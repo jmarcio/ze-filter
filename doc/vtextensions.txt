@@ -1,0 +1,381 @@
+
+THIS IS WEB PAGE "http://www.cknow.com/vtutor/vtextensions.htm"
+
+****************************************************************************
+
+
+    [Ill Computer]     File Extensions
+
+      Navigation               There is currently a big push toward
+                               relying heavily on recognizing "bad"
+   Virus Protection            file extensions and acting solely on
+                                    this knowledge. That's not
+                                   necessarily a good thing as
+ [Virus Tutorial Map]             extensions can be misleading.
+     Tutorial Map
+ [AntiVirus Software]
+                       One of the most asked questions lately is "What
+                       extensions should I scan and/or watch for in E-mail
+  Anti-Virus Software  attachments?" While a valid question, some caveats
+                       must be attached to the answer.
+
+                       First, it's important to note that over time
+                       Microsoft (and others) appear to be working toward
+                       making file extensions as the sole indicator of file
+                       content and creator unnecessary. This already exists
+                       on the Macintosh where the file creator information
+                       is in the file itself so the file name and extension
+                       is no indicator at all of the type of file.
+
+                       Such behavior is starting to appear under Windows as
+                       well. Microsoft Word, for example, will actually
+                       examine a file it's asked to open and, despite the
+                       name ending in .DOC, if the file is a template file
+                       will open the file as a template (.DOT) file
+                       instead. Some Word macro viruses take advantage of
+                       this characteristic and save infected files in
+                       template format with a .DOC extension.
+
+                       Another variant of this behavior on Windows
+                       computers would be the Scrap Object file which
+                       actually can contain most anything from simple text
+                       to complex programs. When opened, the operating
+                       system determines what the content is and acts
+                       accordingly.
+
+                       Finally, there is the issue of double extensions. To
+                       make your viewing easier, Windows offers the option
+                       of turning off the viewing of file extensions. If
+                       you do that, however, you can easily be fooled by
+                       files with double extensions. Most everyone has been
+                       conditioned, for example, that the extension .TXT is
+                       safe as it indicates a pure text file. But, with
+                       extensions turned off if someone sends you a file
+                       named BAD.TXT.VBS you will only see BAD.TXT. If
+                       you've forgotten that extensions are actually turned
+                       off you might think this is a text file and open it.
+                       Instead, this is really an executable VisualBasic
+                       Script file and could do serious damage. For now you
+                       should always have viewing extensions turned on.
+                       Here's how...
+
+                       In Windows 98 double click to open "My Computer" and
+                       then select "View"|"Folder Options". Select the
+                       "View" tab and then scroll down to the entry that
+                       says "Hide file extensions for known file types" and
+                       make certain it's not checked. Click OK and then
+                       close the My Computer window. With this move you
+                       will now see extensions in file directory windows
+                       and the option will be picked up by other Microsoft
+                       programs like Outlook.
+
+                                     [Hide Extensions Dialog]
+
+                       Extensions
+
+                       So, with the thought in mind that file extensions
+                       are likely being phased out over time and can be
+                       spoofed, here are some to watch out for ("?"
+                       represents any character):
+
+                              .386   Windows Enhanced Mode Driver.
+                                     A device driver is executable
+                                     code and, as such, can be
+                                     infected and should be
+                                     scanned.
+                              .ADE   Microsoft Access Project
+                                     Extension. Use of macros makes
+                                     this vulnerable.
+                              .ADP   Microsoft Access Project. Use
+                                     of macros makes this
+                                     vulnerable.
+                              .ADT   Abstract Data Type. According
+                                     to Symantec these are
+                                     database-related program
+                                     files.
+                              .APP   Application File. Associated
+                                     with a variety of programs;
+                                     these files interact with such
+                                     things as database programs to
+                                     make them look like standalone
+                                     programs.
+                              .ASP   Active Server Page.
+                                     Combination program and HTML
+                                     code.
+                              .BAS   Microsoft Visual Basic Class
+                                     Module. These are programs.
+                              .BAT   Batch File. These are text
+                                     files that contain system
+                                     commands. There have been a
+                                     few batch file viruses but
+                                     they are not common.
+                              .BIN   Binary File. Can be used for a
+                                     variety of tasks and usually
+                                     associated with a program.
+                                     Like an overlay file it's
+                                     possible to infect .BIN files
+                                     but not usually likely.
+                              .BTM   4DOS Batch To Memory Batch
+                                     File. Batch file that could be
+                                     infected.
+                              .CBT   Computer Based Training. It's
+                                     never been made clear why or
+                                     how these can become infected
+                                     but Symantec includes them in
+                                     their default listing.
+                              .CHM   Compiled HTML Help File. Use
+                                     of scripting makes these
+                                     vulnerable.
+                              .CLA   Java Class File. Java applets
+                              .CLASS are supposed to be run in a
+                                     "sandbox" and thus be isolated
+                                     from the system. However,
+                                     users can be tricked into
+                                     running an applet in a mode
+                                     that the sandbox considers
+                                     "secure" so Class files should
+                                     be scanned.
+                              .CMD   Windows NT Command Script. A
+                                     batch file for NT.
+                              .COM   Command (Executable File). Any
+                                     executable file can be
+                                     infected in a variety of ways.
+                              .CPL   Control Panel Extension.
+                                     Similar to a device driver
+                                     which is executable code and,
+                                     as such, can be infected and
+                                     should be scanned.
+                              .CRT   Security Certificate. Can have
+                                     code associated with it.
+                              .CSC   Corel Script File. A type of
+                                     script file that is
+                                     executable. Any executable
+                                     should be scanned.
+                              .CSS   Hypertext Cascading Style
+                                     Sheet. Style sheets can
+                                     contain code.
+                              .DLL   Dynamic Link Library. Can be
+                                     used for a variety of tasks
+                                     associated with a program.
+                                     DLLs typically add functions
+                                     to programs. Some contain
+                                     executable code; others simply
+                                     contain functions or data but
+                                     you can't tell by looking so
+                                     all DLLs should be scanned.
+                              .DOC   MS Word Document. Word
+                                     documents can contain macros
+                                     that are powerful enough to be
+                                     used for viruses and worms.
+                              .DOT   MS Word Document Template.
+                                     Word templates can contain
+                                     macros that are powerful
+                                     enough to be used for viruses
+                                     and worms.
+                              .DRV   Device Driver. A device driver
+                                     is executable code and, as
+                                     such, can be infected and
+                                     should be scanned.
+                              .EML   MS Outlook Express E-mail.
+                              or     E-mail messages can contain
+                              .EMAIL HTML and scripts. Many viruses
+                                     and worms use this vector.
+                              .EXE   Executable File. Any
+                                     executable file can be
+                                     infected in a variety of ways.
+                              .FON   Font. Believe it or not, a
+                                     font file can have executable
+                                     code in it and therefore can
+                                     be infected.
+                              .HLP   Help File. Help files can
+                                     contain macros. They are not a
+                                     common vector but have housed
+                                     a Trojan or two.
+                              .HTA   HTML Program. Can contain
+                                     scripts.
+                              .HTM   Hypertext Markeup Language.
+                              .HTML  HTML files can contain scripts
+                                     which are more and more
+                                     becoming vectors.
+                              .INF   Setup Information. Setup
+                                     scripts can be changed to do
+                                     unexpected things.
+                              .INI   Initialization File. Contains
+                                     program options.
+                              .INS   Internet Naming Service. Can
+                                     be changed to point unexpected
+                                     places.
+                              .ISP   Internet Communication
+                                     Settings. Can be changed to
+                                     point unexpected things.
+                              .JS    JavaScript. As script files
+                              .JSE   become vectors more often it's
+                                     best to scan them. (.JSE is
+                                     encoded. Also keep in mind
+                                     that these can have other,
+                                     random, extensions!)
+                              .LIB   Library. In theory, these
+                                     files could be infected but to
+                                     date no LIB-file virus has
+                                     been identified.
+                              .LNK   Link. Can be changed to point
+                                     to unexpected places.
+                              .MDB   MS Access Database or MS
+                                     Access Application. Access
+                                     files can contain macros that
+                                     are powerful enough to be used
+                                     for viruses and worms.
+                              .MDE   Microsoft Access MDE database.
+                                     Macros and scripts make this
+                                     vulnerable.
+                              .MHT   MHTML Document. This is an
+                              .MHTM  archived Web page. As such it
+                              .MHTML can contain scripts which can
+                                     be infected.
+                              .MSO   Math Script Object. According
+                                     to Symantec these are
+                                     database-related program
+                                     files.
+                              .MSC   Microsoft Common Console
+                                     Document. Can be changed to
+                                     point to unexpected places.
+                              .MSI   Microsoft Windows Installer
+                                     Package. Contains code.
+                              .MSP   Microsoft Windows Installer
+                                     Patch. Contains code.
+                              .MST   Microsoft Visual Test Source
+                                     Files. Source can be changed.
+                              .OBJ   Relocatable Object Code. Files
+                                     associated with programs.
+                              .OCX   Object Linking and Embedding
+                                     (OLE) Control Extension. A
+                                     program that can be downloaded
+                                     from a Web page.
+                              .OV?   Program File Overlay. Can be
+                                     used for a variety of tasks
+                                     associated with a program.
+                                     Overlays typically add
+                                     functions to programs. It's
+                                     possible to infect overlay
+                                     files but not usually likely.
+                              .PCD   Photo CD MS Compiled Script.
+                                     Scripts are vulnerable.
+                              .PGM   Program File. Associated with
+                                     a variety of programs; these
+                                     files interact with such
+                                     things as database programs to
+                                     make them look like standalone
+                                     programs.
+                              .PIF   MS-DOS Shortcut. If changed
+                                     can run unexpected programs.
+                              .PPT   MS PowerPoint Presentation.
+                                     PowerPoint presentations can
+                                     contain macros that are
+                                     powerful enough to be used for
+                                     viruses and worms.
+                              .PRC   Palmpilot Resource File. A PDA
+                                     program (yes, there are rare
+                                     PDA viruses).
+                              .REG   Registry Entries. If run these
+                                     change the registry.
+                              .RTF   Rich Text Format. A format for
+                                     transmitting formatted text
+                                     usually assumed to be safe.
+                                     Binary (and infected) objects
+                                     can be embedded within RTF
+                                     files, however, so, to be
+                                     safe, they should be scanned.
+                                     RTF files can also be DOC
+                                     files renamed and Word will
+                                     open them as DOC files.
+                              .SCR   Screen Saver or Script. Screen
+                                     savers and scripts are both
+                                     executable code. As such
+                                     either may contain a virus or
+                                     be used to house a worm or
+                                     Trojan.
+                              .SCT   Windows Script Component.
+                                     Scripts can be infected.
+                              .SHB   Shell Scrap Object File. A
+                              .SHS   scrap file can contain just
+                                     about anything from a simple
+                                     text file to a powerful
+                                     executable program. They
+                                     should generally be avoided if
+                                     one is sent to you but are
+                                     routinely used by the
+                                     operating system on any single
+                                     system.
+                              .SMM   Ami Pro Macro. Rare, but can
+                                     be infected.
+                              Source Source Code. These are program
+                                     files that could be infected
+                                     by a source code virus (these
+                                     are rare). Unless you are a
+                                     programmer these likely won't
+                                     be a concern. Extensions
+                                     include, but are not limited
+                                     to: .ASM, .C, .CPP, .PAS,
+                                     .BAS, .FOR.
+                              .SYS   System Device Driver. A device
+                                     driver is executable code and,
+                                     as such, can be infected and
+                                     should be scanned.
+                              .URL   Internet Shortcut. Can send
+                                     you to any unexpected Web
+                                     location.
+                              .VB    VBScript File. Scripts can be
+                              .VBE   infected. (.VBE is encoded.)
+                              .VBS   Visual Basic Script. A script
+                                     file may contain a virus or be
+                                     used to house a worm or
+                                     Trojan.
+                              .VXD   Virtual Device Driver. A
+                                     device driver is executable
+                                     code and, as such, can be
+                                     infected and should be
+                                     scanned.
+                              .WSC   Windows Script Component.
+                                     Scripts can be infected.
+                              .WSF   Windows Script File. Scripts
+                                     can be infected.
+                              .WSH   Windows Script Host Settings
+                                     File. Settings can be changed
+                                     to do unexpected things.
+                              .XL?   MS Excel File. Excel
+                                     worksheets can contain macros
+                                     that are powerful enough to be
+                                     used for viruses and worms.
+
+                       The above listing has been derived from the default
+                       extension lists of various anti-virus programs and
+                       from discussions in virus-related newsgroups. It
+                       should not be taken as an absolute however. Some
+                       viruses/worms have been spread in files with no
+                       extension and, as noted, an extension does not
+                       necessarily guarantee a particular file type. The
+                       meaning for extensions not listed here might be
+                       found at http://filext.com/.
+
+                       The safe option is to allow anti-virus software to
+                       scan all files.
+
+                       Summary
+
+                          * While extensions are often touted as being
+                            accurate indicators of files that can be
+                            infected, history shows they are not.
+                            Additionally, they can be spoofed in a variety
+                            of ways.
+                          * The safe option is to allow anti-virus software
+                            to scan all files.
+
+                            Let's look at how to practice safe hex...[Next]
+                        [Please visit our sponsors.]
+
+
+
+Send mail to webmaster@cknow.com with questions or comments about this web
+site.
+Copyright © 2001 Computer Knowledge, All Rights Reserved
+Pray the Rosary for peace.

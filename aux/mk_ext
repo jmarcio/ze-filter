@@ -1,0 +1,93 @@
+#! /usr/bin/perl -w
+
+use strict;
+use Getopt::Long;
+
+my $debug = 0;
+
+my $list = 0;
+my $include = 0;
+
+my $ok = GetOptions('l' => \$list,
+		    'i' => \$include);
+
+
+my %XFILES = ();
+my %ORIGIN = ();
+my $origin = "";
+
+while (<>) {
+  chomp;
+  next if /^$/;
+
+  if (/^_ORIGIN_[ ]*([^\s]*)/)
+  {
+    $origin = $1;
+    next;
+  }
+  next if /^[# \t]/;
+
+  my ($ext, $desc) = split (" ", $_, 2);
+  next unless defined ($ext) && $ext ne "";
+  $desc = "" if !defined($desc);
+  $ext =~ s/\.//;
+  eff_blancs($ext);
+  eff_blancs($desc);
+  $XFILES{$ext} = "$desc";
+  $ORIGIN{$ext} = $origin;
+}
+
+if ($list) {
+  print <<TA;
+  "\\n"
+TA
+  foreach (sort keys %XFILES) {
+    printf "  \"  %-8s  %s\\n\"\n", $_, $XFILES{$_};
+  }
+  print <<TB;
+  "\\n"
+TB
+  exit (0);
+}
+
+if ($include) {
+  print <<TA;
+
+static xfilesdef_T xfilesdef[] =
+{
+TA
+
+  foreach (sort keys %XFILES) {
+    print <<TB;
+  { "$_", "$XFILES{$_}", "$ORIGIN{$_}"},
+TB
+  }
+
+  print <<TC;
+  {NULL, NULL, NULL}
+};
+
+TC
+
+  exit (0);
+}
+
+my $s = "";
+
+$s = join (" ", sort keys %XFILES);
+
+print $s, "\n";
+
+
+
+exit 0;
+
+# ************************************************************************
+#
+#
+sub eff_blancs {
+  return "" if $#_ < 0;
+  $_[0] =~ s/^[ \t]+|[ \t]+$//g;
+  return $_[0];
+}
+

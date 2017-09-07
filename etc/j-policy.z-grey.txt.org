@@ -1,0 +1,296 @@
+
+#
+# cru.fr list servers
+# never greylist these...
+NetClass:195.220.94.131		          FRIEND
+NetClass:195.220.94.132		          FRIEND
+GreyCheckConnect:195.220.94.131	          NO-QUICK
+GreyCheckConnect:195.220.94.132	          NO-QUICK
+
+#
+#  ####   #####   ######   #   #  #          #     ####    #####
+# #    #  #    #  #         # #   #          #    #          #
+# #       #    #  #####      #    #          #     ####      #
+# #  ###  #####   #          #    #          #         #     #
+# #    #  #   #   #          #    #          #    #    #     #
+#  ####   #    #  ######     #    ######     #     ####      #
+#
+
+#
+# Servers known to not respect RFCs
+# Greylisting shall not be applied to these servers
+#
+# Southwest Airlines (unique sender, no retry)
+GreyCheckConnect:12.5.136.141                          NO-QUICK
+GreyCheckConnect:12.5.136.142                          NO-QUICK
+
+# kernel.org mailing lists (high traffic, unique sender per mail)
+GreyCheckConnect:12.107.209.244                        NO-QUICK
+
+# sourceware.org mailing lists (high traffic, unique sender per mail)
+GreyCheckConnect:12.107.209.250                        NO-QUICK
+
+# SLmail
+GreyCheckConnect:63.82.37.110                          NO-QUICK
+
+# sentex.ca (common pool)
+GreyCheckConnect:64.7.153.18                           NO-QUICK
+GreyCheckConnect:205.211.164.50                        NO-QUICK
+
+# AOL (common pool) - http://postmaster.aol.com/servers/imo.html
+GreyCheckConnect:64.12.137                             NO-QUICK
+GreyCheckConnect:64.12.138                             NO-QUICK
+GreyCheckConnect:152.163.225                           NO-QUICK
+GreyCheckConnect:205.188.139.136                       NO-QUICK
+GreyCheckConnect:205.188.139.137                       NO-QUICK
+GreyCheckConnect:205.188.144.207                       NO-QUICK
+GreyCheckConnect:205.188.144.208                       NO-QUICK
+GreyCheckConnect:205.188.156.66                        NO-QUICK
+GreyCheckConnect:205.188.157                           NO-QUICK
+GreyCheckConnect:205.188.159.7                         NO-QUICK
+
+# moveon.org (unique sender per attempt)
+GreyCheckConnect:64.124.204.39                         NO-QUICK
+
+# collab.net (unique sender per attempt)
+GreyCheckConnect:64.125.132.254                        NO-QUICK
+
+# gmail (common server pool)
+#GreyCheckConnect:64.233.170                            NO-QUICK
+
+# Groupwise?
+GreyCheckConnect:65.82.241.160                         NO-QUICK
+GreyCheckConnect:66.89.73.101                          NO-QUICK
+GreyCheckConnect:66.100.210.82                         NO-QUICK
+GreyCheckConnect:66.162.216.166                        NO-QUICK
+GreyCheckConnect:68.15.115.88                          NO-QUICK
+GreyCheckConnect:204.60.8.162                          NO-QUICK
+GreyCheckConnect:216.157.204.5                         NO-QUICK
+
+# Ebay (for time critical alerts)
+GreyCheckConnect:66.135.209                            NO-QUICK
+GreyCheckConnect:66.135.197                            NO-QUICK
+
+# PLEXOR
+GreyCheckConnect:66.206.22.82                          NO-QUICK
+GreyCheckConnect:66.206.22.83                          NO-QUICK
+GreyCheckConnect:66.206.22.84                          NO-QUICK
+GreyCheckConnect:66.206.22.85                          NO-QUICK
+
+# Yahoo Groups servers (common pool, no retry)
+GreyCheckConnect:66.94.237                             NO-QUICK
+GreyCheckConnect:66.218.66                             NO-QUICK
+GreyCheckConnect:66.218.67                             NO-QUICK
+GreyCheckConnect:66.218.69                             NO-QUICK
+# Yahoo Mail?
+#GreyCheckConnect:216.136.226.0                         NO-QUICK
+
+# ljbtc.com (Groupwise)
+GreyCheckConnect:66.27.51.218                          NO-QUICK
+
+# Joker.com (email forwarding server)
+GreyCheckConnect:194.245.101.88                        NO-QUICK
+
+# Tid InfoMail Exchanger v2.20
+GreyCheckConnect:195.235.39.19                         NO-QUICK
+
+# skynet.be / isp.belgacom.be (wierd retry pattern)
+#GreyCheckConnect:195.238.2         			NO-QUICK
+#GreyCheckConnect:195.238.3         			NO-QUICK
+
+GreyCheckConnect:195.238.2.100         			NO-QUICK
+GreyCheckConnect:195.238.2.101         			NO-QUICK
+GreyCheckConnect:195.238.2.102         			NO-QUICK
+GreyCheckConnect:195.238.2.105                         	NO-QUICK
+GreyCheckConnect:195.238.2.115         			NO-QUICK
+GreyCheckConnect:195.238.2.117         			NO-QUICK
+GreyCheckConnect:195.238.2.117                         	NO-QUICK
+GreyCheckConnect:195.238.2.124                         	NO-QUICK
+GreyCheckConnect:195.238.2.128         			NO-QUICK
+GreyCheckConnect:195.238.2.199         			NO-QUICK
+GreyCheckConnect:195.238.2.200         			NO-QUICK
+GreyCheckConnect:195.238.2.201         			NO-QUICK
+GreyCheckConnect:195.238.2.202         			NO-QUICK
+GreyCheckConnect:195.238.2.203         			NO-QUICK
+GreyCheckConnect:195.238.2.204         			NO-QUICK
+GreyCheckConnect:195.238.2.208         			NO-QUICK
+GreyCheckConnect:195.238.2.49          			NO-QUICK
+GreyCheckConnect:195.238.2.69          			NO-QUICK
+GreyCheckConnect:195.238.2.80          			NO-QUICK
+GreyCheckConnect:195.238.2.83          			NO-QUICK
+GreyCheckConnect:195.238.2.87          			NO-QUICK
+GreyCheckConnect:195.238.2.91          			NO-QUICK
+GreyCheckConnect:195.238.3.107                         	NO-QUICK
+GreyCheckConnect:195.238.3.12                          	NO-QUICK
+GreyCheckConnect:195.238.3.13                  		NO-QUICK
+GreyCheckConnect:195.238.3.233         			NO-QUICK
+GreyCheckConnect:195.238.3.234         			NO-QUICK
+GreyCheckConnect:195.238.3.235         			NO-QUICK
+GreyCheckConnect:195.238.3.3           			NO-QUICK
+GreyCheckConnect:195.238.3.4           			NO-QUICK
+GreyCheckConnect:195.238.3.49          			NO-QUICK
+GreyCheckConnect:195.238.3.51          			NO-QUICK
+GreyCheckConnect:195.238.3.52          			NO-QUICK
+GreyCheckConnect:195.238.3.64          			NO-QUICK
+GreyCheckConnect:195.238.3.70          			NO-QUICK
+GreyCheckConnect:195.238.3.80          			NO-QUICK
+GreyCheckConnect:195.238.3.96          			NO-QUICK
+GreyCheckConnect:195.238.6.70          			NO-QUICK
+
+
+# Ameritrade (no retry)
+GreyCheckConnect:204.107.120.10                        NO-QUICK
+
+# SecurityFocus.com (unique sender per attempt)
+GreyCheckConnect:205.206.231                           NO-QUICK
+
+# Prodigy (broken software that retries continually with no delay)
+GreyCheckConnect:207.115.63                            NO-QUICK
+
+# Amazon.com (common pool)
+GreyCheckConnect:207.171.164                           NO-QUICK
+GreyCheckConnect:207.171.167                           NO-QUICK
+GreyCheckConnect:207.171.168                           NO-QUICK
+GreyCheckConnect:207.171.180                           NO-QUICK
+GreyCheckConnect:207.171.187                           NO-QUICK
+GreyCheckConnect:207.171.188                           NO-QUICK
+GreyCheckConnect:207.171.190                           NO-QUICK
+
+# optusnet.com.au (wierd retry pattern and more than 48hrs)
+GreyCheckConnect:211.29.132                            NO-QUICK
+
+# Mysql.com (unique sender)
+GreyCheckConnect:213.136.52.31                         NO-QUICK
+
+# AXKit mailing list (unique sender per attempt)
+GreyCheckConnect:217.158.50.178                        NO-QUICK
+#
+#
+# SleepyCat
+GreyCheckConnect:209.235.192.68                        NO-QUICK
+# apache.org - SpamAssassin mailing list
+GreyCheckConnect:209.237.227.199                       NO-QUICK
+# sourceforge.net - outbond list server
+GreyCheckConnect:66.35.250.22                          NO-QUICK
+# Lettre 01 informatique
+GreyCheckConnect:213.186.34                            NO-QUICK
+# Listes gentoo.org
+GreyCheckConnect:156.56.111.196                        NO-QUICK
+# O'Reilly 
+GreyCheckConnect:209.204.146.25                        NO-QUICK
+# presencenet.br
+#GreyCheckConnect:213.186.35.16                         NO-QUICK
+# Yahoo Mail
+GreyCheckConnect:217.21.10                             NO-QUICK
+GreyCheckConnect:217.21.11                             NO-QUICK
+GreyCheckConnect:217.21.12                             NO-QUICK
+GreyCheckConnect:217.21.13                             NO-QUICK
+GreyCheckConnect:217.146.176                           NO-QUICK
+
+# comodo
+GreyCheckConnect:91.199.212.133                        NO-QUICK
+GreyCheckConnect:82.110.55.14                          NO-QUICK
+GreyCheckConnect:82.109.38.202                         NO-QUICK
+
+# sendmail
+GreyCheckConnect:63.195.85.27                          NO-QUICK
+GreyCheckConnect:209.246.26                            NO-QUICK
+GreyCheckConnect:64.81.247.36                          NO-QUICK
+
+# Orange.fr
+GreyCheckConnect:80.12.242.1   				NO-QUICK
+GreyCheckConnect:80.12.242.17   			NO-QUICK
+GreyCheckConnect:80.12.242.18   			NO-QUICK
+GreyCheckConnect:80.12.242.19   			NO-QUICK
+GreyCheckConnect:80.12.242.26   			NO-QUICK
+GreyCheckConnect:80.12.242.27   			NO-QUICK
+GreyCheckConnect:80.12.242.47   			NO-QUICK
+GreyCheckConnect:80.12.242.50   			NO-QUICK
+GreyCheckConnect:193.252.22.20   			NO-QUICK
+GreyCheckConnect:193.252.22.21   			NO-QUICK
+GreyCheckConnect:193.252.22.22   			NO-QUICK
+GreyCheckConnect:193.252.22.23   			NO-QUICK
+GreyCheckConnect:193.252.22.24   			NO-QUICK
+GreyCheckConnect:193.252.22.25   			NO-QUICK
+GreyCheckConnect:193.252.22.26   			NO-QUICK
+GreyCheckConnect:193.252.22.27   			NO-QUICK
+GreyCheckConnect:193.252.22.28   			NO-QUICK
+GreyCheckConnect:193.252.22.29   			NO-QUICK
+GreyCheckConnect:193.252.22.30   			NO-QUICK
+GreyCheckConnect:193.252.22.31   			NO-QUICK
+GreyCheckConnect:193.252.22.54   			NO-QUICK
+GreyCheckConnect:193.252.22.126   			NO-QUICK
+GreyCheckConnect:193.252.22.129   			NO-QUICK
+GreyCheckConnect:193.252.23.69   			NO-QUICK
+GreyCheckConnect:193.252.23.84   			NO-QUICK
+GreyCheckConnect:193.252.23.89   			NO-QUICK
+GreyCheckConnect:193.252.23.111   			NO-QUICK
+
+# amadeus.net
+GreyCheckConnect:82.150.225.79                          NO-QUICK
+
+# xenia3-in0.renault.fr
+GreyCheckConnect:193.194.133.17                         NO-QUICK
+
+
+# Equivalent domains - messages from one domain come from
+# a mail server of the other domain
+#
+GreyEquivDomain:arcelor.com				usinor.com
+GreyEquivDomain:alcatel-lucent.com			alcatel.fr
+GreyEquivDomain:alcatel.fr				alcatel-lucent.com
+GreyEquivDomain:worldonline.fr				tiscali.fr
+GreyEquivDomain:ds-fr.com                               symantecmail.net
+GreyEquivDomain:amadeus.com				messagelabs.com
+GreyEquivDomain:yahoo.fr				yahoo.com
+GreyEquivDomain:vinci.com				group-vinci.com
+GreyEquivDomain:schneider-electric.com			messagelabs.com
+GreyEquivDomain:novartis.com				messagelabs.com
+GreyEquivDomain:oecd.org				messagelabs.com
+GreyEquivDomain:asap.com				asapsoftware.com
+GreyEquivDomain:gmail.com				google.com
+GreyEquivDomain:googlegroups.com			google.com
+GreyEquivDomain:googlemail.com				google.com
+GreyEquivDomain:adcis.net				celeonet.fr,celeo.net
+GreyEquivDomain:cso.cnrs.fr				sciences-po.fr,ornis.com
+
+GreyEquivDomain:jussieu.fr                              upmc.fr,univ-paris7.fr
+GreyEquivDomain:upmc.fr                                 jussieu.fr,univ-paris7.fr
+GreyEquivDomain:mines-paristech.fr                      ensmp.fr
+GreyEquivDomain:telecom-paristech.fr                    enst.fr
+GreyEquivDomain:chimie-paristech.fr                     enscp.fr
+GreyEquivDomain:gazdefrance.fr                          edf.fr
+GreyEquivDomain:gazdefrance.com                         edf.fr
+GreyEquivDomain:france-energie.fr			clara.net
+GreyEquivDomain:regionpaca.fr     		        cr-paca.fr
+GreyEquivDomain:citepa.fr                               orange.fr
+GreyEquivDomain:energies-demain.com                     orange.fr
+GreyEquivDomain:inpg.fr					imag.fr
+GreyEquivDomain:fastmail.fm                             messagingengine.com
+GreyEquivDomain:total.com                               totalfinaelf.net
+GreyEquivDomain:grenoble-inp.fr                         inpg.fr
+GreyEquivDomain:pascal-network.org                      soton.ac.uk
+GreyEquivDomain:telecom-sudparis.eu                     int-evry.fr
+GreyEquivDomain:mines-ales.fr                           ema.fr
+GreyEquivDomain:inrialpes.fr                            inria.fr
+GreyEquivDomain:irisa.fr                                inria.fr
+GreyEquivDomain:orange-ftgroup.com                      francetelecom.com
+GreyEquivDomain:wanadoo.fr                              orange.fr
+GreyEquivDomain:paristech.fr                            ensam.fr
+GreyEquivDomain:framatome-anp.com                       areva.com
+GreyEquivDomain:mines-albi.fr                           enstimac.fr
+GreyEquivDomain:sciencedirect.com                       lexisnexis.com
+GreyEquivDomain:techniques-ingenieur.fr                 epidm.net
+GreyEquivDomain:elsevier.com                            obsmtp.com
+GreyEquivDomain:lafarge.com                             obsmtp.com
+GreyEquivDomain:inter-mines.org                         nocworld.net
+GreyEquivDomain:lsce.ipsl.fr                            cnrs-gif.fr
+GreyEquivDomain:defense.gouv.fr                         oleane.net
+GreyEquivDomain:contact.asso.fr                         univ-montp2.fr
+GreyEquivDomain:arkeia.com                              salesforce.com
+GreyEquivDomain:cener.com                               rima-tde.net,iberbanda.es
+GreyEquivDomain:transvalor.com                          oleane.net
+GreyEquivDomain:gallimard.fr                            sodis.com,sodis.fr
+GreyEquivDomain:athensprogramme.com                     dreamhost.com
+GreyEquivDomain:constellium.com                         microsoft.com
+

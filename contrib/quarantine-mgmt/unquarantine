@@ -1,0 +1,140 @@
+#! /bin/sh
+
+CLAM=/opt/clamav/bin/clamdscan
+
+USER=root+token
+DOMAIN=domain.fr
+FROM="$USER@$DOMAIN"
+RCPT=
+MSG=
+VERBOSE=
+VCHECK=1
+
+
+usage()
+{
+  echo "Usage: $0 [options]"
+  cat <<EOF
+    Options :
+      -h           ce message
+      -m id        message ID
+      -f from      from
+      -t rcpt      destinataire
+      -n           pas de scan antivirus
+
+EOF
+}
+
+set -- `getopt f:t:m:hvn $*`
+if [ $? != 0 ]
+then
+  usage
+  exit 2
+fi
+
+for i in $*
+do
+  case $i in
+    -h)
+       usage
+       exit 0
+       ;;
+    -f)
+       FROM=$2
+       shift 2
+       ;;
+    -t)
+       RCPT=$2
+       shift 2
+       ;;
+    -m)
+       MSG=$2
+       shift 2
+       ;;
+    -v)
+       VERBOSE=-v
+       shift
+       ;;
+    -n)
+       VCHECK=0
+       shift
+       ;;
+    --)
+       shift
+       break
+       ;;
+  esac
+done
+
+if [ -z "$MSG" ]
+then
+  usage
+  cat <<EOF
+    MESSAGE ID option (option -m) is mandatory
+
+EOF
+  exit 1
+fi
+
+cd /var/spool/jchkmail
+
+FILE=
+if [ -f $MSG ] 
+then
+  FILE=$MSG
+elif [ -f $MSG.xfile ]
+then
+  FILE=$MSG.xfile
+else
+  cat <<EOF
+
+    * Message ID $MSG non trouve
+
+EOF
+  exit 1
+fi
+
+if [ "$VCHECK" = "1" -a -x $CLAM -a -f $FILE ]
+then
+  $CLAM $FILE > /dev/null
+  X=$?
+  if [ "$X" = "1" ]
+  then
+    cat <<EOF
+
+    Virus trouve !!! Si vous souhaitez forcer la sortie de
+    la quarantaine, utilisez l option -n
+
+EOF
+    $CLAM $FILE
+    exit 1
+  fi
+fi
+
+if [ -z "$FROM" ]
+then
+  DOMAIN=`grep domain /etc/resolv.conf | awk '{print $2}'`
+  FROM="postmaster@$DOMAIN"
+fi
+
+echo "  * FROM   : $FROM"
+echo "  * RCPT   : $RCPT"
+echo "  * MSG    : $MSG"
+echo "  * FILE   : $FILE"
+
+if [ -z "$FROM" -o -z "$RCPT" -o -z "$FILE" ]
+then
+  usage
+  exit 1
+fi
+
+if [ "$RCPT" = "ALL" -o "$RCPT" = "all" ]
+then
+  RCPT="-t"
+fi
+
+#echo /usr/sbin/sendmail -Am -bm $VERBOSE -f $FROM  $RCPT $FILE
+
+/usr/sbin/sendmail -Am -bm $VERBOSE -f $FROM  $RCPT < $FILE
+
+

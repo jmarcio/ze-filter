@@ -1,0 +1,38 @@
+#! /usr/bin/perl -w
+
+use Getopt::Long;
+
+my $score = 20;
+my $code  = "127.1.0.2";
+my $src   = "src";
+
+my $ok = GetOptions('s=i' => \$score,
+                    'c=s' => \$code,
+                    'o=s' => \$src);
+
+
+my $date = time();
+
+while (<>) {
+  chomp;
+
+  next if /^\s*$/;
+  next if /^\s*#/;
+
+  tr /ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/;
+
+  eff_blancs($_);
+
+  printf "URLBL:%-40s %d:%d:%s:%s\n", $_, $score, $date, $code, $src;
+}
+
+exit 0;
+
+#
+#
+sub eff_blancs {
+  return "" if $#_ < 0;
+  $_[0] =~ s/^\s+|\s+$//g;
+  return $_[0];
+}
+

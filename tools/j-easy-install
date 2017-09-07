@@ -1,0 +1,803 @@
+#! /usr/bin/perl -w
+
+use strict;
+use Getopt::Long;
+use Cwd;
+
+my %PARAM = ();
+my %VERSION = ();
+
+my %OPTIONS = ();
+
+set_defaults();
+
+get_saved_options();
+
+my $WGET = get_option("wget");
+$WGET = useable_value("wget", $WGET);
+
+my $TAR  = get_option("tar");
+$TAR = useable_value("tar", $TAR);
+
+my $BaseSrcDir = get_option("srcdir");
+$BaseSrcDir = useable_value("/var/src/j-chkmail", $BaseSrcDir);
+
+my $VersionsURL = get_option("versionsurl");
+$VersionsURL = useable_value("http://foss.jose-marcio.org/VERSIONS", $VersionsURL);
+
+my $help = 0;
+my $verbose = 0;
+my $interactive = 0;
+my $options = 0;
+
+my $ok = GetOptions ("h"         => \$help,
+		     "O"         => \$options,
+		     "v"         => \$verbose);
+
+if ($help) {
+  usage();
+  exit 0;
+}
+
+if ($options) {
+  print_pkg_conf();
+  exit 0;
+}
+
+
+my @Actions = qw();
+my $Force = 0;
+
+foreach (@ARGV) {
+  if (/force/i) {
+    $Force = 1;
+    next;
+  }
+  push @Actions, $_;
+}
+if ($#Actions < 0) {
+  usage();
+  exit 0;
+}
+
+if ($Actions[0] eq "setup") {
+  my $act = shift @Actions;
+  print_pkg_conf();
+  exit 0;
+}
+
+make_src_dirs();
+
+my %CurConf = ();
+get_current();
+
+
+if ($Actions[0] eq "clean") {
+  my $act = shift @Actions;
+  do_clean($act, @Actions);
+  exit 0;
+}
+
+get_param();
+foreach my $key (sort keys %PARAM) {
+  printf "%-15s %s\n", $key, $PARAM{$key};
+}
+
+if ($Actions[0] eq "autoupdate") {
+  my $act = shift @Actions;
+  do_autoupdate();
+  exit 0;
+}
+
+# test User and Group
+{
+  my $user = get_option("User");
+  my $group = get_option("Group");
+
+  $user = "smmsp" unless defined $user && $user ne "";
+  $group = "smmsp" unless defined $group && $group ne "";
+
+  my ($login,$pass,$uid,$ugid) = getpwnam($user);
+  my ($name,$passwd,$gid,$members) = getgrnam($group);
+
+}
+
+if ($Actions[0] =~ /upgrade|update|install|compile/) {
+  my $act = shift @Actions;
+  do_install($act, @Actions);
+  print  <<EOT;
+
+* You may want to clean-up working directories with :
+
+      j-easy-install clean build
+
+EOT
+  exit 0;
+}
+
+exit 0;
+
+#
+#
+#
+sub get_param {
+  my $URL = "http://foss.jose-marcio.org/VERSIONS";
+  if (defined $VersionsURL && $VersionsURL =~ "^http://") {
+    $URL = $VersionsURL;
+  }
+  my $r = system("$WGET -qN $URL");
+  if ($r != 0) {
+    printf STDERR "$WGET $URL error...\n";
+    exit 1;
+  }
+
+  open FIN, "<VERSIONS" || die "Error : VERSIONS";
+  while (<FIN>) {
+    chomp;
+
+    next if /^\s*$/;
+    next if /^\s*#/;
+
+    if (/^\s*(path|root)\s+(\S+)/i) {
+      $PARAM{url} = $2;
+    }
+
+    if (/^\s*stable\s+/i) {
+      my (undef, $a, $b) = split " ", $_;
+      $VERSION{stable} = $a;
+      $PARAM{stable} = $b;
+    }
+
+    if (/^\s*snapshot\s+/i) {
+      my (undef, $a, $b) = split " ", $_;
+      $VERSION{snapshot} = $a;
+      $PARAM{snapshot} = $b;
+    }
+
+    if (/^\s*j-easy-install\s+/i) {
+      my (undef, $a, $b) = split " ", $_;
+      $VERSION{"j-easy-install"} = $a;
+      $PARAM{"j-easy-install"} = $b;
+    }
+  }
+  close FIN;
+}
+
+#
+#
+#
+sub get_distribution {
+  my ($base, $file, undef) = @_;
+
+  my $r = system("$WGET -qN $base/$file");
+  if ($r != 0) {
+    printf STDERR "$WGET error...\n";
+    exit 1;
+  }
+
+  return $r == 0;
+}
+
+#
+#
+#
+sub get_saved_options {
+  my $cf = "/etc/j-easy-install.conf";
+  if (-f $cf) {
+    open FIN, "<$cf" || return 0;
+    while (my $line = <FIN>) {
+      chomp $line;
+      next if $line =~ /^\s*$/;
+      next if $line =~ /^\s*#/;
+
+      my ($a, $b) = split " ", $line, 2;
+      next unless defined $a && $a ne "";
+      $b = "" unless defined $b && $b ne "";
+
+      my $op = "=";
+      if ($b =~ /^(=|\+=)\s*(.*)$/) {
+	$op = $1;
+	$b = $2;
+      }
+      $a =~ tr/A-Z/a-z/;
+      if (!exists($OPTIONS{$a})) {
+	$OPTIONS{$a} = $b;
+      } else {
+	if ($op eq "=") {
+	  $OPTIONS{$a} = $b;
+	} else {
+	  $OPTIONS{$a} .= " " . $b;
+	}
+      }
+    }
+    close FIN;
+  }
+  if (0) {
+    print "OK  \n";
+    foreach my $k (sort keys %OPTIONS) {
+      printf " %-12s -> %s\n", $k, $OPTIONS{$k};
+    }
+    print "OK \n";
+  }
+  return 1;
+}
+
+#
+#
+#
+sub print_pkg_conf {
+  my $prefix = get_option("prefix");
+  my $User = get_option("User");
+  my $Group = get_option("Group");
+  my $WorkDir = get_option("WorkDir");
+  my $GreyDir = get_option("GreyDir");
+  my $SpoolDir = get_option("SpoolDir");
+  my $ConfDir = get_option("ConfDir");
+  my $RCDir = get_option("RCDir");
+
+  print <<EOT;
+# ************************************************************
+#
+# Package installer configuration
+#
+# ************************************************************
+#
+#tar           = /usr/local/gnu/bin/tar
+#
+#wget          = /usr/bin/wget
+#
+#SrcDir        = /var/src/j-chkmail
+#
+#VersionsURL   = http://foss.jose-marcio.org/VERSIONS
+#
+#RCPath        = /etc/init.d/jchkmail
+#
+#
+# ************************************************************
+#
+# Filter configuration
+#
+# ************************************************************
+#
+# These options control how the configure script is launched.
+#
+# If these options aren't defined or if their definitions are
+# empty, then default configure options are used.
+#
+# You shall understand what you're doing if you want to
+# set this options to something different from default ones.
+#
+# Lauch "configure --help" to check default options.
+#
+prefix        = $prefix
+User          = $User
+Group         = $Group
+WorkDir       = $WorkDir
+GreyDir       = $GreyDir
+SpoolDir      = $SpoolDir
+ConfDir       = $ConfDir
+RcDir         = $RCDir
+#
+EOT
+}
+
+#
+#
+#
+sub set_defaults {
+  %OPTIONS = ("tar"         => "tar",
+	      "wget"        => "wget",
+	      "srcdir"      => "/var/src/j-chkmail",
+	      "versionsurl" => "http://foss.jose-marcio.org/VERSIONS",
+	      "rcpath"      => "/etc/init.d/jchkmail",
+
+	      "prefix"      => "",
+	      "user"        => "",
+	      "group"       => "",
+	      "workdir"     => "",
+	      "greydir"     => "",
+	      "spooldir"    => "",
+	      "confdir"     => "",
+	      "rcdir"       => "",
+	      "cfopt"       => "",
+	      "cfenv"       => "");
+}
+
+
+#
+#
+#
+sub useable_value {
+  my ($a, $b) = @_;
+
+  return $b if defined $b && $b ne "";
+  return $a;
+}
+
+#
+#
+#
+sub get_option {
+  my ($k, undef) = @_;
+
+  return undef unless defined $k;
+  $k =~ tr/A-Z/a-z/;
+  return undef unless exists $OPTIONS{$k} and defined $OPTIONS{$k};
+
+  return $OPTIONS{$k};
+}
+
+#
+#
+#
+sub get_current {
+  my @CPATH= qw(/usr/sbin /usr/local/sbin);
+
+  my @CONF = qw();
+  foreach my $path (@CPATH) {
+    foreach my $opt ("-M running", "-m") {
+      @CONF = `$path/j-chkmail $opt 2>/dev/null`;
+      if ($#CONF >= 0) {
+	$CurConf{DaemonPath} = $path;
+	last;
+      }
+    }
+    last if $#CONF >= 0;
+  }
+  if ($#CONF >= 0) {
+    chomp @CONF;
+    @CONF = grep { !/^\s*$/ && !/^\s*#/;} @CONF;
+    %CurConf = map { split " ", $_, 2;} @CONF;
+  }
+  return $#CONF;
+}
+
+#
+#
+#
+sub do_install
+{
+  my ($action, @ARGS) = @_;
+
+  my $sarg = join " ", @ARGS;
+
+  my $Release = shift @ARGS;
+  $Release = "stable" unless defined $Release;
+
+  $Release =~ tr/A-Z/a-z/;
+  unless ($Release =~ /stable|snapshot/) {
+    return 0;
+  }
+
+  printf "* Geting files\n";
+  my $base = $PARAM{url};
+  my $file = $PARAM{$Release};
+  my $vers = $VERSION{$Release};
+
+  $CurConf{VERSION} = "" unless exists($CurConf{VERSION});
+  $CurConf{VERSION} = "" unless defined $CurConf{VERSION};
+
+  my $r = versions_compare($vers, $CurConf{VERSION});
+  print <<EOT;
+
+      * Current version : $CurConf{VERSION}
+      * New version     : $vers
+
+EOT
+  if ($r <= 0 && !$Force) {
+    print <<EOT;
+
+      * Won't replace current version by a not newer one.
+        unless you force it with
+
+        $0 force $action $sarg
+
+EOT
+    return 0;
+  }
+
+  die "$@" unless chdir "src";
+  my $n = get_distribution($base, $file);
+  if (!$n) {
+    exit 1;
+  }
+  die "$@" unless chdir "..";
+
+  printf "* Untaring files of $file\n";
+  die "$@" unless chdir "build";
+
+  my $cmd = undef;
+
+  $TAR = "tar" unless defined $TAR && $TAR ne "";
+  # suppose this is a GNU tar
+  $r = system("$TAR --help > /dev/null 2>&1");
+  if ($r == 0) {
+    $cmd = "$TAR xzf ../src/$file";
+  }
+
+  # No ! Let's look for gtar
+  unless (defined $cmd) {
+    $r = system("tar --help > /dev/null 2>&1");
+    if ($r == 0) {
+      $cmd = "tar xzf ../src/$file";
+    }
+  }
+
+  # No ! Let's look for gtar
+  unless (defined $cmd) {
+    $r = system("gtar --help > /dev/null 2>&1");
+    if ($r == 0) {
+      $cmd = "gtar xzf ../src/$file";
+    }
+  }
+
+  # No ! Let's try a trivial old tar...
+  unless (defined $cmd) {
+    $cmd = "gunzip -c ../src/$file | $TAR xf -";
+  }
+
+  $r = system($cmd);
+  if ($r != 0) {
+    printf STDERR " Error while untaring distribution file\n";
+    exit 1;
+  }
+
+  my $dir = $file;
+  $dir =~ s/.tgz$//;
+  $dir =~ s/.tar.gz$//;
+
+  chomp $dir;
+  printf "* DIR = $dir\n";
+  die "$@" unless chdir $dir;
+
+  $cmd = "cp -pr $BaseSrcDir/override/* .";
+  $r = system("$cmd > /dev/null");
+  if (! -f "Makefile" || $Force) {
+    my $cf = "";
+
+    my @C = qw();
+    $cf = get_option("prefix");
+    push @C, "--prefix=$cf" if ($cf ne "");
+
+    $cf = get_option("User");
+    push @C, "--with-user=$cf" if ($cf ne "");
+
+    $cf = get_option("Group");
+    push @C, "--with-group=$cf" if ($cf ne "");
+
+    $cf = get_option("WorkDir");
+    push @C, "--with-work-dir=$cf" if ($cf ne "");
+
+    $cf = get_option("GreyDir");
+    push @C, "--with-jgrey-dir=$cf" if ($cf ne "");
+
+    $cf = get_option("SpoolDir");
+    push @C, "--with-spool-dir=$cf" if ($cf ne "");
+
+    $cf = get_option("ConfDir");
+    push @C, "--with-conf-dir=$cf" if ($cf ne "");
+
+    $cf = get_option("RCDir");
+    push @C, "--with-rc-dir=$cf" if ($cf ne "");
+
+    $cf = $#C >= 0 ? join " ", @C: "";
+    if (system("./configure $cf") != 0) {
+      exit 1;
+    }
+  }
+
+  if ($Force && -f "Makefile") {
+    if (system("make clean") != 0) {
+      exit 1;
+    }
+  }
+
+  if (system("make") != 0) {
+    exit 1;
+  }
+
+  my @ConfDiffs = qw();
+  if (-f "tools/check-conf-diffs") {
+    @ConfDiffs = `tools/check-conf-diffs`;
+    chomp @ConfDiffs;
+  }
+
+  my @MTAConfErrors = qw();
+  if (-f "tools/check-conf-diffs") {
+    @MTAConfErrors = `tools/check-mta-conf --check`;
+    chomp @MTAConfErrors;
+  }
+
+  goto fin if $action =~ /compile/i;
+
+  my $target = "install";
+  if ($action =~ /update|upgrade/) {
+    if (versions_compare($vers, "v1.13.0-070701") > 0) {
+      $target = "upgrade";
+    }
+  }
+
+  my $init = undef;
+  {
+    my @RCS = qw(/etc/init.d /etc/rc.d /usr/local/etc/rc.d);
+    foreach my $dir (@RCS) {
+      if (-f "$dir/jchkmail") {
+	$init = "$dir/jchkmail";
+	last;
+      }
+      if (-f "$dir/jchkmail.sh") {
+	$init = "$dir/jchkmail.sh";
+	last;
+      }
+    }
+  }
+
+  if (defined $init) {
+    system("$init stop");
+  }
+
+  if (system("make $target") != 0) {
+    exit 1;
+  }
+
+  if (defined $init) {
+    system("$init start");
+  }
+
+  {
+    my $pwd = getcwd();
+    chomp $pwd;
+
+    my $cdbdir = "/var/jchkmail" . "/cdb";
+
+    if (-d $cdbdir) {
+      die "$@" unless chdir $cdbdir;
+
+      my @TXT = qw(j-bayes.txt j-bayes-md5.txt j-urlbl.txt);
+      foreach my $f (@TXT) {
+	system("touch $f") unless -f $f;
+      }
+      if (system("make") != 0) {
+	exit 1;
+      }
+    }
+  }
+
+  if (defined $init) {
+    system("$init restart");
+  }
+
+  if ($#ConfDiffs >= 0) {
+    print <<EOT;
+
+    j-chkmail configuration remarks :
+    *********************************
+
+EOT
+    foreach my $s (@ConfDiffs) {
+      print $s, "\n";
+    }
+    print <<EOT;
+
+    To correct above possible errors, you may edit the
+    configuration file (j-chkmail.cf)
+
+EOT
+  }
+
+  if ($#MTAConfErrors >= 0) {
+    print <<EOT;
+
+    MTA configuration remarks :
+    ***************************
+
+EOT
+    foreach my $s (@MTAConfErrors) {
+      print $s, "\n";
+    }
+    print <<EOT;
+
+    To correct above possible errors, you may edit the MTA
+    configuration file (sendmail.cf or main.cf)
+
+    You can use the tools/check-mta-conf tool to help you generating
+    the configuration file you need. Launch it with the --help option
+    to get all possible options.
+
+EOT
+  }
+
+ fin:
+  die "$@" unless chdir "../..";
+
+  return 1;
+}
+
+#
+#
+#
+sub do_clean
+{
+  my ($action, @ARGS) = @_;
+
+  printf "* Cleaning files\n";
+
+  # printf "ARGS %s\n", join " ", @ARGS;
+
+  foreach my $w (@ARGS) {
+    die "$@" unless chdir $BaseSrcDir;
+    if ($w =~ /all|src/i) {
+      die "$@" unless chdir "src";
+      my $cwd = getcwd();
+      my @list = <*>;
+      my $list = join " ", @list;
+      if (defined $list && $list ne "") {
+        printf "  Cleaning up %s : removing %s\n", $cwd, $list;
+        system("rm -rf *");
+      } else {
+        printf "  Nothing to remove inside $BaseSrcDir/$w\n";
+      }
+    }
+    die "$@" unless chdir $BaseSrcDir;
+    if ($w =~ /all|build/i) {
+      die "$@" unless chdir "build";
+      my $cwd = getcwd();
+      my @list = <*>;
+      my $list = join " ", @list;
+      if (defined $list && $list ne "") { 
+        printf "  Cleaning up %s : removing %s\n", $cwd, $list;
+        system("rm -rf *");
+      } else {
+        printf "  Nothing to remove inside $BaseSrcDir/$w\n";
+      }
+    }
+  }
+
+  return 1;
+}
+
+#
+#
+#
+sub do_autoupdate
+{
+  my ($action, @ARGS) = @_;
+
+  printf "* Autoupdating myself\n";
+
+  my $me = `which j-easy-install`;
+  chomp $me;
+
+  printf "* Geting files\n";
+  my $base = $PARAM{url};
+  my $file = $PARAM{"j-easy-install"};
+  my $vers = $VERSION{"j-easy-install"};
+
+  die "$@" unless chdir "src";
+  my $n = get_distribution($base, $file);
+  if (!$n) {
+    exit 1;
+  }
+  $file = `basename $file`;
+  chomp $file;
+  chmod 0755, $file;
+  system("cp -p $file $me");
+
+  return 1;
+}
+
+#
+#
+#
+sub make_src_dirs {
+  my $base = `dirname $BaseSrcDir`;
+  chomp $base;
+
+  if (! -d $base) {
+    if (system("mkdir -p $BaseSrcDir") != 0) {
+      printf STDERR "Error mkdir $base\n";
+      exit 1;
+    }
+  }
+  if (! -d  $BaseSrcDir && system("mkdir -p $BaseSrcDir") != 0) {
+    printf STDERR "Error mkdir $BaseSrcDir\n";
+    exit 1;
+  }
+  if (!chdir $BaseSrcDir) {
+    printf STDERR "Error chdir $BaseSrcDir\n";
+    exit 1;
+  }
+  if (! -d "build" && !mkdir  "build") {
+    printf STDERR "Error mkdir build\n";
+    exit 1;
+  }
+  if (! -d "src" && !mkdir  "src") {
+    printf STDERR "Error mkdir src\n";
+    exit 1;
+  }
+  if (! -d "override" && !mkdir  "override") {
+    printf STDERR "Error mkdir override\n";
+    exit 1;
+  }
+  if (! -d "override/tmp") {
+    mkdir "override/tmp";
+  }
+}
+
+
+#
+#
+#
+sub versions_compare {
+  my ($a, $b, undef) = @_;
+
+  my ($av, $ad, $bv, $bd) = qw();
+
+  $av = $bv = 0;
+  if ($a =~ /v(\d+).(\d+).(\d+)(.*)/) {
+    $av = sprintf "%03d%03d%03d", $1, $2, $3;
+    $ad = $4;
+    $ad =~ s/-//g;
+  }
+  if ($b =~ /v(\d+).(\d+).(\d+)(.*)/) {
+    $bv = sprintf "%03d%03d%03d", $1, $2, $3;
+    $bd = $4;
+    $bd =~ s/-//g;
+  }
+  if (!defined $av || !defined $bv) {
+    return   1 if defined $av;
+    return  -1 if defined $bv;
+    return 0;
+  }
+
+  return $av <=> $bv if ($av ne $bv);
+
+  my ($ac, $bc) = (0, 0);
+
+  if ($ad =~ /^\d+$/) {
+    $ac = 0;
+  } elsif ($ad =~ /^rc\d+$/i) {
+    $ac = 1;
+  } elsif ($ad =~ /^$/) {
+    $ac = 2;
+  }
+
+  if ($bd =~ /^\d+$/) {
+    $bc = 0;
+  } elsif ($bd =~ /^rc\d+$/i) {
+    $bc = 1;
+  } elsif ($bd =~ /^$/) {
+    $bc = 2;
+  }
+  return $ac <=> $bc if ($ac != $bc);
+
+  return $ad cmp $bd;
+}
+
+
+#
+#
+#
+sub usage {
+  my $app = `basename $0`;
+  chomp $app;
+
+  print <<EOT;
+
+  Usage : $app [force] options
+
+      force
+
+      install     [stable | snapshot]
+
+      update      [stable | snapshot]
+      upgrade     [stable | snapshot]
+
+      clean       [src | build | all]
+
+      autoupdate
+
+EOT
+}
+
+

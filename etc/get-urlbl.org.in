@@ -1,0 +1,22 @@
+#! /bin/sh
+
+
+RSERVER="foss.jose-marcio.org:1873"
+
+MAKE=make
+RSYNC=rsync
+
+CDBDIR=@WORKROOT@/cdb
+BINDIR=@prefix@/bin
+
+FILES2GET="urlbl/j-urlbl.txt"
+
+cd $CDBDIR
+for file in $FILES2GET
+do
+  $RSYNC -avz rsync://$RSERVER/$file .
+  if [ "$?" = "0" ] ;
+  then
+    $MAKE -f Makefile
+  fi
+done

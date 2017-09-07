@@ -1,0 +1,306 @@
+#! /usr/bin/perl -w
+#
+#
+use strict;
+use Getopt::Long;
+use Pod::Usage;
+use POSIX;
+use Net::SMTP;
+
+use FindBin qw($Bin);
+use lib "$Bin/../lib";
+
+# ------------------------------------------------
+#
+#
+my $appl = `basename $0`;
+chomp $appl;
+
+my $usage   = 0;
+my $debug   = 0;
+my $verbose = 0;
+my $Op      = "";
+
+my $mta  = "localhost";
+my $port = 25;
+my $helo = "localhost.localdomain";
+my $from = "jose\@ensmp.fr";
+my $to   = "devnull\@ensmp.fr";
+my $msg  = "msgfr";
+my $subject = "Test message (smtp-source by Joe)";
+
+my $ok = GetOptions(
+  'help'   => \$usage,
+  'h'      => \$usage,
+  'd'      => \$debug,
+  'debug'  => \$debug,
+  'v'      => \$verbose,
+  'op=s'   => \$Op,
+  'mta=s'  => \$mta,
+  'port=i' => \$port,
+  'helo=s' => \$helo,
+  'from=s' => \$from,
+  'to=s'   => \$to,
+  'msg=s' =>\$msg
+);
+
+if ($usage || $Op =~ /help/i) {
+  usage();
+  exit 0;
+}
+
+my %StaticData = ();
+GetStaticData(\%StaticData);
+
+my @body = qw();
+if ($Op =~ /^msg$/i) {
+  foreach (@body) {
+    print $_, "\n";
+  }
+  exit 0;
+}
+
+if ($Op =~ /^test$/i) {
+  @body = @{$StaticData{msg}{_data_}};
+  sendMail($mta, $port, $helo, $from, $to, @body);
+  
+  exit 0;
+}
+
+if ($Op =~ /^send$/i) {
+  if (exists $StaticData{$msg}) {
+    @body = @{$StaticData{$msg}{_data_}};
+    my $now = clock2date(time());
+    foreach (@body) {
+      s/__DATE__/$now/;
+      s/__RCPT__/$to/;
+      s/__FROM__/$from/;
+      s/__SUBJECT__/$subject/;
+    }
+  }
+  sendMail($mta, $port, $helo, $from, $to, @body);
+  
+  exit 0;
+}
+
+
+exit 0;
+
+# ------------------------------------------------
+#
+#
+sub sendMail {
+  my ($mta, $port, $helo, $from, $to, @body) = @_;
+  my $r;
+
+  my $smtp = Net::SMTP->new(
+    $mta,
+    Hello   => $helo,
+    Timeout => 60,
+    Debug   => $debug
+  );
+
+  unless ($smtp) {
+    goto end;
+  }
+  $r = $smtp->mail($from);
+  unless ($r) {
+    goto end;
+  }
+  $r = $smtp->to("<$to>");
+  unless ($r) {
+    goto end;
+  }
+  if ($#body >= 0) {
+    chomp @body;
+    $r = $smtp->data();
+    foreach my $s (@body) {
+      $r = $smtp->datasend("$s\r\n");
+    }
+    $r = $smtp->dataend();
+  }
+  $smtp->quit();
+
+end:
+  return 1;
+}
+
+# ------------------------------------------------
+#
+#
+sub clock2date {
+  my ($c, undef) = @_;
+  return 0 if !defined($c);
+  
+  my @WDay = qw(Mon Tue Wed Thu Fri Sat Sun);
+  my @Month = qw(Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec);
+
+  my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday) = localtime($c);
+  # Fri, 2 May 2014 20:43:46 +0200
+  return sprintf "%s, %d %s %d %02d:%02d:%02d +0200", $WDay[$wday], $mday, $Month[$mon],
+    $year + 1900, $hour, $min, $sec;
+
+}
+
+# ------------------------------------------------
+#
+#
+sub usage {
+  print <<EOT;
+  Usage : $appl [OPTIONS]
+    --help
+    -h      : Ce message
+EOT
+}
+
+# ------------------------------------------------
+#
+#
+sub GetStaticData {
+  my ($h, undef) = @_;
+  my @DATA = <DATA>;
+  my @SOPT = qw();
+  chomp @DATA;
+  my $in  = 0;
+  my $key = "";
+  foreach my $s (@DATA) {
+    if ($key eq "") {
+      if ($s =~ /==\s+BEGIN\s+(\S+)\s+==/) {
+        $key = $1;
+      }
+      next;
+    }
+    if ($s =~ /==\s+END\s+(\S*\s+)?==/) {
+      $key = "";
+      next;
+    }
+    push @{$h->{$key}{_data_}}, $s;
+    next if $s =~ /^\s*$/;
+    my ($a, $b) = split " ", $s, 2;
+    next unless defined $a && $a ne "";
+    $b = "" unless defined $b;
+    $h->{$key}{$a} = $b;
+  }
+}
+
+
+
+__DATA__
+
+== BEGIN msg ==
+ReplyTo: __FROM__
+From: __FROM__
+Subject: __SUBJECT__
+Date: __DATE__
+To: __RCPT__
+
+Hello,
+
+This is a test message which was sent for some valid reason by postmaster@mines-paristech.fr.
+
+A valid reason to do this may be one of the following :
+* your email address is registered at our messaging system as a local user;
+* your email address is registered at our messaging system as a local user
+  but messages are forwarded to somewhere - in this case your the validity
+  of your email address shall be verified from time to time;
+
+== END ==
+
+== BEGIN msgfr ==
+ReplyTo: __FROM__
+From: __FROM__
+Subject: __SUBJECT__
+Date: __DATE__
+To: __RCPT__
+
+Hello,
+
+This is a test message which was sent for some valid reason by postmaster@mines-paristech.fr.
+
+A valid reason to do this may be one of the following :
+* your email address is registered at our messaging system as a local user;
+* your email address is registered at our messaging system as a local user
+  but messages are forwarded to somewhere - in this case your the validity
+  of your email address shall be verified from time to time;
+
+== END ==
+
+== BEGIN spam ==
+X-libjamoibt: 1587
+Received: from webmail5 (172.31.0.48) by outrelay03.libero.it (8.5.140.03)
+        id 538D9BE10137AC40; Wed, 11 Jun 2014 20:45:10 +0200
+Message-ID: <1122925766.2259001402512310483.JavaMail.defaultUser@defaultHost>
+Date: __DATE__
+From: Tessy Fejoku <tessy.fejok7@libero.it>
+Reply-To: fejokutessylove@yahoo.co.uk
+Subject: Hola
+MIME-Version: 1.0
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_210575_1393233816.1402512310482"
+X-SenderIP: 41.82.60.201
+X-libjamv: VmgHXtt14ZI=
+X-libjamsun: XzAx067Q8KYoKUahcc3F8duN8veyuxRF
+
+
+------=_Part_210575_1393233816.1402512310482
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+
+
+
+Hola,=20
+Mi nombre es Miss Tessy, vi tu perfil y me llam=C3=B3 la atenci=C3=B3n para=
+ escribir=20
+en su caso. Me gustar=C3=ADa que me lo comunique a trav=C3=A9s de mi direcc=
+i=C3=B3n de correo electr=C3=B3nico=20
+(fejokutessylove@yahoo.co.uk)=20
+para que podamos llegar a saber m=C3=A1s unos de otros m=C3=A1s y tambi=C3=
+=A9n para el intercambio de=20
+nuestras fotos. Estoy a la espera a ella de usted. hasta ese momento contin=
+uar=C3=A1 siendo=20
+bendecido.=20
+Tessy=20
+
+------=_Part_210575_1393233816.1402512310482
+Content-Type: text/html;charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<p><p></p><p>Hola,&nbsp;</p><p>Mi nombre es Miss Tessy, vi tu perfil y me l=
+lam=C3=B3 la atenci=C3=B3n para escribir&nbsp;</p><p>en su caso. Me gustar=
+=C3=ADa que me lo comunique a trav=C3=A9s de mi direcci=C3=B3n de correo el=
+ectr=C3=B3nico&nbsp;</p><p>(fejokutessylove@yahoo.co.uk)&nbsp;</p><p>para q=
+ue podamos llegar a saber m=C3=A1s unos de otros m=C3=A1s y tambi=C3=A9n pa=
+ra el intercambio de&nbsp;</p><p>nuestras fotos. Estoy a la espera a ella d=
+e usted. hasta ese momento continuar=C3=A1 siendo&nbsp;</p><p>bendecido.&nb=
+sp;</p><p>Tessy</p><div id=3D"_mcePaste" style=3D"position: absolute; left:=
+ -10000px; top: 0px; width: 1px; height: 1px; overflow: hidden;">&nbsp;</di=
+v><p></p><br mce_bogus=3D"1"></p>
+------=_Part_210575_1393233816.1402512310482--
+
+== END ==
+
+
+== BEGIN datespec ==
+date-time       =       [ day-of-week "," ] date FWS time [CFWS]
+day-of-week     =       ([FWS] day-name) / obs-day-of-week
+day-name        =       "Mon" / "Tue" / "Wed" / "Thu" /
+                        "Fri" / "Sat" / "Sun"
+date            =       day month year
+year            =       4*DIGIT / obs-year
+month           =       (FWS month-name FWS) / obs-month
+month-name      =       "Jan" / "Feb" / "Mar" / "Apr" /
+                        "May" / "Jun" / "Jul" / "Aug" /
+                        "Sep" / "Oct" / "Nov" / "Dec"
+day             =       ([FWS] 1*2DIGIT) / obs-day
+time            =       time-of-day FWS zone
+time-of-day     =       hour ":" minute [ ":" second ]
+hour            =       2DIGIT / obs-hour
+minute          =       2DIGIT / obs-minute
+second          =       2DIGIT / obs-second
+zone            =       (( "+" / "-" ) 4DIGIT) / obs-zone
+== END ==
+
+__END__
+
+

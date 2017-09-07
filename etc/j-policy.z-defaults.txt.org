@@ -1,0 +1,141 @@
+
+#
+# Control channel access control
+#
+#
+CtrlChan:DEFAULT                        REJECT
+CtrlChan:127.0.0.1                      OK
+#CtrlChan:10.10.10.10                    OK
+
+#
+#
+# Define your net classes
+#
+#NetClass:10				DOMAIN
+#NetClass:192.168			DOMAIN
+
+#
+# Define default max connection rates
+#
+
+ConnRate:DEFAULT                        15
+ConnRate:127.0.0.1                      1000
+ConnRate:LOCAL                          300
+ConnRate:DOMAIN                         100
+ConnRate:FRIEND                         30
+#
+# but you can define particular values for some SMTP clients
+#ConnRate:1.1.1.1			23
+
+#
+# Define default max allowed simultaneous connections
+#
+ConnOpen:DEFAULT                        10
+ConnOpen:127.0.0.1                      30
+ConnOpen:LOCAL                          15
+ConnOpen:DOMAIN                         15
+ConnOpen:FRIEND                         10
+#
+# but you can define particular values for some SMTP clients
+ConnOpen:1.1.1.1			23
+
+#
+# Define default max connection rates
+#
+RcptRate:DEFAULT                        300
+RcptRate:127.0.0.1                      1000
+RcptRate:LOCAL                          1000
+RcptRate:DOMAIN                         1000
+RcptRate:FRIEND                         300
+
+#
+# Define default max connection rates
+#
+MaxRcpt:DEFAULT                        100
+MaxRcpt:127.0.0.1                      300
+MaxRcpt:LOCAL                          300
+MaxRcpt:DOMAIN                         250
+MaxRcpt:FRIEND                         250
+
+#
+## Define default max message rates
+##
+#
+MsgRate:DEFAULT                        15
+MsgRate:127.0.0.1                      1000
+MsgRate:LOCAL                          300
+MsgRate:DOMAIN                         100
+MsgRate:FRIEND                         30
+#
+
+#
+# Define default max connection rates
+#
+MaxMsgs:DEFAULT                        10
+MaxMsgs:127.0.0.1                      50
+MaxMsgs:LOCAL                          50
+MaxMsgs:DOMAIN                         30
+MaxMsgs:FRIEND                         20
+
+#
+MsgRateFrom:DEFAULT                     0
+RcptRateFrom:DEFAULT                    0
+MaxRcptFrom:DEFAULT                     0
+
+#
+# People blacklisted
+ConnRate:dnsbl                          3
+ConnOpen:dnsbl                          2
+MsgRate:dnsbl                           3
+MaxMsgs:dnsbl                           1
+MaxRcpt:dnsbl                           10
+
+#
+ArchiveConnect:default                 NO
+
+#
+# Some entries for greylisting
+#
+GreyCheckConnect:default                YES
+# never greylist this addresses
+#GreyCheckTo:postmaster@domain.com       NO
+GreyCheckTo:postmaster@                 NO
+#GreyCheckTo:abuse@domain.com            NO
+GreyCheckTo:abuse@                      NO
+# some exceptions (SMTP clients)
+#GreyCheckConnect:1.1.1.1                NO-QUICK
+# some senders
+#GreyCheckFrom:joe@domain.com            NO-QUICK
+# some recipients
+#GreyCheckTo:joe@domain.com              NO
+
+#
+# Content Checking defaults
+#
+ContentCheckConnect:default                     YES
+#ContentCheckFrom:default                        YES
+#ContentCheckTo:default                          YES
+
+BayesCheckConnect:default                       YES
+#BayesCheckFrom:default                          YES
+#BayesCheckTo:default                            YES
+
+XFilesCheckConnect:default                      YES
+#XFilesCheckFrom:default                         YES
+#XFilesCheckTo:default                           YES
+
+RejectShortMsgsConnect:default                  YES
+#RejectShortMsgsFrom:default                     YES
+#RejectShortMsgsTo:default                       YES
+
+# Google Agenda and Calendar send empty messages 8-(
+RejectShortMsgsConnect:google.com               NO-QUICK
+
+#
+# cru.fr list servers
+NetClass:195.220.94.131                   FRIEND
+NetClass:195.220.94.132                   FRIEND
+# cnrs.fr list servers
+NetClass:195.220.197.22                   FRIEND
+
+

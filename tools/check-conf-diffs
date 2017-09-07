@@ -1,0 +1,86 @@
+#! /usr/bin/perl -w
+
+
+use strict;
+
+
+my $cmd = "j-chkmail -m |";
+my @CONF = get_conf($cmd);
+my  %CUR_CONF = map { split " ", $_, 2} @CONF;
+
+$cmd = "src/j-chkmail -m |";
+@CONF = get_conf($cmd);
+my  %NEW_CONF = map { split " ", $_, 2} @CONF;
+
+my %OPT_REM = ();
+my %OPT_NEW = ();
+
+foreach my $k (sort keys %CUR_CONF) {
+  if (!exists($NEW_CONF{$k})) {
+    $OPT_REM{$k} = $CUR_CONF{$k};
+  }
+}
+
+foreach my $k (sort keys %NEW_CONF) {
+  if (!exists($CUR_CONF{$k})) {
+    $OPT_NEW{$k} = $NEW_CONF{$k};
+  }
+}
+
+print <<EOT;
+
+  * Installed version  : $CUR_CONF{VERSION}
+  * New version        : $NEW_CONF{VERSION}
+EOT
+
+print <<EOT;
+
+  * Removed options :
+
+EOT
+
+foreach my $k (sort keys %OPT_REM) {
+  printf "    * %-32s %s\n", $k, $OPT_REM{$k};
+}
+print <<EOT;
+
+  * New options :
+
+EOT
+
+foreach my $k (sort keys %OPT_NEW) {
+  printf "    * %-32s %s\n", $k, $OPT_NEW{$k};
+}
+print <<EOT;
+
+EOT
+
+
+#foreach my $k (sort keys %CUR_CONF) {
+#  printf "K : %-40s - V : %s\n", $k, $CUR_CONF{$k};
+#}
+
+
+
+
+exit 0;
+
+
+sub get_conf {
+  my @Q = qw();
+  open FIN, "$cmd" || die "Error : $cmd";
+  while (<FIN>) {
+    chomp;
+    next if /^\s*$/;
+    next if /^\s*#/;
+
+    push @Q, $_;
+  }
+  close FIN;
+
+  return @Q;
+}
+
+sub decode_conf {
+
+}

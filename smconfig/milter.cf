@@ -1,0 +1,41 @@
+
+#####################################################################
+#####################################################################
+##
+##                     J-CHKMAIL FILTER DEFINITIONS
+##
+##         Add these lines to sendmail configuration file
+##
+#####################################################################
+#####################################################################
+#
+
+#Xj-chkmail, S=inet:2000@localhost, T=C:2m;S:20s;R:40s;E:5m
+Xj-chkmail, S=local:/var/run/jchkmail/j-chkmail.sock, T=C:2m;S:20s;R:40s;E:5m
+
+# Input mail filters
+O InputMailFilters=j-chkmail
+
+# Milter options
+O Milter.LogLevel=9
+
+#
+# Macros definition
+#
+# macros connect step
+O Milter.macros.connect=_, j, v, {client_addr}, {client_name}, {client_ptr}, {client_resolve}, {daemon_addr}, {daemon_name}, {daemon_port}, {if_addr}, {if_name}
+# macros data step
+O Milter.macros.data=
+# macros envfrom step
+O Milter.macros.envfrom=i, {auth_authen}, {auth_author}, {auth_ssf}, {auth_type}, {mail_addr}, {mail_host}, {mail_mailer}
+# macros envrcpt step
+O Milter.macros.envrcpt={nrcpts}, {rcpt_addr}, {rcpt_host}, {rcpt_mailer}
+# macros eoh step
+O Milter.macros.eoh=
+# macros eom step
+O Milter.macros.eom={msg_id}
+# macros helo step
+O Milter.macros.helo={cert_issuer}, {cert_subject}, {cipher_bits}, {cipher}, {tls_version}
+# macros unknown step
+O Milter.macros.unknown=
+#

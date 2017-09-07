@@ -1,0 +1,76 @@
+
+JCHKMAIL=$(top_srcdir)/src/j-chkmail
+POLICY_SRC = j-policy.base.txt.org j-policy.grey.txt.org j-policy.badmx.txt.org
+
+sysconf_DATA  = j-chkmail.cf.org \
+ j-error-msg.org \
+ j-nets.org \
+ j-regex.org \
+ j-oradata.org \
+ j-xfiles.org \
+ j-tables.org
+
+cdb_update = 	j-policy.grey.txt.org \
+ j-policy.badmx.txt.org
+
+cdb_preserve = 	j-policy.base.txt.org \
+ j-policy.local.txt.org \
+ j-rcpt.txt.org \
+ Makefile.org \
+ get-urlbl.org
+
+OBJECTS = j-policy.txt.org j-chkmail.cf.default j-chkmail.cf.running
+
+all: $(OBJECTS)
+
+j-policy.txt.org : $(POLICY_SRC)
+	cat $(POLICY_SRC) > j-policy.txt.org
+
+distclean::clean-hook
+
+clean:: clean-hook
+
+clean-hook:
+	rm -f $(OBJECTS) j-chkmail.cf.org
+
+realclean: clean-hook clean-cache distclean
+
+j-chkmail.cf.org: j-chkmail.cf.running
+	cp -p j-chkmail.cf.running j-chkmail.cf.org
+
+j-chkmail.cf.running: $(JCHKMAIL) j-chkmail.cf.default
+	cp -p j-chkmail.cf.default j-chkmail.cf.running
+	if [ -f $(DESTDIR)/@CONFDIR@/j-chkmail.cf ] ; then \
+	  $(JCHKMAIL) -m > j-chkmail.cf.running ;\
+	fi
+
+j-chkmail.cf.default: $(JCHKMAIL)
+	$(JCHKMAIL) -n > j-chkmail.cf.default
+
+install-data-hook: j-chkmail.cf.running j-chkmail.cf.default
+	for file in $(sysconf_DATA) ;\
+	do \
+	  conf=`basename $$file .org` ;\
+	  if [ ! -f $(DESTDIR)/@CONFDIR@/$$conf ] ; then \
+	    cp $$file $(DESTDIR)/@CONFDIR@/$$conf ; \
+	  fi ; \
+	done
+	cp j-chkmail.cf.default j-chkmail.cf.running $(DESTDIR)/@CONFDIR@/
+	for file in $(cdb_update) ;\
+	do \
+	  conf=`basename $$file .org` ;\
+	  if [ -f $(DESTDIR)/@WORKROOT@/cdb/$$conf ] ; then \
+	    mv $(DESTDIR)/@WORKROOT@/cdb/$$conf $(DESTDIR)/@WORKROOT@/cdb/$$conf.old ; \
+	  fi ; \
+	  cp $$file $(DESTDIR)/@WORKROOT@/cdb/$$conf ; \
+	done
+	for file in $(cdb_preserve) ;\
+	do \
+	  conf=`basename $$file .org` ;\
+	  if [ -f $(DESTDIR)/@WORKROOT@/cdb/$$conf ] ; then \
+	    cp $$file $(DESTDIR)/@WORKROOT@/cdb/$$conf ; \
+	  fi ; \
+	done
+
+
+

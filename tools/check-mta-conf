@@ -1,0 +1,384 @@
+#! /usr/bin/perl -w
+
+use strict;
+use Getopt::Long;
+
+my %DEFMAC = ();
+my %CFMAC = ();
+
+my $usage = 0;
+my $cfile = "/etc/mail/sendmail.cf";
+my $verbose = 0;
+my $print = undef;
+my $check = 0;
+my $mta = "sendmail";
+
+if (-f "/etc/mail/sendmail.cf") {
+  $cfile = "/etc/mail/sendmail.cf";
+  $mta = "sendmail";
+} elsif (-f "/etc/sendmail.cf") {
+  $cfile = "/etc/sendmail.cf";
+  $mta = "sendmail";
+} elsif (-f "/etc/postfix/main.cf") {
+  $cfile = "/etc/postfix/main.cf";
+  $mta = "postfix";
+}
+
+my $ok = GetOptions ("h"         => \$usage,
+		     "help"      => \$usage,
+		     "verbose"   => \$verbose,
+		     "v"         => \$verbose,
+		     "mta=s"     => \$mta,
+		     "f=s"       => \$cfile,
+		     "cf=s"      => \$cfile,
+		     "p=s"       => \$print,
+		     "print=s"   => \$print,
+		     "c"         => \$check,
+		     "check"     => \$check);
+
+#
+#
+#
+my $appName = `basename $0`;
+chomp $appName;
+
+if ($usage) {
+  usage();
+  exit 0;
+}
+
+init_defmac($mta);
+
+if (defined $print && $print eq "cf") {
+  print_cf();
+  exit 0;
+}
+
+if (defined $print && $print eq "mc") {
+  print_mc();
+  exit 0;
+}
+
+if ($check) {
+  my $ne = 0;
+  my @MERR = qw();
+
+  if ($cfile ne "-") {
+    if (! -f $cfile) {
+      print " Configuration file $cfile not found !\n";
+      exit 1;
+    }
+    push @ARGV, $cfile;
+  }
+  while (<>) {
+    chomp;
+    next if /^\s*$/;
+    next if /^\s*#/;
+
+    if (/Milter.macros.([^=\s]*)\s*=\s*(.*)/i) {
+      #printf " * %s\n", $1;
+      #printf " * %s\n", $2;
+
+      $CFMAC{$1} = $2;
+    }
+  }
+
+  printf "\n";
+  printf "* Checking Milter.macros :";
+  foreach my $k (sort keys %DEFMAC) {
+    my @M = extract_macro_values($DEFMAC{$k});
+    my @X = extract_macro_values($CFMAC{$k});
+    foreach my $m (@M) {
+      if (!is_defined($m, @X)) {
+	push @MERR, sprintf "  -> %-16s   %-20s not defined", $k, $m;
+	$ne++;
+      }
+    }
+  }
+  if ($ne > 0) {
+    printf " %3d error(s) found\n", $ne;
+    print <<EOT;
+     Protocol step    : Error
+     *************      ********************************
+EOT
+    foreach my $err (@MERR) {
+      print $err, "\n";
+    }
+  } else {
+    printf " no errors found\n";
+  }
+
+  print <<EOT;
+
+EOT
+
+  exit 0;
+}
+
+usage();
+
+
+exit 0;
+
+#
+#
+#
+sub extract_macro_values {
+  my ($v, undef) = @_;
+  my @X = qw();
+  return @X unless defined $v;
+
+  $v =~ tr/, \t\n\r/     /;
+  @X = split " ", $v;
+  return sort @X;
+}
+
+#
+#
+#
+sub print_macro {
+  my ($m,@M) = @_;
+
+  foreach (@M) {
+    printf "  * %-8s %s\n", $m, $_;
+  }
+}
+
+sub print_mc {
+  print_mc_header();
+  foreach my $k (sort keys %DEFMAC) {
+    my @M = extract_macro_values($DEFMAC{$k});
+    print_mc_macro($k, @M);
+  }
+  print "dnl\n";
+}
+
+#
+#
+#
+sub print_mc_macro {
+  my ($m,@M) = @_;
+  if ($mta eq "sendmail") {
+    $m =~ tr/a-z/A-Z/;
+    printf "define(`confMILTER_MACROS_$m',`%s')\n", join ", ", @M;
+  }
+  if ($mta eq "postfix") {
+  }
+}
+
+#
+#
+#
+sub print_mc_header {
+  if ($mta eq "sendmail") {
+    print <<EOT;
+dnl MILTER
+dnl
+dnl
+dnl
+dnl INPUT_MAIL_FILTER(`j-chkmail',`S=inet:2000\@localhost, T=C:2m;S:20s;R:40s;E:5m')
+dnl
+INPUT_MAIL_FILTER(`j-chkmail',`S=local:/var/run/jchkmail/j-chkmail.sock, T=C:2m;S:20s;R:40s;E:5m')
+dnl
+define(`confINPUT_MAIL_FILTERS',`j-chkmail')
+dnl
+EOT
+  }
+  if ($mta eq "postfix") {
+  }
+}
+
+#
+#
+#
+sub print_cf {
+  print_cf_header();
+  print <<EOT;
+#
+# Macros definition
+#
+EOT
+  foreach my $k (sort keys %DEFMAC) {
+    my @M = extract_macro_values($DEFMAC{$k});
+    print_cf_macro($k, @M);
+  }
+  print "#\n";
+}
+
+#
+#
+#
+sub print_cf_macro {
+  my ($m,@M) = @_;
+  if ($mta eq "sendmail") {
+    printf "# macros $m step\n";
+    printf "O Milter.macros.%s=%s\n", $m, join ", ", @M;
+  }
+  if ($mta eq "postfix") {
+    printf "# macros $m step\n";
+    printf "milter_%s_macros = %s\n", $m, join " ", @M;
+  }
+}
+
+#
+#
+#
+sub print_cf_header {
+print <<EOT;
+
+#####################################################################
+#####################################################################
+##
+##                     J-CHKMAIL FILTER DEFINITIONS
+##
+##         Add these lines to $mta configuration file
+##
+#####################################################################
+#####################################################################
+#
+EOT
+
+  if ($mta eq "sendmail") {
+    print <<EOT;
+
+#Xj-chkmail, S=inet:2000\@localhost, T=C:2m;S:20s;R:40s;E:5m
+Xj-chkmail, S=local:/var/run/jchkmail/j-chkmail.sock, T=C:2m;S:20s;R:40s;E:5m
+
+# Input mail filters
+O InputMailFilters=j-chkmail
+
+# Milter options
+O Milter.LogLevel=9
+
+EOT
+
+  }
+
+  if ($mta eq "postfix") {
+    print <<EOT;
+#
+smtpd_milters = unix:/var/run/jchkmail/j-chkmail.sock
+milter_protocol = 4
+#
+milter_macro_daemon_name = \$myhostname
+milter_macro_v = \$mail_name \$mail_version
+#
+milter_command_timeout = 30s
+milter_connect_timeout = 30s
+milter_content_timeout = 40s
+#
+milter_default_action = tempfail
+#
+non_smtpd_milters =
+#
+EOT
+  }
+}
+
+#
+#
+#
+sub init_defmac {
+  my $n = 0;
+
+  my $s = <<EOT;
+#
+connect     connect         j
+connect     connect         _
+connect     connect         v
+connect     connect         {daemon_name}
+connect     connect         {if_name}
+connect     connect         {if_addr}
+connect     connect         {client_resolve}
+connect     connect         {client_addr}
+connect     connect         {client_name}
+connect     connect         {client_ptr}
+connect     connect         {daemon_port}
+connect     connect         {daemon_addr}
+#
+helo        helo            {tls_version}
+helo        helo            {cipher}
+helo        helo            {cipher_bits}
+helo        helo            {cert_subject}
+helo        helo            {cert_issuer}
+#
+envfrom     mail            i
+envfrom     mail            {auth_type}
+envfrom     mail            {auth_authen}
+envfrom     mail            {auth_ssf}
+envfrom     mail            {auth_author}
+envfrom     mail            {mail_mailer}
+envfrom     mail            {mail_host}
+envfrom     mail            {mail_addr}
+#
+envrcpt     rcpt            {rcpt_mailer}
+envrcpt     rcpt            {rcpt_host}
+envrcpt     rcpt            {rcpt_addr}
+envrcpt     rcpt            {nrcpts}
+#
+eoh         eoh
+#
+eom         end_of_data     {msg_id}
+#
+data        data
+#
+#unknown     unknown_command
+EOT
+
+  my @DEF = split "\n", $s;
+  #printf " DEF contains %d lines\n", $#DEF + 1;
+
+  foreach my $line (@DEF) {
+    next if $line =~ /^\s*$/;
+    next if $line =~ /^\s*#/;
+
+    ($line, undef) = split "#", $line;
+    my ($sm, $pfx, $macro) = split " ", $line;
+    next unless defined $sm && defined $pfx;
+    $macro = "" unless defined $macro;
+
+    my $k = $mta eq "sendmail" ? $sm : $pfx;
+    $DEFMAC{$k} = "" unless exists $DEFMAC{$k};
+    $DEFMAC{$k} .= " " . $macro;
+    $n++;
+  }
+  #printf " DEF contains %d non empty lines\n", $n;
+
+  return $n;
+}
+
+#
+#
+#
+sub is_defined {
+  my ($k, @V) = @_;
+
+  my @X = grep { $_ eq $k} @V;
+
+  return $#X >= 0;
+}
+
+#
+#
+#
+sub usage {
+  print <<EOT;
+    Usage : $appName options
+      -h         Show this info and quit
+      --help     Show this info and quit
+      --verbose
+      --print    mc | cf
+                 Print the correct lines to be inserted on the MTA
+                 configuration file
+                 mc if you want the sendmail.mc milter content
+                 cf if you want the sendmail.cf milter content
+      --mta      sendmail | postfix
+                 not yet implemented. For the moment, only
+                 sendmail is suppported
+      --check    check if MTA configuration file contains definition
+                 for all macros needed by j-chkmail
+      --cf       file
+                 default : /etc/mail/sendmail.cf
+
+EOT
+}

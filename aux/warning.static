@@ -1,0 +1,20 @@
+
+***********************************************************
+
+  #     #
+  #  #  #    ##    #####   #    #     #    #    #   ####
+  #  #  #   #  #   #    #  ##   #     #    ##   #  #    #
+  #  #  #  #    #  #    #  # #  #     #    # #  #  #
+  #  #  #  ######  #####   #  # #     #    #  # #  #  ###
+  #  #  #  #    #  #   #   #   ##     #    #   ##  #    #
+   ## ##   #    #  #    #  #    #     #    #    #   ####
+
+
+  You're trying to configure j-chkmail to not use
+  static libraries.
+
+  This configuration is not supported and j-chkmail may
+  not work as intended.
+
+***********************************************************
+

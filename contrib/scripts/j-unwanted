@@ -1,0 +1,86 @@
+#! /usr/bin/perl -w
+
+use strict;
+
+my $nl = 0;
+
+my %BOUNDARY = ();
+my %MAILER = ();
+my %CHARSET = ();
+my %TAG = ();
+
+my ($nb, $nm, $nc, $nt) = (0, 0, 0, 0);
+
+while (<>) {
+  chomp;
+
+  next unless /UNWANTED (.*) : (.*)$/;
+
+  if ($1 eq "BOUNDARY") {
+    $BOUNDARY{$2}++;
+    $nb++;
+  }
+
+  if ($1 eq "MAILER") {
+    $MAILER{$2}++;
+    $nm++;
+  }
+
+  if ($1 eq "CHARSET") {
+    $CHARSET{$2}++;
+    $nc++;
+  }
+
+  if ($1 eq "TAG") {
+    $TAG{$2}++;
+    $nt++;
+  }
+
+  $nl++;
+}
+
+if (0) {
+  print "\n\n";
+  printf "--> NL %5d\n", $nl;
+  printf "--> NB %5d\n", $nb;
+  printf "--> NM %5d\n", $nm;
+  printf "--> NC %5d\n", $nc;
+  printf "--> NT %5d\n", $nt;
+}
+
+print "\n\n";
+my $k;
+my $total = 0;
+
+$total = 0;
+foreach $k (reverse sort { $BOUNDARY{$a} <=> $BOUNDARY{$b} } keys %BOUNDARY) {
+  printf "- BOUNDARY %6d %s\n", $BOUNDARY{$k}, $k;
+  $total += $BOUNDARY{$k};
+}
+printf "- TOTAL    %6d\n", $total;
+print "\n";
+
+$total = 0;
+foreach $k (reverse sort { $MAILER{$a} <=> $MAILER{$b} } keys %MAILER) {
+  printf "- MAILER   %6d %s\n", $MAILER{$k}, $k;
+  $total += $MAILER{$k};
+}
+printf "- TOTAL    %6d\n", $total;
+print "\n";
+
+$total = 0;
+foreach $k (reverse sort { $TAG{$a} <=> $TAG{$b} } keys %TAG) {
+  printf "- HTML TAG %6d %s\n", $TAG{$k}, $k;
+  $total += $TAG{$k};
+}
+printf "- TOTAL    %6d\n", $total;
+print "\n";
+
+$total = 0;
+foreach $k (reverse sort { $CHARSET{$a} <=> $CHARSET{$b} } keys %CHARSET) {
+  printf "- CHARSET  %6d %s\n", $CHARSET{$k}, $k;
+  $total += $CHARSET{$k};
+}
+printf "- TOTAL    %6d\n", $total;
+print "\n";
+

@@ -1,0 +1,54 @@
+#
+# Makefile to convert text files into BerkeleyDB format
+#
+.DONE	: done
+
+.SUFFIXES: .txt .db 
+
+VPATH = @sysconfdir@
+
+#
+# Databases to create
+#
+OBJ     = j-urlbl.db j-policy.db j-rcpt.db j-bayes.db
+JBINDIR = @prefix@/bin
+
+#
+# POLICY_SRC variable defines which files to include in your
+#      policy database
+#
+# Depending on your Operating System, you can use one of this options :
+# - GNU make
+POLICYSRC = $(wildcard j-policy.*.txt)
+# - SunOS make
+#POLICYSRC:sh =ls j-policy.*.txt
+# - List text files by hand
+#POLICYSRC = j-policy.grey.txt j-policy.badmx.txt j-policy.base.txt
+
+.txt.db :
+	@echo "** Building $@ ..."
+	@if [ -f $@ ] ; then \
+		mv $@ $@.old ; \
+	fi
+	$(JBINDIR)/j-makemap -b $@ -m e -m s < $<
+
+all : $(OBJ) done
+
+j-policy.txt : $(POLICYSRC)
+	cat  $(POLICYSRC) > $@
+
+j-rcpt.db : j-rcpt.txt
+	@if [ -f j-rcpt.db ] ; then \
+		mv j-rcpt.db j-rcpt.db.old ; \
+	fi
+	$(JBINDIR)/j-makemap -b $@ -m e -m u < $<
+
+clean	:
+	rm -f *.db 
+
+done :
+	@echo "*** Telling j-chkmail to reload databases..."
+	$(JBINDIR)/j-ndc reload databases
+	$(JBINDIR)/j-ndc reload lrdata
+	@rm -f *.db.old
+

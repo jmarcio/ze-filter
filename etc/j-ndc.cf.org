@@ -1,0 +1,14 @@
+
+
+
+#
+# Default address
+#
+#HOST       = 127.0.0.1
+
+
+#
+# Default listening port
+#
+#PORT       = 2010
+

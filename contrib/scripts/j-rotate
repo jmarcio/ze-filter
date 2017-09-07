@@ -1,0 +1,68 @@
+#! /bin/sh
+
+#
+# This script is used to rotate log files
+#
+#
+#
+
+NB=12
+
+DIR=/var/jchkmail/files
+FILES="j-regex j-stats j-xreport j-files j-virus j-grey-expire"
+
+#
+#
+#
+
+rotate()
+{
+  FZIP=""
+  while [ $# -ge 1 ];
+  do
+    FILE=$1
+    shift
+    echo "* Moving $FILE"
+    NBU=$NB
+    while [ $NBU -gt 0 ];
+    do
+      NBL=`expr $NBU - 1`
+
+      if [ -f $FILE.$NBL ];
+      then 
+        mv $FILE.$NBL    $FILE.$NBU
+      fi
+      if [ -f $FILE.$NBL.gz ];
+      then
+        mv $FILE.$NBL.gz $FILE.$NBU.gz
+      fi
+
+      NBU=`expr $NBU - 1`
+    done
+    if [ -f $FILE ]; 
+    then
+      mv $FILE $FILE.0
+      FZIP="$FZIP $FILE.0"
+    fi
+  done
+
+  for FILE in $FZIP ;
+  do
+    echo "* Compressing $FILE"
+    gzip -f $FILE
+  done
+}
+
+#
+#
+#
+
+RET=`pwd`
+
+cd $DIR
+rotate $FILES
+cd $RET
+
+
+j-ndc reopen logfiles
+

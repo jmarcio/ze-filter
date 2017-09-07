@@ -1,0 +1,142 @@
+
+# Error Messages File templates
+
+# Messages are limited by begining and ending tags :
+
+# <XFILE> and </XFILE> replacement message when an XFILE
+# is found
+#
+# <POLICY> and </POLICY> replacement message when the
+# user defined external scanner detects an offending
+# message
+#
+# <VIRUS> and </VIRUS> replacement message for external
+# virus scanners
+#
+#
+# Following tags can be used inside a message :
+#
+#        o __SUBJECT__    - the subject of the message#
+#        o __WHY__        - why the message was intercepted
+#        o __VIRUS__      - the name of the virus (if applicable)
+#        o __TO__         - the first recipient
+#        o __FROM__       - message sender
+#        o __ATTACHMENT__ - the list of attached files
+#        o __MSGID__      - Message ID, or the filename of
+#                           quarantined message
+#
+#
+
+# -----------------------------------------------------------
+# WARNING MESSAGE FOR XFILES
+# -----------------------------------------------------------
+#
+<XFILE>
+
+This message was verified by the filtering system of our mail
+server.
+
+Original message was replaced by this one by the following
+reason :
+
+	__WHY__
+
+Original message had the following attached files :
+
+  __ATTACHMENT__
+
+Original message was sent by
+
+	__FROM__
+
+If you think this is an error and the message should not
+be rejected by the filtering system, you may contact you
+system administrator for instructions.
+
+If you have any questions, you can contact us :
+
+  postmaster@mydomain.com
+
+Sincerely,
+
+  postmaster@mydomain.com
+
+
+</XFILE>
+
+
+# -----------------------------------------------------------
+# WARNING MESSAGE FOR USER DEFINED EXTERNAL SCANNER
+# -----------------------------------------------------------
+
+<POLICY>
+
+This message was verified by the filtering system of our mail
+server.
+
+Original message was replaced by this one by the following
+reason :
+
+	__WHY__
+
+Original message had the following attached files :
+
+  __ATTACHMENT__
+
+Original message was sent by
+
+	__FROM__
+
+with the subject 
+
+        __SUBJECT__
+
+If you have any questions, you can contact :
+
+  postmaster@mydomain.com
+
+Sincerely,
+
+  postmaster@mydomain.com
+
+
+</POLICY>
+
+
+
+# -----------------------------------------------------------
+# WARNING MESSAGE FOR VIRUS
+# -----------------------------------------------------------
+
+<VIRUS>
+
+This message was verified by the filtering system of our mail
+server.
+
+Original message was replaced by this one by the following
+reason :
+
+	__WHY__
+
+  __VIRUS__
+
+Original message had the following attached files :
+
+  __ATTACHMENT__
+
+Original message was sent by
+
+	__FROM__
+
+If you have any questions, you can contact :
+
+  postmaster@mydomain.com
+
+Sincerely,
+
+  postmaster@mydomain.com
+
+
+</VIRUS>
+
+

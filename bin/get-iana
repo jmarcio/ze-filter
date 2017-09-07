@@ -1,0 +1,89 @@
+#! /usr/bin/perl
+
+use strict;
+
+my $reply = "";
+
+$reply = "ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !";
+
+#my $r = system("wget -qN http://www.iana.org/assignments/ipv4-address-space -O ipv4-address-space");
+my $r = system("wget -qN http://www.iana.org/assignments/ipv4-address-space/ipv4-address-space.txt -O ipv4-address-space");
+
+if ($r != 0) {
+  print "Error wget\n";
+  exit 1;
+}
+
+open FIN, "<ipv4-address-space" || die "";
+
+wr_header();
+
+while (<FIN>) {
+  chomp;
+
+  next unless /^\s*\d{3}\/\d\s+/;
+  my @F = split;
+
+  next unless $F[0] =~ /(\d+)\//;
+
+  pop @F unless $F[-1] =~ /^(UNALLOCATED|RESERVED)$/;
+
+  next unless $F[-1] =~ /^(UNALLOCATED|RESERVED)$/;
+
+  if ($F[0] =~ /(\d+)\//) {
+    wr_record(sprintf "%d", $1);
+  }
+}
+close FIN;
+
+wr_footer();
+
+print <<EOT;
+
+#
+#
+# Private networks - RFC 1918 and RFC 3330
+#
+#
+
+EOT
+
+# 10/8 network is already listed
+wr_record("10", "127", "169.254");
+for (my $i = 16; $i < 32; $i++) {
+  wr_record("172.$i");
+}
+wr_record("192.0.2", "192.168", "255");
+
+wr_footer();
+
+#unlink "ipv4-address-space";
+
+exit 0;
+
+sub wr_record {
+  foreach my $net (@_) {
+    printf "BadMX:%-7s  %s\n", $net, $reply;
+  }
+}
+
+sub wr_header {
+  print <<EOT;
+
+#
+# Reserved IANA
+#   Addresses defined as RESERVED or UNALLOCATED 
+#      http://www.iana.org/assignments/ipv4-address-space
+#
+
+EOT
+}
+
+sub wr_footer {
+  print <<EOT;
+
+
+
+
+EOT
+}

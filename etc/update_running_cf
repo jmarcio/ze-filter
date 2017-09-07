@@ -1,0 +1,30 @@
+#! /usr/bin/perl -w
+
+use strict;
+
+my $VERSION = "";
+
+while (<>) {
+  chomp;
+  if (/^\s*$/ || /^\s*#/) {
+    print $_, "\n";
+    next;
+  }
+  my ($key, $val) = split " ", $_, 2;
+
+  if ($key eq "VERSION") {
+    $VERSION = $val;
+  }
+
+  if ($VERSION ge "v2.0") {
+    if ($key eq "ORACLE_SCORES_FILE" && $val =~ /j-tables/) {
+      $val = "j-oracle:ORACLE-SCORES";
+    }
+    if ($key eq "ORACLE_DATA_FILE" && $val =~ /j-oradata/) {
+      $val = "j-oracle:ORACLE-DATA";
+    }
+  }
+
+  printf "%-34s %s\n", $key, $val;
+}
+

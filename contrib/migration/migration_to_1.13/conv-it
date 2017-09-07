@@ -1,0 +1,20 @@
+#! /bin/sh
+
+BASE=/var/jchkmail/wdb
+
+cp -pr $BASE .
+
+for i in j-greypend j-greyvalid j-greywhitelist
+do
+  echo "* $i"
+  j-makemap -d -b $BASE/$i.db > $i.txt
+  ./conv-grey $i.txt | j-makemap -b $i.db
+done
+
+j-makemap -d -b $BASE/j-res-cache.db > j-res-cache.txt
+j-makemap -b j-res-cache.db < j-res-cache.txt
+
+rm -f $BASE/log.*
+rm -f $BASE/__db*
+cp *.db $BASE
+

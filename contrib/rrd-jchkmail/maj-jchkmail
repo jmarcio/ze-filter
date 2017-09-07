@@ -1,0 +1,9 @@
+#! /bin/sh
+
+
+tail -200 /var/jchkmail/j-stats | ./j-mem2rrd  
+
+./j-dograph
+
+./j-grey-update
+

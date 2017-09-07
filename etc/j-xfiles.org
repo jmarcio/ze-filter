@@ -1,0 +1,45 @@
+#
+# X-FILES definition
+#
+#  Syntax :
+#  MIME;conditions   FILENAME
+# where
+#  MIME       ::=    ( [!]MIMETYPE | ALL [;sizeof=min,max] )
+#  FILENAME   ::=    (regular expression | TAG)
+#  TAG        ::=    ( DEFAULT | TNEF | CLSID )
+
+# Examples :
+#
+# All zip files whose mime type is different from 
+# x-zip-compressed
+#!x-zip-compressed       \.zip$
+#
+# All zip files which filename (without extension) 
+# is less than 16 characters long
+#ALL                     ^.{0,15}\.zip$
+#
+# All messages with attached zip files, whose size
+# is smaller than 250000 bytes
+#ALL;size=0,250000     \.zip$
+#
+#
+# To get default behaviour and also reject CLSID
+# and TNEF files, and RFC2046 partial messages, add :
+
+# default behaviour
+ALL                   DEFAULT
+
+# TNEF
+ALL                   TNEF
+
+# CLSID
+ALL                   CLSID
+
+# RFC 2046 tricky messages
+message/partial       ALL
+message/external      ALL
+
+
+
+
+

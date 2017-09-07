@@ -1,0 +1,49 @@
+
+Configuration results : Thu Sep  7 23:38:11 CEST 2017
+-----------------------
+  configure arguments      : 
+
+  Source directory         : /data/sys-dev/martins/sources/jchkmail/jchkmail-2.7.0-RC1
+  Package                  : j-chkmail
+  Version                  : 2.7.0
+  Host type                : x86_64-unknown-linux-gnu
+  Host OS                  : linux-gnu
+  Host CPU                 : x86_64
+  j-chkmail user           : smmsp
+  j-chkmail group          : smmsp
+  prefix dir               : /usr
+  start-up script dir      : /etc/init.d
+  start-up scripts         : jchkmail jgreyd
+  configuration files dir  : /etc/mail/jchkmail
+  work dir                 : /var/jchkmail
+  state dir                : /var/run/jchkmail
+  spool dir                : /var/spool/jchkmail
+  jgreyd dir               : /var/jchkmail/jgreydb
+  
+  USE PCRE                 : bundled - pcre-8.31
+  USE BerkeleyDB           : bundled - db-5.3.21
+  
+  MODULES                  : 
+  
+  CC                       : gcc
+  CPPFLAGS                 :  -I../pcre.dir -I. -I../berkdb -I../include
+  CFLAGS                   : -pthread 
+  LIBS                     : -lmilter -ldl -lrt -lm -lresolv -lc -lresolv -lldap -lnsl -lpthread  
+  LDFLAGS                  : 
+  JLIBS                    :  -L../libjoe -ljoe -L../zmchklib -lzmchk -L../libs -lcommon -L../librepl -lrepl -L../zmlib -lzm 
+  
+
+  Before upgrading from a previous version, it's absolutely necessary
+  to read both README and ChangeLog files and check whether changes
+  may affect your configuration file.
+
+  Mainly, installation scripts will install two files named 
+    j-chkmail.cf.defaults  - default configuration
+  and
+    j-chkmail.cf.running   - running configuration
+  at your configuration directory.
+
+  You may consider replacing your current configuration file by the
+  last one, AFTER checking if it fits the configuration you expect.
+
+

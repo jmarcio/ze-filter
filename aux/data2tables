@@ -1,0 +1,41 @@
+#! /usr/bin/perl -w
+
+use strict;
+
+my $cfdir = "/etc/mail/jchkmail";
+
+my @FILES = qw(j-regex j-oradata j-access);
+
+my %TAGS = ('j-regex' => 'REGEX',
+	    'j-oradata' => 'ORACLE-DATA',
+	    'j-access' => 'ACCESS');
+
+my %LABEL = ('j-regex' => 'Pattern matching',
+	     'j-oradata' => 'Oracle definitions',
+	     'j-access' => 'Access table');
+
+foreach my $file (@FILES) {
+  my $fin = "$cfdir/$file";
+
+  next unless -f $fin;
+
+  open FIN, "<$fin" || die "$@";
+  print <<TXT;
+# *******************************************************
+#
+# $LABEL{$file}
+#
+# *******************************************************
+<$TAGS{$file}>
+
+TXT
+
+  print $_ while (<FIN>);
+
+  print <<TXT;
+
+</$TAGS{$file}>
+
+TXT
+
+}

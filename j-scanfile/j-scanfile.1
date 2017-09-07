@@ -1,0 +1,72 @@
+.TH j-scanfile 1 "25 May 2002" "j-chkmail 1.1"
+.SH NAME
+Joe's j-scanfile \- Command line version of j-chkmail filter
+.SH SYNOPSIS
+.B j-scanfile
+[ -h ] [ -c conf_file ]
+.I file file file ...
+.SH DESCRIPTION
+.I  j-scanfile
+is the a command line version of the filter integrated at the
+j-chkmail daemon. j-scanfile scans text mail files in the 
+format accepted by the SMTP protocol or the usual unix mailbox.
+
+.SH OPTIONS
+
+.TP
+.B \-h
+Show help and command line options
+.TP
+.B \-c
+Uses 
+.I conf_file 
+as the alternate configuration file (default is /etc/mail/j-chkmail.cf)
+.TP
+.B \-v
+verbose
+.TP
+.B \-vv
+more verbose
+.TP
+.B \-vvv
+yet more verbose
+
+.SH EXIT STATUS
+The following exit values are returned:
+.TP
+0     
+No error
+.TP
+1
+An error was found while scanning input file
+.TP
+2
+Input file contains an XFILE
+.TP
+3
+Other kind of error
+
+
+.SH FILES
+.TP
+.I /etc/mail/j-chkmail.cf
+Global j-chkmail configuration file
+
+.SH "SEE ALSO"
+j-chkmail(8), j-printstats(1), j-chkmail.cf(5)
+
+.SH BUGS
+.I Bugs ???
+Did you say 
+.I bugs ???
+Where did you see a
+.I bug ???
+.PP
+If you find yourself in a very improbable situation of finding a bug,
+please send me a bug repport.
+
+.SH AUTHOR
+Joe's j-chkmail was written by Jose Marcio Martins da Cruz : 
+martins@paris.ensmp.fr
+.PP
+

@@ -1,0 +1,51 @@
+#! /bin/sh
+
+#
+# indiquez le chemin complet de l'executable rrdtool
+# par defaut il est installe dans /usr/local/rrdtool/bin
+#
+RRDBIN=/opt/rrdtool/bin/rrdtool
+
+RRDDIR=rrd
+START="--start 900000000"
+
+database="j-chkmail"
+
+echo "RRDTool database : $database"
+
+
+#                        dt     Dt
+#       1    288   -     5 m    1 d
+#      12    168   -     1 h    7 d
+#      72    124   -     6 h   31 d
+#     144    124   -    12 h   62 d
+#    1152    365   -     4 d    4 y
+
+test -f $RRDDIR/$database.rrd || $RRDBIN create $RRDDIR/$database.rrd \
+                $START \
+                --step 300 \
+                DS:CONN:GAUGE:600:U:U \
+                DS:ABRT:GAUGE:600:U:U \
+                DS:MSGS:GAUGE:600:U:U \
+                DS:KBYTES:GAUGE:600:U:U \
+                DS:RCPT:GAUGE:600:U:U \
+                DS:FILES:GAUGE:600:U:U \
+                DS:XFILES:GAUGE:600:U:U \
+                DS:THROTTLE:GAUGE:600:U:U \
+                DS:OPENCONN:GAUGE:600:U:U \
+                DS:BADRCPT:GAUGE:600:U:U \
+                DS:LOCALUSER:GAUGE:600:U:U \
+                DS:RESFAIL:GAUGE:600:U:U \
+                DS:RESFORG:GAUGE:600:U:U \
+                DS:MATCHING:GAUGE:600:U:U \
+                DS:ORACLE:GAUGE:600:U:U \
+		DS:URLBL:GAUGE:600:U:U \
+                DS:SPAMTRAP:GAUGE:600:U:U \
+                DS:GREYMSGS:GAUGE:600:U:U \
+                DS:GREYRCPT:GAUGE:600:U:U \
+                RRA:AVERAGE:0.99:1:576 \
+                RRA:AVERAGE:0.99:12:168 \
+                RRA:AVERAGE:0.99:72:124 \
+                RRA:AVERAGE:0.99:144:124 \
+                RRA:AVERAGE:0.99:1152:365
+

@@ -1,0 +1,77 @@
+#! /usr/bin/perl -w
+
+#
+# This script can be used to update some j-chkmail configuration files
+#
+my $ROOTURL = "http://foss.jose-marcio.org/data/conf-data";
+my $CF = "conf-data.txt";
+my $LOG = "/tmp/j-update.log";
+
+my %DIRS = ('cdb' => '/var/jchkmail/cdb',
+            'etc' => '/etc/mail/jchkmail');
+
+my $r = system("wget -qN $ROOTURL/$CF -o $LOG -O /tmp/$CF");
+if ($r != 0) {
+
+  exit 1;
+}
+
+unlink $LOG if -f $LOG;
+$r = system("touch $LOG");
+if ($r != 0) {
+
+}
+
+open FIN, "</tmp/$CF" || die "???";
+while (my $line = <FIN>) {
+  chomp $line;
+  next if $line =~ /^\s*$/;
+  next if $line =~ /^\s*#/;
+
+  my ($tag, $file, $dir) = split " ", $line;
+
+  if (exists $DIRS{$tag} && -d $DIRS{$tag}) {
+    $dir = $DIRS{$tag};
+  }
+
+  unless (defined $dir && $dir ne "" && -d $dir) {
+    next;
+  }
+
+  printf "* Directory %-20s : Updating %s\n", $dir, $file;
+  # $dir = "/tmp";
+  chdir $dir;
+
+  unless (-w $dir) {
+    print "  Can't write to $dir\n";
+    next;
+  }
+  unless (-w "$dir/$file") {
+    print "  Can't write to $dir/$file\n";
+    next;
+  }
+  $r = system("wget -nv -N -a $LOG $ROOTURL/$file");
+  if ($r != 0) {
+    printf "  Error getting $file\n";
+  }
+}
+close FIN;
+
+
+open FIN, "< $LOG" || die "???";
+my @LINES = <FIN>;
+close FIN;
+
+if ($#LINES >= 0) {
+  print <<EOT;
+
+*** ERRORS ***
+
+EOT
+  foreach (@LINES) {
+    print;
+  }
+  print "\n\n";
+}
+
+exit 0;

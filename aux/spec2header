@@ -1,0 +1,346 @@
+#! /usr/bin/perl -w
+
+use strict;
+
+my %CONFIG = ();
+
+#my %PNAME = ();
+#my %PTYPE = ();
+#my %PVAL  = ();
+#my %PATTR  = ();
+# ------------------------------------------------------------------------------
+#
+# ------------------------------------------------------------------------------
+
+my %ENUM = ();
+
+my %LABEL = ();
+
+@{$ENUM{"ACTION"}}   = qw(OK REJECT WARN DISCARD X-HEADER);
+@{$ENUM{"REJECT"}}   = qw(OK REJECT TEMPFAIL);
+@{$ENUM{"NO_YES"}}   = qw(NO YES);
+@{$ENUM{"SENDER"}}   = qw(SENDER OTHER);
+@{$ENUM{"SUBJECT"}}  = qw(SUBJECT OTHER);
+@{$ENUM{"HOSTNAME"}} = qw(SYSTEM SENDMAIL OTHER);
+@{$ENUM{"PRESENCE"}} = qw(SHOW HIDE);
+#@{$ENUM{"AV_TYPE"}}  = qw(NONE USER UVSCAN SOPHOS TREND);
+#@{$ENUM{"TEXT_DB"}}  = qw(TEXT DB);
+#@{$ENUM{"SCOPE"}}    = qw(ALL ATTACHMENTS);
+##@{$ENUM{"ORIGIN"}}   = qw(ALL UNKNOWN);
+
+#my %X = {A => ["a", "b", "c"]};
+
+my $dump = 0;
+
+# ------------------------------------------------------------------------------
+#
+# ------------------------------------------------------------------------------
+
+my @SECTION = qw();
+
+my $CurSection = "";
+
+my $line = 0;
+while (<>) {
+  $line++;
+  print if $dump;
+  chomp;
+  next if /^$/;
+
+  my ($label, $reste) = split(" ", $_, 2);
+  next if $label =~ /^#/;
+
+  if ($label eq "DEFINE") {
+    my ($id, $name, $type, $p1, $p2) = split(" ", $reste, 5);
+
+    $CONFIG{$id}{"name"} = $name;
+    $CONFIG{$id}{"type"} = $type;
+    $CONFIG{$id}{"section"} = $CurSection;
+    $CONFIG{$id}{"syntax"} = "";
+
+    $p1 = "" if !defined($p1);
+    if (($type eq "STR") || ($type eq "ENUM")) {
+      $CONFIG{$id}{"attr"} = $p1;
+    }
+
+    next;
+  }
+
+  if ($label eq "DEFAULT") {
+    my ($id, $value) = split(" ", $reste, 2);
+    $value = "" if !defined($value);
+    $CONFIG{$id}{"default"} = $value;
+    next;
+  }
+
+  if ($label eq "SIMPLE") {
+    my ($id, $value) = split(" ", $reste, 2);
+    $value = "" if !defined($value);
+    $CONFIG{$id}{"simple"} = $value;
+    next;
+  }
+
+  if ($label eq "SYNTAX") {
+    my ($id, $value) = split(" ", $reste, 2);
+    $value = "" if !defined($value);
+    $CONFIG{$id}{"syntax"} = $value;
+    next;
+  }
+
+  if ($label eq "LEVEL") {
+    my ($id, $value) = split(" ", $reste, 2);
+    $value = "" if !defined($value);
+    $CONFIG{$id}{"level"} = $value;
+    next;
+  }
+
+  if ($label eq "LABEL") {
+    my ($id, $value) = split(" ", $reste, 2);
+
+    $value = "" if !defined($value);
+    $LABEL{$id} = $value;
+    next;
+  }
+
+  if ($label eq "HELP") {
+
+    next;
+  }
+
+  if ($label eq "SECTION") {
+    my ($id, $value) = split(" ", $reste, 2);
+
+    $value = $id if !defined($value) || ($value eq "");
+    $CurSection = $reste;
+    push @SECTION, $reste;
+
+    next;
+  }
+
+  if ($label eq "ENUM") {
+    my ($id, @value) = split(" ", $reste);
+
+    @{$ENUM{$id}} = @value;
+    next;
+  }
+}
+
+
+
+# ------------------------------------------------------------------------------
+#
+# ------------------------------------------------------------------------------
+my $FH;
+
+$FH = "cfh-defs.h";
+open FOUT, ">$FH" || die " can't open $FH";
+print_header();
+foreach  (sort { $a <=> $b } keys %CONFIG) {
+  printf FOUT "#define    CF_%-36s    %5d\n", $CONFIG{$_}{"name"}, $_;
+}
+print FOUT "\n";
+close FOUT;
+
+
+# ------------------------------------------------------------------------------
+#
+# ------------------------------------------------------------------------------
+
+foreach (keys %CONFIG) {
+  if (($CONFIG{$_}{"type"} eq "STR") && !($CONFIG{$_}{"default"} =~ /^J_/)) {
+    $CONFIG{$_}{"default"} = "\"" . $CONFIG{$_}{"default"} . "\"";
+  }
+}
+
+foreach (keys %CONFIG) {
+  if (!exists $CONFIG{$_}{"simple"} || !defined ($CONFIG{$_}{"simple"})) {
+    $CONFIG{$_}{"simple"} = $CONFIG{$_}{"default"};
+  } else {
+    if (($CONFIG{$_}{"type"} eq "STR") && !($CONFIG{$_}{"simple"} =~ /^J_/)) {
+      $CONFIG{$_}{"simple"} = "\"" . $CONFIG{$_}{"simple"} . "\"";
+    }
+  }
+}
+
+$FH = "cfc-defs.h";
+open FOUT, ">$FH" || die " can't open $FH";
+print_header();
+
+my $id;
+foreach $id (sort keys %ENUM) {
+
+  printf FOUT "static char  *ENUM_%s[] = {\n", $id;
+  foreach (@{$ENUM{$id}}) {
+    printf FOUT "                   \"%s\",\n", $_;
+  }
+  printf FOUT "                   NULL};\n\n";
+}
+
+print FOUT  <<T1;
+
+/*****************************************************************************
+ *                                                                           *
+ *                                                                           *
+ *****************************************************************************/
+static void
+cf_define ()
+{
+T1
+foreach  (sort { $a <=> $b } keys %CONFIG) {
+  if ($CONFIG{$_}{"type"} eq "INT") {
+    printf FOUT "  cf_add_id_int  (CF_%s, STRING(%s), \"%s\");\n",
+            $CONFIG{$_}{"name"}, $CONFIG{$_}{"name"}, $CONFIG{$_}{"default"};
+    next;
+  }
+
+  if ($CONFIG{$_}{"type"} eq "DOUBLE") {
+    printf FOUT "  cf_add_id_double  (CF_%s, STRING(%s), \"%s\");\n",
+            $CONFIG{$_}{"name"}, $CONFIG{$_}{"name"}, $CONFIG{$_}{"default"};
+    next;
+  }
+
+  if ($CONFIG{$_}{"type"} eq "STR") {
+    $CONFIG{$_}{"attr"} = 64 if $CONFIG{$_}{"attr"} eq "";
+
+    printf FOUT "  cf_add_id_str  (CF_%s, STRING(%s), %d, %s);\n",
+      $CONFIG{$_}{"name"}, $CONFIG{$_}{"name"},
+	$CONFIG{$_}{"attr"}, $CONFIG{$_}{"default"};
+    next;
+  }
+
+  if ($CONFIG{$_}{"type"} eq "ENUM") {
+    printf FOUT "  cf_add_id_enum (CF_%s, STRING(%s), ENUM_%s, \"%s\");\n",
+      $CONFIG{$_}{"name"}, $CONFIG{$_}{"name"},
+	$CONFIG{$_}{"attr"}, $CONFIG{$_}{"default"};
+    next;
+  }
+}
+print FOUT  <<T1;
+  cf_sort();
+}
+
+T1
+
+print FOUT  <<T1;
+
+/*****************************************************************************
+ *                                                                           *
+ *                                                                           *
+ *****************************************************************************/
+void
+cf_defaults ()
+{
+T1
+
+foreach  (sort { $a <=> $b } keys %CONFIG) {
+  if ($CONFIG{$_}{"type"} eq "STR") {
+    printf FOUT "  cf_set_val (CF_%s, %s);\n", $CONFIG{$_}{"name"},
+      $CONFIG{$_}{"default"};
+  } else {
+    printf FOUT "  cf_set_val (CF_%s, \"%s\");\n", $CONFIG{$_}{"name"},
+      $CONFIG{$_}{"default"};
+  }
+}
+
+print FOUT  <<T1;
+}
+
+T1
+
+print FOUT  <<T2;
+/*****************************************************************************
+ *                                                                           *
+ *                                                                           *
+ *****************************************************************************/
+
+static cfvar_t cfvar[] = {
+T2
+
+foreach (sort { $a <=> $b } keys %LABEL) {
+  my ($id, $type, $attrenum, $attrstr, $cftag, $cfdefault, $cfdesc, $cfsection, $cfsyntax, $cfsimple);
+
+  $id = $_;
+  $type = "J_" . $CONFIG{$_}{"type"};
+
+  $attrstr = 0;
+  $attrstr = $CONFIG{$_}{"attr"} if $CONFIG{$_}{"type"} eq "STR";
+  $attrenum = "NULL";
+  $attrenum = "ENUM_" . $CONFIG{$_}{"attr"} if $CONFIG{$_}{"type"} eq "ENUM";
+
+  $cftag = $CONFIG{$_}{"name"};
+
+  if ($CONFIG{$_}{"type"} eq "STR") {
+    $cfdefault = $CONFIG{$_}{"default"};
+  } else {
+    $cfdefault = "\"" . $CONFIG{$_}{"default"} . "\"";
+  }
+
+  $cfdesc = $LABEL{$_};
+  $cfsection = $CONFIG{$id}{"section"};
+  $cfsyntax = $CONFIG{$id}{"syntax"};
+
+  if ($CONFIG{$_}{"type"} eq "STR") {
+    $cfsimple = $CONFIG{$_}{"simple"};
+  } else {
+    $cfsimple = "\"" . $CONFIG{$_}{"simple"} . "\"";
+  }
+
+  print FOUT <<T25;
+             /* $cfdesc */
+             {CF_$cftag, $type, $attrenum, $attrstr,
+              "$cftag", 
+              $cfdefault,
+              "$cfsection",
+              "$cfdesc",
+              "$cfsyntax",
+              $cfsimple},
+
+T25
+
+}
+
+print FOUT <<T3;
+             {-1,0,NULL,0,NULL,NULL,NULL,NULL}};
+
+T3
+
+
+exit 0;
+
+
+# ------------------------------------------------------------------------------
+#
+# ------------------------------------------------------------------------------
+sub print_header {
+
+print FOUT <<ET;
+/*
+ *
+ * j-chkmail - Mail Server Filter for sendmail
+ *
+ * Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz
+ *
+ *  Auteur     : Jose Marcio Martins da Cruz
+ *               Jose-Marcio.Martins\@ensmp.fr
+ *
+ *  Historique :
+ *  Creation     : janvier 2005
+ *
+ * This program is free software, but with restricted license :
+ *
+ * - j-chkmail is distributed only to registered users
+ * - j-chkmail license is available only non-commercial applications,
+ *   this means, you can use j-chkmail if you make no profit with it.
+ * - redistribution of j-chkmail in any way : binary, source in any
+ *   media, is forbidden
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * More details about j-chkmail license can be found at j-chkmail
+ * web site : http://foss.jose-marcio.org
+ */
+
+ET
+}

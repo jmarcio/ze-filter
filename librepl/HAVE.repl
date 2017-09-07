@@ -1,0 +1,9 @@
+HAVE_FFS          NO
+HAVE_MEMCMP       NO
+HAVE_STRLCAT      NO
+HAVE_STRLCPY      OUI
+HAVE_STRSEP       OUI
+HAVE_VSYSLOG      NO
+
+
+

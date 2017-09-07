@@ -1,0 +1,10 @@
+#! /bin/sh
+
+/bin/rm -f rrd/*
+
+./j-initrrd
+
+./j-mem2rrd /var/jchkmail/j-stats
+
+./j-dograph
+

@@ -1,0 +1,8 @@
+
+
+> Is there a proper automake way of installing startup scripts?
+> 
+> Try
+>   init_d_dir = $(sysconfdir)/rc.d/init.d
+>   init_d_SCRIPTS = blah
+

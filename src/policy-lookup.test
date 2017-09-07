@@ -1,0 +1,33 @@
+Client MsgRate  10.3.5.15 bororo.ensmp.fr local
+Client MsgRate  10.3.5.15 bororo.ensmp.fr
+Client ConnRate 10.3.5.15 bororo.ensmp.fr local
+Client ConnOpen 10.3.5.15 bororo.ensmp.fr local
+Client RcptRate 10.3.5.15 bororo.ensmp.fr local
+Client ConnRate 194.214.158.133 zmail.mines-paristech.fr
+Client ConnRate 194.214.158.196 paris.ensmp.fr
+Client ConnRate 194.214.158.176 saci.ensmp.fr
+
+Email  What     jose.marcio@ccsi.mines-paristech.fr
+#Email  What     mines-paristech.fr
+#Email  What     jose.marcio@
+Email  RcptRateFrom jose.marcio@ccsi.mines-paristech.fr
+Email  RcptRateFrom  jose.marcio@mines-paristech.fr
+
+Email  RcptRateFrom  john@hotmail.com
+Email  RcptRateFrom  <john@hotmail.com>
+Email  RcptRateFrom  <>
+
+
+NetClass 10.3.5.5         bororo.ensmp.fr
+NetClass 194.214.158.133  zmail.mines-paristech.fr
+NetClass 128.93.162.84    www.inria.fr
+
+Email    Prf user@dept.domain.com
+
+Access  10.3.5.16 jose-marcio.martins@ensmp.fr  root@ensmp.fr
+Access  10.3.5.16 jose-marcio.martins@ensmp.fr  postmaster@ensmp.fr
+Access  10.3.5.16 claude@ensmp.fr  postmaster@ensmp.fr
+Access  10.3.5.16 claude@ensmp.fr  postmaster@mines-paristech.fr
+
+Access  192.168.10.10 abdallah.bouhal@ensmp.fr   toto@free.fr
+

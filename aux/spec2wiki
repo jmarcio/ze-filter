@@ -1,0 +1,138 @@
+#! /usr/bin/perl -w
+
+use strict;
+
+my %ENUM = ();
+my %TYPE = ("str"  => "String",
+	    "int"  => "Integer",
+	    "enum" => "Option");
+
+my $section = "";
+
+my $version = undef;
+if (-f "version") {
+  $version = `head -1 version`;
+  chomp $version;
+}
+
+my ($key,$default, $syntax, $label, $type, $subtype);
+my @descr;
+reset_opt_values();
+
+my ($sdescr) = "";
+
+my %CFDEFS = ();
+get_confs();
+
+while (<>) {
+  chomp;
+
+  next if /^\s*#/;
+  if (/^\s*$/) {
+    if (defined $sdescr && $sdescr ne "") {
+      printf "%s\n\n", $sdescr;
+      $sdescr = undef;
+    }
+
+    if (defined $key) {
+      $default = $version if $key =~ /^version$/i;
+      $label =~ s#//#/ /# if defined $label;
+      $default =~ s#//#/ /# if defined $default;
+      $default = $CFDEFS{$default} if exists $CFDEFS{$default};
+      my $tlabel = type_name($type);
+      printf "  * **%s** (%s) - %s\n", $key, $tlabel, $label;
+      printf "    * %s\n", join " ", @descr if $#descr >= 0;
+      if ($type eq "ENUM") {
+	printf "    * **Values** : ''%s''\n", $ENUM{$subtype};
+      }
+      printf "    * **Syntax** : ''%s''\n", $syntax if defined $syntax;
+      printf "    * **Default** : ''%s''\n", $default if defined $default;
+    }
+    reset_opt_values();
+    next;
+  }
+
+  if (/^enum\s+(\S+)\s+(.*)/i) {
+    my $v = join "/", split " ", $2;
+    $ENUM{$1} = $v;
+    next;
+  }
+  if (/^section\s+(.*)/i) {
+    printf "\n";
+    printf "==== %s ====\n\n", $1;
+    next;
+  }
+  if (/^define\s+(\S+)\s+(\S+)\s+(ENUM|STR)\s+(.*)/i) {
+    $key = eff_blancs($2);
+    $type = eff_blancs($3);
+    $subtype = eff_blancs($4);
+    next;
+  }
+
+  if (/^define\s+(\S+)\s+(\S+)\s+(INT)/i) {
+    $key = eff_blancs($2);
+    $type = eff_blancs($3);
+    next;
+  }
+  if (/^label\s+(\S+)\s+(.*)/i) {
+    $label = eff_blancs($2);
+    next;
+  }
+  if (/^descr\s+(\S+)\s+(.*)/i) {
+    push @descr, eff_blancs($2) if defined $2 && $2 ne "";
+    next;
+  }
+  if (/^syntax\s+(\S+)\s+(.*)/i) {
+    $syntax = eff_blancs($2) unless $2 =~ /-----/;
+    next;
+  }
+  if (/^default\s+(\S+)\s+(.*)/i) {
+    $default = eff_blancs($2);
+    next;
+  }
+
+  if (/^sdescr\s+(.+)/i) {
+    $sdescr .= " " . eff_blancs($1);
+    $sdescr = eff_blancs($sdescr);
+    next;
+  }
+}
+
+exit 0;
+
+sub reset_opt_values {
+  $key = $default = $syntax = $label = $type = $subtype = undef;
+  @descr = qw();
+}
+
+sub type_name {
+  my ($t, undef) = @_;
+
+  return "???" unless defined $t;
+
+  $t =~ tr /A-Z/a-z/;
+  return $TYPE{$t} if exists $TYPE{$t};
+  return "???";
+}
+
+sub get_confs {
+  return 0 unless -f "../include/defs.h";
+
+  open DEFS, "<../include/defs.h" || return 0;
+  while (my $l = <DEFS>) {
+    chomp $l;
+    next unless $l =~ /^#define\s+(\S+)\s*["]?([^"]*)/;
+    $CFDEFS{$1} = $2;
+    #printf "* %-30s %s\n", $1, $2;
+  }
+  close DEFS;
+  return 1;
+}
+
+sub eff_blancs {
+  my ($s, undef) = @_;
+  return "" unless defined $s;
+  $s =~ s/^[ \t]+|[ \t]+$//g;
+  return $s;
+}
+

@@ -1,0 +1,506 @@
+#! /usr/bin/perl -w
+
+use strict;
+
+use Getopt::Long;
+use Cwd;
+
+my $MINSCORE = 2;
+my $NBDAYS = 7;
+
+my $RESOLVE_IP = 0;
+my $log_origin = 0;
+my $log_lastseen = 0;
+
+my %EXPR = ();
+
+my $TAG = "DBURLBL";
+
+my $ok = GetOptions('t=s' => \$TAG,
+                    'l' => \$log_lastseen,
+                    'o' => \$log_origin);
+
+
+if ($#ARGV < 0) {
+  push (@ARGV, "/var/jchkmail/files/j-regex");
+}
+
+my $DATE = `date`;
+chomp $DATE;
+
+my $tmin = time() - 4 * 30 * 86400;
+
+my %BL = ();
+my %BLBYDAY = ();
+
+my @OKTAGS = qw(DBURLBL DNSURLBL URLSTR URLEXPR);
+
+$ok = 0;
+foreach (@OKTAGS) {
+  $ok = 1 if $_ eq  $TAG;
+}
+if (!$ok) {
+	printf " # Non valid tag : $TAG\n\n", $TAG;
+	exit 0;
+}
+
+
+
+###############################################################################
+#
+#
+#
+###############################################################################
+#####
+# Configuration file reading
+#
+open IN, "/etc/mail/jchkmail/j-regex";
+while (<IN>) {
+  my ($s, $tag);
+
+  next if /^\#/;
+  next if /^$/;
+  chomp;
+  ($tag, undef, $s) = split(" ", $_, 3);
+
+  next if $TAG eq "DBURLBL";
+
+  next unless $tag =~ /$TAG/i;
+
+  $EXPR{$s} = 0;
+}
+close IN;
+
+
+###############################################################################
+#
+#
+#
+###############################################################################
+#####
+#
+#
+my %DAY2STR = ();
+my %LASTSEEN = ();
+my @LINES = qw();
+my %LINESBYDAY = ();
+
+my %CONNIDBYIP = ();
+my %SPAMNBBYIP = ();
+
+my $tlast = 0;
+
+while (<>) {
+  chomp;
+  my ($clk, $id, $ip, $nb, $score, $expr);
+
+  next unless /\bTAG=/;
+
+  ($clk, $id, $ip, $nb, $score, $expr) = decode_line($_);
+
+  next if ($clk < $tmin);
+
+  my $cle = int($clk / 86400);
+
+  $tlast = $cle if $cle > $tlast;
+  $DAY2STR{$cle} = clock2day($clk);
+
+  if (exists($LASTSEEN{$expr})) {
+    $LASTSEEN{$expr} = $cle if $cle > $LASTSEEN{$expr};
+  } else {
+    $LASTSEEN{$expr} = $cle;
+  }
+
+  next if $score < $MINSCORE;
+  push @LINES, $_;
+}
+
+printf "LINES NB = %5d\n", $#LINES;
+
+my @GOOD = grep { my ($clk,undef) = split( " ", $_, 2);
+                  $clk = int($clk/86400);
+                  $clk + $NBDAYS > $tlast} @LINES;
+
+
+foreach (@GOOD) {
+  my ($clk, $id, $ip, $nb, $score, $expr, $reste);
+
+  ($clk, $id, $ip, $nb, $score, $expr) = decode_line($_);
+
+  my $cle = int($clk / 86400);
+
+  $EXPR{$expr}++;
+
+  $LINESBYDAY{$cle}{$expr}++;
+}
+
+
+###############################################################################
+#
+#
+#
+###############################################################################
+my $nb = 0;
+my $line = "";
+
+foreach (keys %EXPR) {
+  $nb += $EXPR{$_};
+}
+
+print <<T1;
+
+=================================================
+
+  URL BLACKLIST RESULTS   ($TAG)
+
+=================================================
+
+T1
+
+{
+  my @Q = keys %EXPR;
+
+  printf "\n $DATE \n\n";
+
+  printf "%6d messages detected\n", $#LINES + 1;
+  printf "%6d last detected last %d days\n", $#GOOD + 1, $NBDAYS;
+}
+
+###############################################################################
+#
+#
+#
+###############################################################################
+
+if ($TAG =~ /^(DNS|DB)URLBL$/) {
+
+  print <<T1;
+
+=================================================
+
+  STATS BY URL BL
+
+=================================================
+
+T1
+
+  foreach (sort keys %BL) {
+    my @BLGOOD = grep { my ($clk,undef) = split( " ", $_, 2);
+    $clk = int($clk/86400);
+    $clk + $NBDAYS > $tlast} @{$BLBYDAY{$_}};
+
+    printf " * %-30s %6d %6d\n", $_, $BL{$_}, $#BLGOOD + 1;
+  }
+}
+
+###############################################################################
+#
+#
+#
+###############################################################################
+my @TXTOUT = qw();
+
+$line = "
+
+=================================================
+
+  STATS BY EXPRESSION FOR THE LAST $NBDAYS DAYS
+
+=================================================
+";
+push @TXTOUT, $line;
+
+$line = "";
+
+for (my $i = $tlast - $NBDAYS + 1; $i <= $tlast; $i++) {
+  $DAY2STR{$i} = "" if !exists($DAY2STR{$i});
+  $line .= sprintf "%5s ", $DAY2STR{$i};
+}
+$line .= sprintf "|  TOTAL | Expression \n";
+push @TXTOUT, $line;
+
+my %COUNT = ();
+my $nb_expr = 0;
+
+foreach (reverse sort {$EXPR{$a} <=> $EXPR{$b}} keys %EXPR) {
+  next if $EXPR{$_} == 0;
+
+  for (my $i = $tlast - $NBDAYS + 1; $i <= $tlast; $i++) {
+    my $nb = 0;
+    $nb = $LINESBYDAY{$i}{$_} if exists($LINESBYDAY{$i}{$_});
+    $COUNT{$i} = 0 if !exists($COUNT{$i});
+    $COUNT{$i} += $nb;  
+  }
+}
+
+$line = "";
+for (my $i = $tlast - $NBDAYS + 1; $i <= $tlast; $i++) {
+  $COUNT{$i} = 0 if !exists($COUNT{$i});
+  $line .= sprintf "%5d ", $COUNT{$i};
+}
+$line .= "\n";
+push @TXTOUT, $line;
+
+foreach (reverse sort {$EXPR{$a} <=> $EXPR{$b}} keys %EXPR) {
+
+  next if $EXPR{$_} == 0;
+
+  $line = "";
+  for (my $i = $tlast - $NBDAYS + 1; $i <= $tlast; $i++) {
+    my $nb = 0;
+    $nb = $LINESBYDAY{$i}{$_} if exists($LINESBYDAY{$i}{$_});
+
+    $line .= sprintf "%5d ", $nb;
+  }
+  $line .= sprintf "| %6d | %s", $EXPR{$_}, $_;
+  push @TXTOUT, $line;
+  $nb_expr++;
+}
+
+foreach (@TXTOUT) {
+  print "$_\n";
+}
+
+printf "\n %d expressions\n", $nb_expr;
+
+###############################################################################
+#
+#
+#
+###############################################################################
+if ($log_origin) {
+  print <<T2;
+
+=================================================
+
+  GATEWAYS SENDING SPAM
+
+=================================================
+
+T2
+
+  foreach (sort { ip2int($a) <=> ip2int($b) } keys %CONNIDBYIP) {
+    my (@ID, $id, @TID, $line, $clk);
+
+    @ID = qw ();
+
+    @TID = grep { my ($clk,undef) = split( " ", $_, 2);
+		  $clk = int($clk/86400);
+		  $clk + $NBDAYS > $tlast} @{$CONNIDBYIP{$_}};
+
+    foreach $id (@TID) {
+      ($clk, $id) = split(" ", $id);
+      push @ID, $id;
+    }
+
+    @ID = uniq_array(@ID);
+    @{$CONNIDBYIP{$_}} = @ID;
+
+    # printf " - %-16s %5d - %s\n", $_, $#ID + 1, ip2name($_) ;
+  }
+
+
+  foreach (reverse sort { $#{$CONNIDBYIP{$a}} <=> $#{$CONNIDBYIP{$b}} } keys %CONNIDBYIP) {
+    printf " - %-16s %5d - %s\n", 
+           $_, $#{$CONNIDBYIP{$_}} + 1, ip2name($_) if $#{$CONNIDBYIP{$_}} > 2;
+  }
+
+  print <<T2;
+
+
+T2
+
+}
+
+
+###############################################################################
+#
+#
+#
+###############################################################################
+
+if ($log_lastseen) {
+  print <<T1;
+
+=================================================
+
+  LAST TIME SEEN
+
+=================================================
+
+T1
+
+  foreach (reverse sort {$LASTSEEN{$a} <=> $LASTSEEN{$b}} keys %LASTSEEN) {
+    $DAY2STR{$_} = "" if !exists($DAY2STR{$_});
+    printf "%6s : %s\n", $DAY2STR{$LASTSEEN{$_}}, $_;
+  }
+
+  $nb = 0;
+  foreach (sort keys %EXPR) {
+    $nb++ if !exists $LASTSEEN{$_};
+  }
+
+
+  print <<T1;
+
+=================================================
+
+T1
+
+}
+
+
+###############################################################################
+#
+#
+#
+###############################################################################
+if ($log_lastseen && $TAG !~ /^(DNS|DB)URLBL$/) {
+  print <<T2;
+
+=================================================
+
+  NEVER SAW : $nb expressions
+
+=================================================
+
+T2
+
+foreach (sort keys %EXPR) {
+  printf "   -  %6s\n", $_ if !exists $LASTSEEN{$_};
+}
+
+
+print <<T2;
+
+  $nb unseen expressions
+
+T2
+
+}
+
+exit 0;
+
+###############################################################################
+#
+#     E N D
+#
+###############################################################################
+
+sub clock2day {
+  my ($c, undef) = @_;
+  return 0 if ! defined($c);
+
+  my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday) = gmtime($c);
+
+  return sprintf "%02d/%02d", $mday, $mon + 1;
+  return sprintf "%02d/%02d", $mon + 1, $mday;
+  return sprintf "%02d/%02d", $mday, $mon + 1;
+}
+
+#
+#
+#
+sub clock2month {
+  my ($c, undef) = @_;
+  return 0 if ! defined($c);
+
+  my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday) = gmtime($c);
+  return $mon + 1;
+}
+
+# --------------------------------------------------
+#
+#
+sub uniq_array {
+  return qw() if !defined(@_) || $#_ < 0;
+  my %T = map { $_ => 1; } @_;
+  return sort keys %T;
+}
+
+############################################################
+#
+#
+
+sub by_ip {
+  return ip2int($a) <=> ip2int($b);
+}
+
+sub ip2int {
+  my ($ip, undef) = @_;
+  my @i = split('\.', $ip);
+  $ip = 0;
+  foreach (@i) {
+    $ip = 256 * $ip + $_;
+  }
+  return $ip;
+}
+
+# ---------------------------------------------------------
+#
+my %numtoname = ();
+#
+sub ip2name {
+  local($_) = @_;
+
+  return "" if !$RESOLVE_IP;
+
+  unless (defined $numtoname{$_}) {
+    my(@a) = gethostbyaddr(pack('C4', split(/\./)),2);
+    $numtoname{$_} = @a > 0 ? $a[0] : "";
+  }
+  $numtoname{$_};
+}
+
+############################################################
+#
+#
+
+sub decode_line {
+  my ($reste, $clk, $id, $ip, $nb, $score, $expr);
+
+  ($clk, $reste) = split(" ", $_, 2);
+
+  ($id, $reste) = split(" ", $reste, 2);
+
+  while (1) {
+    my ($a, $b) = split (" ", $reste, 2);
+    my $t;
+
+    if ($a =~ /[^ ]*=\([^ ]*\)$/) {
+      $reste = $b;
+
+      if (($t) = ($a =~ /IP=\(([^ \)]*)/)) {
+        $ip = $t;
+        push @{$CONNIDBYIP{$ip}}, "$clk $id";
+        next;
+      }
+
+      if (($t) = ($a =~ /ID=\(([^ \)]*)/)) {
+        $id = $t;
+        printf "ID = $t\n";
+        next;
+      }
+
+      if (($t) = ($a =~ /TAG=\(([^ \)]*)/)) {
+        return (0, undef) unless $t =~ /^$TAG/;
+
+        my (undef, $bl) = split (":", $t);
+
+        next unless defined($bl);
+
+	$BL{$bl}++;
+	push @{$BLBYDAY{$bl}}, $clk;
+      }
+
+      next;
+    }
+    last;
+  }
+
+  ($nb, $score, $expr) = split(" ", $reste, 3);
+
+  return ($clk, $id, $ip, $nb, $score, $expr);
+}
+
+

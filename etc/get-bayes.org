@@ -1,0 +1,24 @@
+#! /bin/sh
+
+
+RSERVER="foss.jose-marcio.org:1873"
+
+MAKE=make
+RSYNC=rsync
+
+CDBDIR=/var/jchkmail/cdb
+BINDIR=/usr/bin
+
+cd $CDBDIR
+
+FILES2GET="j-toolbox/j-bayes-md5.txt"
+for file in $FILES2GET
+do
+  $RSYNC -avz rsync://$RSERVER/$file .
+  [ "$?" = "0" ] && $MAKE -f Makefile
+done
+
+LR2GET="j-toolbox/j-lr.txt"
+$RSYNC -avz rsync://$RSERVER/$LR2GET .
+[ "$?" = "0" ] && j-ndc reload lrdata
+

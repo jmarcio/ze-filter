@@ -1,0 +1,200 @@
+#! /bin/sh
+
+TMP=/tmp/wdb-tmp
+DBDIR=
+TMP=
+
+VDBI=
+VDBN=
+
+default_wdb()
+{
+  for JBIN in src/j-chkmail /usr/sbin/j-chkmail
+  do
+    if [ -x $JBIN ]
+    then
+      DBDIR=`$JBIN -M running 2>/dev/null | grep "^WDBDIR" | tail -1 | awk '{print $2}'`
+      [ "$?" = "0" ] && break
+      DBDIR=`$JBIN -m  2>/dev/null | grep "^WDBDIR" | tail -1 | awk '{print $2}'`
+      [ "$?" = "0" ] && break
+      DBDIR=
+    fi
+  done
+}
+
+usage()
+{
+  cat <<EOF 
+
+  Usage : $0 options commands
+
+    options 
+      -h     : help (this message)
+      -d     : working database directory [$DBDIR]
+      -t     : temporary data directory [$TMP/]
+
+    commands
+      versions
+      compare
+
+      dump
+      export    : dump contents of databases inside $DBDIR
+                  into text files
+
+      restore   : rebuild contents of databases inside $DBDIR
+                  using previously exported data
+
+      update
+      upgrade   : export followed by restore
+
+EOF
+}
+
+count_files()
+{
+  [ "x$1" = "x" ] && return 0
+  [ "x$2" = "x" ] && return 0
+  dir=$1
+  [ -d $dir ] || return 0;
+  n=`ls $1/*$2 2>/dev/null | wc -l`
+  return $n
+}
+
+wdb_save()
+{
+  count_files $DBDIR .db
+  N=$?
+  [ "x$N" = "x0" ] && return
+  rm -f $TMP/*
+  for f in `ls $DBDIR/j-*db`
+  do 
+    base=`basename $f .db`
+    echo "   * Saving $base"
+    j-makemap -d -b $DBDIR/$base.db > $TMP/$base.txt
+  done
+  echo ""
+}
+
+wdb_restore()
+{
+  count_files $TMP .txt
+  N=$?
+  [ "x$N" = "x0" ] && return
+  for f in `ls $TMP/j-*.txt`
+  do 
+    base=`basename $f .txt`
+    echo "   * Restoring $base"
+    mv -f $DBDIR/$base.db $DBDIR/$base.db.old
+    j-makemap -b $DBDIR/$base.db < $TMP/$base.txt > /dev/null
+    rm -f $DBDIR/$base.db.old
+  done
+  rm -f $DBDIR/__*
+  rm -f $DBDIR/log.*
+
+  chown smmsp:smmsp $DBDIR/*
+  chmod 664         $DBDIR/*
+  echo ""
+}
+
+check_dirs()
+{
+  [ -z "$DBDIR" ] && default_wdb
+  [ -z "$DBDIR" ] && exit 1
+  TMP=/tmp/x-`basename $DBDIR`
+  [ -d $DBDIR ] || exit 1;
+}
+
+
+set -- `getopt hd:t: $*`
+for i in $*
+do
+  case $i in
+    -h)
+       echo usage
+       exit 0
+       ;;
+    -d)
+       DBDIR=$2
+       shift 2
+       ;;
+    -t)
+       TMP=$2
+       shift 2
+       ;;
+    --)
+       shift
+       break
+       ;;
+  esac
+done
+
+check_dirs
+
+ROOT=`dirname $DBDIR`
+
+if [ -x $ROOT/dbtools/db_verify ]
+    then
+    VDBI=`$ROOT/dbtools/db_verify -V`
+fi
+if [ -x berkdb/db_verify ]
+    then
+    VDBN=`berkdb/db_verify -V`
+fi
+
+mkdir -p $TMP
+#rm -f $TMP/*
+
+RESULT=0
+for arg in $*
+do
+  case $arg in
+    version*)
+      [ -n "$VDBI" ] && echo "  * Installed DB lib version : $VDBI"
+      [ -n "$VDBN" ] && echo "  * New DB lib version       : $VDBN"
+      ;;
+
+    compare)
+      if [ "x$VDBI" != "x$VDBN" ]
+      then
+	echo "  * Installed and new DB API versions are different"
+        echo " "
+        echo "    Installed DB API : $VDBI"
+        echo "    New DB API       : $VDBN"
+        echo " "
+        echo "    YOU SHALL UPDATE WDB DATABASES BEFORE LAUNCHING THE FILTER"
+        echo "    LAUNCH :"
+        echo " "
+        echo "        tools/update-wdb-databases upgrade"
+        echo " "
+        RESULT=0
+      else
+        echo "  * Installed and new DB API versions are the same"
+      fi
+      ;;
+
+    save|dump|export)
+      echo "  * Saving databases from : $DBDIR"
+      wdb_save
+      ;;
+
+    restore)
+      echo "  * Restoring databases at : $DBDIR"
+      wdb_restore
+      ;;
+
+    update|upgrade)
+      echo "  * Upgrading databases : $DBDIR"
+      wdb_save
+      wdb_restore
+      echo " "
+      ;;
+
+    *)
+      usage
+      ;;
+  esac
+done
+
+#rm -f $TMP/*
+
+exit $RESULT

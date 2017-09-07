@@ -1,0 +1,23 @@
+
+smtpd_milters = unix:/var/run/jchkmail/j-chkmail.sock
+milter_protocol = 4
+
+milter_connect_macros = j {daemon_name} v {client_name}
+milter_data_macros = i
+milter_end_of_data_macros = i
+milter_helo_macros = {tls_version} {cipher} {cipher_bits} {cert_subject} {cert_issuer}
+milter_macro_daemon_name = $myhostname
+milter_macro_v = $mail_name $mail_version
+milter_mail_macros = i {auth_type} {auth_authen} {auth_author} {mail_addr}
+milter_rcpt_macros = i {rcpt_addr}
+milter_unknown_command_macros = 
+
+milter_command_timeout = 30s
+milter_connect_timeout = 30s
+milter_content_timeout = 40s
+
+milter_default_action = tempfail
+non_smtpd_milters = 
+
+
+

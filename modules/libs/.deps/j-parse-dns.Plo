@@ -1,0 +1,1 @@
+j-parse-dns.lo j-parse-dns.o: ../../libs/j-parse-dns.c

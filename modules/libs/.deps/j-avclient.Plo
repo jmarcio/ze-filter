@@ -1,0 +1,536 @@
+j-avclient.lo j-avclient.o: ../../libs/j-avclient.c ../../include/j-sys.h \
+  ../../include/config.h /usr/include/stdio.h /usr/include/features.h \
+  /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h \
+  /usr/include/gnu/stubs.h /usr/include/gnu/stubs-32.h \
+  /usr/local/gcc-3.4.6/lib/gcc/i686-pc-linux-gnu/3.4.6/include/stddef.h \
+  /usr/include/bits/types.h /usr/include/bits/typesizes.h \
+  /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
+  /usr/include/bits/wchar.h /usr/include/gconv.h \
+  /usr/local/gcc-3.4.6/lib/gcc/i686-pc-linux-gnu/3.4.6/include/stdarg.h \
+  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
+  /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h \
+  /usr/include/endian.h /usr/include/bits/endian.h \
+  /usr/include/sys/select.h /usr/include/bits/select.h \
+  /usr/include/bits/sigset.h /usr/include/bits/time.h \
+  /usr/include/sys/sysmacros.h /usr/include/bits/pthreadtypes.h \
+  /usr/include/alloca.h /usr/include/unistd.h \
+  /usr/include/bits/posix_opt.h /usr/include/bits/confname.h \
+  /usr/include/getopt.h /usr/include/string.h /usr/include/strings.h \
+  /usr/include/sysexits.h \
+  /usr/local/gcc-3.4.6/lib/gcc/i686-pc-linux-gnu/3.4.6/include/limits.h \
+  /usr/local/gcc-3.4.6/lib/gcc/i686-pc-linux-gnu/3.4.6/include/syslimits.h \
+  /usr/include/limits.h /usr/include/bits/posix1_lim.h \
+  /usr/include/bits/local_lim.h /usr/include/linux/limits.h \
+  /usr/include/bits/posix2_lim.h /usr/include/math.h \
+  /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h \
+  /usr/include/bits/mathcalls.h /usr/include/errno.h \
+  /usr/include/bits/errno.h /usr/include/linux/errno.h \
+  /usr/include/asm/errno.h /usr/include/asm-generic/errno.h \
+  /usr/include/asm-generic/errno-base.h /usr/include/sys/time.h \
+  /usr/include/sys/resource.h /usr/include/bits/resource.h \
+  /usr/include/signal.h /usr/include/bits/signum.h \
+  /usr/include/bits/siginfo.h /usr/include/bits/sigaction.h \
+  /usr/include/bits/sigcontext.h /usr/include/asm/sigcontext.h \
+  /usr/include/bits/sigstack.h /usr/include/bits/sigthread.h \
+  /usr/include/sys/wait.h /usr/include/bits/waitflags.h \
+  /usr/include/bits/waitstatus.h /usr/include/fcntl.h \
+  /usr/include/bits/fcntl.h /usr/include/sys/stat.h \
+  /usr/include/bits/stat.h /usr/include/dirent.h \
+  /usr/include/bits/dirent.h ../../pcre-7.0/pcre.h /usr/include/regex.h \
+  /usr/include/ctype.h /usr/include/sys/socket.h /usr/include/sys/uio.h \
+  /usr/include/bits/uio.h /usr/include/bits/socket.h \
+  /usr/include/bits/sockaddr.h /usr/include/asm/socket.h \
+  /usr/include/asm/sockios.h /usr/include/sys/un.h /usr/include/poll.h \
+  /usr/include/sys/poll.h /usr/include/bits/poll.h \
+  /usr/include/netinet/in.h /usr/include/stdint.h /usr/include/bits/in.h \
+  /usr/include/bits/byteswap.h /usr/include/arpa/inet.h \
+  /usr/include/arpa/nameser.h /usr/include/sys/param.h \
+  /usr/include/linux/param.h /usr/include/asm/param.h \
+  /usr/include/sys/bitypes.h /usr/include/arpa/nameser_compat.h \
+  /usr/include/netdb.h /usr/include/rpc/netdb.h /usr/include/bits/netdb.h \
+  /usr/include/resolv.h /usr/include/syslog.h /usr/include/sys/syslog.h \
+  /usr/include/bits/syslog-path.h /usr/include/pthread.h \
+  /usr/include/sched.h /usr/include/bits/sched.h \
+  /usr/include/bits/setjmp.h /usr/include/dlfcn.h \
+  /usr/include/bits/dlfcn.h /usr/include/pwd.h /usr/include/grp.h \
+  /usr/include/sys/sysinfo.h /usr/include/linux/kernel.h \
+  /usr/include/sys/utsname.h /usr/include/bits/utsname.h \
+  /usr/include/sys/mman.h /usr/include/bits/mman.h /usr/include/assert.h \
+  /usr/include/libgen.h ../../berkdb/db.h /usr/include/inttypes.h \
+  /usr/include/libmilter/mfapi.h /usr/include/libmilter/mfdef.h \
+  ../../include/j-avclient.h ../../include/j-chkmail.h \
+  ../../include/version.h ../../include/defs.h ../../include/j-sys.h \
+  ../../include/j-libjc.h ../../include/macros.h ../../include/j-time.h \
+  ../../include/kstats.h ../../include/j-linkedlist.h \
+  ../../include/j-name2id.h ../../include/j-regex.h \
+  ../../include/j-decode.h ../../include/j-base64.h ../../include/j-qp.h \
+  ../../include/j-rfc2822.h ../../include/j-demime.h \
+  ../../include/j-convert-8to7.h ../../include/j-html.h \
+  ../../include/j-divers.h ../../include/j-smtp-divers.h \
+  ../../include/j-strings.h ../../include/j-strconvert.h \
+  ../../include/j-buffer.h ../../include/j-morpho.h \
+  ../../include/j-syslog.h ../../include/j-txtlog.h \
+  ../../include/j-server.h ../../include/j-avclient.h \
+  ../../include/j-inet.h ../../include/j-dns.h \
+  ../../include/j-dns-parse.h ../../include/j-ipc.h ../../include/j-db.h \
+  ../../include/j-map.h ../../include/md5.h ../../include/sha1.h \
+  ../../include/j-msg-hash.h ../../include/j-databases.h \
+  ../../include/j-resolve-cache.h ../../include/j-btree.h \
+  ../../include/j-rdfile.h ../../include/j-shmem.h \
+  ../../include/j-table.h ../../include/j-uudecode.h \
+  ../../include/j-unattach.h ../../include/j-load.h \
+  ../../include/j-cyclic.h ../../include/j-mbox.h \
+  ../../include/j-bfilter.h ../../include/j-bcheck.h \
+  ../../include/j-msg-score.h ../../include/j-modules.h \
+  ../../include/j-read-conf-data.h ../../include/j-headers.h \
+  ../../include/j-oracle-scores.h ../../include/j-chkcontent.h \
+  ../../include/j-oracle.h ../../include/j-fileexp.h ../../include/j-cf.h \
+  ../../include/cfh-defs.h ../../include/j-log.h \
+  ../../include/j-proc-witness.h ../../include/j-config.h \
+  ../../include/j-stats.h ../../include/mimelist.h \
+  ../../include/scanmail.h ../../include/j-signal.h \
+  ../../include/j-control.h ../../include/j-main.h \
+  ../../include/j-cleanspool.h ../../include/j-throttle.h \
+  ../../include/j-smtprate.h ../../include/j-connopen.h \
+  ../../include/j-livehistory.h ../../include/j-entropy.h \
+  ../../include/j-rbl.h ../../include/j-resource.h ../../include/j-dbbl.h \
+  ../../include/j-rcpt-list.h ../../include/j-dbpolicy.h \
+  ../../include/j-policy.h ../../include/j-dbrcpt.h \
+  ../../include/j-rcpt.h ../../include/j-grey.h \
+  ../../include/j-grey-client.h ../../include/j-grey-cleanup.h \
+  ../../include/j-nets-tab.h ../../include/j-access.h \
+  ../../include/j-mailregex.h
+
+../../include/j-sys.h:
+
+../../include/config.h:
+
+/usr/include/stdio.h:
+
+/usr/include/features.h:
+
+/usr/include/sys/cdefs.h:
+
+/usr/include/bits/wordsize.h:
+
+/usr/include/gnu/stubs.h:
+
+/usr/include/gnu/stubs-32.h:
+
+/usr/local/gcc-3.4.6/lib/gcc/i686-pc-linux-gnu/3.4.6/include/stddef.h:
+
+/usr/include/bits/types.h:
+
+/usr/include/bits/typesizes.h:
+
+/usr/include/libio.h:
+
+/usr/include/_G_config.h:
+
+/usr/include/wchar.h:
+
+/usr/include/bits/wchar.h:
+
+/usr/include/gconv.h:
+
+/usr/local/gcc-3.4.6/lib/gcc/i686-pc-linux-gnu/3.4.6/include/stdarg.h:
+
+/usr/include/bits/stdio_lim.h:
+
+/usr/include/bits/sys_errlist.h:
+
+/usr/include/stdlib.h:
+
+/usr/include/sys/types.h:
+
+/usr/include/time.h:
+
+/usr/include/endian.h:
+
+/usr/include/bits/endian.h:
+
+/usr/include/sys/select.h:
+
+/usr/include/bits/select.h:
+
+/usr/include/bits/sigset.h:
+
+/usr/include/bits/time.h:
+
+/usr/include/sys/sysmacros.h:
+
+/usr/include/bits/pthreadtypes.h:
+
+/usr/include/alloca.h:
+
+/usr/include/unistd.h:
+
+/usr/include/bits/posix_opt.h:
+
+/usr/include/bits/confname.h:
+
+/usr/include/getopt.h:
+
+/usr/include/string.h:
+
+/usr/include/strings.h:
+
+/usr/include/sysexits.h:
+
+/usr/local/gcc-3.4.6/lib/gcc/i686-pc-linux-gnu/3.4.6/include/limits.h:
+
+/usr/local/gcc-3.4.6/lib/gcc/i686-pc-linux-gnu/3.4.6/include/syslimits.h:
+
+/usr/include/limits.h:
+
+/usr/include/bits/posix1_lim.h:
+
+/usr/include/bits/local_lim.h:
+
+/usr/include/linux/limits.h:
+
+/usr/include/bits/posix2_lim.h:
+
+/usr/include/math.h:
+
+/usr/include/bits/huge_val.h:
+
+/usr/include/bits/mathdef.h:
+
+/usr/include/bits/mathcalls.h:
+
+/usr/include/errno.h:
+
+/usr/include/bits/errno.h:
+
+/usr/include/linux/errno.h:
+
+/usr/include/asm/errno.h:
+
+/usr/include/asm-generic/errno.h:
+
+/usr/include/asm-generic/errno-base.h:
+
+/usr/include/sys/time.h:
+
+/usr/include/sys/resource.h:
+
+/usr/include/bits/resource.h:
+
+/usr/include/signal.h:
+
+/usr/include/bits/signum.h:
+
+/usr/include/bits/siginfo.h:
+
+/usr/include/bits/sigaction.h:
+
+/usr/include/bits/sigcontext.h:
+
+/usr/include/asm/sigcontext.h:
+
+/usr/include/bits/sigstack.h:
+
+/usr/include/bits/sigthread.h:
+
+/usr/include/sys/wait.h:
+
+/usr/include/bits/waitflags.h:
+
+/usr/include/bits/waitstatus.h:
+
+/usr/include/fcntl.h:
+
+/usr/include/bits/fcntl.h:
+
+/usr/include/sys/stat.h:
+
+/usr/include/bits/stat.h:
+
+/usr/include/dirent.h:
+
+/usr/include/bits/dirent.h:
+
+../../pcre-7.0/pcre.h:
+
+/usr/include/regex.h:
+
+/usr/include/ctype.h:
+
+/usr/include/sys/socket.h:
+
+/usr/include/sys/uio.h:
+
+/usr/include/bits/uio.h:
+
+/usr/include/bits/socket.h:
+
+/usr/include/bits/sockaddr.h:
+
+/usr/include/asm/socket.h:
+
+/usr/include/asm/sockios.h:
+
+/usr/include/sys/un.h:
+
+/usr/include/poll.h:
+
+/usr/include/sys/poll.h:
+
+/usr/include/bits/poll.h:
+
+/usr/include/netinet/in.h:
+
+/usr/include/stdint.h:
+
+/usr/include/bits/in.h:
+
+/usr/include/bits/byteswap.h:
+
+/usr/include/arpa/inet.h:
+
+/usr/include/arpa/nameser.h:
+
+/usr/include/sys/param.h:
+
+/usr/include/linux/param.h:
+
+/usr/include/asm/param.h:
+
+/usr/include/sys/bitypes.h:
+
+/usr/include/arpa/nameser_compat.h:
+
+/usr/include/netdb.h:
+
+/usr/include/rpc/netdb.h:
+
+/usr/include/bits/netdb.h:
+
+/usr/include/resolv.h:
+
+/usr/include/syslog.h:
+
+/usr/include/sys/syslog.h:
+
+/usr/include/bits/syslog-path.h:
+
+/usr/include/pthread.h:
+
+/usr/include/sched.h:
+
+/usr/include/bits/sched.h:
+
+/usr/include/bits/setjmp.h:
+
+/usr/include/dlfcn.h:
+
+/usr/include/bits/dlfcn.h:
+
+/usr/include/pwd.h:
+
+/usr/include/grp.h:
+
+/usr/include/sys/sysinfo.h:
+
+/usr/include/linux/kernel.h:
+
+/usr/include/sys/utsname.h:
+
+/usr/include/bits/utsname.h:
+
+/usr/include/sys/mman.h:
+
+/usr/include/bits/mman.h:
+
+/usr/include/assert.h:
+
+/usr/include/libgen.h:
+
+../../berkdb/db.h:
+
+/usr/include/inttypes.h:
+
+/usr/include/libmilter/mfapi.h:
+
+/usr/include/libmilter/mfdef.h:
+
+../../include/j-avclient.h:
+
+../../include/j-chkmail.h:
+
+../../include/version.h:
+
+../../include/defs.h:
+
+../../include/j-sys.h:
+
+../../include/j-libjc.h:
+
+../../include/macros.h:
+
+../../include/j-time.h:
+
+../../include/kstats.h:
+
+../../include/j-linkedlist.h:
+
+../../include/j-name2id.h:
+
+../../include/j-regex.h:
+
+../../include/j-decode.h:
+
+../../include/j-base64.h:
+
+../../include/j-qp.h:
+
+../../include/j-rfc2822.h:
+
+../../include/j-demime.h:
+
+../../include/j-convert-8to7.h:
+
+../../include/j-html.h:
+
+../../include/j-divers.h:
+
+../../include/j-smtp-divers.h:
+
+../../include/j-strings.h:
+
+../../include/j-strconvert.h:
+
+../../include/j-buffer.h:
+
+../../include/j-morpho.h:
+
+../../include/j-syslog.h:
+
+../../include/j-txtlog.h:
+
+../../include/j-server.h:
+
+../../include/j-avclient.h:
+
+../../include/j-inet.h:
+
+../../include/j-dns.h:
+
+../../include/j-dns-parse.h:
+
+../../include/j-ipc.h:
+
+../../include/j-db.h:
+
+../../include/j-map.h:
+
+../../include/md5.h:
+
+../../include/sha1.h:
+
+../../include/j-msg-hash.h:
+
+../../include/j-databases.h:
+
+../../include/j-resolve-cache.h:
+
+../../include/j-btree.h:
+
+../../include/j-rdfile.h:
+
+../../include/j-shmem.h:
+
+../../include/j-table.h:
+
+../../include/j-uudecode.h:
+
+../../include/j-unattach.h:
+
+../../include/j-load.h:
+
+../../include/j-cyclic.h:
+
+../../include/j-mbox.h:
+
+../../include/j-bfilter.h:
+
+../../include/j-bcheck.h:
+
+../../include/j-msg-score.h:
+
+../../include/j-modules.h:
+
+../../include/j-read-conf-data.h:
+
+../../include/j-headers.h:
+
+../../include/j-oracle-scores.h:
+
+../../include/j-chkcontent.h:
+
+../../include/j-oracle.h:
+
+../../include/j-fileexp.h:
+
+../../include/j-cf.h:
+
+../../include/cfh-defs.h:
+
+../../include/j-log.h:
+
+../../include/j-proc-witness.h:
+
+../../include/j-config.h:
+
+../../include/j-stats.h:
+
+../../include/mimelist.h:
+
+../../include/scanmail.h:
+
+../../include/j-signal.h:
+
+../../include/j-control.h:
+
+../../include/j-main.h:
+
+../../include/j-cleanspool.h:
+
+../../include/j-throttle.h:
+
+../../include/j-smtprate.h:
+
+../../include/j-connopen.h:
+
+../../include/j-livehistory.h:
+
+../../include/j-entropy.h:
+
+../../include/j-rbl.h:
+
+../../include/j-resource.h:
+
+../../include/j-dbbl.h:
+
+../../include/j-rcpt-list.h:
+
+../../include/j-dbpolicy.h:
+
+../../include/j-policy.h:
+
+../../include/j-dbrcpt.h:
+
+../../include/j-rcpt.h:
+
+../../include/j-grey.h:
+
+../../include/j-grey-client.h:
+
+../../include/j-grey-cleanup.h:
+
+../../include/j-nets-tab.h:
+
+../../include/j-access.h:
+
+../../include/j-mailregex.h:

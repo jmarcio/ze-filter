@@ -1,0 +1,23 @@
+#! /bin/bash
+
+#M4=/usr/local/gnu/bin/m4
+#export M4
+
+PATH=/usr/bin:$PATH
+
+DATE=`date +%y%m%d`
+echo $DATE > aux/timestamp
+
+HERE=`pwd`
+VERSION=`basename $HERE`
+VERSION=`echo $VERSION | sed s/jchkmail-// | sed s/j-chkmail-//`
+echo $VERSION > aux/version
+
+set -x
+
+autoheader
+aclocal
+libtoolize -c -f --automake
+automake -a -c  
+autoconf 
+

@@ -1,0 +1,81 @@
+/*
+ *
+ * j-chkmail - Mail Server Filter for sendmail
+ *
+ * Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz
+ *
+ *  Auteur     : Jose Marcio Martins da Cruz
+ *               jose.marcio.mc@gmail.org
+ *
+ *  Historique :
+ *  Creation     : janvier 2002
+ *
+ * This program is free software, but with restricted license :
+ *
+ * - j-chkmail is distributed only to registered users
+ * - j-chkmail license is available only non-commercial applications,
+ *   this means, you can use j-chkmail if you make no profit with it.
+ * - redistribution of j-chkmail in any way : binary, source in any
+ *   media, is forbidden
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * More details about j-chkmail license can be found at j-chkmail
+ * web site : http://foss.jose-marcio.org
+ */
+
+#undef  RUN_AS_USER
+#define RUN_AS_USER        "@USER@"
+
+#undef  RUN_AS_GROUP
+#define RUN_AS_GROUP       "@GROUP@"
+
+#define J_SPOOLDIR         "@SPOOLDIR@"
+
+#define J_WORKROOT         "@WORKROOT@"
+#define J_WORKDIR          "@WORKROOT@/files" 
+#define J_CDBDIR           "@WORKROOT@/cdb" 
+#define J_WDBDIR           "@WORKROOT@/wdb" 
+#define J_CONFDIR          "@CONFDIR@"
+
+#define J_GREYDDIR         "@JGREYDDIR@"
+#define J_GREYD_PID_FILE   "@STATEDIR@/j-greyd.pid"
+#define J_CONF_FILE        "@CONFDIR@/j-chkmail.cf"
+
+#define J_STATS_FILE       "file:j-stats"
+#define J_XFILES_LOG       "file:j-files"
+#define J_VIRUS_LOG        "file:j-virus"
+#define J_REGEX_LOG        "file:j-regex"
+#define J_GREY_LOG         "file:j-grey-expire"
+#define J_QUARANTINE_LOG   "file:j-quarantine"
+
+#define J_USERS_FILE       "j-local-users"
+#define J_ERROR_MSG_FILE   "j-error-msg"
+#define J_NETS_FILE        "j-nets"
+#define J_REGEX_FILE       "j-regex"
+#define J_XFILES_FILE      "j-xfiles"
+#define J_ORADATA_FILE     "j-oradata"
+
+#define J_URLBL_DB         "j-urlbl.db"
+#define J_POLICY_DB        "j-policy.db"
+#define J_RCPT_DB          "j-rcpt.db"
+
+#define J_STATEDIR         "@STATEDIR@"
+#define J_SMSOCKFILE       "local:@STATEDIR@/j-chkmail.sock"
+#define J_PID_FILE         "@STATEDIR@/j-chkmail.pid"
+
+#define J_CW_FILE          "/etc/mail/local-host-names"
+
+#define J_CFARGS           "@CFARGS@"
+
+#define LANG_EN            0
+#define LANG_FR            1
+
+#define MSG_LANG           LANG_@LANGSPEC@
+
+#define UNAME              "@UNAME@"
+
+#define CONF_XFILES_DEF    "@XFILES_DEF@"
+

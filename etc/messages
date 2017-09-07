@@ -1,0 +1,35 @@
+
+ErrorMsg:NO_PEER_HOSTNAME       *** No peer hostname when connecting
+ErrorMsg:XFILE                  *** A suspicious file (executable code) was found in the message !
+ErrorMsg:NO_FROM_HEADER         *** There is no From header field
+ErrorMsg:NO_RCPT_HEADER         *** There is no To, CC or Bcc header field
+ErrorMsg:NO_SUBJECT_HEADER      *** There is no Subject Header
+ErrorMsg:NO_HEADERS             *** There are no headers...
+ErrorMsg:INTRANET_USER          *** Mail to intranet user from outside world...
+ErrorMsg:LOCAL_USER             *** %s can receive mail only from local network
+ErrorMsg:BINARY_MESSAGE         *** Trying a buffer overflow ??? - Let's discard it ! 
+ErrorMsg:VIRUS                  *** A virus was detected in your message
+ErrorMsg:POLICY                 *** This message violates our policy
+ErrorMsg:TOO_MUCH_RCPT          *** Too much recipients for this message
+ErrorMsg:ADDRESS_OUTSIDE_DOMAIN *** %s From address outside %s network (%s)
+ErrorMsg:RESOLVE_FAIL           *** RESOLVE : mail gateway DNS lookup failed
+ErrorMsg:RESOLVE_FORGED         *** RESOLVE : mail gateway hostname seems to be forged
+ErrorMsg:TOO_MUCH_EMPTY         *** Too much empty connections
+ErrorMsg:TOO_MUCH_BADRCPT       *** Harvesting ???
+ErrorMsg:TOO_MUCH_OPEN          *** Too much open connections
+ErrorMsg:THROTTLE_EXCEEDED      *** CONN THROTTLE : too high
+ErrorMsg:RCPT_THROTTLE_EXCEEDED *** RCPT THROTTLE : too high
+ErrorMsg:FROM_CONTENTS          *** From contents violates site policy
+ErrorMsg:SUBJECT_CONTENTS       *** Subject contents violates site policy
+ErrorMsg:HEADERS_CONTENTS       *** Header contents violates site policy
+ErrorMsg:BODY_CONTENTS          *** Sorry, this server is configured to refuse this kind of mail (SPAM)
+ErrorMsg:HELO_CONTENTS          *** HELO contents : strange !!!
+ErrorMsg:TEXT_NOT_ALLOWED       *** MESSAGE CONTENTS VIOLATE SITE POLICY
+ErrorMsg:ENCODED_BODY           *** We don't accept encoded messages
+ErrorMsg:BODY_ENCODED_BINARY    *** No BINARY messages !
+ErrorMsg:BODY_ENCODED_BASE64    *** No BASE 64 messages !
+ErrorMsg:BODY_ENCODED_QP        *** No QUOTED PRINTABLE messages !
+ErrorMsg:BAD_NULL_SENDER        *** Bad NULL sender
+
+
+

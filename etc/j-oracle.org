@@ -1,0 +1,150 @@
+
+
+<ORACLE-SCORES>
+
+# RATIO :   0.961 (28010 spams/29152 hams)
+R00   ENABLE   odds=5.000      Realtime Blacklist
+R01   DISABLE  odds=1.000      Realtime Blacklist
+R02   DISABLE  odds=1.000      Realtime Blacklist
+R03   DISABLE  odds=1.000      Realtime Blacklist
+R04   DISABLE  odds=1.000      Realtime Blacklist
+R05   DISABLE  odds=1.000      Realtime Blacklist
+R06   DISABLE  odds=1.000      Realtime Blacklist
+R07   DISABLE  odds=1.000      Realtime Blacklist
+R08   DISABLE  odds=1.000      Realtime Blacklist
+R09   DISABLE  odds=1.000      Realtime Blacklist
+R10   DISABLE  odds=1.000      Realtime Blacklist
+R11   DISABLE  odds=1.000      Realtime Blacklist
+R12   DISABLE  odds=1.000      Realtime Blacklist
+R13   DISABLE  odds=1.000      Realtime Blacklist
+R14   DISABLE  odds=1.000      Realtime Blacklist
+R15   DISABLE  odds=1.000      Realtime Blacklist
+
+
+C01   ENABLE   odds=8.000      SMTP client resolve failed
+C02   ENABLE   odds=8.000      SMTP client resolve forged
+C03   ENABLE   odds=8.000      SMTP client resolve tempfail
+C04   ENABLE   odds=8.000      False localhost DNS declaration
+C05   ENABLE   odds=8.000      SMTP client sending mail to spamtrap
+C06   ENABLE   odds=8.000      Bad EHLO parameter
+C07   ENABLE   odds=8.000      Myself EHLO parameter - forged
+
+
+M01   ENABLE   odds=1.000      No HTML nor TEXT parts
+M02   ENABLE   odds=8.386      text/html without text/plain
+M03   ENABLE   odds=187.440    bad date (   0.4)
+M04   ENABLE   odds=241.000    date in the future (   0.4)
+M06   ENABLE   odds=830.064    unwanted charset
+M08   ENABLE   odds=7.108      BAD EXPRESSIONS
+M09   ENABLE   odds=8.000      Forged postmaster
+M10   ENABLE   odds=8.000      Invalid sender address
+M11   ENABLE   odds=8.000      Invalid domain address
+M12   ENABLE   odds=8.000      No Subject header
+M13   ENABLE   odds=12.478     RFC2822 headers compliance
+M14   ENABLE   odds=3.246      Header syntax
+M15   ENABLE   odds=20.429     Base 64 encoded message
+M16   ENABLE   odds=75.352     Base 64 encoded Subject
+M17   ENABLE   odds=69.581     multipart/* unwanted boundary
+M18   ENABLE   odds=8.000      message with bad recipients
+M19   ENABLE   odds=1.000      MIME errors
+M21   ENABLE   odds=23.281     unwanted mailer
+M22   ENABLE   odds=10.694     text plain/html parts don't match
+M23   ENABLE   odds=1.000      message with spamtrap recipient
+M24   ENABLE   odds=1.000      message too short
+M25   ENABLE   odds=1.000      bad NULL sender
+M26   ENABLE   odds=7.342      HI CAPS Subject
+M27   ENABLE   odds=56.965     Unwanted MIME part with Content-ID
+M28   ENABLE   odds=125.000    Message with an empty attachment (   2.0)
+
+
+P01   ENABLE   odds=6.626     text/plain empty
+#P01   ENABLE   odds=46.626     text/plain empty
+P02   ENABLE   odds=13.523     text/plain encoded base64
+P03   ENABLE   odds=2637.000   text/plain wo charset
+P04   ENABLE   odds=5.125      plain/text too short
+
+
+H03   ENABLE   odds=19.244     cleaned HTML part too short
+H04   ENABLE   odds=17.941     text/html  encoded base64
+H05   ENABLE   odds=5.098      HTML with unwanted tags
+H06   ENABLE   odds=7.703      HTML tag/text ratio
+H10   ENABLE   odds=3.004      invalid HTML tags
+
+
+</ORACLE-SCORES>
+
+
+<ORACLE-DATA>
+# NL :    58
+
+# RATIO :   0.961 (28010 spams/29152 hams)
+
+HTML-TAGS     odds=3.90     <(table|td|th|tr)[^<>]+background=[^<>]+>
+HTML-TAGS     odds=4.27     <a href[^<>]+>[ ]*</a>
+HTML-TAGS     odds=1.86     <a href[^<>]+href=[^<>]+>
+HTML-TAGS     odds=1.25     <a[^<>]+href[^<>]+http[s]?://[^<>]+http[s]?://[^<>]+>
+HTML-TAGS     odds=1.00     <applet[^<>]+codebase=[^<>]+>
+HTML-TAGS     odds=7.20     <area[^<>]+href=[^<>]+>
+#HTML-TAGS     odds=0.67     <base[^<>]+href=[^<>]+>
+HTML-TAGS     odds=1.33     <embed[^<>]+src=[^<>]+>
+HTML-TAGS     odds=1.34     <form[^<>]+action=[^<>]+>
+HTML-TAGS     odds=1.00     <frame[^<>]+src=[^<>]+>
+HTML-TAGS     odds=129.00   <iframe[^<>]+src=[^<>]+>
+HTML-TAGS     odds=131.00   <iframe[^>]*>
+HTML-TAGS     odds=1.00     <img[^<>]+dynsrc=[^<>]+>
+HTML-TAGS     odds=5.00     <img[^<>]+lowsrc=[^<>]+>
+HTML-TAGS     odds=59.40    <img[^<>]+src=[']?cid:[^<>]+>
+HTML-TAGS     odds=17.61    <img[^<>]+src=[^<>]+>
+HTML-TAGS     odds=6.95     <img[^<>]+usemap=[^<>]+>
+HTML-TAGS     odds=1.23     <input[^<>]*>
+HTML-TAGS     odds=1.96     <input[^<>]+src=[^<>]+>
+HTML-TAGS     odds=1.58     <link[^<>]+href=[^<>]+>
+HTML-TAGS     odds=11.00    <meta[^<>]+url=[^<>]+>
+HTML-TAGS     odds=3.70     <object[^<>]+classid=[^<>]+>
+HTML-TAGS     odds=2.27     <object[^<>]+codebase=[^<>]+>
+HTML-TAGS     odds=5.00     <object[^<>]+data=[^<>]+>
+HTML-TAGS     odds=5.00     <object[^<>]+name=[^<>]+>
+HTML-TAGS     odds=1.66     <script[^<>]*>
+HTML-TAGS     odds=1.40     <script[^<>]+src=[^<>]+>
+HTML-TAGS     odds=1.45     <span[^<>]*>
+
+BAD-EXPR      odds=20.88    http[s]?://[^ /#]*#[0-9a-f]
+BAD-EXPR      odds=1.00     http[s]?://[^ /&]*&#[0-9]{1,3}
+BAD-EXPR      odds=1.03     http[s]?://[^ /@>\\n]*@
+BAD-EXPR      odds=6.92     http[s]?://[^ /]*[0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}
+BAD-EXPR      odds=3.91     http[s]?://[^>\n\r *]+\\*http[s]?://
+
+CHARSET       odds=13.00    ^big5$
+CHARSET       odds=9.00     ^euc-kr$
+CHARSET       odds=4519.00  ^gb2312$
+CHARSET       odds=378.27   ^iso-2022-jp$
+CHARSET       odds=167.00   ^koi8-r$
+CHARSET       odds=233.11   ^windows-1251$
+
+BOUNDARY      odds=127.00   ^--[0-9]{10,30}$
+BOUNDARY      odds=14.72    ^[0-9]+$
+
+MAILER        odds=1.00     ClassMailing
+MAILER        odds=2.68     CommuniGate Pro WebUser Interface
+MAILER        odds=1.00     DM-SenderEX
+MAILER        odds=1.00     Douhou@Mail
+MAILER        odds=7.00     Easy DM free
+MAILER        odds=1.00     Full.*Randomized SMTP & Webmail Version
+MAILER        odds=15.00    JMail
+MAILER        odds=9.00     JiXing mailer .*Design By JohnnieHuang
+MAILER        odds=9.00     MBM [0-9].[0-9][a-z]?
+MAILER        odds=1.00     MyListManager .* SCH MAIL
+MAILER        odds=25.00    OpenSmtp.net
+MAILER        odds=25.00    PG-MAILINGLIST PRO
+MAILER        odds=5.00     PHPBulkEmailer.*http://www.nukedweb.com/
+#MAILER        odds=0.07     PocoMail
+MAILER        odds=5.00     QuickSender
+MAILER        odds=101.00   RLSP Mailer
+MAILER        odds=5.82     SMTP32
+MAILER        odds=133.00   WAmailer.*phpcodeur.net
+#MAILER        odds=0.34     WC Mail
+MAILER        odds=3.00     ^[a-z]{9,11} [0-9]\.[0-9]$
+MAILER        odds=3.00     mPOP Web-Mail
+
+</ORACLE-DATA>
+

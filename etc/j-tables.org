@@ -1,0 +1,16 @@
+
+<DNS-IP-RBWL>
+
+#dnswl.domain.org     netclass=dnswl; odds=0.5000; code=all; onmatch=stop; checks=addr,name
+#dnsbl.domain.org     netclass=dnsbl; odds=2.0000; code=all; onmatch=stop; checks=addr,name
+
+dnsbl.foss.jose-marcio.org  netclass=dnsbl; odds=2.0000; code=127.0.0.2; onmatch=stop; checks=addr,name
+</DNS-IP-RBWL>
+
+
+<DNS-URLBL>
+
+#multi.surbl.org  score=20.000;code=all;onmatch=stop;recurse=yes
+</DNS-URLBL>
+
+

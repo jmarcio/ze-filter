@@ -1,0 +1,24 @@
+#! /usr/bin/perl -w
+
+my $OK = 0;
+
+while (<>) {
+  chomp;
+  chomp;
+
+  if (!$ok) {
+    next unless /^\s*$/;
+
+    $ok = 1;
+    next;
+  }
+
+  next if /^\s*$/;
+
+  next if /^\d+\.\d+\.\d+\.\d+/;
+
+  my ($a, undef) = split;
+  printf "$a\n";
+}
+
+

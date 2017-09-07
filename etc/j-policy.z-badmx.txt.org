@@ -1,0 +1,231 @@
+#   ######                  #     # #     #
+#   #     #    ##    #####  ##   ##  #   #
+#   #     #   #  #   #    # # # # #   # #
+#   ######   #    #  #    # #  #  #    #
+#   #     #  ######  #    # #     #   # #
+#   #     #  #    #  #    # #     #  #   #
+#   ######   #    #  #####  #     # #     #
+
+#
+# Some Bad boys detected at j-chkmail author site...
+#
+#
+# NOTE : We here are returning error 421/4.5.1.
+#        This doesn't conforms to RFCs, as this will close connection
+#        with a temporary error. Correct answer shall probably be
+#        550/5.7.1. But unless this comes from misconfigured servers,
+#        all messages coming from this kind of addresses are spam.
+#
+#        So, let's fill up sender mailqueue (if they manage this...)
+#
+#
+BadMX:dev.null             ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+
+BadMX:mail.img2k4.biz      ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:65.59.208.95         ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+#
+BadMX:saveinternet.net     ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.122.4          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.123.4          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.112.4          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.113.4          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.114.4          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.115.4          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.116.4          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.117.4          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.118.4          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.119.4          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.120.4          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.121.4          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+
+BadMX:69.42.122.7          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.123.7          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.112.7          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.113.7          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.114.7          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.115.7          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.116.7          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.117.7          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.118.7          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.119.7          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.120.7          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.121.7          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+
+BadMX:69.42.122.8          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.123.8          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.112.8          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.113.8          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.114.8          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.115.8          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.116.8          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.117.8          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.118.8          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.119.8          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.120.8          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.121.8          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+
+BadMX:69.42.122.9          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.123.9          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.112.9          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.113.9          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.114.9          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.115.9          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.116.9          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.117.9          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.118.9          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.119.9          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.120.9          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.121.9          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+
+BadMX:69.42.112.16         ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.42.112.17         ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+
+# fastmail
+#BadMX:66.111.4.72          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+#BadMX:66.111.4.73          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+#BadMX:66.111.4.71          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+#BadMX:66.139.75.100        ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+
+
+# spam0n.address.com
+BadMX:205.158.107.22       ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:205.158.107.77       ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:205.158.110.5        ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:64.0.22.22           ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.36.252.55         ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+
+
+BadMX:216.176.28.102       ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:216.176.28.109       ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:216.176.28.116       ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:216.176.28.118       ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:216.176.28.121       ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:216.176.28.124       ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:216.168.224.63       ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:216.168.224.64       ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+# catchamail.com, isleuthmail.com, freefunds.com, losers.com, ...
+BadMX:64.40.102            ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:63.251.163.109       ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:63.251.163.112       ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:64.235.246.143       ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:66.150.161.33          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:66.150.161.34          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:66.150.161.35          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:216.185.55.66          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:216.185.55.67          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:216.185.55.68          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:216.185.55.69          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:67.19.67.164           ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:msgto.com              ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+
+# thisistheremofthisjohn.com
+BadMX:219.148.2.22	         ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+
+# feltherain.biz
+BadMX:66.36.230.170	         ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+#
+#BadMX:dyndns.org            ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:relay.wolfe.net        ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:ipt.aol.com            ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:angelfire.com          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:209.202.218.12         ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+
+BadMX:roger.com                 ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:fake-hostname.oracle.com  ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:veloxzone.com.br          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:hstntx.swbell.net         ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+
+# itookmyproza.com, girlofyourdreams.com, mydotcomaddress.com, ...
+BadMX:65.198.177                ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+
+# theoffice.net, ...
+BadMX:69.56.175.208             ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:69.56.175.209             ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+
+# thinkbigcolor.com, ...
+BadMX:216.168.224.63            ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+
+# cheapone.com, ...
+BadMX:212.227.34.3              ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+
+# adept-job.com, marlininc.com...
+BadMX:204.251.15                ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+
+# juventusmail.net, mediomail.com, suferznet.net
+BadMX:207.219.111.23            ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+
+BadMX:copacabana.com            ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:anonymizer.com            ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+
+BadMX:cyberdif.com              ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:213.130.63.235            ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:this.domain.is.not.used.for.email        ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+
+BadMX:juridica.com              ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+
+BadMX:forfree.at                ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+
+# catchamail.com, isleuthmail.com, ...
+BadMX:64.40.102.42              ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+
+BadMX:nomail.yahoo.com          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:client.comcast.com        ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:pooles.rima-tde.net       ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:client2.attbi.com         ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:client.mchsi.net          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:client.mchsi.com          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:client.insightbb.com      ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:dsl.siol.net              ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+
+BadMX:cable.earthlink.net       ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:vc.shawcable.net          ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+
+BadMX:mail.                     ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:mail                      ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+
+BadMX:64.202.160.122            ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+
+# greatoffrs.com.
+BadMX:69.90.126.111             ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+# mail.com.fr
+BadMX:209.249.170.10            ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+
+# recruitingproducttesters.info and so...
+BadMX:63.243.148                ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+
+BadMX:freelotto.com             ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+
+#BadMX:        ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+
+BadMX:cust-mx.pool.cisdata.net  ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:cust-mx2.pool.cisdata.net ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:mail.bar-plate.com        ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+
+BadMX:medco.com.lb            ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:91.121.13.98            ERROR:550:5.7.1:No wines here...
+BadMX:213.186.36.182          ERROR:550:5.7.1:No wines here...
+BadMX:le20.com                ERROR:550:5.7.1:No wines here...
+BadMX:le20.fr                 ERROR:550:5.7.1:No wines here...
+BadMX:le20news.com            ERROR:550:5.7.1:No wines here...
+BadMX:le20news.fr             ERROR:550:5.7.1:No wines here...
+BadMX:le20newsletter.com      ERROR:550:5.7.1:No wines here...
+
+BadMX:pixmania.fr               ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:pixmania.org              ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:mail.pixmania.org         ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+
+BadMX:72.32.71.212              ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:72.32.71.213              ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+BadMX:72.32.71.214              ERROR:421:4.5.1:Unwanted or unreacheable MX... Try later !
+
+BadMX:example.com               ERROR:550:571:Hmmm. Good example ! Give me another one !
+
+BadMX:objectif-sciences.info    ERROR:550:571:You don't accept bounces !!!   
+
+# SEDO Parking 
+BadMX:82.98.86                  ERROR:550:571:Domain parking !!!
+
+BadMX:blackhole.wanadoo.com	ERROR:550:571:Blackhole MX !
+
+BadMX:mailrejector.com          ERROR:550:571:Fake MX !
+

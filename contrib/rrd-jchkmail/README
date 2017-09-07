@@ -1,0 +1,86 @@
+
+
+I.     INSTALLATION
+
+II.    UPGRADING
+
+
+---------------------------------------------------------------
+
+I.   INSTALLATION
+
+1. Install rrdtool, the excelent package to do graphical stats. 
+   You can get rrdtool from
+
+   http://ee-staff.ethz.ch/~oetiker/webtools/rrdtool/
+
+   Mainly, be sure you've read installation instructions to
+   see where RRD perl modules will be installed. You'll need
+   this information later... 8-)
+
+2. Copy this directory (contrib/rrdtool-jchkmail) elsewhere
+   at your mail server.
+
+3. Scripts on this package are :
+   - j-initrrd   - This script is used to initialize rrd database
+       at rrd directory
+   - j-mem2rrd   - this script is used to read /var/jchkmail/j-stats
+       j-chkmail internal counters and integrate then to the rrd
+       database
+   - j-dograph   - this script creates beautiful presentation from
+       rrd database
+   - maj-jchkmail - this script shall be called by a cron, each
+       five minutes to update everything. The only time you shall
+       call other scripts is at initialisation time.
+   - cvt-j-stats - this script is used to convert j-stats file
+       from old format to new one (read below and the FAQ).
+
+
+3. Check all scripts to adapt paths and perl modules path. You'll
+   probably need to modify :
+   - j-initrrd   -  Define RRDBIN variable with the path of rrdtool
+         binary.
+   - j-mem2rrd   - define perl and rrdtool path. Lines to change are :
+
+       #!/opt/perl/bin/perl -w
+       ...
+       use lib qw( /opt/rrdtool/lib/perl ../lib/perl );
+
+   - j-dograph   - repeat what you did with j-mem2rrd
+
+       #! /opt/perl/bin/perl -w
+       ...
+       use lib qw( /opt/rrdtool/lib/perl ../lib/perl );
+
+   - maj-jchkmail - change the path of where you change your data.
+
+4. Initialisation - 
+   - remove all files inside rrd directory
+   - create a new rrd database : 
+     ./j-initrrd
+   - fill up rrd database with already existing data 
+     ./j-mem2rrd /var/jchkmail/j-stats
+
+5. Add maj-jchkmail to the crontab. Something of the kind...
+
+   1,6,11,16,21,26,31,36,41,46,51,56 * * * * (cd /toto ; ./maj-jchkmail ) > /dev/null
+
+6. You'll probably want to add this directory to your webserver.
+  
+---------------------------------------------------------------
+
+II.  UPGRADING
+
+
+j-stats file format has changed on later snapshots of version 1.5
+
+You can update old j-stats file with the cvt-j-stats script.
+
+Run it as :
+
+  cp j-stats j-stats.old
+  ./cvt-j-stats  j-stats.old > j-stats.new
+
+Reinitialise all rrd databases as indicated above.
+
+

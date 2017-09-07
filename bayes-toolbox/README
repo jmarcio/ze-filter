@@ -1,0 +1,97 @@
+
+
+T.O.C.
+******
+
+1. Introduction
+2. Requirements
+3. Learning
+4. Updating learning database
+5. Checking filter efficiency
+
+1. Introduction
+***************
+
+Contents of this directory will help you to :
+
+- Create databases used by j-chkmail to do bayesian filtering
+  (learning)
+
+- Checking messages by hand
+
+The contents of this directory will be installed as 
+    /var/jchkmail/bayes-toolbox
+
+
+2. Requirements
+***************
+
+To use this tools, you need to compile and install j-chkmail. Mainly,
+you'll need two programs from j-chkmail distribution : j-makemap (to
+handle BerkeleyDB databases) and j-bayes-tbx (to extract tokens from
+messages and check messages).
+
+
+3. Basic Learning
+*****************
+
+Learning means create databases used by the filter to evaluate the
+score to be assigned to a message or a set of messages.
+
+You need some mailboxes, both hams and spams. Spams and Hams shall be
+in different files. So, this is some work to be done by hand by a
+human being.
+
+Spams and Hams files are identified by their extensions :
+
+	hbox    -> HAM
+	sbox	-> SPAM
+
+Put the mailboxes to be learned inside "bayes/learn" directory, and
+simply type :
+
+	cd learn
+	make
+
+This will create everything. The filter will look for a database in the
+BerkeleyDB format inside  /var/jchkmail/cdb directory.
+
+For your convenience, you can launch :
+
+	make install
+
+This will both copy the required database into work directory, but also
+tell the daemon to use the new database.
+
+4. Updating learning database
+*****************************
+
+The learn.sh script allows you to manage the learning process. This means,
+if you have some way to collect message samples and want to use them to
+update the training database. It's just enough to put them inside some
+directory and periodically launch this script to feed them into j-chkmail
+learning chain. learn.sh will do the rest for you.
+
+You'll eventually need to take a look into learn.sh (the documentation is
+integrated in it) and eventually modify some path values in order to adapt
+it to your installation.
+
+learn.sh is a contribution from Thomas Spahni.
+
+
+5. Checking filter efficiency
+*****************************
+
+Use the j-bayes-tbx executable :
+
+	j-bayes-tbx -c [ -p -x -v ] mailbox
+
+REM : play with p, x and v options to see what they do
+
+	-v   : verbose - this will show the real score of
+         checked message
+        -x   : when checking an entire mailbox, this will
+         present the histogram of scores
+	-b   : use this option to specify a different path
+         to the bag of words database
+

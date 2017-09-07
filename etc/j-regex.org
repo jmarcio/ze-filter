@@ -1,0 +1,39 @@
+#  j-regex
+#
+# WHERE     WEIGHT    REGEX
+#
+#    WHERE  = SUBJECT | HEADERS | BODY | HELO | ANYWHERE
+#    WEIGHT = each occurence counts "WEIGHT" matches
+#    REGEX  = regular expression
+#
+# Ex :
+# SUBJECT    2    viagra
+# BODY       5    http://[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/
+
+
+BODY    10   http://[^ /%]*%[0-9a-f]+
+BODY    10   http://[^ /]*&#[0-9]{1,3}
+BODY    10   <font [^>]*color=["]?(#[ef]{6,6}|white)["]?[^>]*>
+SUBJECT  5   [\ ]{6,20}
+#BODY     5   [\n]{6,}
+
+#BODY    10   http://[^ /]*\.us/
+#BODY    10   http://[^ /]*\.biz
+#BODY    10   http://[^ /]*\.info/
+
+BODY    20  http://[^ /]*/default\.asp\?id=
+#BODY    20  http://[^ /]*/p2/\?id=
+
+#BODY     5  U.S. Licensed Doctors
+#BODY     5  http://[^ /]*more-[^ /]*\.(com|biz)
+
+#BODY    20   http://[^ ]*/cable/
+#BODY    10   http://[^ ]*/patch/
+
+BODY    15   order now
+BODY    10   Magic Lubricant
+BODY    15   \bfuck
+BODY    10   \bpornstar
+BODY    10   \babsolutely free
+
+

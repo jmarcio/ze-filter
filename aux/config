@@ -1,0 +1,144 @@
+#! /bin/sh
+
+os=`uname -s`
+
+OPTIONS=""
+
+DEFOPT="LOAD REGEXREALCLEAN OPENCONN USEDBENV"
+
+DEFOPT=""
+export DEFOPT
+
+#LDFLAGS="-L/opt/sweep/lib"
+#export LDFLAGS
+
+#
+# Select C compiler if not already done
+#
+if [ -z "$CC" ] ; then
+  if [ -x /opt/SUNWspro/bin/cc ] ; then
+    CC="/opt/SUNWspro/bin/cc"
+    CXX="/opt/SUNWspro/bin/CC"
+    #CFLAGS="-xO4"
+  elif [ -x /usr/local/SUNWspro/bin/cc ] ; then
+    CC="/usr/local/SUNWspro/bin/cc"
+    CXX="/usr/local/SUNWspro/bin/CC"
+    #CFLAGS="-xO4"
+  elif [ -x /opt/gcc/bin/gcc ] ; then
+    CC="/opt/gcc/bin/gcc"
+  elif [ -x /usr/local/gcc/bin/gcc ] ; then
+    CC="/usr/local/gcc/bin/gcc"
+  fi
+fi
+
+if [ -n "$CC" ] && [ "`basename $CC`" = "gcc" ] ;
+then
+#  CFLAGS="--pedantic -Wall -g $CFLAGS"
+  echo "" 
+fi
+
+#
+# Already validated _FFRs
+#
+
+#
+# Parse command line options
+#
+setupconfigoptions()
+{
+  while [ $# -gt 0 ];
+  do
+    echo "- $1"
+
+    if [ "$1" = "M64" ] ;
+    then
+      CFLAGS="-m64 $CFLAGS"
+    fi
+
+    if [ "$1" = "LOGREG" ] ;
+    then
+      CPPFLAGS="-D_FFR_LOGREG=1 $CPPFLAGS"
+    fi
+
+    if [ "$1" = "FD4096" ] ;
+    then
+      CPPFLAGS="-DFD_SETSIZE=4096 $CPPFLAGS"
+    fi
+
+    if [ "$1" = "ENTROPY" ] ;
+    then
+      CPPFLAGS="-D_FFR_MSG_ENTROPY=1 $CPPFLAGS"
+    fi
+
+    if [ "$1" = "NEWSCANNER" ] ;
+    then
+      CPPFLAGS="-D_FFR_NEW_SCAN_BLOCK=1"
+    fi
+
+    if [ "$1" = "DBPOLICY" ] ;
+    then
+      CPPFLAGS="-D_FFR_DBPOLICY=1 $CPPFLAGS"
+    fi
+
+    if [ "$1" = "PERIODIC_DEBUG" ] ;
+    then
+      CPPFLAGS="-D_PERIODIC_DEBUG=1 $CPPFLAGS"
+    fi
+
+    if [ "$1" = "BUGGY_AVL" ] ;
+    then
+      CPPFLAGS="-D_BUGGY_AVL=1 $CPPFLAGS"
+    fi
+
+    if [ "$1" = "C99" ] ;
+    then
+      if [ -n "$CC" ] && [ "`basename $CC`" = "gcc" ] ;
+      then
+        CFLAGS="-std=c99 $CFLAGS"
+      fi
+    fi
+
+    if [ "$1" = "PEDANTIC" ] ;
+    then
+      if [ -n "$CC" ] && [ "`basename $CC`" = "gcc" ] ;
+      then
+        CFLAGS="\"--pedantic -Wall -std=c99 $CFLAGS\""
+      fi
+    fi
+
+    if [ "$1" = "DEBUG" ] ;
+    then
+      CFLAGS="-g $CFLAGS"
+    fi
+
+    if [ "$1" = "RPMOPT" ] ;
+    then
+      CFLAGS="$CFLAGS -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4  -m64 -mtune=generic"
+    fi
+
+    shift
+  done
+}
+
+#
+#
+#
+#
+setupconfigoptions $*
+
+setupconfigoptions $DEFOPT
+
+#echo ""
+
+export CC
+export CFLAGS
+export CPPFLAGS
+export OPTIONS
+
+
+#
+# Now let's go
+#
+./configure $OPTIONS
+
+

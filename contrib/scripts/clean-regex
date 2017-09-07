@@ -1,0 +1,85 @@
+#! /usr/bin/perl -w
+
+# Usage :
+#
+#   clean-regex   /var/jchkmail/j-regex
+
+use Getopt::Long;
+use Cwd;
+
+my $months = 4;
+
+my $now = time();
+
+my $tmin = $now - $months * 30 * 86400;
+
+my $nl = 0;
+
+my %EXPR_DATE = ();
+my %EXPR_NB = ();
+
+$conf = 0;
+$stat = 0;
+$cf_file = "/etc/mail/jchkmail/j-regex";
+
+my $ok = GetOptions('c'   => \$conf,
+                    's'   => \$stat,
+                    'f=s' => \$cf_file);
+
+while (<>)
+{
+  chomp;
+
+  my ($ti, undef, undef, undef, undef, $expr) = split (" ",$_,6);
+
+  next if ($ti < $tmin);
+
+  $nl++;
+
+  $EXPR_DATE{$expr} = $ti;
+  $EXPR_NB{$expr}++;
+}
+
+
+if ($stat)
+{
+  printf " -> $nl lines \n";
+
+  foreach (reverse sort {$EXPR_NB{$a} <=> $EXPR_NB{$b}} keys %EXPR_NB)
+  {
+    printf "%7d %s\n", $EXPR_NB{$_}, $_;
+  }
+}
+
+if ($conf)
+{
+  open IN, "$cf_file" || die "Can't open $cf_file";
+  $nl = 0;
+  while (<IN>)
+  {
+    chomp;
+    if (/^$/)
+    {
+      print "$_\n";
+      next;
+    }
+    if (/^#/)
+    {
+      print "$_\n";
+      next;
+    }
+    (undef, undef, $expr) = split(" ", $_, 3);
+
+    next if !exists($EXPR_DATE{$expr});
+    print "$_\n";
+    $nl++;
+  }
+  close IN;
+
+  print <<TXT1;
+#
+# $nl restored
+#
+TXT1
+
+}

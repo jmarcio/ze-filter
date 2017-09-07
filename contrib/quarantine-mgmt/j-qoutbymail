@@ -1,0 +1,283 @@
+#!/bin/ksh
+
+#
+# j-qoutbymail : Sortie de quarantaine par envoi de message
+#
+# Dans le fichier /etc/mail/aliases ajouter :
+#
+# bon-de-sortie:       "|j-qoutbymail -r 1"
+#
+# Envoyer le message libérateur à : bon-de-sortie@domaine.tld
+#
+# Le champ Subject: doit contenir __MSGID__ du message mis en quaranatine
+#
+# Si -c on vérifie qu'il y a cohérence avec la valeur du corps du message
+#
+
+# Version 1.0 du 29/11/04 par Christian Pélissier
+# Licence GPL (Gnu Public Licence)
+
+export PATH=/usr/bin:/usr/sbin:/usr/local/bin
+
+function usage
+{
+	print -u 2 "\nusage : ${0##*/} [-r] [-u] mtime"
+	print -u 2 "\t-c : check mail sent Subject against quarantined file"
+	print -u 2 "\t-d : suppress delay control"
+	print -u 2 "\t-r : remove file upon successful execution or virus"
+}
+
+typeset -i lineno=1
+
+#
+# Parametres à adapter pour chaque site
+#
+
+MSGREQ=/tmp/msgreq.$$
+
+DOMAIN=A_REMPLACER_PAR_VOTRE_NOM_DE_DOMAINE
+
+#VSCANNER="/usr/local/bin/clamscan --no-summary --detect-broken"
+VSCANNER="/usr/local/bin/clamscan --no-summary"
+
+SENDMAIL=/usr/lib/sendmail
+# Définir MSA si submit.cf
+#MSA=-Am
+
+# MTIME fichiers de plus de 0 jour soit au moins 1 jour
+MTIME=0
+
+# Où se trouvent les fichiers en quarantaine
+SPOOLDIR=/var/spool/jchkmail
+
+ERRORS=/tmp/${0##*/}.$$
+
+#
+# Paramètres liés au langage Fr. Comment E_VAR  for English messages
+#
+
+E_SUBJECT="Erreur sur demande de libération de quarantaine"
+E_NULLSUB="Indiquer le MSG_ID dans l'Objet du message"
+E_CHKBODY="Valeur de l'Objet non présente dans le corps du message"
+E_TOOEARLY="Tentative de récupération prématurée pour"
+E_NOTFOUND="Pas de fichier nommé"
+E_VIRFOUND="Virus identifié dans"
+E_UNKNODIR="Pas de répertoire nommé"
+E_OUTOFDOM="Pas d'action si le demandeur n'est pas dans le domaine"
+E_UNSECURE="Valeur innaceptable pour le l'Objet: du message"
+
+
+
+#
+# Valeurs par défaut
+#
+
+check=no
+delay=yes
+error=no
+remove=no
+
+
+# Check options
+
+while (( $# > 1 ))
+do
+	if [[ "$1" == -r ]]
+	then
+		remove=yes
+		shift
+	elif [[ "$1" == -c ]]
+	then
+		check=yes
+		shift
+	elif [[ "$1" == -d ]]
+	then
+		delay=no
+		shift
+	elif [[ "$1" == -* ]]
+	then
+		print -u2 -- "\n${0##*/} : $1 no such option\n"
+		usage
+		exit 64
+	else
+		break
+	fi
+done
+
+# Argument 1 un délai minimum de sortie de quarantaine
+
+if (( $# < 1 ))
+then
+	usage
+	exit 64
+else
+	case "$1" in 
+	0|1|2|3|4|5|6|7|8|9)
+		MTIME=$1
+		;;
+	esac
+fi
+
+
+#
+# Backup du message requête
+#
+
+cat > $MSGREQ
+
+#
+# Extraction de la premier ligne de la requête (From Unix)
+#
+
+REPLY_TO=$(read -r -- Const EnvFrom Other < $MSGREQ)
+
+#
+# Construction du message d'erreur initial puis redirection de stderr
+#
+
+cat > ${ERRORS} <<- ____end____cat____
+	From: postmaster@$DOMAIN
+	To: $REPLY_TO
+	Subject: ${E_SUBJECT:-Error on unquarantine attempt}
+
+____end____cat____
+
+
+exec 2>> $ERRORS
+
+#
+# Extraction des headers
+#
+
+typeset -l HEADERF
+
+while read -r -- HEADERF HEADERV OTHERS
+do
+	if (( lineno == 1 ))
+	then
+		# From martin@onera.fr Mon Nov 22 14:49:31 2004
+		RETURN_PATH="${HEADERV%% *}"
+		(( lineno += 1 ))
+		continue
+	fi
+	if [[ "$HEADERF" == "" ]]
+	then
+		break
+	fi
+	case $HEADERF in
+	from:)
+		FROM="$HEADERV"
+		;;
+	subject:)
+		if [[ $HEADERV == "" ]]
+		then
+			print -u2 "${E_NULLSUB:-Subject must contain MSG_ID}"
+			error=yes
+		else
+			if [[ $check == yes ]]
+			then
+				FILE=$(grep 'MSG_ID' $MSGREQ | awk '{print $2}')
+				if [[ "$HEADERV" != $FILE ]]
+				then
+					print -u2 "${E_CHKBODY:-Subject header value not found in message body"
+					error=yes
+				fi
+			else
+				FILE=$HEADERV
+			fi
+			FF="$FILE"
+			# Suppression de ce qui serait malveillant avant
+			# pour eviter ./../../../filename
+			FILE=${FILE##*/}
+			# Suppression de ce qui serait malveillant après
+			#FILE=${FILE%%/*}
+			if [[ $FF != $FILE ]]
+			then
+    				logger -t ${0##*/} -p mail.info -i "attack $FF"
+    				print -u2 "${E_UNSECURE:-Unacceptable unsecure value of Subject} $FILE"
+				error=yes
+			fi
+		fi
+		;;
+	esac
+done < $MSGREQ
+
+rm -f $MSGREQ 
+
+if [[ "$RETURN_PATH" != "" ]]
+then
+	REPLY_TO="$RETURN_PATH"
+else
+	REPLY_TO="$FROM"
+fi
+
+#
+# On ne répond que dans son propre domaine pour cause de spam et virus
+#
+
+if [[ "$REPLY_TO" != *${DOMAIN%.*}* ]]
+then
+    logger -t ${0##*/} -p mail.info -i "mail from $REPLY_TO to $1 discarded"
+    print -u2 "${E_OUTOFDOM:-No action out of domain} $DOMAIN"
+    error=yes
+fi
+
+if cd $SPOOLDIR
+then
+	if [[ ! -f $SPOOLDIR/$FILE ]]
+	then
+		print -u 2 "${E_NOTFOUND:-Unknown file} $FILE"
+		error=yes
+	fi
+
+	
+
+	if [[ $delay == yes ]]
+	then
+		found=$( find . -name $FILE -mtime +$MTIME )
+		if [[ x$found == x ]]
+		then
+			print -u 2 "${E_TOOEARLY:-Too early attempt for} $FILE"
+			error=yes
+		fi
+	fi
+	
+	if [[ $error == yes ]]
+	then
+		exec 2>&-
+                $SENDMAIL $MSA -bm -f postmaster@$DOMAIN $REPLY_TO < $ERRORS
+		rm -f $ERRORS
+		exit 0
+	fi
+
+	read -r -- Const EnvFrom Other < $FILE
+
+        if $VSCANNER $SPOOLDIR/$FILE
+        then
+            	# No virus
+		#TO=$(egrep "^To:.*$FROM.*" $SPOOLDIR/$FILE)
+		#CC=$(egrep "^Cc:.*$FROM.*" $SPOOLDIR/$FILE)
+            	$SENDMAIL $MSA -bm -f "$EnvFrom" $REPLY_TO < $SPOOLDIR/$FILE
+		rm -f $ERRORS
+		if [[ $remove == yes ]]
+		then
+			rm -f $SPOOLDIR/$FILE
+		fi
+		exit 0
+        else
+            	# Virus found
+		print -u 2 "${E_VIRFOUND:-Found a virus in} $FILE"
+		exec 2>&-
+                $SENDMAIL $MSA -bm -f postmaster@$DOMAIN $REPLY_TO < $ERRORS
+		rm -f $ERRORS
+		exit 0
+        fi
+else
+	print -u 2 -- "${E_UNKNODIR:-Unknown directory} $SPOOLDIR"
+	exec 2>&-
+        $SENDMAIL $MSA -bm -f postmaster@$DOMAIN $REPLY_TO < $ERRORS
+	rm -f $ERRORS
+	exit 0
+fi
+
+exit 0

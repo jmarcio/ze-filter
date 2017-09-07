@@ -1,0 +1,58 @@
+
+.SUFFIXES: .txt .db .rbldnsd .raw
+
+OBJ = j-urlbl.db
+
+SOURCE := $(wildcard *.ensmp)
+
+SURBLSRC := $(wildcard *.rbldnsd)
+
+SURBLRAW := $(SURBLSRC:.rbldnsd=.raw)
+
+SURBLTXT := $(SURBLSRC:.rbldnsd=.txt)
+
+#
+#
+.txt.db :
+	j-makemap -b $@ -m s < $<
+
+.rbldnsd.raw :
+	../bin/rbldns2txt $< > $@
+
+.raw.txt :
+	../bin/mk_dbin $< > $@
+
+#
+#
+all : $(OBJ) 
+
+clean	:
+	rm -f *.raw *.txt *~
+
+realclean	:
+	rm -f *.db *.raw *.txt *~
+
+
+lurlbl.raw : $(SOURCE)
+	sort $(SOURCE) | uniq > $@
+	cp -p $@ ../extract/
+
+
+be.surbl.org.txt : be.surbl.org.raw
+	../bin/mk_dbin -s 10 -o be.surbl -c 127.1.0.1 $< > $@
+
+sc.surbl.org.txt : sc.surbl.org.raw
+	../bin/mk_dbin -s 10 -o sc.surbl -c 127.1.0.2 $< > $@
+
+ws.surbl.org.txt : ws.surbl.org.raw
+	../bin/mk_dbin -s 10 -o ws.surbl -c 127.1.0.3 $< > $@
+
+mw.surbl.org.txt : mw.surbl.org.raw
+	../bin/mk_dbin -s 10 -o mw.surbl -c 127.1.0.4 $< > $@
+
+lurlbl.txt : lurlbl.raw
+	../bin/mk_dbin -s 10 -o j-chkmail -c 127.2.0.1 $< > $@
+
+j-urlbl.txt : $(SURBLTXT) lurlbl.txt
+	cat lurlbl.txt $(SURBLTXT) > $@
+

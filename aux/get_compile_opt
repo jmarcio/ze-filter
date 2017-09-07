@@ -1,0 +1,41 @@
+# ! /usr/bin/perl -w
+
+use strict;
+
+exit 1 if $#ARGV < 0;
+
+my $look = pop @ARGV;
+
+str_toupper($look);
+
+while (<>)
+{
+	chomp;
+
+	next if /^\s*#/;
+	next if /^\s*$/;
+
+	my ($k, $v) = split ("=", $_, 2);
+	next unless defined $k and defined $v;
+
+	trim_spaces($k);
+	trim_spaces($v);
+
+	str_toupper($k);
+	if ($k eq $look) {
+		print $v, "\n";
+		exit 0;
+	}
+}
+
+exit 1;
+
+sub trim_spaces
+{
+	$_[0] =~ s/^\s+|\s+$//g;
+}
+
+sub str_toupper
+{
+	$_[0] =~ tr/abcdefghijklmnopqrstuvwxyz/ABCDEFGHIJKLMNOPQRSTUVWXYZ/
+}

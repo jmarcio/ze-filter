@@ -1,0 +1,186 @@
+#!/usr/bin/perl -w
+#
+# Ecole des Mines de Paris
+#
+# Historique
+# 27/02/2003 - Jose Marcio Martins da Cruz - Creation
+#
+
+use strict;
+use IO::Socket;
+use Getopt::Long;
+
+my $debug = 0;
+
+my $HOST = "127.0.0.1";
+my $PORT = 2010;
+
+my $help = 0;
+my $quit = 0;
+
+my @CFFILES = qw(/etc/mail/jchkmail/j-ndc.cf
+		 /etc/j-ndc.cf
+		 /usr/local/etc/mail/jchkmail/j-ndc.cf
+		 /usr/local/etc/j-ndc.cf);
+
+my %CF = ();
+
+read_conf(@CFFILES);
+
+$HOST = $CF{HOST} if exists $CF{HOST};
+$PORT = $CF{PORT} if exists $CF{PORT};
+
+my $ok = GetOptions('h'   => \$help,
+                    'd'   => \$debug,
+                    'q'   => \$quit,
+		    'p=i' => \$PORT,
+		    's=s' => \$HOST);
+
+if ($debug)
+{
+  printf " Debug info...\n";
+  printf " * HOST    : %s\n", $HOST;
+  printf " * PORT    : %s\n", $PORT;
+  if ($#ARGV >= 0)
+  {
+    printf " * CMD     : ";
+    printf "%s ", $_ foreach (@ARGV);
+    printf "\n";
+  }
+  printf "\n";
+}
+
+if ($help || $#ARGV < 0) {
+  usage();
+  exit (1);
+}
+
+
+if (!send_cmd(@ARGV)) {
+  #print "###  Erreur pendant reception fichier \n";
+  #exit 1;
+}
+
+exit 0;
+
+
+#
+#
+#
+# #############################################################################
+#
+#
+sub send_cmd {
+  my ($fname, undef) = @_;
+  my ($fh, $line);
+  my $result = 0;
+  # create a tcp connection to the specified host and port
+  $fh = IO::Socket::INET->new(Proto => "tcp",
+			      PeerAddr => $HOST,
+			      PeerPort => $PORT,
+			      Timeout => 10) ||
+	die "can't connect to port $PORT on $HOST: $!";
+
+  $fh->autoflush(1);
+  $fh->timeout(3);
+
+  print "# [Connected to $HOST:$PORT]\n";
+
+  open CMD, "<$fname" || die "???";
+  while (my $fline = <CMD>) {
+    chomp $fline;
+
+    printf $fh "%s\r\n", $file;
+
+    if ($fh->opened && !$fh->error && defined ($line = $fh->getline)) {
+      chomp $line;
+      print "$line\n";
+      last if $line =~ "QUIT";
+    } else {
+      last;
+    }
+  }
+  printf $fh "QUIT\r\n" if $quit || 1;
+  close $fh;
+  $result = 1 if defined($line) && $line =~ /QUIT OK/;
+  return $result;
+}
+
+#
+#
+#
+sub read_conf
+{
+  foreach my $cf (@_)
+  {
+    if (-f $cf) 
+    {
+      printf "* Trying %s\n", $cf;
+      open CF, "<$cf" || die "Can't open configuration file $cf";
+      while (<CF>)
+      {
+	chomp;
+	next if /^\s*$/;
+	next if /^\s*#/;
+
+	my ($key, $value) = split "=", $_, 2;
+	if (defined $key && defined $value) {
+	  trim_blanks($key, $value);
+
+          if ($debug) {
+            printf "  * KEY : %-20s : VALUE : %s\n", $key, $value;
+          }
+
+	  next if $key eq "";
+	  $CF{$key} = $value;
+	}
+      }
+      close CF;
+      return 1;
+    }
+  }
+  return 0;
+}
+
+#
+#
+#
+sub trim_blanks {
+  foreach (@_) {
+   $_ =~ s/^[ \t]+|[ \t]+$//g;
+  }
+}
+
+
+#
+#
+#
+sub usage
+{
+
+  print << "EOF";
+Usage:
+   j-ndc [-h] [-s server] [-p port] command
+
+   Use the j-ndc script to send a command to the filter.
+
+   Options :
+
+   -h    : This message
+   -s    : Server name/address
+   -p    : Server port
+   -q    : Send a QUIT command before exiting
+   -d    : debug
+
+   Commands :
+     HELP
+     ...
+
+     To know the list of all available commandes type :
+            j-ndc help
+
+EOF
+
+
+}
+

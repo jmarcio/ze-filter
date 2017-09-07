@@ -1,0 +1,558 @@
+.TH j-chkmail.cf 4 "25 May 2002" "j-chkmail 1.1"
+.SH NAME
+j-chkmail.cf \- configuration file for j\-chkmail
+.SH SYNOPSIS
+.B /etc/mail/j-chkmail.cf
+.SH DESCRIPTION
+.I  j-chkmail.cf
+is j-chkmail daemon configuration file
+.IP \(bu 4
+.B General section
+.TP 
+.B DOMAIN
+this is your domain name. There is no default value
+
+.br
+Syntax :
+.br
+DOMAIN         my-domain.com
+.br
+Default : no default value
+.TP
+.B J_HOSTNAME
+this option tells how j-chkmail sets its own hostname.
+
+.br
+Syntax :
+.br
+J_HOSTNAME     SYSTEM | SENDMAIL | myserver.mydomain.com
+.br
+Default : SYSTEM
+
+Declaring SYSTEM tells sendmail to use value returned by
+gethostname system call. SENDMAIL tells j-chkmail to use value
+defined by $j macro at sendmail configuration file. Otherwise,
+j-chkmail will use declared value for this option.
+.TP 
+.B PRESENCE
+this option defines if j-chkmail will add a header to
+announce its presence.
+
+.br
+Syntax :
+.br
+PRESENCE       SHOW | HIDE
+.br
+Default : SHOW
+.TP 
+.B USER
+this option tells j-chkmail to run as USER.
+
+.br
+Syntax :
+.br
+USER           user
+.br
+Default : smmsp, if undefined elsewhere
+.TP 
+.B GROUP
+this options tells j-chkmail to run as GROUP.
+																	 
+.br
+Syntax :
+.br
+GROUP          group
+.br
+Default : smmsp, if undefined elsewhere
+
+.IP \(bu 4
+sendmail <-> j-chkmail communications socket \- only one declaration is
+possible.
+
+.TP 
+.B SOCKET
+General declaration
+
+.br
+Syntax :
+.br
+SOCKET local:/var/jchkmail/j-chkmail.sock (UNIX socket)
+.br
+SOCKET unix:/var/jchkmail/j-chkmail.sock  (UNIX socket)
+.br
+SOCKET inet:2000@hostname                 (INET socket)
+.TP 
+.B INET_SOCK
+If you've chosen an INET socket at localhost, only the
+port number is necessary.
+
+.br
+Syntax :
+.br
+INET_SOCK      2000
+.TP 
+.B UNIX_SOCK
+if you prefer an UNIX socket (named pipe), you shall tell 
+j-chkmail the socket name.
+
+.br
+Syntax :
+.br
+UNIX_SOCK      /var/jchkmail/j-chkmail.sock
+.IP \(bu 4
+Warning messages
+
+.TP 
+.B WARN_SENDER
+this option tells j-chkmail if sender shall receive
+warning messages.
+
+.br
+Syntax :
+.br
+WARN_SENDER    YES | NO
+.br
+Default : YES
+.TP 
+.B WARN_RCPT
+this option tells j-chkmail if warning original
+recipients shall receive warning messages.
+
+.br
+Syntax :
+.br
+WARN_RCPT      YES | NO
+.br
+Default : YES
+.TP 
+.B J_SENDER
+This option tells j-chkmail which address to use when
+sending warning messages. SENDER preserves sender address.
+
+.br
+Syntax :
+.br
+J_SENDER       SENDER |  j-master@myserver.mydomain.com
+.br
+Default : SENDER
+.IP \(bu 4
+Logging
+
+.TP 
+.B LOG_FACILITY
+obvious
+
+.br
+Syntax :
+.br
+LOG_FACILITY   local5
+.br
+Default : local5
+.TP 
+.B LOG_LEVEL
+obvious
+
+.br
+Syntax :
+.br
+LOG_LEVEL      10
+.br
+Default : 10
+.TP 
+.B STATS_INTERVAL
+j-chkmail periodically dumps internal counters
+contents. This option defines interval between two dumps. If this
+parameter is set to 0, j-chkmail does no dumps.
+
+.br
+Syntax :
+.br
+STATS_INTERVAL  300
+.br
+Default : 300
+.TP 
+.B LOG_ATTACHMENTS
+this option tells j-chkmail to log every
+attachment detected.
+
+.br
+Syntax :
+.br
+LOG_ATTACHMENTS  NO | YES
+.br
+Default : NO
+
+.IP \(bu 4
+Configuration files
+
+.TP 
+.B ERROR_MSG_FILE
+This file contains warning messages.
+
+.br
+Syntax (and default file) :
+.br
+ERROR_MSG_FILE   /etc/mail/j-error-msg
+.TP 
+.B CW_FILE
+This is the file used by sendmail to define Class W
+hosts.
+
+.br
+Syntax (and default file) :
+.br
+CW_FILE      /etc/mail/local-host-names or /etc/mail/sendmail.cw
+.TP 
+.B USERS_FILE
+This file contains the list of local e-mail
+addresses.
+
+.br
+Syntax (and default file) :
+.br
+USERS_FILE     /etc/mail/j-local-users
+.TP 
+.B NETS_FILE
+
+.br
+Syntax (and default file) :
+.br
+NETS_FILE      /etc/mail/j-nets
+
+.IP \(bu 4
+Work files and directories
+
+.TP 
+.B SPOOLDIR
+
+.br
+Syntax (and default file) :
+.br
+SPOOLDIR       /var/spool/jchkmail
+.TP 
+.B WORKDIR
+
+.br
+Syntax (and default file) :
+.br
+WORKDIR        /var/jchkmail
+.TP 
+.B PID_FILE
+
+.br
+Syntax (and default file) :
+.br
+PID_FILE       /var/jchkmail/j-chkmail.pid
+.TP 
+.B STATS_FILE
+
+.br 
+Syntax (and default file) :
+.br 
+STATS_FILE     /var/jchkmail/j-stats
+.TP 
+.B STATE_FILE
+
+.br
+Syntax (and default file) :
+.br
+STATE_FILE     /var/jchkmail/j-state
+.TP 
+.B XFILES_LOG
+
+.br
+Syntax (and default file) :
+.br
+XFILES_LOG     /var/jchkmail/j-files
+
+.IP \(bu 4
+Using internal scanner to filter unsafe X-files
+.TP 
+.B DELETE_EXEC_FILES
+Obsolete - use XFILES
+.TP 
+.B XFILES
+this option tells j-chkmail what to do when detecting an
+attached XFILE.
+
+.br
+Syntax :
+.br
+XFILES         OK | WARN | REJECT | DISCARD
+.br
+Default : OK
+.RS
+.TP
+.B OK
+tells j-chkmail to do behave normally if it detects an
+XFILE.
+.TP
+.B WARN
+tells j-chkmail to replace original message by the
+message configured at error configuration file
+(/etc/mail/j-error-msg)
+.TP
+.B REJECT
+tells j-chkmail to reject message. Sender receives
+the usual MTA error message.
+.TP
+.B DISCARD
+message is silently discarded
+.RE
+
+.TP 
+.B FILE_EXT
+this option defines which file extensions are used to
+detect "unsafe" attached files. You may define multiple values
+each line and declare multiple lines.
+
+.br
+Syntax :
+.br
+FILE_EXT       ext1 [ext2] [ext3] ...
+.TP 
+.B FILE_REGEX
+You can also declare "unsafe" files to being defined
+by regular expressions appearing in their filenames.
+
+.br
+Syntax :
+.br
+FILE_REGEX     regex
+.TP 
+.B XFILE_SAVE_MSG
+doesn't delete spool message if a XFILE is found.
+
+.br
+Syntax :
+.br
+XFILE_SAVE_MSG  YES | NO
+.br
+Default : NO
+
+.IP \(bu 4
+
+Using anti-virus to filter messages
+
+.TP 
+.B AV_ACTION
+this option disables anti-virus checking and tells
+j-chkmail what to do when finding a virus.
+
+.br
+Syntax :
+.br
+AV_ACTION      OK | WARN | REJECT | DISCARD
+.br
+Default : OK
+.RS
+.TP
+.B OK
+disables anti-virus scanner calls.
+.TP
+.B WARN
+tells j-chkmail to replace original message by the
+message configured at error configuration file
+(/etc/mail/j-error-msg)
+.TP
+.B REJECT
+tells j-chkmail to reject message. Sender receives
+the usual MTA error message.
+.TP
+.B DISCARD
+message is silently discarded
+.RE
+
+.TP 
+.B AV_PORT
+port number will be used to communicate with anti-virus
+scanner server
+
+.br
+Syntax :
+.br
+AV_PORT        2000
+.TP 
+.B AV_TYPE, AV_PATH and AV_ARGS
+Anti-virus specific parameters - 
+these parameters are specific to each anti-virus and tells
+j-chkmail what kind of anti-virus is being used, the path to the
+command line scanner and eventual parameters to pass to the
+scanner. Nowadays, only these three anti-virus are supported by
+j-chkmail.
+
+.br
+Syntax :
+.br
+AV_TYPE   UVSCAN
+.br
+AV_PATH   /usr/local/uvscan/uvscan
+.br
+AV_ARGS   --mime --secure -rv --summary --noboot
+
+.br
+AV_TYPE   SOPHOS
+.br
+AV_PATH   /opt/sophos/bin/sweep
+.br
+AV_ARGS   -nb -f -all -rec -ss -sc -archive
+
+.br
+AV_TYPE   TREND
+.br
+AV_PATH   /opt/trend/ISBASE/IScan.BASE/vscan
+.br
+AV_ARGS   -a
+.TP 
+.B AV_SAVE_MSG
+doesn't delete spool message if a virus is detected in a
+message.
+
+.br
+Syntax :
+.br
+AV_SAVE_MSG    YES | NO
+.br
+Default : NO
+
+.IP \(bu 4
+Filtering messages sent to Intranet users
+
+.TP 
+.B CHECK_LOCAL_USERS
+this option enables checking of local users
+recipient addresses (as defined at /etc/mail/j-local-users file)
+against known IP networks (as defined at /etc/mail/j-nets file).
+
+.br
+Syntax :
+.br
+CHECK_LOCAL_USERS  YES | NO
+.br
+Default : NO
+
+.IP \(bu 4
+Filtering messages by the number of recipients
+
+.TP 
+.B CHECK_NB_RCPT
+this option enables checking of number of message
+recipients and the IP address SMTP connection is coming from,
+against known IP networks (as defined at /etc/mail/j-nets file).
+
+.br
+Syntax :
+.br
+CHECK_NB_RCPT    YES | NO
+.br
+Default : NO
+.TP 
+.B MAX_RCPT_FROM_DOMAIN
+
+.br
+Syntax :
+.br
+MAX_RCPT_FROM_DOMAIN    200
+.br 
+Default : 200
+.TP 
+.B MAX_RCPT_FROM_LOCAL
+
+.br
+Syntax :
+.br
+MAX_RCPT_FROM_LOCAL     200
+.br
+Default : 200
+.TP 
+.B MAX_RCPT_FROM_FRIEND
+
+.br
+Syntax :
+.br
+MAX_RCPT_FROM_FRIEND    1000
+.br
+Default : 1000
+.TP 
+.B MAX_RCPT_FROM_OUTSIDE
+
+.br
+Syntax :
+.br
+MAX_RCPT_FROM_OUTSIDE   10
+.br
+Default : 10
+
+.IP \(bu 4
+Filtering messages by RFCs conformance
+
+.TP 
+.B NO_TO_HEADERS
+this option enables checking of existence of at
+least one recipient address between header fields 
+(To or Cc or Bcc).
+
+.br
+Syntax :
+.br
+NO_TO_HEADERS      OK | REJECT
+.br
+Default : OK
+.TP 
+.B NO_FROM_HEADERS
+this option enables checking of existence of at
+least one sender address correctly written (fields From at header
+or envelope).
+
+.br
+Syntax :
+.br
+NO_FROM_HEADERS    OK | REJECT
+.br
+Default : OK
+
+.IP \(bu 4
+Trying to detect forget domain address
+
+.TP 
+.B CHECK_DOMAIN_ADDRESS
+this option enables checking of sender
+address. If sender e-mail address is an address from your domain
+and the IP network the SMTP connection is coming from isn't
+defined at j-nets file, the message may be rejected. There are
+some unsolved problems with this option as there may be some
+legitimate messages of this kind : e.g. messages sent to external
+list servers. So it isn't recommended to use this option.
+
+.br
+Syntax :
+.br
+CHECK_DOMAIN_ADDRESS    OK | REJECT
+.br
+Default : OK
+
+
+.SH FILES
+.TP
+.I /etc/mail/j-chkmail.cf
+Global j-chkmail configuration file
+
+
+.SH "SEE ALSO"
+j-chkmail(8), j-printstats(1), j-scanfile(5)
+
+.SH BUGS
+.I Bugs ???
+Did you say 
+.I bugs ???
+Where did you see a
+.I bug ???
+.PP
+If you find yourself in a very improbable situation of finding a bug,
+please send me a bug repport.
+
+.SH AUTHOR
+Joe's j-chkmail was written by Jose Marcio Martins da Cruz : 
+martins@paris.ensmp.fr
+.PP
+

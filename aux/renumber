@@ -1,0 +1,54 @@
+#! /usr/bin/perl -w
+
+use strict;
+
+my $nb      = 0;
+my $section = 0;
+
+my ($define, $label, $default, $syntax) = qw();
+
+while (<>) {
+  chomp;
+
+  if (/^SECTION/) {
+    $section += 100;
+    $nb = $section;
+
+    my ($code, $data) = split (" ", $_, 2);
+    $data = "" unless defined $data;
+    printf "%-18s %s\n", $code, $data;
+
+    next;
+  }
+
+  my ($code, $id, $data) = split (" ", $_, 3);
+  $data = "" unless defined $data;
+  if (/^DEFINE/) {
+    $nb++;
+    printf "%-10s %5d   %s\n", $code, $nb, $data;
+    #printf "%-10s %5d   %s\n", "DESCR", $nb, "";
+
+    next;
+  }
+  if (/^DESCR/) {
+    printf "%-10s %5d   %s\n", $code, $nb, $data;
+    next;
+  }
+  if (/^DEFAULT/) {
+    printf "%-10s %5d   %s\n", $code, $nb, $data;
+    next;
+  }
+  if (/^SYNTAX/) {
+    printf "%-10s %5d   %s\n", $code, $nb, $data;
+    next;
+  }
+  if (/^LABEL/) {
+    printf "%-10s %5d   %s\n", $code, $nb, $data;
+    next;
+  }
+  if (/^SIMPLE/) {
+    printf "%-10s %5d   %s\n", $code, $nb, $data;
+    next;
+  }
+  print $_, "\n";
+}

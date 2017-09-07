@@ -1,0 +1,79 @@
+
+#
+# Reserved IANA
+#   Addresses defined as RESERVED or UNALLOCATED 
+#      http://www.iana.org/assignments/ipv4-address-space
+#
+
+BadMX:0        ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:10       ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:127      ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:224      ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:225      ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:226      ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:227      ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:228      ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:229      ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:230      ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:231      ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:232      ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:233      ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:234      ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:235      ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:236      ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:237      ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:238      ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:239      ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:240      ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:241      ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:242      ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:243      ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:244      ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:245      ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:246      ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:247      ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:248      ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:249      ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:250      ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:251      ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:252      ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:253      ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:254      ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:255      ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+
+
+
+
+
+#
+#
+# Private networks - RFC 1918 and RFC 3330
+#
+#
+
+BadMX:10       ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:127      ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:169.254  ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:172.16   ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:172.17   ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:172.18   ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:172.19   ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:172.20   ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:172.21   ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:172.22   ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:172.23   ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:172.24   ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:172.25   ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:172.26   ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:172.27   ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:172.28   ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:172.29   ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:172.30   ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:172.31   ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:192.0.2  ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:192.168  ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+BadMX:255      ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !
+
+
+
+

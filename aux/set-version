@@ -1,0 +1,10 @@
+#! /bin/sh
+
+DATE=`date +%y%m%d`
+echo $DATE > aux/timestamp
+
+HERE=`pwd`
+VERSION=`basename $HERE`
+VERSION=`echo $VERSION | sed s/jchkmail-// | sed s/j-chkmail-//`
+echo $VERSION > aux/version
+

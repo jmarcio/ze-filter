@@ -1,0 +1,91 @@
+#! /usr/bin/perl -w
+
+use strict;
+
+my $date = `date`;
+chomp $date;
+
+foreach (@ARGV) {
+  my $src = $_;
+
+  my $dst;
+
+  $dst = "$src.c";
+  open OUT, ">$dst" || die "Can't open $dst file";
+  print_header($src, $dst);
+  print_header_c($src, $dst);
+  close OUT;
+
+  $dst = "$src.h";
+  open OUT, ">$dst" || die "Can't open $dst file";
+  print_header($src, $dst);
+  print_header_h($src, $dst);
+  close OUT;
+}
+
+
+
+sub print_header
+{
+  my $year = `date +"%Y"`;
+  chomp $year;
+
+  print OUT <<EOT;
+/*
+ *
+ * j-chkmail - Mail Server Filter for sendmail
+ *
+ * Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz
+ *
+ *  Auteur       : Jose Marcio Martins da Cruz
+ *                 Jose-Marcio.Martins\@ensmp.fr
+ *
+ *  Historique   :
+ *  Creation     : $date
+ *
+ * This program is free software - GPL v2., 
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ */
+
+EOT
+}
+
+sub print_header_c
+{
+  my ($src, $dst, undef) = @_;
+  print OUT <<EOT;
+
+#include <j-sys.h>
+#include <j-chkmail.h>
+#include <$src.h>
+
+/* ****************************************************************************
+ *                                                                            *
+ *                                                                            *
+ **************************************************************************** */
+
+EOT
+}
+
+sub print_header_h
+{
+  my ($src, $dst, undef) = @_;
+
+  my $tag = $dst;
+  $tag =~ tr/a-z\-\./A-Z__/;
+
+  print OUT <<EOT;
+
+#ifndef $tag
+
+
+
+# define $tag    1
+#endif /* $tag */
+
+EOT
+}
