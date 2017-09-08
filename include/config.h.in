@@ -815,9 +815,6 @@
 /* HOST_OS */
 #undef OS_TRU64
 
-/* Name of package */
-#undef PACKAGE
-
 /* Define to the address where bug reports for this package should be sent. */
 #undef PACKAGE_BUGREPORT
 
@@ -878,9 +875,6 @@
 
 /* pcre */
 #undef USE_PCRE
-
-/* Version number of package */
-#undef VERSION
 
 /* BSD_SOURCE */
 #undef _BSD_SOURCE

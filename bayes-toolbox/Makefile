@@ -1,5 +1,5 @@
 
-RSYNCSERVER = j-chkmail.ensmp.fr
+RSYNCSERVER = foss.jose-marcio.org
 
 CDBDIR = /var/jchkmail/cdb
 BINDIR = /usr/bin

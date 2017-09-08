@@ -1,9 +1,8 @@
 
 AC_INIT(j-chkmail, 2.7.0, jose.marcio.mc@gmail.com)
 AC_COPYRIGHT([Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz])
-dnl AC_REVISION([$Id: configure.ac,v 1.129 2004/10/14 16:50:22 Exp $])
 AC_CONFIG_SRCDIR([src/j-chkmail.c])
-dnl AC_CONFIG_AUX_DIR(build)
+AM_INIT_AUTOMAKE([no-define])
 
 PACKAGE="j-chkmail"
 if [ test -f aux/timestamp ]; then
@@ -13,18 +12,17 @@ else
 fi
 export DATE
 
-VERSION="2.6.4-$DATE"
+VERSION="2.7.0-$DATE"
 if [ test -f aux/version ]; then
   VERSION=`head -1 aux/version`
 else
-  VERSION="2.6.4-$DATE"
+  VERSION="2.7.0-$DATE"
 fi
 export VERSION
 
-AM_INIT_AUTOMAKE
-dnl AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
 AM_CONFIG_HEADER(include/config.h)
 
+AC_CONFIG_MACRO_DIRS([m4])
 AC_CANONICAL_HOST
 
 AC_SUBST(PACKAGE)
@@ -196,7 +194,7 @@ dnl
 AC_PROG_AWK
 AC_PROG_CC
 AC_PROG_LN_S
-AC_PROG_RANLIB
+LT_INIT
 AC_PROG_INSTALL
 
 AC_ISC_POSIX

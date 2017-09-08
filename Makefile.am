@@ -32,7 +32,7 @@ clean-db:
 	if [ -d libdb ]; then cd libdb; ./Build clean; cd ..; fi
 
 clean-cache:
-	rm -rf autom4te.cache/*
+	rm -rf autom4te.cache/* */autom4te.cache/*
 
 realclean: clean-hook clean-cache distclean
 

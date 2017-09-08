@@ -40,7 +40,7 @@ sub print_header
  * Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz
  *
  *  Auteur       : Jose Marcio Martins da Cruz
- *                 Jose-Marcio.Martins\@ensmp.fr
+ *                 jose.marcio.mc@gmail.com
  *
  *  Historique   :
  *  Creation     : $date
@@ -58,7 +58,7 @@ sub print_header
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * More details about j-chkmail license can be found at j-chkmail
- * web site : http://j-chkmail.ensmp.fr
+ * web site : http://foss.jose-marcio.org
  */
 
 EOT

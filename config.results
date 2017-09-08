@@ -1,12 +1,12 @@
 
-Configuration results : Thu Sep  7 23:38:11 CEST 2017
+Configuration results : Fri Sep  8 11:58:23 CEST 2017
 -----------------------
   configure arguments      : 
 
-  Source directory         : /data/sys-dev/martins/sources/jchkmail/jchkmail-2.7.0-RC1
+  Source directory         : /export/home/martins/Desktop/devel-j-chkmail/j-chkmail
   Package                  : j-chkmail
-  Version                  : 2.7.0
-  Host type                : x86_64-unknown-linux-gnu
+  Version                  : j-chkmail
+  Host type                : x86_64-pc-linux-gnu
   Host OS                  : linux-gnu
   Host CPU                 : x86_64
   j-chkmail user           : smmsp
@@ -26,7 +26,7 @@ Configuration results : Thu Sep  7 23:38:11 CEST 2017
   MODULES                  : 
   
   CC                       : gcc
-  CPPFLAGS                 :  -I../pcre.dir -I. -I../berkdb -I../include
+  CPPFLAGS                 :  -DOTHER_IS_KNOWN=1 -D_FFR_LOGREG=1 -I../pcre.dir -I. -I../berkdb -I../include
   CFLAGS                   : -pthread 
   LIBS                     : -lmilter -ldl -lrt -lm -lresolv -lc -lresolv -lldap -lnsl -lpthread  
   LDFLAGS                  : 
