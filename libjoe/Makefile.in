@@ -109,22 +109,24 @@ am__v_AR_0 = @echo "  AR      " $@;
 am__v_AR_1 = 
 libjoe_a_AR = $(AR) $(ARFLAGS)
 libjoe_a_LIBADD =
-am_libjoe_a_OBJECTS = j-oracle-scores.$(OBJEXT) j-chkcontent.$(OBJEXT) \
-	j-connopen.$(OBJEXT) j-dbbl.$(OBJEXT) j-dbpolicy.$(OBJEXT) \
-	j-dbrcpt.$(OBJEXT) j-entropy.$(OBJEXT) j-fileexp.$(OBJEXT) \
-	j-databases.$(OBJEXT) j-resolve-cache.$(OBJEXT) \
-	j-grey-cleanup.$(OBJEXT) j-grey.$(OBJEXT) \
-	j-grey-client.$(OBJEXT) j-log-grey.$(OBJEXT) \
-	j-log-regex.$(OBJEXT) j-headers.$(OBJEXT) j-history.$(OBJEXT) \
-	j-livehistory.$(OBJEXT) j-mailregex.$(OBJEXT) \
-	j-netclass.$(OBJEXT) j-oracle.$(OBJEXT) j-policy.$(OBJEXT) \
-	j-rcpt.$(OBJEXT) j-dns-iprbwl.$(OBJEXT) j-dns-urlbl.$(OBJEXT) \
-	j-resource.$(OBJEXT) j-smtprate.$(OBJEXT) j-stats.$(OBJEXT) \
-	j-throttle.$(OBJEXT) mimelist.$(OBJEXT) scanmail.$(OBJEXT) \
-	j-read-conf-data.$(OBJEXT) j-cf.$(OBJEXT) j-log.$(OBJEXT) \
-	j-proc-witness.$(OBJEXT) j-config.$(OBJEXT) \
-	j-rcpt-list.$(OBJEXT) j-msg-score.$(OBJEXT) \
-	j-modules.$(OBJEXT)
+am_libjoe_a_OBJECTS = ze-oracle-scores.$(OBJEXT) \
+	ze-chkcontent.$(OBJEXT) ze-connopen.$(OBJEXT) \
+	ze-dbbl.$(OBJEXT) ze-dbpolicy.$(OBJEXT) ze-dbrcpt.$(OBJEXT) \
+	ze-entropy.$(OBJEXT) ze-fileexp.$(OBJEXT) \
+	ze-databases.$(OBJEXT) ze-resolve-cache.$(OBJEXT) \
+	ze-grey-cleanup.$(OBJEXT) ze-grey.$(OBJEXT) \
+	ze-grey-client.$(OBJEXT) ze-log-grey.$(OBJEXT) \
+	ze-log-regex.$(OBJEXT) ze-headers.$(OBJEXT) \
+	ze-history.$(OBJEXT) ze-livehistory.$(OBJEXT) \
+	ze-mailregex.$(OBJEXT) ze-netclass.$(OBJEXT) \
+	ze-oracle.$(OBJEXT) ze-policy.$(OBJEXT) ze-rcpt.$(OBJEXT) \
+	ze-dns-iprbwl.$(OBJEXT) ze-dns-urlbl.$(OBJEXT) \
+	ze-resource.$(OBJEXT) ze-smtprate.$(OBJEXT) ze-stats.$(OBJEXT) \
+	ze-throttle.$(OBJEXT) mimelist.$(OBJEXT) scanmail.$(OBJEXT) \
+	ze-read-conf-data.$(OBJEXT) ze-cf.$(OBJEXT) ze-log.$(OBJEXT) \
+	ze-proc-witness.$(OBJEXT) ze-config.$(OBJEXT) \
+	ze-rcpt-list.$(OBJEXT) ze-msg-score.$(OBJEXT) \
+	ze-modules.$(OBJEXT)
 libjoe_a_OBJECTS = $(am_libjoe_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -340,45 +342,45 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 noinst_LIBRARIES = libjoe.a
-libjoe_a_SOURCES = j-oracle-scores.c \
-			j-chkcontent.c \
-			j-connopen.c \
-			j-dbbl.c \
-			j-dbpolicy.c \
-			j-dbrcpt.c \
-			j-entropy.c \
-			j-fileexp.c  \
-			j-databases.c \
-			j-resolve-cache.c \
-			j-grey-cleanup.c \
-			j-grey.c \
-			j-grey-client.c \
-			j-log-grey.c \
-			j-log-regex.c \
-			j-headers.c \
-			j-history.c \
-			j-livehistory.c \
-			j-mailregex.c \
-			j-netclass.c \
-			j-oracle.c \
-			j-policy.c \
-			j-rcpt.c \
-			j-dns-iprbwl.c \
-			j-dns-urlbl.c \
-			j-resource.c \
-			j-smtprate.c \
-			j-stats.c \
-			j-throttle.c \
+libjoe_a_SOURCES = ze-oracle-scores.c \
+			ze-chkcontent.c \
+			ze-connopen.c \
+			ze-dbbl.c \
+			ze-dbpolicy.c \
+			ze-dbrcpt.c \
+			ze-entropy.c \
+			ze-fileexp.c  \
+			ze-databases.c \
+			ze-resolve-cache.c \
+			ze-grey-cleanup.c \
+			ze-grey.c \
+			ze-grey-client.c \
+			ze-log-grey.c \
+			ze-log-regex.c \
+			ze-headers.c \
+			ze-history.c \
+			ze-livehistory.c \
+			ze-mailregex.c \
+			ze-netclass.c \
+			ze-oracle.c \
+			ze-policy.c \
+			ze-rcpt.c \
+			ze-dns-iprbwl.c \
+			ze-dns-urlbl.c \
+			ze-resource.c \
+			ze-smtprate.c \
+			ze-stats.c \
+			ze-throttle.c \
 			mimelist.c \
 			scanmail.c \
-			j-read-conf-data.c \
-			j-cf.c \
-			j-log.c \
-			j-proc-witness.c \
-		 	j-config.c \
-			j-rcpt-list.c \
-			j-msg-score.c \
-			j-modules.c 
+			ze-read-conf-data.c \
+			ze-cf.c \
+			ze-log.c \
+			ze-proc-witness.c \
+		 	ze-config.c \
+			ze-rcpt-list.c \
+			ze-msg-score.c \
+			ze-modules.c 
 
 LDADD = @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@
 AM_CPPFLAGS = -I../zeinc -I../zechkinc @BDBINCS@
@@ -430,45 +432,45 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-cf.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-chkcontent.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-config.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-connopen.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-databases.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-dbbl.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-dbpolicy.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-dbrcpt.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-dns-iprbwl.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-dns-urlbl.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-entropy.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-fileexp.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-grey-cleanup.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-grey-client.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-grey.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-headers.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-history.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-livehistory.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-log-grey.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-log-regex.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-log.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-mailregex.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-modules.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-msg-score.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-netclass.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-oracle-scores.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-oracle.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-policy.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-proc-witness.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-rcpt-list.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-rcpt.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-read-conf-data.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-resolve-cache.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-resource.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-smtprate.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-stats.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-throttle.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mimelist.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/scanmail.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-cf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-chkcontent.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-config.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-connopen.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-databases.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-dbbl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-dbpolicy.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-dbrcpt.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-dns-iprbwl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-dns-urlbl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-entropy.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-fileexp.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-grey-cleanup.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-grey-client.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-grey.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-headers.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-history.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-livehistory.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-log-grey.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-log-regex.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-log.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-mailregex.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-modules.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-msg-score.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-netclass.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-oracle-scores.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-oracle.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-policy.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-proc-witness.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-rcpt-list.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-rcpt.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-read-conf-data.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-resolve-cache.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-resource.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-smtprate.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-stats.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-throttle.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

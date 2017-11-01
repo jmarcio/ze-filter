@@ -27,7 +27,7 @@
  */
 
 #include <ze-sys.h>
-#include "ze-chkmail.h"
+#include "ze-filter.h"
 
 
 

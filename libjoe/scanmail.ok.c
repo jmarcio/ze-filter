@@ -28,7 +28,7 @@
 
 #include <ze-sys.h>
 
-#include "ze-chkmail.h"
+#include "ze-filter.h"
 
 #define  SZ_P               65536
 #define  SZ_FREE            8192

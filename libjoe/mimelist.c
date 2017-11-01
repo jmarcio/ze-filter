@@ -28,7 +28,7 @@
 
 #include <ze-sys.h>
 
-#include "ze-chkmail.h"
+#include "ze-filter.h"
 
 #ifndef  TRUE
 #define  TRUE  1

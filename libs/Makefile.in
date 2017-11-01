@@ -108,28 +108,29 @@ am__v_AR_0 = @echo "  AR      " $@;
 am__v_AR_1 = 
 libchkvirus_a_AR = $(AR) $(ARFLAGS)
 libchkvirus_a_LIBADD =
-am_libchkvirus_a_OBJECTS = j-avclient.$(OBJEXT)
+am_libchkvirus_a_OBJECTS = ze-avclient.$(OBJEXT)
 libchkvirus_a_OBJECTS = $(am_libchkvirus_a_OBJECTS)
 libcommon_a_AR = $(AR) $(ARFLAGS)
 libcommon_a_LIBADD =
-am_libcommon_a_OBJECTS = j-base64.$(OBJEXT) j-btree.$(OBJEXT) \
-	j-buffer.$(OBJEXT) j-linkedlist.$(OBJEXT) j-db.$(OBJEXT) \
-	j-map.$(OBJEXT) j-decode.$(OBJEXT) j-rfc2822.$(OBJEXT) \
-	j-demime.$(OBJEXT) j-convert-8to7.$(OBJEXT) j-mbox.$(OBJEXT) \
-	j-divers.$(OBJEXT) j-dns-parse.$(OBJEXT) j-dns.$(OBJEXT) \
-	j-html.$(OBJEXT) j-inet.$(OBJEXT) j-ipv4.$(OBJEXT) \
-	j-ipv6.$(OBJEXT) j-ip.$(OBJEXT) j-ipc.$(OBJEXT) \
-	j-syslog.$(OBJEXT) j-txtlog.$(OBJEXT) j-morpho.$(OBJEXT) \
-	j-name2id.$(OBJEXT) j-parse-dns.$(OBJEXT) j-qp.$(OBJEXT) \
-	j-regex.$(OBJEXT) j-server.$(OBJEXT) j-client.$(OBJEXT) \
-	j-shmem.$(OBJEXT) j-smtp-divers.$(OBJEXT) j-strings.$(OBJEXT) \
-	j-strconvert.$(OBJEXT) j-time.$(OBJEXT) j-rdfile.$(OBJEXT) \
-	j-table.$(OBJEXT) j-uudecode.$(OBJEXT) j-unattach.$(OBJEXT) \
-	j-load.$(OBJEXT) j-cyclic.$(OBJEXT) kstats.$(OBJEXT) \
-	j-logit.$(OBJEXT) j-bfilter.$(OBJEXT) \
-	j-bsegmentation.$(OBJEXT) j-bcheck.$(OBJEXT) md5.$(OBJEXT) \
-	sha1.$(OBJEXT) j-msg-hash.$(OBJEXT) j-bestof-n.$(OBJEXT) \
-	j-lr-funcs.$(OBJEXT)
+am_libcommon_a_OBJECTS = ze-base64.$(OBJEXT) ze-btree.$(OBJEXT) \
+	ze-buffer.$(OBJEXT) ze-linkedlist.$(OBJEXT) ze-db.$(OBJEXT) \
+	ze-map.$(OBJEXT) ze-decode.$(OBJEXT) ze-rfc2822.$(OBJEXT) \
+	ze-demime.$(OBJEXT) ze-convert-8to7.$(OBJEXT) \
+	ze-mbox.$(OBJEXT) ze-divers.$(OBJEXT) ze-dns-parse.$(OBJEXT) \
+	ze-dns.$(OBJEXT) ze-html.$(OBJEXT) ze-inet.$(OBJEXT) \
+	ze-ipv4.$(OBJEXT) ze-ipv6.$(OBJEXT) ze-ip.$(OBJEXT) \
+	ze-ipc.$(OBJEXT) ze-syslog.$(OBJEXT) ze-txtlog.$(OBJEXT) \
+	ze-morpho.$(OBJEXT) ze-name2id.$(OBJEXT) \
+	ze-parse-dns.$(OBJEXT) ze-qp.$(OBJEXT) ze-regex.$(OBJEXT) \
+	ze-server.$(OBJEXT) ze-client.$(OBJEXT) ze-shmem.$(OBJEXT) \
+	ze-smtp-divers.$(OBJEXT) ze-strings.$(OBJEXT) \
+	ze-strconvert.$(OBJEXT) ze-time.$(OBJEXT) ze-rdfile.$(OBJEXT) \
+	ze-table.$(OBJEXT) ze-uudecode.$(OBJEXT) ze-unattach.$(OBJEXT) \
+	ze-load.$(OBJEXT) ze-cyclic.$(OBJEXT) kstats.$(OBJEXT) \
+	ze-logit.$(OBJEXT) ze-bfilter.$(OBJEXT) \
+	ze-bsegmentation.$(OBJEXT) ze-bcheck.$(OBJEXT) md5.$(OBJEXT) \
+	sha1.$(OBJEXT) ze-msg-hash.$(OBJEXT) ze-bestof-n.$(OBJEXT) \
+	ze-lr-funcs.$(OBJEXT)
 libcommon_a_OBJECTS = $(am_libcommon_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -198,7 +199,7 @@ CTAGS = ctags
 am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/depcomp \
 	$(top_srcdir)/mkinstalldirs
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-VPATH = ../../j-logistic:tmp
+VPATH = ../../ze-logistic:tmp
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
 AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
@@ -346,58 +347,58 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 noinst_LIBRARIES = libcommon.a libchkvirus.a 
-libcommon_a_SOURCES = j-base64.c \
-				j-btree.c \
-				j-buffer.c \
-				j-linkedlist.c \
-				j-db.c \
-				j-map.c \
-				j-decode.c \
-				j-rfc2822.c \
-				j-demime.c \
-				j-convert-8to7.c \
-				j-mbox.c \
-				j-divers.c \
-				j-dns-parse.c \
-				j-dns.c \
-				j-html.c \
-				j-inet.c \
-				j-ipv4.c \
-				j-ipv6.c \
-				j-ip.c \
-				j-ipc.c \
-				j-syslog.c \
-				j-txtlog.c \
-				j-morpho.c \
-				j-name2id.c \
-				j-parse-dns.c \
-				j-qp.c \
-				j-regex.c \
-				j-server.c \
-				j-client.c \
-				j-shmem.c \
-				j-smtp-divers.c \
-				j-strings.c \
-				j-strconvert.c \
-				j-time.c \
-				j-rdfile.c \
-				j-table.c \
-				j-uudecode.c \
-				j-unattach.c \
-				j-load.c \
-				j-cyclic.c \
+libcommon_a_SOURCES = ze-base64.c \
+				ze-btree.c \
+				ze-buffer.c \
+				ze-linkedlist.c \
+				ze-db.c \
+				ze-map.c \
+				ze-decode.c \
+				ze-rfc2822.c \
+				ze-demime.c \
+				ze-convert-8to7.c \
+				ze-mbox.c \
+				ze-divers.c \
+				ze-dns-parse.c \
+				ze-dns.c \
+				ze-html.c \
+				ze-inet.c \
+				ze-ipv4.c \
+				ze-ipv6.c \
+				ze-ip.c \
+				ze-ipc.c \
+				ze-syslog.c \
+				ze-txtlog.c \
+				ze-morpho.c \
+				ze-name2id.c \
+				ze-parse-dns.c \
+				ze-qp.c \
+				ze-regex.c \
+				ze-server.c \
+				ze-client.c \
+				ze-shmem.c \
+				ze-smtp-divers.c \
+				ze-strings.c \
+				ze-strconvert.c \
+				ze-time.c \
+				ze-rdfile.c \
+				ze-table.c \
+				ze-uudecode.c \
+				ze-unattach.c \
+				ze-load.c \
+				ze-cyclic.c \
 				kstats.c \
-				j-logit.c \
-				j-bfilter.c \
-				j-bsegmentation.c \
-				j-bcheck.c \
+				ze-logit.c \
+				ze-bfilter.c \
+				ze-bsegmentation.c \
+				ze-bcheck.c \
 				md5.c \
 				sha1.c \
-				j-msg-hash.c \
-				j-bestof-n.c \
-				j-lr-funcs.c
+				ze-msg-hash.c \
+				ze-bestof-n.c \
+				ze-lr-funcs.c
 
-libchkvirus_a_SOURCES = j-avclient.c
+libchkvirus_a_SOURCES = ze-avclient.c
 LDADD = @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@
 AM_CPPFLAGS = -I../zeinc -I../zechkinc @BDBINCS@
 all: all-am
@@ -453,57 +454,57 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-avclient.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-base64.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-bcheck.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-bestof-n.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-bfilter.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-bsegmentation.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-btree.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-buffer.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-client.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-convert-8to7.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-cyclic.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-db.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-decode.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-demime.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-divers.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-dns-parse.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-dns.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-html.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-inet.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-ip.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-ipc.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-ipv4.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-ipv6.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-linkedlist.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-load.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-logit.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-lr-funcs.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-map.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-mbox.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-morpho.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-msg-hash.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-name2id.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-parse-dns.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-qp.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-rdfile.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-regex.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-rfc2822.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-server.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-shmem.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-smtp-divers.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-strconvert.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-strings.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-syslog.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-table.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-time.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-txtlog.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-unattach.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-uudecode.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/kstats.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/md5.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sha1.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-avclient.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-base64.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-bcheck.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-bestof-n.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-bfilter.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-bsegmentation.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-btree.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-buffer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-client.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-convert-8to7.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-cyclic.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-db.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-decode.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-demime.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-divers.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-dns-parse.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-dns.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-html.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-inet.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-ip.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-ipc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-ipv4.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-ipv6.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-linkedlist.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-load.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-logit.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-lr-funcs.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-map.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-mbox.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-morpho.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-msg-hash.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-name2id.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-parse-dns.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-qp.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-rdfile.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-regex.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-rfc2822.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-server.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-shmem.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-smtp-divers.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-strconvert.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-strings.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-syslog.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-table.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-time.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-txtlog.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-unattach.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-uudecode.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

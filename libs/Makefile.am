@@ -1,59 +1,59 @@
-VPATH=../../j-logistic:tmp
+VPATH=../../ze-logistic:tmp
 
 noinst_LIBRARIES      = 	libcommon.a libchkvirus.a 
 
-libcommon_a_SOURCES   = 	j-base64.c \
-				j-btree.c \
-				j-buffer.c \
-				j-linkedlist.c \
-				j-db.c \
-				j-map.c \
-				j-decode.c \
-				j-rfc2822.c \
-				j-demime.c \
-				j-convert-8to7.c \
-				j-mbox.c \
-				j-divers.c \
-				j-dns-parse.c \
-				j-dns.c \
-				j-html.c \
-				j-inet.c \
-				j-ipv4.c \
-				j-ipv6.c \
-				j-ip.c \
-				j-ipc.c \
-				j-syslog.c \
-				j-txtlog.c \
-				j-morpho.c \
-				j-name2id.c \
-				j-parse-dns.c \
-				j-qp.c \
-				j-regex.c \
-				j-server.c \
-				j-client.c \
-				j-shmem.c \
-				j-smtp-divers.c \
-				j-strings.c \
-				j-strconvert.c \
-				j-time.c \
-				j-rdfile.c \
-				j-table.c \
-				j-uudecode.c \
-				j-unattach.c \
-				j-load.c \
-				j-cyclic.c \
+libcommon_a_SOURCES   = 	ze-base64.c \
+				ze-btree.c \
+				ze-buffer.c \
+				ze-linkedlist.c \
+				ze-db.c \
+				ze-map.c \
+				ze-decode.c \
+				ze-rfc2822.c \
+				ze-demime.c \
+				ze-convert-8to7.c \
+				ze-mbox.c \
+				ze-divers.c \
+				ze-dns-parse.c \
+				ze-dns.c \
+				ze-html.c \
+				ze-inet.c \
+				ze-ipv4.c \
+				ze-ipv6.c \
+				ze-ip.c \
+				ze-ipc.c \
+				ze-syslog.c \
+				ze-txtlog.c \
+				ze-morpho.c \
+				ze-name2id.c \
+				ze-parse-dns.c \
+				ze-qp.c \
+				ze-regex.c \
+				ze-server.c \
+				ze-client.c \
+				ze-shmem.c \
+				ze-smtp-divers.c \
+				ze-strings.c \
+				ze-strconvert.c \
+				ze-time.c \
+				ze-rdfile.c \
+				ze-table.c \
+				ze-uudecode.c \
+				ze-unattach.c \
+				ze-load.c \
+				ze-cyclic.c \
 				kstats.c \
-				j-logit.c \
-				j-bfilter.c \
-				j-bsegmentation.c \
-				j-bcheck.c \
+				ze-logit.c \
+				ze-bfilter.c \
+				ze-bsegmentation.c \
+				ze-bcheck.c \
 				md5.c \
 				sha1.c \
-				j-msg-hash.c \
-				j-bestof-n.c \
-				j-lr-funcs.c
+				ze-msg-hash.c \
+				ze-bestof-n.c \
+				ze-lr-funcs.c
 
-libchkvirus_a_SOURCES   =       j-avclient.c
+libchkvirus_a_SOURCES   =       ze-avclient.c
 
 LDADD                 = @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@
 
