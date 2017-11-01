@@ -21,8 +21,8 @@
 
 #ifndef ZMCHKLIB_H
 
-#include <zmPolicy.h>
-#include <zmAccess.h>
+#include <zePolicy.h>
+#include <zeAccess.h>
 
 
 # define ZMCHKLIB_H    1

@@ -1,5 +1,5 @@
 
-JCHKMAIL=$(top_srcdir)/src/ze-chkmail
+JCHKMAIL=$(top_srcdir)/src/ze-filter
 POLICY_SRC = ze-policy.base.txt.org ze-policy.grey.txt.org ze-policy.badmx.txt.org
 
 sysconf_DATA  = ze-filter.cf.org \

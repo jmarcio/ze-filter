@@ -21,7 +21,7 @@
 
 #include <ze-sys.h>
 #include <ze-filter.h>
-#include <zmAccess.h>
+#include <zeAccess.h>
 
 
 /*

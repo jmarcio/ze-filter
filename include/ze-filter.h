@@ -84,8 +84,8 @@ struct CONNID_T
 #include "ze-netclass.h"
 #include "ze-mailregex.h"
 
-#include "zmChkLib.h"
-/* #include "zmPolicy.h" */
+#include "zeChkLib.h"
+/* #include "zePolicy.h" */
 
 #include "macros.h"
 
