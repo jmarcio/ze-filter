@@ -27,8 +27,8 @@
  */
 
 
-#include <zm-sys.h>
-#include <zmlibs.h>
+#include <ze-sys.h>
+#include <zelibs.h>
 
 
 /* TODO ...

@@ -21,10 +21,10 @@ check_PROGRAMS         = av-test policy-test \
 man_MANS               = j-chkmail.8 j-chkmail.cf.4 
 
 #LDADD                 = @LDLIBPCRE@ @BDBLIBS@ @JCHKLIBS@
-#LDADD                 = ../libjoe/libjoe.a ../zmlib/libzm.a @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@
+#LDADD                 = ../libjoe/libjoe.a ../zelib/libze.a @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@
 LDADD                  = @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@
 
-AM_CPPFLAGS            = -I../zmchkinc -I../zminc @BDBINCS@
+AM_CPPFLAGS            = -I../zmchkinc -I../zeinc @BDBINCS@
 
 j_chkmail_LDFLAGS      = ../libs/libchkvirus.a
 

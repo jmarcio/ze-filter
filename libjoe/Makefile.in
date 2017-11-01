@@ -381,7 +381,7 @@ libjoe_a_SOURCES = j-oracle-scores.c \
 			j-modules.c 
 
 LDADD = @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@
-AM_CPPFLAGS = -I../zminc -I../zmchkinc @BDBINCS@
+AM_CPPFLAGS = -I../zeinc -I../zmchkinc @BDBINCS@
 all: all-am
 
 .SUFFIXES:

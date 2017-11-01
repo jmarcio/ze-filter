@@ -73,7 +73,7 @@
 #include "sha1.h"
 #include "j-msg-hash.h"
 
-#include <zmLibs.h>
+#include <zeLibs.h>
 
 #include "j-databases.h"
 

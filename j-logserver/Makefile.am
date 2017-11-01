@@ -5,6 +5,6 @@ j_logserver_SOURCES 	= j-logserver.c
 
 LDADD                   = @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@
 
-AM_CPPFLAGS             = -I../zminc @BDBINCS@
+AM_CPPFLAGS             = -I../zeinc @BDBINCS@
 
 

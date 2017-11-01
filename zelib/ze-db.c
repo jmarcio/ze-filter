@@ -26,10 +26,9 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#include <zm-sys.h>
+#include <ze-sys.h>
 
-#include <zmLibs.h>
-#include <zmDb.h>
+#include "zelibs.h"
 
 #if USE_BerkeleyDB
 #define BDB_VERSION  \
@@ -47,15 +46,15 @@
  *                                                                            *
  *                                                                            *
  ******************************************************************************/
-static size_t       db_db_cache_size = 16 * 1024 * 1024;
+size_t              db_db_cache_size = 16 * 1024 * 1024;
 
-static size_t       db_env_cache_size = 16 * 1024 * 1024;
-static int          db_lk_max_locks = 0x8000;
-static int          db_lk_max_lockers = 1000;
-static int          db_lk_max_objects = 0x8000;
+size_t              db_env_cache_size = 16 * 1024 * 1024;
+int                 db_lk_max_locks = 0x8000;
+int                 db_lk_max_lockers = 1000;
+int                 db_lk_max_objects = 0x8000;
 
 size_t
-zmDb_SetDefaultCache_size(size)
+zmdb_set_default_cache_size(size)
      size_t              size;
 {
   size_t              old = db_db_cache_size;
@@ -65,7 +64,7 @@ zmDb_SetDefaultCache_size(size)
 }
 
 size_t
-zmDb_SetDefaults(which, value)
+zmdb_set_defaults(which, value)
      int                 which;
      size_t              value;
 {
@@ -98,7 +97,7 @@ zmDb_SetDefaults(which, value)
 }
 
 static void
-zmDB_DefaultsFromEnv()
+db_defaults_from_env()
 {
   char               *env;
   int                 err = 0;
@@ -155,7 +154,7 @@ zmDB_DefaultsFromEnv()
  *                                                                            *
  ******************************************************************************/
 bool
-zmDb_CheckVersion()
+zmdb_check_version()
 {
 #if USE_BerkeleyDB
   int                 major, minor, patch;
@@ -171,12 +170,14 @@ zmDb_CheckVersion()
   if ((major != DB_VERSION_MAJOR) ||
       (minor != DB_VERSION_MINOR) || (patch != DB_VERSION_PATCH))
   {
-    MESSAGE_ERROR(8,
-                  "Application compiled against Berkeley DB version %d.%d.%d "
-                  "but runtime version is %d.%d.%d", DB_VERSION_MAJOR,
-                  DB_VERSION_MINOR, DB_VERSION_PATCH, major, minor, patch);
+    MESSAGE_ERROR(8, "j-chkmail compiled using Berkeley DB version %d.%d.%d "
+                  "but runtime version is %d.%d.%d",
+                  DB_VERSION_MAJOR, DB_VERSION_MINOR, DB_VERSION_PATCH,
+                  major, minor, patch);
     return FALSE;
   }
+
+  MESSAGE_INFO(11, STRNULL(dbv, "No Berkeley DB version string"));
 
   return TRUE;
 #else
@@ -189,10 +190,10 @@ zmDb_CheckVersion()
  *                                                                            *
  ******************************************************************************/
 #define DIMDB   256
-static ZMDB_T       rwdb[DIMDB];
+static ZMDB_T        rwdb[DIMDB];
 
 static void        *
-zmDb_PeriodicTasks(arg)
+zmdb_periodic_tasks(arg)
      void               *arg;
 {
   DB_ENV             *dbenv;
@@ -257,7 +258,7 @@ zmDb_PeriodicTasks(arg)
 }
 
 ZMDBENV_T          *
-zmDb_EnvOpen(home, rdonly, dt_chkpoint)
+zmdb_env_open(home, rdonly, dt_chkpoint)
      char               *home;
      bool                rdonly;
      int                 dt_chkpoint;
@@ -267,7 +268,7 @@ zmDb_EnvOpen(home, rdonly, dt_chkpoint)
   int                 flags = 0;
   DB_ENV             *dbenv = NULL;
 
-  zmDB_DefaultsFromEnv();
+  db_defaults_from_env();
   /* 
    ** Create an environment and initialize it for additional error 
    ** reporting.
@@ -310,6 +311,7 @@ zmDb_EnvOpen(home, rdonly, dt_chkpoint)
       LOG_MSG_ERROR("Error setting environment flags : %s", db_strerror(ret));
       goto err;
     }
+
 #if _FFR_LOG_IN_MEMORY
 #if BDB_VERSION >= 0x50000
     if ((ret = dbenv->log_set_config(dbenv, DB_LOG_IN_MEMORY, TRUE)) != 0)
@@ -325,7 +327,7 @@ zmDb_EnvOpen(home, rdonly, dt_chkpoint)
       DB_INIT_TXN |             /* Initialize transactions */
       DB_INIT_LOCK |            /* Initialize locking. */
       DB_INIT_LOG |             /* Initialize logging */
-      /* DB_INIT_REP |  *//* Initialize logging */
+   /* DB_INIT_REP |  */           /* Initialize logging */
       DB_INIT_MPOOL;            /* Initialize the in-memory cache. */
 
 #if USE_DB_THREAD
@@ -382,10 +384,10 @@ zmDb_EnvOpen(home, rdonly, dt_chkpoint)
     int                 res;
 
     if ((res =
-         pthread_create(&ptid, NULL, zmDb_PeriodicTasks, (void *) dbenv)) != 0)
+         pthread_create(&ptid, NULL, zmdb_periodic_tasks, (void *) dbenv)) != 0)
     {
       errno = res;
-      LOG_SYS_ERROR("Failed spawning zmDB_PeriodicTasks thread: %s\n",
+      LOG_SYS_ERROR("Failed spawning zmdb_periodic_tasks thread: %s\n",
                     strerror(errno));
       exit(1);
     }
@@ -427,7 +429,7 @@ err:
  *                                                                            *
  ******************************************************************************/
 bool
-zmDb_EnvClose(dbenv)
+zmdb_env_close(dbenv)
      ZMDBENV_T          *dbenv;
 {
 #if USE_BerkeleyDB
@@ -450,7 +452,7 @@ zmDb_EnvClose(dbenv)
  *                                                                            *
  ******************************************************************************/
 
-bool                zmDB_CheckLastMTime(ZMDB_T *);
+bool                zmdb_check_last_mtime(ZMDB_T *);
 
 #if USE_BerkeleyDB
 
@@ -474,8 +476,8 @@ bt_compare_fcn(h, a, b)
  ******************************************************************************/
 
 bool
-zmDb_Open(h, dbenv, database, mode, rdonly, dbtype, dbcache)
-     ZMDB_T             *h;
+zmdb_open(h, dbenv, database, mode, rdonly, dbtype, dbcache)
+     ZMDB_T              *h;
      ZMDBENV_T          *dbenv;
      char               *database;
      int                 mode;
@@ -505,7 +507,7 @@ zmDb_Open(h, dbenv, database, mode, rdonly, dbtype, dbcache)
   {
     FREE(h->database);
     h->OK = FALSE;
-    h->signature = ZMDBSIGNATURE;
+    h->signature = SIGNATURE;
   }
 
   ret = h->err = db_create(&dbp, dbenv, 0);
@@ -670,8 +672,8 @@ fin:
  *                                                                            *
  ******************************************************************************/
 bool
-zmDb_OK(h)
-     ZMDB_T             *h;
+zmdb_ok(h)
+     ZMDB_T              *h;
 {
 #if USE_BerkeleyDB
   if (h == NULL)
@@ -688,8 +690,8 @@ zmDb_OK(h)
  *                                                                            *
  ******************************************************************************/
 bool
-zmDb_Close(h)
-     ZMDB_T             *h;
+zmdb_close(h)
+     ZMDB_T              *h;
 {
 #if USE_BerkeleyDB
   if (h == NULL)
@@ -717,8 +719,8 @@ zmDb_Close(h)
  *                                                                            *
  ******************************************************************************/
 bool
-zmDb_Empty(h)
-     ZMDB_T             *h;
+zmdb_empty(h)
+     ZMDB_T              *h;
 {
 #if USE_BerkeleyDB
   u_int32_t           count = 0;
@@ -748,8 +750,8 @@ zmDb_Empty(h)
  *                                                                            *
  ******************************************************************************/
 bool
-zmDb_Flush(h)
-     ZMDB_T             *h;
+zmdb_flush(h)
+     ZMDB_T              *h;
 {
 #if USE_BerkeleyDB
   int                 ret = 0;
@@ -775,8 +777,8 @@ zmDb_Flush(h)
  *                                                                            *
  ******************************************************************************/
 bool
-zmDb_AddRec(h, k, d, sz)
-     ZMDB_T             *h;
+zmdb_add_rec(h, k, d, sz)
+     ZMDB_T              *h;
      char               *k;
      void               *d;
      size_t              sz;
@@ -818,8 +820,8 @@ zmDb_AddRec(h, k, d, sz)
  *                                                                            *
  ******************************************************************************/
 bool
-zmDb_GetRec(h, k, d, szd)
-     ZMDB_T             *h;
+zmdb_get_rec(h, k, d, szd)
+     ZMDB_T              *h;
      char               *k;
      void               *d;
      size_t              szd;
@@ -895,8 +897,8 @@ fin:
  *                                                                            *
  ******************************************************************************/
 bool
-zmDb_DelRec(h, k)
-     ZMDB_T             *h;
+zmdb_del_rec(h, k)
+     ZMDB_T              *h;
      char               *k;
 {
 #if USE_BerkeleyDB
@@ -930,8 +932,8 @@ zmDb_DelRec(h, k)
  ******************************************************************************/
 
 bool
-zmDb_Lock(h)
-     ZMDB_T             *h;
+zmdb_lock(h)
+     ZMDB_T              *h;
 {
 #if USE_BerkeleyDB
   return (pthread_mutex_lock(&h->dbmutex) == 0);
@@ -941,8 +943,8 @@ zmDb_Lock(h)
 }
 
 bool
-zmDb_unlock(h)
-     ZMDB_T             *h;
+zmdb_unlock(h)
+     ZMDB_T              *h;
 {
 #if USE_BerkeleyDB
   return (pthread_mutex_unlock(&h->dbmutex) == 0);
@@ -956,8 +958,8 @@ zmDb_unlock(h)
  *                                                                            *
  ******************************************************************************/
 int
-zmDb_errno(h)
-     ZMDB_T             *h;
+zmdb_errno(h)
+     ZMDB_T              *h;
 {
   if (h == NULL)
     return 0;
@@ -970,8 +972,8 @@ zmDb_errno(h)
  *                                                                            *
  ******************************************************************************/
 bool
-zmDb_CursorOpen(h, rdonly)
-     ZMDB_T             *h;
+zmdb_cursor_open(h, rdonly)
+     ZMDB_T              *h;
      bool                rdonly;
 {
 #if USE_BerkeleyDB
@@ -1025,8 +1027,8 @@ zmDb_CursorOpen(h, rdonly)
  *                                                                            *
  ******************************************************************************/
 bool
-zmDb_CursorClose(h)
-     ZMDB_T             *h;
+zmdb_cursor_close(h)
+     ZMDB_T              *h;
 {
 #if USE_BerkeleyDB
   int                 ret = 0;
@@ -1065,7 +1067,7 @@ zmDb_CursorClose(h)
   h->dbc = NULL;
 
   if (!h->rdonly)
-    zmDB_Flush(h);
+    zmdb_flush(h);
 
   MUTEX_UNLOCK(&h->dbmutex);
 
@@ -1080,8 +1082,8 @@ zmDb_CursorClose(h)
  *                                                                            *
  ******************************************************************************/
 bool
-zmDb_CursorGetFirst(h, k, szk, d, szd)
-     ZMDB_T             *h;
+zmdb_cursor_get_first(h, k, szk, d, szd)
+     ZMDB_T              *h;
      char               *k;
      size_t              szk;
      void               *d;
@@ -1158,8 +1160,8 @@ fin:
  *                                                                            *
  ******************************************************************************/
 bool
-zmDb_CursorGetNext(h, k, szk, d, szd)
-     ZMDB_T             *h;
+zmdb_cursor_get_next(h, k, szk, d, szd)
+     ZMDB_T              *h;
      char               *k;
      size_t              szk;
      void               *d;
@@ -1234,8 +1236,8 @@ fin:
  *                                                                            *
  ******************************************************************************/
 bool
-zmDb_CursorDel(h)
-     ZMDB_T             *h;
+zmdb_cursor_del(h)
+     ZMDB_T              *h;
 {
 #if USE_BerkeleyDB
   int                 ret;
@@ -1262,8 +1264,8 @@ zmDb_CursorDel(h)
  *                                                                            *
  ******************************************************************************/
 bool
-zmDb_CursorSetRange(h, k, d, sz, where)
-     ZMDB_T             *h;
+zmdb_cursor_set_range(h, k, d, sz, where)
+     ZMDB_T              *h;
      char               *k;
      void               *d;
      size_t              sz;
@@ -1281,8 +1283,8 @@ zmDb_CursorSetRange(h, k, d, sz, where)
  *                                                                            *
  ******************************************************************************/
 bool
-zmDb_cursor_get(h, k, d, sz, where)
-     ZMDB_T             *h;
+zmdb_cursor_get(h, k, d, sz, where)
+     ZMDB_T              *h;
      char               *k;
      void               *d;
      size_t              sz;
@@ -1290,7 +1292,7 @@ zmDb_cursor_get(h, k, d, sz, where)
 {
 #if USE_BerkeleyDB
 #if 0
-  if ((h->dbc == NULL) && !zmDB_CursorOpen(h))
+  if ((h->dbc == NULL) && !zmdb_cursor_open(h))
     return FALSE;
 #endif
   /*
@@ -1309,27 +1311,25 @@ zmDb_cursor_get(h, k, d, sz, where)
  *                                                                            *
  ******************************************************************************/
 bool
-zmDb_Stat(h, st)
-     ZMDB_T             *h;
-     ZMDB_STAT_T       **st;
+zmdb_stat(h, st)
+     ZMDB_T              *h;
+     ZMDB_STAT_T         **st;
 {
 #if USE_BerkeleyDB
   if (h == FALSE || st == FALSE)
     return FALSE;
 
-  if (0)
-  {
+  if (0) {
     if (h->dbh->stat_print(h->dbh, 0) == 0)
       return TRUE;
-  } else
-  {
+  } else {
     if (h->dbh->stat(h->dbh, NULL, (void *) st, 0) == 0)
       return TRUE;
   }
   /*
-     if (h->dbh->stat(h->dbh, NULL, (void *) st, DB_FAST_STAT) == 0)
-     return TRUE;
-   */
+  if (h->dbh->stat(h->dbh, NULL, (void *) st, DB_FAST_STAT) == 0)
+    return TRUE;
+  */
 
   return FALSE;
 #else              /* USE_BerkeleyDB */
@@ -1342,8 +1342,8 @@ zmDb_Stat(h, st)
  *                                                                            *
  ******************************************************************************/
 bool
-zmDb_CheckLastMTime(h)
-     ZMDB_T             *h;
+zmdb_check_last_mtime(h)
+     ZMDB_T              *h;
 {
 #if USE_BerkeleyDB
   if (h == NULL)

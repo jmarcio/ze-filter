@@ -88,7 +88,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-subdir = zmlib
+subdir = zelib
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
 	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
@@ -107,11 +107,11 @@ AM_V_AR = $(am__v_AR_@AM_V@)
 am__v_AR_ = $(am__v_AR_@AM_DEFAULT_V@)
 am__v_AR_0 = @echo "  AR      " $@;
 am__v_AR_1 = 
-libzm_a_AR = $(AR) $(ARFLAGS)
-libzm_a_LIBADD =
-am_libzm_a_OBJECTS = zmStrings.$(OBJEXT) zmFileSystem.$(OBJEXT) \
-	zmDb.$(OBJEXT) zmMap.$(OBJEXT)
-libzm_a_OBJECTS = $(am_libzm_a_OBJECTS)
+libze_a_AR = $(AR) $(ARFLAGS)
+libze_a_LIBADD =
+am_libze_a_OBJECTS = zeStrings.$(OBJEXT) zeFileSystem.$(OBJEXT) \
+	zeDb.$(OBJEXT) zeMap.$(OBJEXT)
+libze_a_OBJECTS = $(am_libze_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -150,8 +150,8 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(libzm_a_SOURCES)
-DIST_SOURCES = $(libzm_a_SOURCES)
+SOURCES = $(libze_a_SOURCES)
+DIST_SOURCES = $(libze_a_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -325,23 +325,23 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-noinst_LIBRARIES = libzm.a 
-libzm_a_SOURCES = zmStrings.c \
-				zmFileSystem.c \
-				zmDb.c \
-				zmMap.c
+noinst_LIBRARIES = libze.a 
+libze_a_SOURCES = zeStrings.c \
+				zeFileSystem.c \
+				zeDb.c \
+				zeMap.c
 
-#				zm-linkedlist.c \
-#				zm-map.c \
-#				zm-syslog.c \
-#				zm-divers.c \
-#				zm-strings.c \
-#				zm-strconvert.c \
-#				zm-rdfile.c \
+#				ze-linkedlist.c \
+#				ze-map.c \
+#				ze-syslog.c \
+#				ze-divers.c \
+#				ze-strings.c \
+#				ze-strconvert.c \
+#				ze-rdfile.c \
 #				strlcpy.c
 
 #LDADD                 = @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@
-AM_CPPFLAGS = -I../zminc -I../zmchkinc @BDBINCS@ 
+AM_CPPFLAGS = -I../zeinc -I../zmchkinc @BDBINCS@ 
 all: all-am
 
 .SUFFIXES:
@@ -355,9 +355,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu zmlib/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu zelib/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu zmlib/Makefile
+	  $(AUTOMAKE) --gnu zelib/Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \
@@ -379,10 +379,10 @@ $(am__aclocal_m4_deps):
 clean-noinstLIBRARIES:
 	-test -z "$(noinst_LIBRARIES)" || rm -f $(noinst_LIBRARIES)
 
-libzm.a: $(libzm_a_OBJECTS) $(libzm_a_DEPENDENCIES) $(EXTRA_libzm_a_DEPENDENCIES) 
-	$(AM_V_at)-rm -f libzm.a
-	$(AM_V_AR)$(libzm_a_AR) libzm.a $(libzm_a_OBJECTS) $(libzm_a_LIBADD)
-	$(AM_V_at)$(RANLIB) libzm.a
+libze.a: $(libze_a_OBJECTS) $(libze_a_DEPENDENCIES) $(EXTRA_libze_a_DEPENDENCIES) 
+	$(AM_V_at)-rm -f libze.a
+	$(AM_V_AR)$(libze_a_AR) libze.a $(libze_a_OBJECTS) $(libze_a_LIBADD)
+	$(AM_V_at)$(RANLIB) libze.a
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -390,10 +390,10 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zmDb.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zmFileSystem.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zmMap.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zmStrings.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeDb.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeFileSystem.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeMap.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeStrings.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

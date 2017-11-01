@@ -26,10 +26,10 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#include <zm-sys.h>
-#include <zm-syslog.h>
+#include <ze-sys.h>
+#include <ze-syslog.h>
 
-#include "zm-strings.h"
+#include "ze-strings.h"
 
 
 /******************************************************************************

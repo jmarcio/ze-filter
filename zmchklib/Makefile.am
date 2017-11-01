@@ -6,6 +6,6 @@ libzmchk_a_SOURCES    = zmPolicy.c \
 
 LDADD                 = @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@
 
-AM_CPPFLAGS           = -I../zminc -I../zmchkinc @BDBINCS@
+AM_CPPFLAGS           = -I../zeinc -I../zmchkinc @BDBINCS@
 
 

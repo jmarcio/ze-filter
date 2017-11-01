@@ -5,7 +5,7 @@
 
 SUBDIRS = $(subdirs) \
 	librepl \
-	zmlib \
+	zelib \
 	zmchklib \
 	libs \
 	libjoe \

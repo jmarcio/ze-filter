@@ -21,12 +21,12 @@
 
 #ifndef ZMLIBS_H
 
-#include <zm-macros.h>
-#include <zmFileSystem.h>
-#include <zmStrings.h>
-#include <zm-linkedlist.h>
-#include <zmDb.h>
-/* #include <zmMap.h> */
+#include <ze-macros.h>
+#include <zeFileSystem.h>
+#include <zeStrings.h>
+#include <ze-linkedlist.h>
+#include <zeDb.h>
+/* #include <zeMap.h> */
 
 # define ZMLIBS_H    1
 #endif /* ZMLIBS_H */

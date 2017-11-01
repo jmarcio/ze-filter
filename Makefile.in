@@ -360,7 +360,7 @@ top_srcdir = @top_srcdir@
 #CLEANDIRS = etc
 SUBDIRS = $(subdirs) \
 	librepl \
-	zmlib \
+	zelib \
 	zmchklib \
 	libs \
 	libjoe \

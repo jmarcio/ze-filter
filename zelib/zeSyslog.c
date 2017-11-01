@@ -26,9 +26,9 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#include <zm-sys.h>
-#include <zmLibs.h>
-#include <zmSyslog.h>
+#include <ze-sys.h>
+#include <zeLibs.h>
+#include <zeSyslog.h>
 
 
 /******************************************************************************

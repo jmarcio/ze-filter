@@ -57,5 +57,5 @@ libchkvirus_a_SOURCES   =       j-avclient.c
 
 LDADD                 = @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@
 
-AM_CPPFLAGS           	= -I../zminc -I../zmchkinc @BDBINCS@
+AM_CPPFLAGS           	= -I../zeinc -I../zmchkinc @BDBINCS@
 

@@ -7,7 +7,7 @@ j_message_tbx_SOURCES     = j-message-tbx.c
 
 LDADD                     = @JCHKLIBS@  @LDLIBPCRE@ @BDBLIBS@
 
-AM_CPPFLAGS               = -I../zminc -I../zmchkinc @BDBINCS@
+AM_CPPFLAGS               = -I../zeinc -I../zmchkinc @BDBINCS@
 
 man_MANS = j-scanfile.1 
 

@@ -20,9 +20,9 @@
  */
 
 
-#include <zm-sys.h>
-#include <zmLibs.h>
-#include <zmStrings.h>
+#include <ze-sys.h>
+#include <zeLibs.h>
+#include <zeStrings.h>
 
 #include <j-chkmail.h>
 
