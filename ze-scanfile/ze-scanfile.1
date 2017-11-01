@@ -1,6 +1,6 @@
-.TH j-scanfile 1 "25 May 2002" "j-chkmail 1.1"
+.TH j-scanfile 1 "25 May 2002" "ze-filter 1.1"
 .SH NAME
-Joe's j-scanfile \- Command line version of j-chkmail filter
+Joe's j-scanfile \- Command line version of ze-filter filter
 .SH SYNOPSIS
 .B j-scanfile
 [ -h ] [ -c conf_file ]
@@ -8,7 +8,7 @@ Joe's j-scanfile \- Command line version of j-chkmail filter
 .SH DESCRIPTION
 .I  j-scanfile
 is the a command line version of the filter integrated at the
-j-chkmail daemon. j-scanfile scans text mail files in the 
+ze-filter daemon. j-scanfile scans text mail files in the 
 format accepted by the SMTP protocol or the usual unix mailbox.
 
 .SH OPTIONS
@@ -20,7 +20,7 @@ Show help and command line options
 .B \-c
 Uses 
 .I conf_file 
-as the alternate configuration file (default is /etc/mail/j-chkmail.cf)
+as the alternate configuration file (default is /etc/mail/ze-filter.cf)
 .TP
 .B \-v
 verbose
@@ -49,11 +49,11 @@ Other kind of error
 
 .SH FILES
 .TP
-.I /etc/mail/j-chkmail.cf
-Global j-chkmail configuration file
+.I /etc/mail/ze-filter.cf
+Global ze-filter configuration file
 
 .SH "SEE ALSO"
-j-chkmail(8), j-printstats(1), j-chkmail.cf(5)
+ze-filter(8), j-printstats(1), ze-filter.cf(5)
 
 .SH BUGS
 .I Bugs ???
@@ -66,7 +66,7 @@ If you find yourself in a very improbable situation of finding a bug,
 please send me a bug repport.
 
 .SH AUTHOR
-Joe's j-chkmail was written by Jose Marcio Martins da Cruz : 
+Joe's ze-filter was written by Jose Marcio Martins da Cruz : 
 martins@paris.ensmp.fr
 .PP
 

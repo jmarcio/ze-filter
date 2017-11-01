@@ -88,7 +88,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-bin_PROGRAMS = ze-scanfile$(EXEEXT) j-message-tbx$(EXEEXT)
+bin_PROGRAMS = ze-scanfile$(EXEEXT) ze-message-tbx$(EXEEXT)
 subdir = ze-scanfile
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -104,16 +104,16 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(man1dir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_j_message_tbx_OBJECTS = ze-message-tbx.$(OBJEXT)
-j_message_tbx_OBJECTS = $(am_j_message_tbx_OBJECTS)
-j_message_tbx_LDADD = $(LDADD)
-j_message_tbx_DEPENDENCIES =
+am_ze_message_tbx_OBJECTS = ze-message-tbx.$(OBJEXT)
+ze_message_tbx_OBJECTS = $(am_ze_message_tbx_OBJECTS)
+ze_message_tbx_LDADD = $(LDADD)
+ze_message_tbx_DEPENDENCIES =
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
-ze_scanfile_SOURCES = ze-scanfile.c
-ze_scanfile_OBJECTS = ze-scanfile.$(OBJEXT)
+am_ze_scanfile_OBJECTS = ze-scanfile.$(OBJEXT)
+ze_scanfile_OBJECTS = $(am_ze_scanfile_OBJECTS)
 ze_scanfile_LDADD = $(LDADD)
 ze_scanfile_DEPENDENCIES =
 AM_V_P = $(am__v_P_@AM_V@)
@@ -150,8 +150,8 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(j_message_tbx_SOURCES) ze-scanfile.c
-DIST_SOURCES = $(j_message_tbx_SOURCES) ze-scanfile.c
+SOURCES = $(ze_message_tbx_SOURCES) $(ze_scanfile_SOURCES)
+DIST_SOURCES = $(ze_message_tbx_SOURCES) $(ze_scanfile_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -355,10 +355,10 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-j_scanfile_SOURCES = ze-scanfile.c 
-j_message_tbx_SOURCES = ze-message-tbx.c
+ze_scanfile_SOURCES = ze-scanfile.c 
+ze_message_tbx_SOURCES = ze-message-tbx.c
 LDADD = @JCHKLIBS@  @LDLIBPCRE@ @BDBLIBS@
-AM_CPPFLAGS = -I../zeinc -I../zmchkinc @BDBINCS@
+AM_CPPFLAGS = -I../zeinc -I../zechkinc @BDBINCS@
 man_MANS = ze-scanfile.1 
 all: all-am
 
@@ -443,9 +443,9 @@ clean-binPROGRAMS:
 	echo " rm -f" $$list; \
 	rm -f $$list
 
-j-message-tbx$(EXEEXT): $(j_message_tbx_OBJECTS) $(j_message_tbx_DEPENDENCIES) $(EXTRA_j_message_tbx_DEPENDENCIES) 
-	@rm -f j-message-tbx$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(j_message_tbx_OBJECTS) $(j_message_tbx_LDADD) $(LIBS)
+ze-message-tbx$(EXEEXT): $(ze_message_tbx_OBJECTS) $(ze_message_tbx_DEPENDENCIES) $(EXTRA_ze_message_tbx_DEPENDENCIES) 
+	@rm -f ze-message-tbx$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ze_message_tbx_OBJECTS) $(ze_message_tbx_LDADD) $(LIBS)
 
 ze-scanfile$(EXEEXT): $(ze_scanfile_OBJECTS) $(ze_scanfile_DEPENDENCIES) $(EXTRA_ze_scanfile_DEPENDENCIES) 
 	@rm -f ze-scanfile$(EXEEXT)

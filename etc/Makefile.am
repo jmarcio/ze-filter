@@ -4,7 +4,7 @@ WORKROOT = @WORKROOT@
 CDBDIR   = @WORKROOT@/cdb
 CFDIR    = @CONFDIR@
 
-JCHKMAIL=$(top_srcdir)/src/j-chkmail
+JCHKMAIL=$(top_srcdir)/src/ze-filter
 POLICY_SRC = j-policy.base.txt.org \
  j-policy.z-grey.txt.org \
  j-policy.z-badmx.txt.org \

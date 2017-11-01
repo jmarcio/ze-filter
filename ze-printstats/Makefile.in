@@ -104,8 +104,8 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(man1dir)"
 PROGRAMS = $(bin_PROGRAMS)
-ze_printstats_SOURCES = ze-printstats.c
-ze_printstats_OBJECTS = ze-printstats.$(OBJEXT)
+am_ze_printstats_OBJECTS = ze-printstats.$(OBJEXT)
+ze_printstats_OBJECTS = $(am_ze_printstats_OBJECTS)
 ze_printstats_LDADD = $(LDADD)
 ze_printstats_DEPENDENCIES =
 AM_V_lt = $(am__v_lt_@AM_V@)
@@ -146,8 +146,8 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = ze-printstats.c
-DIST_SOURCES = ze-printstats.c
+SOURCES = $(ze_printstats_SOURCES)
+DIST_SOURCES = $(ze_printstats_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -351,9 +351,9 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-j_printstats_SOURCES = ze-printstats.c 
+ze_printstats_SOURCES = ze-printstats.c 
 LDADD = @JCHKLIBS@   @LDLIBPCRE@ @BDBLIBS@
-AM_CPPFLAGS = -I../zeinc -I../zmchkinc @BDBINCS@
+AM_CPPFLAGS = -I../zeinc -I../zechkinc @BDBINCS@
 man_MANS = ze-printstats.1 
 all: all-am
 

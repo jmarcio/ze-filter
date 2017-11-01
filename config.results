@@ -1,5 +1,5 @@
 
-Configuration results : Wed Nov  1 02:32:41 CET 2017
+Configuration results : Wed Nov  1 11:12:40 CET 2017
 -----------------------
   configure arguments      : 
 
@@ -30,7 +30,7 @@ Configuration results : Wed Nov  1 02:32:41 CET 2017
   CFLAGS                   : -pthread 
   LIBS                     : -lmilter -ldl -lrt -lm -lresolv -lc -lresolv -lldap -lnsl -lpthread  
   LDFLAGS                  : 
-  JLIBS                    :  -L../libjoe -ljoe -L../zmchklib -lzmchk -L../libs -lcommon -L../librepl -lrepl -L../zelib -lze 
+  JLIBS                    :  -L../libjoe -ljoe -L../zechklib -lzechk -L../libs -lcommon -L../librepl -lrepl -L../zelib -lze 
   
 
   Before upgrading from a previous version, it's absolutely necessary

@@ -1,7 +1,7 @@
 
 bin_PROGRAMS            = ze-logserver
 
-j_logserver_SOURCES 	= ze-logserver.c 
+ze_logserver_SOURCES 	= ze-logserver.c 
 
 LDADD                   = @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@
 

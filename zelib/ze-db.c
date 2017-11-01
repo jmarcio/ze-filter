@@ -1,6 +1,6 @@
 /*
  *
- * j-chkmail - Mail Server Filter for sendmail
+ * ze-filter - Mail Server Filter for sendmail
  *
  * Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz
  *
@@ -12,17 +12,17 @@
  *
  * This program is free software, but with restricted license :
  *
- * - j-chkmail is distributed only to registered users
- * - j-chkmail license is available only non-commercial applications,
- *   this means, you can use j-chkmail if you make no profit with it.
- * - redistribution of j-chkmail in any way : binary, source in any
+ * - ze-filter is distributed only to registered users
+ * - ze-filter license is available only non-commercial applications,
+ *   this means, you can use ze-filter if you make no profit with it.
+ * - redistribution of ze-filter in any way : binary, source in any
  *   media, is forbidden
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * More details about j-chkmail license can be found at j-chkmail
+ * More details about ze-filter license can be found at ze-filter
  * web site : http://foss.jose-marcio.org
  */
 
@@ -170,7 +170,7 @@ zmdb_check_version()
   if ((major != DB_VERSION_MAJOR) ||
       (minor != DB_VERSION_MINOR) || (patch != DB_VERSION_PATCH))
   {
-    MESSAGE_ERROR(8, "j-chkmail compiled using Berkeley DB version %d.%d.%d "
+    MESSAGE_ERROR(8, "ze-filter compiled using Berkeley DB version %d.%d.%d "
                   "but runtime version is %d.%d.%d",
                   DB_VERSION_MAJOR, DB_VERSION_MINOR, DB_VERSION_PATCH,
                   major, minor, patch);
@@ -408,7 +408,7 @@ zmdb_env_open(home, rdonly, dt_chkpoint)
         static char         pfx[256];
 
         (void) dbenv->get_home(dbenv, (const char **) &home);
-        snprintf(pfx, sizeof (pfx), "j-chkmail (%s) ", STRNULL(home, "???"));
+        snprintf(pfx, sizeof (pfx), "ze-filter (%s) ", STRNULL(home, "???"));
         (void) dbenv->set_errpfx(dbenv, pfx);
         (void) dbenv->set_errfile(dbenv, ferr);
       }

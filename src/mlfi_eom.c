@@ -1,7 +1,7 @@
 
 /*
  *
- * j-chkmail - Mail Server Filter for sendmail
+ * ze-filter - Mail Server Filter for sendmail
  *
  * Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz
  *
@@ -13,17 +13,17 @@
  *
  * This program is free software, but with restricted license :
  *
- * - j-chkmail is distributed only to registered users
- * - j-chkmail license is available only non-commercial applications,
- *   this means, you can use j-chkmail if you make no profit with it.
- * - redistribution of j-chkmail in any way : binary, source in any
+ * - ze-filter is distributed only to registered users
+ * - ze-filter license is available only non-commercial applications,
+ *   this means, you can use ze-filter if you make no profit with it.
+ * - redistribution of ze-filter in any way : binary, source in any
  *   media, is forbidden
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * More details about j-chkmail license can be found at j-chkmail
+ * More details about ze-filter license can be found at ze-filter
  * web site : http://foss.jose-marcio.org
  */
 
@@ -277,16 +277,16 @@ mlfi_eom(ctx)
     url = cf_get_str(CF_FILTER_URL);
     url = STRNULL(url, "");
     if (strcasecmp(url, "http://foss.jose-marcio.org") == 0)
-      url = "http : // j-chkmail dot ensmp dot fr";
+      url = "http : // ze-filter dot ensmp dot fr";
     if (strcasecmp(url, "NO") == 0)
       url = "";
     if (strlen(url) > 0) {
       snprintf(hbuf, sizeof hbuf,
-               "at %s with ID %s by Joe's j-chkmail (%s)!",
+               "at %s with ID %s by Joe's ze-filter (%s)!",
                host, CONNID_STR(priv->id), url);
     } else {
       snprintf(hbuf, sizeof hbuf,
-               "at %s with ID %s by Joe's j-chkmail !", host,
+               "at %s with ID %s by Joe's ze-filter !", host,
                CONNID_STR(priv->id));
     }
     smfi_addheader(ctx, "X-Miltered", hbuf);
@@ -313,7 +313,7 @@ mlfi_eom(ctx)
           (mac_auth_authen != NULL) && (strlen(mac_auth_authen) > 0)) {
         snprintf(hbuf, sizeof (hbuf), "USER-ID %s",
                  STREMPTY(mac_auth_authen, "???"));
-        smfi_addheader(ctx, "X-j-chkmail-Auth", hbuf);
+        smfi_addheader(ctx, "X-ze-filter-Auth", hbuf);
       }
     }
 
@@ -323,7 +323,7 @@ mlfi_eom(ctx)
              mac_cl_name, mac_cl_ptr, mac_cl_addr,
              priv->helohost, priv->env_from);
 
-    smfi_addheader(ctx, "X-j-chkmail-Enveloppe", hbuf);
+    smfi_addheader(ctx, "X-ze-filter-Enveloppe", hbuf);
   }
 
   /*
@@ -370,14 +370,14 @@ mlfi_eom(ctx)
     argc = str2tokens(buf, 32, argv, ", ");
 
     if (argc > 0) {
-      n = count_msgheader_attr(priv->headers, "x-j-chkmail-score");
+      n = count_msgheader_attr(priv->headers, "x-ze-filter-score");
       while (n > 0) {
         bool                do_it = FALSE;
 
         header_T           *h;
         int                 i;
 
-        h = get_msgheader_index_2(priv->headers, "X-j-chkmail-Score", n);
+        h = get_msgheader_index_2(priv->headers, "X-ze-filter-Score", n);
         if (h == NULL)
           break;
         if (h->value == NULL || strlen(h->value) == 0)
@@ -412,9 +412,9 @@ mlfi_eom(ctx)
 
 
           /*
-           * "MSGID : %s on %s : j-chkmail score : %s : %d/%d %d %5.3f -> %d", 
+           * "MSGID : %s on %s : ze-filter score : %s : %d/%d %d %5.3f -> %d", 
            */
-          snprintf(expr, sizeof (expr), "on [^ ]*%s : j-chkmail score", arg);
+          snprintf(expr, sizeof (expr), "on [^ ]*%s : ze-filter score", arg);
           if (strexpr(h->value, expr, NULL, NULL, TRUE)) {
             if (!preserve)
               do_it = TRUE;
@@ -423,7 +423,7 @@ mlfi_eom(ctx)
         }
 
         if (do_it)
-          (void) smfi_chgheader(ctx, "X-j-chkmail-Score", n, NULL);
+          (void) smfi_chgheader(ctx, "X-ze-filter-Score", n, NULL);
 
         n--;
       }
@@ -551,7 +551,7 @@ mlfi_eom(ctx)
 
 #if _FFR_MODULES
   /*
-   ** j-chkmail modules
+   ** ze-filter modules
    **
    */
   if (do_module_callback(ctx, 0, &result))
@@ -738,7 +738,7 @@ eom_check_xfiles(ctx, ahead, done)
 
         xstatus = cf_get_str(CF_XSTATUS_HEADER);
         if (xstatus == NULL || strlen(xstatus) == 0)
-          xstatus = "X-j-chkmail-Status";
+          xstatus = "X-ze-filter-Status";
         smfi_addheader(ctx, xstatus, "Spam HI");
       }
 

@@ -1,85 +1,85 @@
 
-sbin_PROGRAMS      = 	j-chkmail
+sbin_PROGRAMS      = 	ze-filter
 
-noinst_PROGRAMS    = 	j-policy-test \
-			j-policy-lookup \
-			j-rcpt-test \
-			j-grey-test \
-			j-grey-client-test \
-			j-client-test \
-			j-rbwl-test \
-			j-inet-test
+noinst_PROGRAMS    = 	ze-policy-test \
+			ze-policy-lookup \
+			ze-rcpt-test \
+			ze-grey-test \
+			ze-grey-client-test \
+			ze-client-test \
+			ze-rbwl-test \
+			ze-inet-test
 
 check_PROGRAMS         = av-test policy-test \
-			j-null-milter \
-			j-module-test \
-			j-crypt-test \
-			j-msg-score-test \
-			j-ipv6-test \
-			j-bestof-test
+			ze-null-milter \
+			ze-module-test \
+			ze-crypt-test \
+			ze-msg-score-test \
+			ze-ipv6-test \
+			ze-bestof-test
 
-man_MANS               = j-chkmail.8 j-chkmail.cf.4 
+man_MANS               = ze-filter.8 ze-filter.cf.4 
 
 #LDADD                 = @LDLIBPCRE@ @BDBLIBS@ @JCHKLIBS@
 #LDADD                 = ../libjoe/libjoe.a ../zelib/libze.a @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@
 LDADD                  = @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@
 
-AM_CPPFLAGS            = -I../zmchkinc -I../zeinc @BDBINCS@
+AM_CPPFLAGS            = -I../zechkinc -I../zeinc @BDBINCS@
 
-j_chkmail_LDFLAGS      = ../libs/libchkvirus.a
+ze_filter_LDFLAGS      = ../libs/libchkvirus.a
 
-j_chkmail_SOURCES = 	j-main.c \
-			j-signal.c \
-			j-mxcheck.c \
-			j-short-messages.c \
-			j-check-connection.c \
-			j-callback.c \
-			j-callbackchecks.c \
-			j-callbacklogs.c \
-			j-log-files.c \
-			j-log-quarantine.c \
-			j-log-virus.c \
-			j-chkmail.c \
-			j-libmilter.c \
-			j-cleanspool.c \
-			j-spool.c \
-			j-smmacros.c \
-			j-reply.c \
-                        j-ndc-help.c \
-                        j-ndc-server.c \
-			j-lr-init.c \
-			j-mod-tools.c
+ze_filter_SOURCES = 	ze-main.c \
+			ze-signal.c \
+			ze-mxcheck.c \
+			ze-short-messages.c \
+			ze-check-connection.c \
+			ze-callback.c \
+			ze-callbackchecks.c \
+			ze-callbacklogs.c \
+			ze-log-files.c \
+			ze-log-quarantine.c \
+			ze-log-virus.c \
+			ze-filter.c \
+			ze-libmilter.c \
+			ze-cleanspool.c \
+			ze-spool.c \
+			ze-smmacros.c \
+			ze-reply.c \
+                        ze-ndc-help.c \
+                        ze-ndc-server.c \
+			ze-lr-init.c \
+			ze-mod-tools.c
 
-j_crypt_test_SOURCES  = j-crypt-test.c 
+ze_crypt_test_SOURCES  = ze-crypt-test.c 
 
-j_policy_test_SOURCES  = j-policy-test.c 
+ze_policy_test_SOURCES  = ze-policy-test.c 
 
-j_policy_lookup_SOURCES  = j-policy-lookup.c 
+ze_policy_lookup_SOURCES  = ze-policy-lookup.c 
 
-j_module_test_SOURCES  = j-module-test.c 
+ze_module_test_SOURCES  = ze-module-test.c 
 
-j_rcpt_test_SOURCES    = j-rcpt-test.c 
+ze_rcpt_test_SOURCES    = ze-rcpt-test.c 
 
-j_rbwl_test_SOURCES    = j-rbwl-test.c 
+ze_rbwl_test_SOURCES    = ze-rbwl-test.c 
 
-j_grey_test_SOURCES    = j-grey-test.c 
+ze_grey_test_SOURCES    = ze-grey-test.c 
 
-j_grey_client_test_SOURCES    = j-grey-client-test.c 
+ze_grey_client_test_SOURCES    = ze-grey-client-test.c 
 
-j_client_test_SOURCES    = j-client-test.c 
+ze_client_test_SOURCES    = ze-client-test.c 
 
-j_msg_score_test_SOURCES    = j-msg-score-test.c 
+ze_msg_score_test_SOURCES    = ze-msg-score-test.c 
 
-j_ipv6_test_SOURCES    = j-ipv6-test.c
+ze_ipv6_test_SOURCES    = ze-ipv6-test.c
 
-j_bestof_test_SOURCES  = j-bestof-test.c
+ze_bestof_test_SOURCES  = ze-bestof-test.c
 
-j_null_milter_SOURCES  = j-null-milter.c
+ze_null_milter_SOURCES  = ze-null-milter.c
 
-j_inet_test_SOURCES  = j-inet-test.c
+ze_inet_test_SOURCES  = ze-inet-test.c
 
-av_test_SOURCES        = av-test.c j-reply.c
+av_test_SOURCES        = av-test.c ze-reply.c
 
 policy_test_SOURCES    = policy-test.c \
-			 j-reply.c 
+			 ze-reply.c 
 

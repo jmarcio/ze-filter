@@ -17,6 +17,6 @@ libze_a_SOURCES       = 	zeStrings.c \
 
 #LDADD                 = @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@
 
-AM_CPPFLAGS           	= -I../zeinc -I../zmchkinc @BDBINCS@ 
+AM_CPPFLAGS           	= -I../zeinc -I../zechkinc @BDBINCS@ 
 
 

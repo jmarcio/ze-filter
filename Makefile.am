@@ -6,7 +6,7 @@
 SUBDIRS = $(subdirs) \
 	librepl \
 	zelib \
-	zmchklib \
+	zechklib \
 	libs \
 	libjoe \
 	src \

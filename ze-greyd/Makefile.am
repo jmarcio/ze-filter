@@ -1,10 +1,10 @@
 
 sbin_PROGRAMS            = ze-greyd
 
-j_greyd_SOURCES 	= ze-greyd.c 
+ze_greyd_SOURCES 	= ze-greyd.c 
 
 LDADD              	= @JCHKLIBS@  @LDLIBPCRE@ @BDBLIBS@
 
-AM_CPPFLAGS             = -I../zeinc -I../zmchkinc @BDBINCS@
+AM_CPPFLAGS             = -I../zeinc -I../zechkinc @BDBINCS@
 
 

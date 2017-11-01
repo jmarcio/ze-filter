@@ -1,6 +1,6 @@
 /*
  *
- * j-chkmail - Mail Server Filter for sendmail
+ * ze-filter - Mail Server Filter for sendmail
  *
  * Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz
  *
@@ -12,17 +12,17 @@
  *
  * This program is free software, but with restricted license :
  *
- * - j-chkmail is distributed only to registered users
- * - j-chkmail license is available only non-commercial applications,
- *   this means, you can use j-chkmail if you make no profit with it.
- * - redistribution of j-chkmail in any way : binary, source in any
+ * - ze-filter is distributed only to registered users
+ * - ze-filter license is available only non-commercial applications,
+ *   this means, you can use ze-filter if you make no profit with it.
+ * - redistribution of ze-filter in any way : binary, source in any
  *   media, is forbidden
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * More details about j-chkmail license can be found at j-chkmail
+ * More details about ze-filter license can be found at ze-filter
  * web site : http://foss.jose-marcio.org
  */
 
@@ -134,7 +134,7 @@ mlfi_envfrom(ctx, envfrom)
 
 #if _FFR_MODULES
   /* 
-   ** j-chkmail modules
+   ** ze-filter modules
    **
    */
   if (do_module_callback(ctx, 0, &result))
@@ -177,7 +177,7 @@ mlfi_envfrom(ctx, envfrom)
   }
 #if _FFR_MODULES
   /* 
-   ** j-chkmail modules
+   ** ze-filter modules
    **
    */
   if (do_module_callback(ctx, 0, &result))

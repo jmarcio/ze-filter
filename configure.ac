@@ -1,7 +1,7 @@
 
 AC_INIT(j-chkmail, 2.7.0, jose.marcio.mc@gmail.com)
 AC_COPYRIGHT([Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz])
-AC_CONFIG_SRCDIR([src/j-chkmail.c])
+AC_CONFIG_SRCDIR([src/ze-filter.c])
 AM_INIT_AUTOMAKE([no-define])
 
 PACKAGE="j-chkmail"
@@ -1435,7 +1435,7 @@ dnl from line 963
 CPPFLAGS="$CPPFLAGS -I../include"
 
 #JCHKLIBS=" ../libjoe/libjoe.a ../libs/libcommon.a ../librepl/librepl.a ../zelib/libzm.a"
-JCHKLIBS=" -L../libjoe -ljoe -L../zmchklib -lzmchk -L../libs -lcommon -L../librepl -lrepl -L../zelib -lze "
+JCHKLIBS=" -L../libjoe -ljoe -L../zechklib -lzechk -L../libs -lcommon -L../librepl -lrepl -L../zelib -lze "
 AC_SUBST(JCHKLIBS)
 dnl
 dnl
@@ -1443,7 +1443,7 @@ dnl
 AC_CONFIG_FILES(Makefile)
 AC_CONFIG_FILES(include/version.h include/defs.h)
 
-AC_CONFIG_FILES(librepl/Makefile libjoe/Makefile libs/Makefile zelib/Makefile zmchklib/Makefile)
+AC_CONFIG_FILES(librepl/Makefile libjoe/Makefile libs/Makefile zelib/Makefile zechklib/Makefile)
 AC_CONFIG_FILES(src/Makefile scratch/Makefile ze-bayes-tbx/Makefile ze-makemap/Makefile ze-scanfile/Makefile ze-printstats/Makefile ze-greyd/Makefile ze-logserver/Makefile)
 
 AC_CONFIG_FILES(etc/Makefile etc/Makefile.org)

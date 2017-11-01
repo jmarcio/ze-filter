@@ -1,13 +1,13 @@
 
-bin_PROGRAMS              = ze-scanfile j-message-tbx
+bin_PROGRAMS              = ze-scanfile ze-message-tbx
 
-j_scanfile_SOURCES        = ze-scanfile.c 
+ze_scanfile_SOURCES        = ze-scanfile.c 
 
-j_message_tbx_SOURCES     = ze-message-tbx.c
+ze_message_tbx_SOURCES     = ze-message-tbx.c
 
 LDADD                     = @JCHKLIBS@  @LDLIBPCRE@ @BDBLIBS@
 
-AM_CPPFLAGS               = -I../zeinc -I../zmchkinc @BDBINCS@
+AM_CPPFLAGS               = -I../zeinc -I../zechkinc @BDBINCS@
 
 man_MANS = ze-scanfile.1 
 

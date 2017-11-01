@@ -191,7 +191,7 @@ INSTALL_DATA = ${INSTALL} -m 644
 INSTALL_PROGRAM = ${INSTALL}
 INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
-JCHKLIBS =  -L../libjoe -ljoe -L../zmchklib -lzmchk -L../libs -lcommon -L../librepl -lrepl -L../zelib -lze 
+JCHKLIBS =  -L../libjoe -ljoe -L../zechklib -lzechk -L../libs -lcommon -L../librepl -lrepl -L../zelib -lze 
 JGREYDDIR = /var/jchkmail/jgreydb
 LANGSPEC = EN
 LD = /usr/bin/ld -m elf_x86_64
@@ -302,7 +302,7 @@ top_builddir = ..
 top_srcdir = ..
 CDBDIR = /var/jchkmail/cdb
 CFDIR = /etc/mail/jchkmail
-JCHKMAIL = $(top_srcdir)/src/j-chkmail
+JCHKMAIL = $(top_srcdir)/src/ze-filter
 POLICY_SRC = j-policy.base.txt.org \
  j-policy.z-grey.txt.org \
  j-policy.z-badmx.txt.org \

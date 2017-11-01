@@ -88,15 +88,15 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-sbin_PROGRAMS = j-chkmail$(EXEEXT)
-noinst_PROGRAMS = j-policy-test$(EXEEXT) j-policy-lookup$(EXEEXT) \
-	j-rcpt-test$(EXEEXT) j-grey-test$(EXEEXT) \
-	j-grey-client-test$(EXEEXT) j-client-test$(EXEEXT) \
-	j-rbwl-test$(EXEEXT) j-inet-test$(EXEEXT)
+sbin_PROGRAMS = ze-filter$(EXEEXT)
+noinst_PROGRAMS = ze-policy-test$(EXEEXT) ze-policy-lookup$(EXEEXT) \
+	ze-rcpt-test$(EXEEXT) ze-grey-test$(EXEEXT) \
+	ze-grey-client-test$(EXEEXT) ze-client-test$(EXEEXT) \
+	ze-rbwl-test$(EXEEXT) ze-inet-test$(EXEEXT)
 check_PROGRAMS = av-test$(EXEEXT) policy-test$(EXEEXT) \
-	j-null-milter$(EXEEXT) j-module-test$(EXEEXT) \
-	j-crypt-test$(EXEEXT) j-msg-score-test$(EXEEXT) \
-	j-ipv6-test$(EXEEXT) j-bestof-test$(EXEEXT)
+	ze-null-milter$(EXEEXT) ze-module-test$(EXEEXT) \
+	ze-crypt-test$(EXEEXT) ze-msg-score-test$(EXEEXT) \
+	ze-ipv6-test$(EXEEXT) ze-bestof-test$(EXEEXT)
 subdir = src
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -113,7 +113,7 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(sbindir)" "$(DESTDIR)$(man4dir)" \
 	"$(DESTDIR)$(man8dir)"
 PROGRAMS = $(noinst_PROGRAMS) $(sbin_PROGRAMS)
-am_av_test_OBJECTS = av-test.$(OBJEXT) j-reply.$(OBJEXT)
+am_av_test_OBJECTS = av-test.$(OBJEXT) ze-reply.$(OBJEXT)
 av_test_OBJECTS = $(am_av_test_OBJECTS)
 av_test_LDADD = $(LDADD)
 av_test_DEPENDENCIES =
@@ -121,82 +121,82 @@ AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
-am_j_bestof_test_OBJECTS = j-bestof-test.$(OBJEXT)
-j_bestof_test_OBJECTS = $(am_j_bestof_test_OBJECTS)
-j_bestof_test_LDADD = $(LDADD)
-j_bestof_test_DEPENDENCIES =
-am_j_chkmail_OBJECTS = j-main.$(OBJEXT) j-signal.$(OBJEXT) \
-	j-mxcheck.$(OBJEXT) j-short-messages.$(OBJEXT) \
-	j-check-connection.$(OBJEXT) j-callback.$(OBJEXT) \
-	j-callbackchecks.$(OBJEXT) j-callbacklogs.$(OBJEXT) \
-	j-log-files.$(OBJEXT) j-log-quarantine.$(OBJEXT) \
-	j-log-virus.$(OBJEXT) j-chkmail.$(OBJEXT) \
-	j-libmilter.$(OBJEXT) j-cleanspool.$(OBJEXT) j-spool.$(OBJEXT) \
-	j-smmacros.$(OBJEXT) j-reply.$(OBJEXT) j-ndc-help.$(OBJEXT) \
-	j-ndc-server.$(OBJEXT) j-lr-init.$(OBJEXT) \
-	j-mod-tools.$(OBJEXT)
-j_chkmail_OBJECTS = $(am_j_chkmail_OBJECTS)
-j_chkmail_LDADD = $(LDADD)
-j_chkmail_DEPENDENCIES =
-j_chkmail_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
-	$(j_chkmail_LDFLAGS) $(LDFLAGS) -o $@
-am_j_client_test_OBJECTS = j-client-test.$(OBJEXT)
-j_client_test_OBJECTS = $(am_j_client_test_OBJECTS)
-j_client_test_LDADD = $(LDADD)
-j_client_test_DEPENDENCIES =
-am_j_crypt_test_OBJECTS = j-crypt-test.$(OBJEXT)
-j_crypt_test_OBJECTS = $(am_j_crypt_test_OBJECTS)
-j_crypt_test_LDADD = $(LDADD)
-j_crypt_test_DEPENDENCIES =
-am_j_grey_client_test_OBJECTS = j-grey-client-test.$(OBJEXT)
-j_grey_client_test_OBJECTS = $(am_j_grey_client_test_OBJECTS)
-j_grey_client_test_LDADD = $(LDADD)
-j_grey_client_test_DEPENDENCIES =
-am_j_grey_test_OBJECTS = j-grey-test.$(OBJEXT)
-j_grey_test_OBJECTS = $(am_j_grey_test_OBJECTS)
-j_grey_test_LDADD = $(LDADD)
-j_grey_test_DEPENDENCIES =
-am_j_inet_test_OBJECTS = j-inet-test.$(OBJEXT)
-j_inet_test_OBJECTS = $(am_j_inet_test_OBJECTS)
-j_inet_test_LDADD = $(LDADD)
-j_inet_test_DEPENDENCIES =
-am_j_ipv6_test_OBJECTS = j-ipv6-test.$(OBJEXT)
-j_ipv6_test_OBJECTS = $(am_j_ipv6_test_OBJECTS)
-j_ipv6_test_LDADD = $(LDADD)
-j_ipv6_test_DEPENDENCIES =
-am_j_module_test_OBJECTS = j-module-test.$(OBJEXT)
-j_module_test_OBJECTS = $(am_j_module_test_OBJECTS)
-j_module_test_LDADD = $(LDADD)
-j_module_test_DEPENDENCIES =
-am_j_msg_score_test_OBJECTS = j-msg-score-test.$(OBJEXT)
-j_msg_score_test_OBJECTS = $(am_j_msg_score_test_OBJECTS)
-j_msg_score_test_LDADD = $(LDADD)
-j_msg_score_test_DEPENDENCIES =
-am_j_null_milter_OBJECTS = j-null-milter.$(OBJEXT)
-j_null_milter_OBJECTS = $(am_j_null_milter_OBJECTS)
-j_null_milter_LDADD = $(LDADD)
-j_null_milter_DEPENDENCIES =
-am_j_policy_lookup_OBJECTS = j-policy-lookup.$(OBJEXT)
-j_policy_lookup_OBJECTS = $(am_j_policy_lookup_OBJECTS)
-j_policy_lookup_LDADD = $(LDADD)
-j_policy_lookup_DEPENDENCIES =
-am_j_policy_test_OBJECTS = j-policy-test.$(OBJEXT)
-j_policy_test_OBJECTS = $(am_j_policy_test_OBJECTS)
-j_policy_test_LDADD = $(LDADD)
-j_policy_test_DEPENDENCIES =
-am_j_rbwl_test_OBJECTS = j-rbwl-test.$(OBJEXT)
-j_rbwl_test_OBJECTS = $(am_j_rbwl_test_OBJECTS)
-j_rbwl_test_LDADD = $(LDADD)
-j_rbwl_test_DEPENDENCIES =
-am_j_rcpt_test_OBJECTS = j-rcpt-test.$(OBJEXT)
-j_rcpt_test_OBJECTS = $(am_j_rcpt_test_OBJECTS)
-j_rcpt_test_LDADD = $(LDADD)
-j_rcpt_test_DEPENDENCIES =
-am_policy_test_OBJECTS = policy-test.$(OBJEXT) j-reply.$(OBJEXT)
+am_policy_test_OBJECTS = policy-test.$(OBJEXT) ze-reply.$(OBJEXT)
 policy_test_OBJECTS = $(am_policy_test_OBJECTS)
 policy_test_LDADD = $(LDADD)
 policy_test_DEPENDENCIES =
+am_ze_bestof_test_OBJECTS = ze-bestof-test.$(OBJEXT)
+ze_bestof_test_OBJECTS = $(am_ze_bestof_test_OBJECTS)
+ze_bestof_test_LDADD = $(LDADD)
+ze_bestof_test_DEPENDENCIES =
+am_ze_client_test_OBJECTS = ze-client-test.$(OBJEXT)
+ze_client_test_OBJECTS = $(am_ze_client_test_OBJECTS)
+ze_client_test_LDADD = $(LDADD)
+ze_client_test_DEPENDENCIES =
+am_ze_crypt_test_OBJECTS = ze-crypt-test.$(OBJEXT)
+ze_crypt_test_OBJECTS = $(am_ze_crypt_test_OBJECTS)
+ze_crypt_test_LDADD = $(LDADD)
+ze_crypt_test_DEPENDENCIES =
+am_ze_filter_OBJECTS = ze-main.$(OBJEXT) ze-signal.$(OBJEXT) \
+	ze-mxcheck.$(OBJEXT) ze-short-messages.$(OBJEXT) \
+	ze-check-connection.$(OBJEXT) ze-callback.$(OBJEXT) \
+	ze-callbackchecks.$(OBJEXT) ze-callbacklogs.$(OBJEXT) \
+	ze-log-files.$(OBJEXT) ze-log-quarantine.$(OBJEXT) \
+	ze-log-virus.$(OBJEXT) ze-filter.$(OBJEXT) \
+	ze-libmilter.$(OBJEXT) ze-cleanspool.$(OBJEXT) \
+	ze-spool.$(OBJEXT) ze-smmacros.$(OBJEXT) ze-reply.$(OBJEXT) \
+	ze-ndc-help.$(OBJEXT) ze-ndc-server.$(OBJEXT) \
+	ze-lr-init.$(OBJEXT) ze-mod-tools.$(OBJEXT)
+ze_filter_OBJECTS = $(am_ze_filter_OBJECTS)
+ze_filter_LDADD = $(LDADD)
+ze_filter_DEPENDENCIES =
+ze_filter_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(ze_filter_LDFLAGS) $(LDFLAGS) -o $@
+am_ze_grey_client_test_OBJECTS = ze-grey-client-test.$(OBJEXT)
+ze_grey_client_test_OBJECTS = $(am_ze_grey_client_test_OBJECTS)
+ze_grey_client_test_LDADD = $(LDADD)
+ze_grey_client_test_DEPENDENCIES =
+am_ze_grey_test_OBJECTS = ze-grey-test.$(OBJEXT)
+ze_grey_test_OBJECTS = $(am_ze_grey_test_OBJECTS)
+ze_grey_test_LDADD = $(LDADD)
+ze_grey_test_DEPENDENCIES =
+am_ze_inet_test_OBJECTS = ze-inet-test.$(OBJEXT)
+ze_inet_test_OBJECTS = $(am_ze_inet_test_OBJECTS)
+ze_inet_test_LDADD = $(LDADD)
+ze_inet_test_DEPENDENCIES =
+am_ze_ipv6_test_OBJECTS = ze-ipv6-test.$(OBJEXT)
+ze_ipv6_test_OBJECTS = $(am_ze_ipv6_test_OBJECTS)
+ze_ipv6_test_LDADD = $(LDADD)
+ze_ipv6_test_DEPENDENCIES =
+am_ze_module_test_OBJECTS = ze-module-test.$(OBJEXT)
+ze_module_test_OBJECTS = $(am_ze_module_test_OBJECTS)
+ze_module_test_LDADD = $(LDADD)
+ze_module_test_DEPENDENCIES =
+am_ze_msg_score_test_OBJECTS = ze-msg-score-test.$(OBJEXT)
+ze_msg_score_test_OBJECTS = $(am_ze_msg_score_test_OBJECTS)
+ze_msg_score_test_LDADD = $(LDADD)
+ze_msg_score_test_DEPENDENCIES =
+am_ze_null_milter_OBJECTS = ze-null-milter.$(OBJEXT)
+ze_null_milter_OBJECTS = $(am_ze_null_milter_OBJECTS)
+ze_null_milter_LDADD = $(LDADD)
+ze_null_milter_DEPENDENCIES =
+am_ze_policy_lookup_OBJECTS = ze-policy-lookup.$(OBJEXT)
+ze_policy_lookup_OBJECTS = $(am_ze_policy_lookup_OBJECTS)
+ze_policy_lookup_LDADD = $(LDADD)
+ze_policy_lookup_DEPENDENCIES =
+am_ze_policy_test_OBJECTS = ze-policy-test.$(OBJEXT)
+ze_policy_test_OBJECTS = $(am_ze_policy_test_OBJECTS)
+ze_policy_test_LDADD = $(LDADD)
+ze_policy_test_DEPENDENCIES =
+am_ze_rbwl_test_OBJECTS = ze-rbwl-test.$(OBJEXT)
+ze_rbwl_test_OBJECTS = $(am_ze_rbwl_test_OBJECTS)
+ze_rbwl_test_LDADD = $(LDADD)
+ze_rbwl_test_DEPENDENCIES =
+am_ze_rcpt_test_OBJECTS = ze-rcpt-test.$(OBJEXT)
+ze_rcpt_test_OBJECTS = $(am_ze_rcpt_test_OBJECTS)
+ze_rcpt_test_LDADD = $(LDADD)
+ze_rcpt_test_DEPENDENCIES =
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -231,24 +231,24 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(av_test_SOURCES) $(j_bestof_test_SOURCES) \
-	$(j_chkmail_SOURCES) $(j_client_test_SOURCES) \
-	$(j_crypt_test_SOURCES) $(j_grey_client_test_SOURCES) \
-	$(j_grey_test_SOURCES) $(j_inet_test_SOURCES) \
-	$(j_ipv6_test_SOURCES) $(j_module_test_SOURCES) \
-	$(j_msg_score_test_SOURCES) $(j_null_milter_SOURCES) \
-	$(j_policy_lookup_SOURCES) $(j_policy_test_SOURCES) \
-	$(j_rbwl_test_SOURCES) $(j_rcpt_test_SOURCES) \
-	$(policy_test_SOURCES)
-DIST_SOURCES = $(av_test_SOURCES) $(j_bestof_test_SOURCES) \
-	$(j_chkmail_SOURCES) $(j_client_test_SOURCES) \
-	$(j_crypt_test_SOURCES) $(j_grey_client_test_SOURCES) \
-	$(j_grey_test_SOURCES) $(j_inet_test_SOURCES) \
-	$(j_ipv6_test_SOURCES) $(j_module_test_SOURCES) \
-	$(j_msg_score_test_SOURCES) $(j_null_milter_SOURCES) \
-	$(j_policy_lookup_SOURCES) $(j_policy_test_SOURCES) \
-	$(j_rbwl_test_SOURCES) $(j_rcpt_test_SOURCES) \
-	$(policy_test_SOURCES)
+SOURCES = $(av_test_SOURCES) $(policy_test_SOURCES) \
+	$(ze_bestof_test_SOURCES) $(ze_client_test_SOURCES) \
+	$(ze_crypt_test_SOURCES) $(ze_filter_SOURCES) \
+	$(ze_grey_client_test_SOURCES) $(ze_grey_test_SOURCES) \
+	$(ze_inet_test_SOURCES) $(ze_ipv6_test_SOURCES) \
+	$(ze_module_test_SOURCES) $(ze_msg_score_test_SOURCES) \
+	$(ze_null_milter_SOURCES) $(ze_policy_lookup_SOURCES) \
+	$(ze_policy_test_SOURCES) $(ze_rbwl_test_SOURCES) \
+	$(ze_rcpt_test_SOURCES)
+DIST_SOURCES = $(av_test_SOURCES) $(policy_test_SOURCES) \
+	$(ze_bestof_test_SOURCES) $(ze_client_test_SOURCES) \
+	$(ze_crypt_test_SOURCES) $(ze_filter_SOURCES) \
+	$(ze_grey_client_test_SOURCES) $(ze_grey_test_SOURCES) \
+	$(ze_inet_test_SOURCES) $(ze_ipv6_test_SOURCES) \
+	$(ze_module_test_SOURCES) $(ze_msg_score_test_SOURCES) \
+	$(ze_null_milter_SOURCES) $(ze_policy_lookup_SOURCES) \
+	$(ze_policy_test_SOURCES) $(ze_rbwl_test_SOURCES) \
+	$(ze_rcpt_test_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -453,52 +453,52 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-man_MANS = j-chkmail.8 j-chkmail.cf.4 
+man_MANS = ze-filter.8 ze-filter.cf.4 
 
 #LDADD                 = @LDLIBPCRE@ @BDBLIBS@ @JCHKLIBS@
 #LDADD                 = ../libjoe/libjoe.a ../zelib/libze.a @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@
 LDADD = @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@
-AM_CPPFLAGS = -I../zmchkinc -I../zeinc @BDBINCS@
-j_chkmail_LDFLAGS = ../libs/libchkvirus.a
-j_chkmail_SOURCES = j-main.c \
-			j-signal.c \
-			j-mxcheck.c \
-			j-short-messages.c \
-			j-check-connection.c \
-			j-callback.c \
-			j-callbackchecks.c \
-			j-callbacklogs.c \
-			j-log-files.c \
-			j-log-quarantine.c \
-			j-log-virus.c \
-			j-chkmail.c \
-			j-libmilter.c \
-			j-cleanspool.c \
-			j-spool.c \
-			j-smmacros.c \
-			j-reply.c \
-                        j-ndc-help.c \
-                        j-ndc-server.c \
-			j-lr-init.c \
-			j-mod-tools.c
+AM_CPPFLAGS = -I../zechkinc -I../zeinc @BDBINCS@
+ze_filter_LDFLAGS = ../libs/libchkvirus.a
+ze_filter_SOURCES = ze-main.c \
+			ze-signal.c \
+			ze-mxcheck.c \
+			ze-short-messages.c \
+			ze-check-connection.c \
+			ze-callback.c \
+			ze-callbackchecks.c \
+			ze-callbacklogs.c \
+			ze-log-files.c \
+			ze-log-quarantine.c \
+			ze-log-virus.c \
+			ze-filter.c \
+			ze-libmilter.c \
+			ze-cleanspool.c \
+			ze-spool.c \
+			ze-smmacros.c \
+			ze-reply.c \
+                        ze-ndc-help.c \
+                        ze-ndc-server.c \
+			ze-lr-init.c \
+			ze-mod-tools.c
 
-j_crypt_test_SOURCES = j-crypt-test.c 
-j_policy_test_SOURCES = j-policy-test.c 
-j_policy_lookup_SOURCES = j-policy-lookup.c 
-j_module_test_SOURCES = j-module-test.c 
-j_rcpt_test_SOURCES = j-rcpt-test.c 
-j_rbwl_test_SOURCES = j-rbwl-test.c 
-j_grey_test_SOURCES = j-grey-test.c 
-j_grey_client_test_SOURCES = j-grey-client-test.c 
-j_client_test_SOURCES = j-client-test.c 
-j_msg_score_test_SOURCES = j-msg-score-test.c 
-j_ipv6_test_SOURCES = j-ipv6-test.c
-j_bestof_test_SOURCES = j-bestof-test.c
-j_null_milter_SOURCES = j-null-milter.c
-j_inet_test_SOURCES = j-inet-test.c
-av_test_SOURCES = av-test.c j-reply.c
+ze_crypt_test_SOURCES = ze-crypt-test.c 
+ze_policy_test_SOURCES = ze-policy-test.c 
+ze_policy_lookup_SOURCES = ze-policy-lookup.c 
+ze_module_test_SOURCES = ze-module-test.c 
+ze_rcpt_test_SOURCES = ze-rcpt-test.c 
+ze_rbwl_test_SOURCES = ze-rbwl-test.c 
+ze_grey_test_SOURCES = ze-grey-test.c 
+ze_grey_client_test_SOURCES = ze-grey-client-test.c 
+ze_client_test_SOURCES = ze-client-test.c 
+ze_msg_score_test_SOURCES = ze-msg-score-test.c 
+ze_ipv6_test_SOURCES = ze-ipv6-test.c
+ze_bestof_test_SOURCES = ze-bestof-test.c
+ze_null_milter_SOURCES = ze-null-milter.c
+ze_inet_test_SOURCES = ze-inet-test.c
+av_test_SOURCES = av-test.c ze-reply.c
 policy_test_SOURCES = policy-test.c \
-			 j-reply.c 
+			 ze-reply.c 
 
 all: all-am
 
@@ -605,69 +605,69 @@ av-test$(EXEEXT): $(av_test_OBJECTS) $(av_test_DEPENDENCIES) $(EXTRA_av_test_DEP
 	@rm -f av-test$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(av_test_OBJECTS) $(av_test_LDADD) $(LIBS)
 
-j-bestof-test$(EXEEXT): $(j_bestof_test_OBJECTS) $(j_bestof_test_DEPENDENCIES) $(EXTRA_j_bestof_test_DEPENDENCIES) 
-	@rm -f j-bestof-test$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(j_bestof_test_OBJECTS) $(j_bestof_test_LDADD) $(LIBS)
-
-j-chkmail$(EXEEXT): $(j_chkmail_OBJECTS) $(j_chkmail_DEPENDENCIES) $(EXTRA_j_chkmail_DEPENDENCIES) 
-	@rm -f j-chkmail$(EXEEXT)
-	$(AM_V_CCLD)$(j_chkmail_LINK) $(j_chkmail_OBJECTS) $(j_chkmail_LDADD) $(LIBS)
-
-j-client-test$(EXEEXT): $(j_client_test_OBJECTS) $(j_client_test_DEPENDENCIES) $(EXTRA_j_client_test_DEPENDENCIES) 
-	@rm -f j-client-test$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(j_client_test_OBJECTS) $(j_client_test_LDADD) $(LIBS)
-
-j-crypt-test$(EXEEXT): $(j_crypt_test_OBJECTS) $(j_crypt_test_DEPENDENCIES) $(EXTRA_j_crypt_test_DEPENDENCIES) 
-	@rm -f j-crypt-test$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(j_crypt_test_OBJECTS) $(j_crypt_test_LDADD) $(LIBS)
-
-j-grey-client-test$(EXEEXT): $(j_grey_client_test_OBJECTS) $(j_grey_client_test_DEPENDENCIES) $(EXTRA_j_grey_client_test_DEPENDENCIES) 
-	@rm -f j-grey-client-test$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(j_grey_client_test_OBJECTS) $(j_grey_client_test_LDADD) $(LIBS)
-
-j-grey-test$(EXEEXT): $(j_grey_test_OBJECTS) $(j_grey_test_DEPENDENCIES) $(EXTRA_j_grey_test_DEPENDENCIES) 
-	@rm -f j-grey-test$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(j_grey_test_OBJECTS) $(j_grey_test_LDADD) $(LIBS)
-
-j-inet-test$(EXEEXT): $(j_inet_test_OBJECTS) $(j_inet_test_DEPENDENCIES) $(EXTRA_j_inet_test_DEPENDENCIES) 
-	@rm -f j-inet-test$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(j_inet_test_OBJECTS) $(j_inet_test_LDADD) $(LIBS)
-
-j-ipv6-test$(EXEEXT): $(j_ipv6_test_OBJECTS) $(j_ipv6_test_DEPENDENCIES) $(EXTRA_j_ipv6_test_DEPENDENCIES) 
-	@rm -f j-ipv6-test$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(j_ipv6_test_OBJECTS) $(j_ipv6_test_LDADD) $(LIBS)
-
-j-module-test$(EXEEXT): $(j_module_test_OBJECTS) $(j_module_test_DEPENDENCIES) $(EXTRA_j_module_test_DEPENDENCIES) 
-	@rm -f j-module-test$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(j_module_test_OBJECTS) $(j_module_test_LDADD) $(LIBS)
-
-j-msg-score-test$(EXEEXT): $(j_msg_score_test_OBJECTS) $(j_msg_score_test_DEPENDENCIES) $(EXTRA_j_msg_score_test_DEPENDENCIES) 
-	@rm -f j-msg-score-test$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(j_msg_score_test_OBJECTS) $(j_msg_score_test_LDADD) $(LIBS)
-
-j-null-milter$(EXEEXT): $(j_null_milter_OBJECTS) $(j_null_milter_DEPENDENCIES) $(EXTRA_j_null_milter_DEPENDENCIES) 
-	@rm -f j-null-milter$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(j_null_milter_OBJECTS) $(j_null_milter_LDADD) $(LIBS)
-
-j-policy-lookup$(EXEEXT): $(j_policy_lookup_OBJECTS) $(j_policy_lookup_DEPENDENCIES) $(EXTRA_j_policy_lookup_DEPENDENCIES) 
-	@rm -f j-policy-lookup$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(j_policy_lookup_OBJECTS) $(j_policy_lookup_LDADD) $(LIBS)
-
-j-policy-test$(EXEEXT): $(j_policy_test_OBJECTS) $(j_policy_test_DEPENDENCIES) $(EXTRA_j_policy_test_DEPENDENCIES) 
-	@rm -f j-policy-test$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(j_policy_test_OBJECTS) $(j_policy_test_LDADD) $(LIBS)
-
-j-rbwl-test$(EXEEXT): $(j_rbwl_test_OBJECTS) $(j_rbwl_test_DEPENDENCIES) $(EXTRA_j_rbwl_test_DEPENDENCIES) 
-	@rm -f j-rbwl-test$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(j_rbwl_test_OBJECTS) $(j_rbwl_test_LDADD) $(LIBS)
-
-j-rcpt-test$(EXEEXT): $(j_rcpt_test_OBJECTS) $(j_rcpt_test_DEPENDENCIES) $(EXTRA_j_rcpt_test_DEPENDENCIES) 
-	@rm -f j-rcpt-test$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(j_rcpt_test_OBJECTS) $(j_rcpt_test_LDADD) $(LIBS)
-
 policy-test$(EXEEXT): $(policy_test_OBJECTS) $(policy_test_DEPENDENCIES) $(EXTRA_policy_test_DEPENDENCIES) 
 	@rm -f policy-test$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(policy_test_OBJECTS) $(policy_test_LDADD) $(LIBS)
+
+ze-bestof-test$(EXEEXT): $(ze_bestof_test_OBJECTS) $(ze_bestof_test_DEPENDENCIES) $(EXTRA_ze_bestof_test_DEPENDENCIES) 
+	@rm -f ze-bestof-test$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ze_bestof_test_OBJECTS) $(ze_bestof_test_LDADD) $(LIBS)
+
+ze-client-test$(EXEEXT): $(ze_client_test_OBJECTS) $(ze_client_test_DEPENDENCIES) $(EXTRA_ze_client_test_DEPENDENCIES) 
+	@rm -f ze-client-test$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ze_client_test_OBJECTS) $(ze_client_test_LDADD) $(LIBS)
+
+ze-crypt-test$(EXEEXT): $(ze_crypt_test_OBJECTS) $(ze_crypt_test_DEPENDENCIES) $(EXTRA_ze_crypt_test_DEPENDENCIES) 
+	@rm -f ze-crypt-test$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ze_crypt_test_OBJECTS) $(ze_crypt_test_LDADD) $(LIBS)
+
+ze-filter$(EXEEXT): $(ze_filter_OBJECTS) $(ze_filter_DEPENDENCIES) $(EXTRA_ze_filter_DEPENDENCIES) 
+	@rm -f ze-filter$(EXEEXT)
+	$(AM_V_CCLD)$(ze_filter_LINK) $(ze_filter_OBJECTS) $(ze_filter_LDADD) $(LIBS)
+
+ze-grey-client-test$(EXEEXT): $(ze_grey_client_test_OBJECTS) $(ze_grey_client_test_DEPENDENCIES) $(EXTRA_ze_grey_client_test_DEPENDENCIES) 
+	@rm -f ze-grey-client-test$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ze_grey_client_test_OBJECTS) $(ze_grey_client_test_LDADD) $(LIBS)
+
+ze-grey-test$(EXEEXT): $(ze_grey_test_OBJECTS) $(ze_grey_test_DEPENDENCIES) $(EXTRA_ze_grey_test_DEPENDENCIES) 
+	@rm -f ze-grey-test$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ze_grey_test_OBJECTS) $(ze_grey_test_LDADD) $(LIBS)
+
+ze-inet-test$(EXEEXT): $(ze_inet_test_OBJECTS) $(ze_inet_test_DEPENDENCIES) $(EXTRA_ze_inet_test_DEPENDENCIES) 
+	@rm -f ze-inet-test$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ze_inet_test_OBJECTS) $(ze_inet_test_LDADD) $(LIBS)
+
+ze-ipv6-test$(EXEEXT): $(ze_ipv6_test_OBJECTS) $(ze_ipv6_test_DEPENDENCIES) $(EXTRA_ze_ipv6_test_DEPENDENCIES) 
+	@rm -f ze-ipv6-test$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ze_ipv6_test_OBJECTS) $(ze_ipv6_test_LDADD) $(LIBS)
+
+ze-module-test$(EXEEXT): $(ze_module_test_OBJECTS) $(ze_module_test_DEPENDENCIES) $(EXTRA_ze_module_test_DEPENDENCIES) 
+	@rm -f ze-module-test$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ze_module_test_OBJECTS) $(ze_module_test_LDADD) $(LIBS)
+
+ze-msg-score-test$(EXEEXT): $(ze_msg_score_test_OBJECTS) $(ze_msg_score_test_DEPENDENCIES) $(EXTRA_ze_msg_score_test_DEPENDENCIES) 
+	@rm -f ze-msg-score-test$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ze_msg_score_test_OBJECTS) $(ze_msg_score_test_LDADD) $(LIBS)
+
+ze-null-milter$(EXEEXT): $(ze_null_milter_OBJECTS) $(ze_null_milter_DEPENDENCIES) $(EXTRA_ze_null_milter_DEPENDENCIES) 
+	@rm -f ze-null-milter$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ze_null_milter_OBJECTS) $(ze_null_milter_LDADD) $(LIBS)
+
+ze-policy-lookup$(EXEEXT): $(ze_policy_lookup_OBJECTS) $(ze_policy_lookup_DEPENDENCIES) $(EXTRA_ze_policy_lookup_DEPENDENCIES) 
+	@rm -f ze-policy-lookup$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ze_policy_lookup_OBJECTS) $(ze_policy_lookup_LDADD) $(LIBS)
+
+ze-policy-test$(EXEEXT): $(ze_policy_test_OBJECTS) $(ze_policy_test_DEPENDENCIES) $(EXTRA_ze_policy_test_DEPENDENCIES) 
+	@rm -f ze-policy-test$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ze_policy_test_OBJECTS) $(ze_policy_test_LDADD) $(LIBS)
+
+ze-rbwl-test$(EXEEXT): $(ze_rbwl_test_OBJECTS) $(ze_rbwl_test_DEPENDENCIES) $(EXTRA_ze_rbwl_test_DEPENDENCIES) 
+	@rm -f ze-rbwl-test$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ze_rbwl_test_OBJECTS) $(ze_rbwl_test_LDADD) $(LIBS)
+
+ze-rcpt-test$(EXEEXT): $(ze_rcpt_test_OBJECTS) $(ze_rcpt_test_DEPENDENCIES) $(EXTRA_ze_rcpt_test_DEPENDENCIES) 
+	@rm -f ze-rcpt-test$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ze_rcpt_test_OBJECTS) $(ze_rcpt_test_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -676,42 +676,42 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/av-test.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-bestof-test.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-callback.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-callbackchecks.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-callbacklogs.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-check-connection.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-chkmail.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-cleanspool.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-client-test.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-crypt-test.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-grey-client-test.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-grey-test.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-inet-test.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-ipv6-test.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-libmilter.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-log-files.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-log-quarantine.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-log-virus.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-lr-init.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-main.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-mod-tools.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-module-test.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-msg-score-test.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-mxcheck.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-ndc-help.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-ndc-server.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-null-milter.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-policy-lookup.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-policy-test.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-rbwl-test.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-rcpt-test.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-reply.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-short-messages.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-signal.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-smmacros.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-spool.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/policy-test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-bestof-test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-callback.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-callbackchecks.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-callbacklogs.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-check-connection.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-cleanspool.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-client-test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-crypt-test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-filter.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-grey-client-test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-grey-test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-inet-test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-ipv6-test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-libmilter.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-log-files.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-log-quarantine.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-log-virus.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-lr-init.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-mod-tools.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-module-test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-msg-score-test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-mxcheck.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-ndc-help.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-ndc-server.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-null-milter.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-policy-lookup.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-policy-test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-rbwl-test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-rcpt-test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-reply.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-short-messages.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-signal.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-smmacros.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-spool.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

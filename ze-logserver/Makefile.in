@@ -104,8 +104,8 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-ze_logserver_SOURCES = ze-logserver.c
-ze_logserver_OBJECTS = ze-logserver.$(OBJEXT)
+am_ze_logserver_OBJECTS = ze-logserver.$(OBJEXT)
+ze_logserver_OBJECTS = $(am_ze_logserver_OBJECTS)
 ze_logserver_LDADD = $(LDADD)
 ze_logserver_DEPENDENCIES =
 AM_V_lt = $(am__v_lt_@AM_V@)
@@ -146,8 +146,8 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = ze-logserver.c
-DIST_SOURCES = ze-logserver.c
+SOURCES = $(ze_logserver_SOURCES)
+DIST_SOURCES = $(ze_logserver_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -321,7 +321,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-j_logserver_SOURCES = ze-logserver.c 
+ze_logserver_SOURCES = ze-logserver.c 
 LDADD = @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@
 AM_CPPFLAGS = -I../zeinc @BDBINCS@
 all: all-am

@@ -1,6 +1,6 @@
 /*
  *
- * j-chkmail - Mail Server Filter for sendmail
+ * ze-filter - Mail Server Filter for sendmail
  *
  * Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz
  *
@@ -12,23 +12,23 @@
  *
  * This program is free software, but with restricted license :
  *
- * - j-chkmail is distributed only to registered users
- * - j-chkmail license is available only non-commercial applications,
- *   this means, you can use j-chkmail if you make no profit with it.
- * - redistribution of j-chkmail in any way : binary, source in any
+ * - ze-filter is distributed only to registered users
+ * - ze-filter license is available only non-commercial applications,
+ *   this means, you can use ze-filter if you make no profit with it.
+ * - redistribution of ze-filter in any way : binary, source in any
  *   media, is forbidden
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * More details about j-chkmail license can be found at j-chkmail
+ * More details about ze-filter license can be found at ze-filter
  * web site : http://foss.jose-marcio.org
  */
 
 #include <j-sys.h>
 
-#include "j-chkmail.h"
+#include "ze-filter.h"
 
 
 
@@ -72,7 +72,7 @@ main(argc, argv)
   bool                dbexport = TRUE;
 
 #ifndef USE_BerkeleyDB
-  fprintf(stderr, " -> j-chkmail wasn't compiled with BerkeleyDB...\n");
+  fprintf(stderr, " -> ze-filter wasn't compiled with BerkeleyDB...\n");
   fprintf(stderr, " ->   Can't use dabatases without BerkeleyDB !\n");
   exit(1);
 #endif

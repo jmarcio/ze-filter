@@ -1,0 +1,128 @@
+.TH ze-filter 8 "25 May 2002" "ze-filter 1.1"
+.SH NAME
+Joe's ze-filter \- A milter based filtering mail daemon for sendmail
+.SH SYNOPSIS
+.B ze-filter
+[ -p sock ] [ -i port ] [ -u unix_sock ] [ -d domain ] [ -c conf_file ]
+[ -l level ] [ -v | -h ]
+.SH DESCRIPTION
+.I  ze-filter
+is the daemon which communicates with sendmail and filter messages
+and connexions accordingly to the configuration file.
+
+.SH OPTIONS
+.TP
+.B \-p
+Use
+.I sock 
+to cummunicate with sendmail.
+.I sock 
+shall be expressed as follows :
+           inet:2000@localhost
+           local:/var/sock
+.TP
+.B \-i
+Use 
+.I port
+to communicate with sendmail (see doc)
+.TP
+.B \-u
+Use 
+.I unix_sock 
+to communicate with sendmail (see doc)
+.TP
+.B \-d
+Set domain do 
+.I domain
+.TP
+.B \-h
+Show help and command line options
+.TP
+.B \-c
+Uses 
+.I conf_file 
+as the alternate configuration file (default is /etc/mail/ze-filter.cf)
+
+.TP
+.B \-l
+Set log level to 
+.I level
+.TP
+.B \-v
+Show version, runtime parameters values and quit
+
+.SH RETURN VALUES
+.Rv 
+
+.SH CONFIGURATION FILES
+.TP
+.I /etc/mail/ze-filter.cf
+Global ze-filter configuration file. Look at ze-filter.cf man page
+for a complete description of this file.
+.TP 
+.I /etc/mail/j-nets
+IP networks to be known by ze-filter. IP networks are described
+one each line, in the format :
+ NETCLASS NETWORK NETMASK
+.B NETCLASS 
+= 
+.I DOMAIN 
+| 
+.I LOCAL 
+| 
+.I FRIEND
+ 
+.TP 
+.I /etc/mail/j-local-users
+e-mail adresses which can receive mail only from known IP networks.
+Local addresses are declared one at a line without the machine and
+domain right side.
+
+.TP
+.I /etc/mail/j-error-msg
+Definition of e-mail replacement messages. Messages are enclosed by
+tags defining when to use it. Nowadays, only two tags are used :
+.B XFILE  
+and
+.B VIRUS.
+So, message concerning XFILE are enclosed by the tags :
+.B \<XFILE\>
+and
+.B \</XFILE\>
+
+.SH FILES
+.TP
+.I /var/tmp/ze-filter.pid
+Where ze-filter stores parent pid file
+.TP
+.I /var/tmp/j-state
+Binary file where ze-filter stores internal counter contents
+.TP
+.I /var/tmp/j-stats
+Text file where ze-filter periodicaly dumps internal counters
+.TP
+.I /var/tmp/j-files
+Text file where ze-filter saves attached filenames of rejected messages
+.TP
+.I /var/spool/jchkmail/
+Directory where ze-filter creates temporary files
+
+
+.SH "SEE ALSO"
+j-scanfile(1), j-printstats(1), ze-filter.cf(5)
+
+.SH BUGS
+.I Bugs ???
+Did you say 
+.I bugs ???
+Where did you see a
+.I bug ???
+.PP
+If you find yourself in a very improbable situation of finding a bug,
+please send me a bug repport.
+
+.SH AUTHOR
+Joe's ze-filter was written by Jose Marcio Martins da Cruz : 
+martins@paris.ensmp.fr
+.PP
+
