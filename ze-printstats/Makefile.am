@@ -1,11 +1,11 @@
 
-bin_PROGRAMS            = j-printstats
+bin_PROGRAMS            = ze-printstats
 
-j_printstats_SOURCES 	= j-printstats.c 
+j_printstats_SOURCES 	= ze-printstats.c 
 
 LDADD              	= @JCHKLIBS@   @LDLIBPCRE@ @BDBLIBS@
 
 AM_CPPFLAGS             = -I../zeinc -I../zmchkinc @BDBINCS@
 
-man_MANS                = j-printstats.1 
+man_MANS                = ze-printstats.1 
 

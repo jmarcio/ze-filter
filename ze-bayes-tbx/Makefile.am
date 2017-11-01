@@ -1,7 +1,7 @@
 
-sbin_PROGRAMS            = j-greyd
+bin_PROGRAMS         = ze-bayes-tbx
 
-j_greyd_SOURCES 	= j-greyd.c 
+j_bayes_tbx_SOURCES 	= ze-bayes-tbx.c 
 
 LDADD              	= @JCHKLIBS@  @LDLIBPCRE@ @BDBLIBS@
 

@@ -16904,7 +16904,7 @@ ac_config_files="$ac_config_files include/version.h include/defs.h"
 
 ac_config_files="$ac_config_files librepl/Makefile libjoe/Makefile libs/Makefile zelib/Makefile zmchklib/Makefile"
 
-ac_config_files="$ac_config_files src/Makefile scratch/Makefile j-bayes-tbx/Makefile j-makemap/Makefile j-scanfile/Makefile j-printstats/Makefile j-greyd/Makefile j-logserver/Makefile"
+ac_config_files="$ac_config_files src/Makefile scratch/Makefile ze-bayes-tbx/Makefile ze-makemap/Makefile ze-scanfile/Makefile ze-printstats/Makefile ze-greyd/Makefile ze-logserver/Makefile"
 
 
 ac_config_files="$ac_config_files etc/Makefile etc/Makefile.org"
@@ -17939,12 +17939,12 @@ do
     "zmchklib/Makefile") CONFIG_FILES="$CONFIG_FILES zmchklib/Makefile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "scratch/Makefile") CONFIG_FILES="$CONFIG_FILES scratch/Makefile" ;;
-    "j-bayes-tbx/Makefile") CONFIG_FILES="$CONFIG_FILES j-bayes-tbx/Makefile" ;;
-    "j-makemap/Makefile") CONFIG_FILES="$CONFIG_FILES j-makemap/Makefile" ;;
-    "j-scanfile/Makefile") CONFIG_FILES="$CONFIG_FILES j-scanfile/Makefile" ;;
-    "j-printstats/Makefile") CONFIG_FILES="$CONFIG_FILES j-printstats/Makefile" ;;
-    "j-greyd/Makefile") CONFIG_FILES="$CONFIG_FILES j-greyd/Makefile" ;;
-    "j-logserver/Makefile") CONFIG_FILES="$CONFIG_FILES j-logserver/Makefile" ;;
+    "ze-bayes-tbx/Makefile") CONFIG_FILES="$CONFIG_FILES ze-bayes-tbx/Makefile" ;;
+    "ze-makemap/Makefile") CONFIG_FILES="$CONFIG_FILES ze-makemap/Makefile" ;;
+    "ze-scanfile/Makefile") CONFIG_FILES="$CONFIG_FILES ze-scanfile/Makefile" ;;
+    "ze-printstats/Makefile") CONFIG_FILES="$CONFIG_FILES ze-printstats/Makefile" ;;
+    "ze-greyd/Makefile") CONFIG_FILES="$CONFIG_FILES ze-greyd/Makefile" ;;
+    "ze-logserver/Makefile") CONFIG_FILES="$CONFIG_FILES ze-logserver/Makefile" ;;
     "etc/Makefile") CONFIG_FILES="$CONFIG_FILES etc/Makefile" ;;
     "etc/Makefile.org") CONFIG_FILES="$CONFIG_FILES etc/Makefile.org" ;;
     "etc/get-urlbl.org") CONFIG_FILES="$CONFIG_FILES etc/get-urlbl.org" ;;

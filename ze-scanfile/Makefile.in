@@ -88,8 +88,8 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-bin_PROGRAMS = j-scanfile$(EXEEXT) j-message-tbx$(EXEEXT)
-subdir = j-scanfile
+bin_PROGRAMS = ze-scanfile$(EXEEXT) j-message-tbx$(EXEEXT)
+subdir = ze-scanfile
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
 	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
@@ -104,7 +104,7 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(man1dir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_j_message_tbx_OBJECTS = j-message-tbx.$(OBJEXT)
+am_j_message_tbx_OBJECTS = ze-message-tbx.$(OBJEXT)
 j_message_tbx_OBJECTS = $(am_j_message_tbx_OBJECTS)
 j_message_tbx_LDADD = $(LDADD)
 j_message_tbx_DEPENDENCIES =
@@ -112,10 +112,10 @@ AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
-am_j_scanfile_OBJECTS = j-scanfile.$(OBJEXT)
-j_scanfile_OBJECTS = $(am_j_scanfile_OBJECTS)
-j_scanfile_LDADD = $(LDADD)
-j_scanfile_DEPENDENCIES =
+ze_scanfile_SOURCES = ze-scanfile.c
+ze_scanfile_OBJECTS = ze-scanfile.$(OBJEXT)
+ze_scanfile_LDADD = $(LDADD)
+ze_scanfile_DEPENDENCIES =
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -150,8 +150,8 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(j_message_tbx_SOURCES) $(j_scanfile_SOURCES)
-DIST_SOURCES = $(j_message_tbx_SOURCES) $(j_scanfile_SOURCES)
+SOURCES = $(j_message_tbx_SOURCES) ze-scanfile.c
+DIST_SOURCES = $(j_message_tbx_SOURCES) ze-scanfile.c
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -355,11 +355,11 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-j_scanfile_SOURCES = j-scanfile.c 
-j_message_tbx_SOURCES = j-message-tbx.c
+j_scanfile_SOURCES = ze-scanfile.c 
+j_message_tbx_SOURCES = ze-message-tbx.c
 LDADD = @JCHKLIBS@  @LDLIBPCRE@ @BDBLIBS@
 AM_CPPFLAGS = -I../zeinc -I../zmchkinc @BDBINCS@
-man_MANS = j-scanfile.1 
+man_MANS = ze-scanfile.1 
 all: all-am
 
 .SUFFIXES:
@@ -373,9 +373,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu j-scanfile/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu ze-scanfile/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu j-scanfile/Makefile
+	  $(AUTOMAKE) --gnu ze-scanfile/Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \
@@ -447,9 +447,9 @@ j-message-tbx$(EXEEXT): $(j_message_tbx_OBJECTS) $(j_message_tbx_DEPENDENCIES) $
 	@rm -f j-message-tbx$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(j_message_tbx_OBJECTS) $(j_message_tbx_LDADD) $(LIBS)
 
-j-scanfile$(EXEEXT): $(j_scanfile_OBJECTS) $(j_scanfile_DEPENDENCIES) $(EXTRA_j_scanfile_DEPENDENCIES) 
-	@rm -f j-scanfile$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(j_scanfile_OBJECTS) $(j_scanfile_LDADD) $(LIBS)
+ze-scanfile$(EXEEXT): $(ze_scanfile_OBJECTS) $(ze_scanfile_DEPENDENCIES) $(EXTRA_ze_scanfile_DEPENDENCIES) 
+	@rm -f ze-scanfile$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ze_scanfile_OBJECTS) $(ze_scanfile_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -457,8 +457,8 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-message-tbx.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-scanfile.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-message-tbx.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-scanfile.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

@@ -88,8 +88,8 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-bin_PROGRAMS = j-logserver$(EXEEXT)
-subdir = j-logserver
+bin_PROGRAMS = ze-bayes-tbx$(EXEEXT)
+subdir = ze-bayes-tbx
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
 	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
@@ -104,10 +104,10 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_j_logserver_OBJECTS = j-logserver.$(OBJEXT)
-j_logserver_OBJECTS = $(am_j_logserver_OBJECTS)
-j_logserver_LDADD = $(LDADD)
-j_logserver_DEPENDENCIES =
+ze_bayes_tbx_SOURCES = ze-bayes-tbx.c
+ze_bayes_tbx_OBJECTS = ze-bayes-tbx.$(OBJEXT)
+ze_bayes_tbx_LDADD = $(LDADD)
+ze_bayes_tbx_DEPENDENCIES =
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
@@ -146,8 +146,8 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(j_logserver_SOURCES)
-DIST_SOURCES = $(j_logserver_SOURCES)
+SOURCES = ze-bayes-tbx.c
+DIST_SOURCES = ze-bayes-tbx.c
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -321,9 +321,9 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-j_logserver_SOURCES = j-logserver.c 
-LDADD = @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@
-AM_CPPFLAGS = -I../zeinc @BDBINCS@
+j_bayes_tbx_SOURCES = ze-bayes-tbx.c 
+LDADD = @JCHKLIBS@  @LDLIBPCRE@ @BDBLIBS@
+AM_CPPFLAGS = -I../zeinc -I../zmchkinc @BDBINCS@
 all: all-am
 
 .SUFFIXES:
@@ -337,9 +337,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu j-logserver/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu ze-bayes-tbx/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu j-logserver/Makefile
+	  $(AUTOMAKE) --gnu ze-bayes-tbx/Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \
@@ -407,9 +407,9 @@ clean-binPROGRAMS:
 	echo " rm -f" $$list; \
 	rm -f $$list
 
-j-logserver$(EXEEXT): $(j_logserver_OBJECTS) $(j_logserver_DEPENDENCIES) $(EXTRA_j_logserver_DEPENDENCIES) 
-	@rm -f j-logserver$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(j_logserver_OBJECTS) $(j_logserver_LDADD) $(LIBS)
+ze-bayes-tbx$(EXEEXT): $(ze_bayes_tbx_OBJECTS) $(ze_bayes_tbx_DEPENDENCIES) $(EXTRA_ze_bayes_tbx_DEPENDENCIES) 
+	@rm -f ze-bayes-tbx$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ze_bayes_tbx_OBJECTS) $(ze_bayes_tbx_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -417,7 +417,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-logserver.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-bayes-tbx.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

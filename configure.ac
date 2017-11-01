@@ -1444,7 +1444,7 @@ AC_CONFIG_FILES(Makefile)
 AC_CONFIG_FILES(include/version.h include/defs.h)
 
 AC_CONFIG_FILES(librepl/Makefile libjoe/Makefile libs/Makefile zelib/Makefile zmchklib/Makefile)
-AC_CONFIG_FILES(src/Makefile scratch/Makefile j-bayes-tbx/Makefile j-makemap/Makefile j-scanfile/Makefile j-printstats/Makefile j-greyd/Makefile j-logserver/Makefile)
+AC_CONFIG_FILES(src/Makefile scratch/Makefile ze-bayes-tbx/Makefile ze-makemap/Makefile ze-scanfile/Makefile ze-printstats/Makefile ze-greyd/Makefile ze-logserver/Makefile)
 
 AC_CONFIG_FILES(etc/Makefile etc/Makefile.org)
 AC_CONFIG_FILES(etc/get-urlbl.org etc/get-bayes.org)

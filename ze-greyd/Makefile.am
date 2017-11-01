@@ -1,10 +1,9 @@
 
-bin_PROGRAMS            = j-makemap
+sbin_PROGRAMS            = ze-greyd
 
-j_makemap_SOURCES 	= j-makemap.c 
+j_greyd_SOURCES 	= ze-greyd.c 
 
 LDADD              	= @JCHKLIBS@  @LDLIBPCRE@ @BDBLIBS@
-
 
 AM_CPPFLAGS             = -I../zeinc -I../zmchkinc @BDBINCS@
 

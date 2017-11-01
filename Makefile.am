@@ -12,12 +12,12 @@ SUBDIRS = $(subdirs) \
 	src \
 	etc \
 	scratch \
-	j-bayes-tbx \
-	j-makemap \
-	j-printstats \
-	j-scanfile \
-	j-greyd \
-	j-logserver \
+	ze-bayes-tbx \
+	ze-makemap \
+	ze-printstats \
+	ze-scanfile \
+	ze-greyd \
+	ze-logserver \
 	@MODDIRS@
 
 #	modules/libs 

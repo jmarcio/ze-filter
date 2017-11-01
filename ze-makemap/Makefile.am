@@ -1,9 +1,10 @@
 
-bin_PROGRAMS         = j-bayes-tbx
+bin_PROGRAMS            = ze-makemap
 
-j_bayes_tbx_SOURCES 	= j-bayes-tbx.c 
+j_makemap_SOURCES 	= ze-makemap.c 
 
 LDADD              	= @JCHKLIBS@  @LDLIBPCRE@ @BDBLIBS@
+
 
 AM_CPPFLAGS             = -I../zeinc -I../zmchkinc @BDBINCS@
 
