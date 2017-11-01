@@ -47,7 +47,7 @@ clean	:
 	rm -f *.db 
 
 done :
-	@echo "*** Telling j-chkmail to reload databases..."
+	@echo "*** Telling ze-filter to reload databases..."
 	$(JBINDIR)/j-ndc reload databases
 	$(JBINDIR)/j-ndc reload lrdata
 	@rm -f *.db.old

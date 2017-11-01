@@ -20,7 +20,7 @@ my $TAR  = get_option("tar");
 $TAR = useable_value("tar", $TAR);
 
 my $BaseSrcDir = get_option("srcdir");
-$BaseSrcDir = useable_value("/var/src/j-chkmail", $BaseSrcDir);
+$BaseSrcDir = useable_value("/var/src/ze-filter", $BaseSrcDir);
 
 my $VersionsURL = get_option("versionsurl");
 $VersionsURL = useable_value("http://foss.jose-marcio.org/VERSIONS", $VersionsURL);
@@ -246,11 +246,11 @@ sub print_pkg_conf {
 #
 #wget          = /usr/bin/wget
 #
-#SrcDir        = /var/src/j-chkmail
+#SrcDir        = /var/src/ze-filter
 #
 #VersionsURL   = http://foss.jose-marcio.org/VERSIONS
 #
-#RCPath        = /etc/init.d/jchkmail
+#RCPath        = /etc/init.d/ze-filter
 #
 #
 # ************************************************************
@@ -287,9 +287,9 @@ EOT
 sub set_defaults {
   %OPTIONS = ("tar"         => "tar",
 	      "wget"        => "wget",
-	      "srcdir"      => "/var/src/j-chkmail",
+	      "srcdir"      => "/var/src/ze-filter",
 	      "versionsurl" => "http://foss.jose-marcio.org/VERSIONS",
-	      "rcpath"      => "/etc/init.d/jchkmail",
+	      "rcpath"      => "/etc/init.d/ze-filter",
 
 	      "prefix"      => "",
 	      "user"        => "",
@@ -336,7 +336,7 @@ sub get_current {
   my @CONF = qw();
   foreach my $path (@CPATH) {
     foreach my $opt ("-M running", "-m") {
-      @CONF = `$path/j-chkmail $opt 2>/dev/null`;
+      @CONF = `$path/ze-filter $opt 2>/dev/null`;
       if ($#CONF >= 0) {
 	$CurConf{DaemonPath} = $path;
 	last;
@@ -521,12 +521,12 @@ EOT
   {
     my @RCS = qw(/etc/init.d /etc/rc.d /usr/local/etc/rc.d);
     foreach my $dir (@RCS) {
-      if (-f "$dir/jchkmail") {
-	$init = "$dir/jchkmail";
+      if (-f "$dir/ze-filter") {
+	$init = "$dir/ze-filter";
 	last;
       }
-      if (-f "$dir/jchkmail.sh") {
-	$init = "$dir/jchkmail.sh";
+      if (-f "$dir/ze-filter.sh") {
+	$init = "$dir/ze-filter.sh";
 	last;
       }
     }
@@ -548,7 +548,7 @@ EOT
     my $pwd = getcwd();
     chomp $pwd;
 
-    my $cdbdir = "/var/jchkmail" . "/cdb";
+    my $cdbdir = "/var/ze-filter" . "/cdb";
 
     if (-d $cdbdir) {
       die "$@" unless chdir $cdbdir;
@@ -570,7 +570,7 @@ EOT
   if ($#ConfDiffs >= 0) {
     print <<EOT;
 
-    j-chkmail configuration remarks :
+    ze-filter configuration remarks :
     *********************************
 
 EOT
@@ -580,7 +580,7 @@ EOT
     print <<EOT;
 
     To correct above possible errors, you may edit the
-    configuration file (j-chkmail.cf)
+    configuration file (ze-filter.cf)
 
 EOT
   }

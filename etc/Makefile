@@ -70,10 +70,10 @@ am__make_running_with_option = \
   test $$has_opt = yes
 am__make_dryrun = (target_option=n; $(am__make_running_with_option))
 am__make_keepgoing = (target_option=k; $(am__make_running_with_option))
-pkgdatadir = $(datadir)/j-chkmail
-pkgincludedir = $(includedir)/j-chkmail
-pkglibdir = $(libdir)/j-chkmail
-pkglibexecdir = $(libexecdir)/j-chkmail
+pkgdatadir = $(datadir)/ze-filter
+pkgincludedir = $(includedir)/ze-filter
+pkglibdir = $(libdir)/ze-filter
+pkglibexecdir = $(libexecdir)/ze-filter
 am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd
 install_sh_DATA = $(install_sh) -c -m 644
 install_sh_PROGRAM = $(install_sh) -c
@@ -154,13 +154,13 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.org.in \
 	$(srcdir)/get-bayes.org.in $(srcdir)/get-urlbl.org.in \
 	$(top_srcdir)/mkinstalldirs
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-ACLOCAL = ${SHELL} /data/FOSS/dev-j-chkmail/ze-Filter/missing aclocal-1.15
+ACLOCAL = ${SHELL} /data/FOSS/dev-ze-filter/ze-Filter/missing aclocal-1.15
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
 AR = ar
-AUTOCONF = ${SHELL} /data/FOSS/dev-j-chkmail/ze-Filter/missing autoconf
-AUTOHEADER = ${SHELL} /data/FOSS/dev-j-chkmail/ze-Filter/missing autoheader
-AUTOMAKE = ${SHELL} /data/FOSS/dev-j-chkmail/ze-Filter/missing automake-1.15
+AUTOCONF = ${SHELL} /data/FOSS/dev-ze-filter/ze-Filter/missing autoconf
+AUTOHEADER = ${SHELL} /data/FOSS/dev-ze-filter/ze-Filter/missing autoheader
+AUTOMAKE = ${SHELL} /data/FOSS/dev-ze-filter/ze-Filter/missing automake-1.15
 AWK = gawk
 BDBDIR = berkdb
 BDBINCS = -I../berkdb/
@@ -169,7 +169,7 @@ CC = gcc
 CCDEPMODE = depmode=gcc3
 CFARGS = 
 CFLAGS = -pthread 
-CONFDIR = /etc/mail/jchkmail
+CONFDIR = /etc/ze-filter
 CPP = gcc -E
 CPPFLAGS =  -DOTHER_IS_KNOWN=1 -D_FFR_LOGREG=1 -I../pcre.dir -I. -I../berkdb -I../include
 CYGPATH_W = echo
@@ -185,14 +185,14 @@ EGREP = /usr/bin/grep -E
 EXEEXT = 
 FGREP = /usr/bin/grep -F
 GREP = /usr/bin/grep
-GROUP = smmsp
+GROUP = ze-filter
 INSTALL = /usr/bin/install -c
 INSTALL_DATA = ${INSTALL} -m 644
 INSTALL_PROGRAM = ${INSTALL}
 INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
 JCHKLIBS =  -L../libjoe -ljoe -L../zechklib -lzechk -L../libs -lcommon -L../librepl -lrepl -L../zelib -lze 
-JGREYDDIR = /var/jchkmail/jgreydb
+JGREYDDIR = /var/ze-filter/ze-greydb
 LANGSPEC = EN
 LD = /usr/bin/ld -m elf_x86_64
 LDFLAGS = 
@@ -204,7 +204,7 @@ LIPO =
 LN_S = ln -s
 LTLIBOBJS = 
 LT_SYS_LIBRARY_PATH = 
-MAKEINFO = ${SHELL} /data/FOSS/dev-j-chkmail/ze-Filter/missing makeinfo
+MAKEINFO = ${SHELL} /data/FOSS/dev-ze-filter/ze-Filter/missing makeinfo
 MANIFEST_TOOL = :
 MKDIR_P = /usr/bin/mkdir -p
 MODDIRS = 
@@ -215,13 +215,13 @@ OBJDUMP = objdump
 OBJEXT = o
 OTOOL = 
 OTOOL64 = 
-PACKAGE = j-chkmail
+PACKAGE = ze-filter
 PACKAGE_BUGREPORT = jose.marcio.mc@gmail.com
-PACKAGE_NAME = j-chkmail
-PACKAGE_STRING = j-chkmail 2.7.0
-PACKAGE_TARNAME = j-chkmail
+PACKAGE_NAME = ze-filter
+PACKAGE_STRING = ze-filter 0.0.1
+PACKAGE_TARNAME = ze-filter
 PACKAGE_URL = 
-PACKAGE_VERSION = 2.7.0
+PACKAGE_VERSION = 0.0.1
 PATH_SEPARATOR = :
 PCREDIR = pcre.dir
 PERL = /usr/bin/perl
@@ -232,25 +232,25 @@ PTHREAD_CFLAGS = -pthread
 PTHREAD_LIBS = 
 RANLIB = ranlib
 RCDIR = /etc/init.d
-RCGREYD = jgreyd
-RCSCRIPT = jchkmail
+RCGREYD = ze-greyd
+RCSCRIPT = ze-filter
 RSYNC_SERVER = foss.jose-marcio.org:1873
 SED = /usr/bin/sed
 SET_MAKE = 
 SHELL = /bin/sh
-SPOOLDIR = /var/spool/jchkmail
-STATEDIR = /var/run/jchkmail
+SPOOLDIR = /var/spool/ze-filter
+STATEDIR = /var/run/ze-filter
 STRIP = strip
-TOPDIR = /data/FOSS/dev-j-chkmail/ze-Filter
+TOPDIR = /data/FOSS/dev-ze-filter/ze-Filter
 UNAME = Linux perere.paris.ensmp.fr 4.13.5-200.fc26.x86_64 #1 SMP Thu Oct 5 16:53:13 UTC 2017 x86_64 x86_64 x86_64 GNU/Linux
-USER = smmsp
+USER = ze-filter
 VERSION = ze-Filter
-WORKROOT = /var/jchkmail
+WORKROOT = /var/ze-filter
 XFILES_DEF = ade adp app bas bat bin btm chm cmd com cpl csh dll drv exe fxp hlp hta inf ini ins isp js jse ksh lnk mdb mde mdt mdw msc msi msp mst ops pcd pif prg reg scr sct shb shs sys url vb vbe vbs vxd wsc wsf wsh xmf
-abs_builddir = /data/FOSS/dev-j-chkmail/ze-Filter/etc
-abs_srcdir = /data/FOSS/dev-j-chkmail/ze-Filter/etc
-abs_top_builddir = /data/FOSS/dev-j-chkmail/ze-Filter
-abs_top_srcdir = /data/FOSS/dev-j-chkmail/ze-Filter
+abs_builddir = /data/FOSS/dev-ze-filter/ze-Filter/etc
+abs_srcdir = /data/FOSS/dev-ze-filter/ze-Filter/etc
+abs_top_builddir = /data/FOSS/dev-ze-filter/ze-Filter
+abs_top_srcdir = /data/FOSS/dev-ze-filter/ze-Filter
 ac_ct_AR = ar
 ac_ct_CC = gcc
 ac_ct_DUMPBIN = 
@@ -279,7 +279,7 @@ host_vendor = pc
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /data/FOSS/dev-j-chkmail/ze-Filter/install-sh
+install_sh = ${SHELL} /data/FOSS/dev-ze-filter/ze-Filter/install-sh
 libdir = ${exec_prefix}/lib64
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -295,51 +295,51 @@ sbindir = ${exec_prefix}/sbin
 sharedstatedir = /var
 srcdir = .
 subdirs =  pcre.dir berkdb
-sysconfdir = /etc/mail/jchkmail
+sysconfdir = /etc/ze-filter
 target_alias = 
 top_build_prefix = ../
 top_builddir = ..
 top_srcdir = ..
-CDBDIR = /var/jchkmail/cdb
-CFDIR = /etc/mail/jchkmail
+CDBDIR = /var/ze-filter/cdb
+CFDIR = /etc/ze-filter
 JCHKMAIL = $(top_srcdir)/src/ze-filter
-POLICY_SRC = j-policy.base.txt.org \
- j-policy.z-grey.txt.org \
- j-policy.z-badmx.txt.org \
- j-policy.z-iana.txt.org \
- j-policy.z-defaults.txt.org
+POLICY_SRC = ze-policy.base.txt.org \
+ ze-policy.z-grey.txt.org \
+ ze-policy.z-badmx.txt.org \
+ ze-policy.z-iana.txt.org \
+ ze-policy.z-defaults.txt.org
 
-sysconf_DATA = j-chkmail.cf.org \
- j-error-msg.org \
- j-regex.org \
- j-oracle.org \
- j-xfiles.org \
- j-modules.org \
- j-tables.org \
- j-ndc.cf.org
+sysconf_DATA = ze-filter.cf.org \
+ ze-error-msg.org \
+ ze-regex.org \
+ ze-oracle.org \
+ ze-xfiles.org \
+ ze-modules.org \
+ ze-tables.org \
+ ze-ndc.cf.org
 
-etc_upgrade = j-chkmail.cf.org \
- j-oracle.org
+etc_upgrade = ze-filter.cf.org \
+ ze-oracle.org
 
-cdb_install = j-policy.z-grey.txt.org \
- j-policy.z-badmx.txt.org \
- j-policy.z-iana.txt.org \
- j-policy.z-defaults.txt.org
+cdb_install = ze-policy.z-grey.txt.org \
+ ze-policy.z-badmx.txt.org \
+ ze-policy.z-iana.txt.org \
+ ze-policy.z-defaults.txt.org
 
-cdb_remove = j-policy.grey.txt.org \
- j-policy.badmx.txt.org
+cdb_remove = ze-policy.grey.txt.org \
+ ze-policy.badmx.txt.org
 
-cdb_preserve = j-policy.base.txt.org \
- j-policy.local.txt.org \
- j-rcpt.txt.org \
- j-bayes.txt.org \
- j-urlbl.txt.org \
+cdb_preserve = ze-policy.base.txt.org \
+ ze-policy.local.txt.org \
+ ze-rcpt.txt.org \
+ ze-bayes.txt.org \
+ ze-urlbl.txt.org \
  Makefile.org
 
 script_preserve = get-urlbl.org \
  get-bayes.org
 
-OBJECTS = j-policy.txt.org j-chkmail.cf.default j-chkmail.cf.running j-chkmail.cf.null
+OBJECTS = ze-policy.txt.org ze-filter.cf.default ze-filter.cf.running ze-filter.cf.null
 all: all-am
 
 .SUFFIXES:
@@ -562,37 +562,37 @@ uninstall-am: uninstall-sysconfDATA
 
 all: $(OBJECTS)
 
-j-policy.txt.org : $(POLICY_SRC)
-	cat $(POLICY_SRC) > j-policy.txt.org
+ze-policy.txt.org : $(POLICY_SRC)
+	cat $(POLICY_SRC) > ze-policy.txt.org
 
 distclean::clean-hook
 
 clean:: clean-hook
 
 clean-hook:
-	rm -f $(OBJECTS) j-chkmail.cf.org
+	rm -f $(OBJECTS) ze-filter.cf.org
 
 realclean: clean-hook clean-cache distclean
 
-j-chkmail.cf.org: j-chkmail.cf.running
-	cp -p j-chkmail.cf.running j-chkmail.cf.org
+ze-filter.cf.org: ze-filter.cf.running
+	cp -p ze-filter.cf.running ze-filter.cf.org
 
-j-chkmail.cf.running: $(JCHKMAIL) j-chkmail.cf.default
-	cp -p j-chkmail.cf.default j-chkmail.cf.running
-	if [ -f $(DESTDIR)/$(CFDIR)/j-chkmail.cf ] ; then \
-	  $(JCHKMAIL) -M running | ./update_running_cf > j-chkmail.cf.running ;\
+ze-filter.cf.running: $(JCHKMAIL) ze-filter.cf.default
+	cp -p ze-filter.cf.default ze-filter.cf.running
+	if [ -f $(DESTDIR)/$(CFDIR)/ze-filter.cf ] ; then \
+	  $(JCHKMAIL) -M running | ./update_running_cf > ze-filter.cf.running ;\
 	fi
 
-j-chkmail.cf.default: $(JCHKMAIL)
-	$(JCHKMAIL) -M default > j-chkmail.cf.default
+ze-filter.cf.default: $(JCHKMAIL)
+	$(JCHKMAIL) -M default > ze-filter.cf.default
 
-j-chkmail.cf.null: $(JCHKMAIL)
-	$(JCHKMAIL) -M null > j-chkmail.cf.null
+ze-filter.cf.null: $(JCHKMAIL)
+	$(JCHKMAIL) -M null > ze-filter.cf.null
 
 iana:
-	../bin/get-iana > j-policy.z-iana.txt.org
+	../bin/get-iana > ze-policy.z-iana.txt.org
 
-install-data-hook: j-chkmail.cf.running j-chkmail.cf.default j-chkmail.cf.null
+install-data-hook: ze-filter.cf.running ze-filter.cf.default ze-filter.cf.null
 	@list='$(sysconf_DATA)'; for file in $$list ;\
 	do \
 	  conf=`basename $$file .org` ;\
@@ -600,11 +600,11 @@ install-data-hook: j-chkmail.cf.running j-chkmail.cf.default j-chkmail.cf.null
 	    $(INSTALL_DATA) $$file $(DESTDIR)/$(CFDIR)/$$conf ; \
 	  fi ; \
 	done
-	cp j-chkmail.cf.default j-chkmail.cf.running $(DESTDIR)/$(CFDIR)/
-	@mkdir -p $(DESTDIR)/var/jchkmail/cdb
-	@chmod 755 $(DESTDIR)/var/jchkmail/cdb
-	@chown smmsp $(DESTDIR)/var/jchkmail/cdb
-	@chgrp smmsp $(DESTDIR)/var/jchkmail/cdb
+	cp ze-filter.cf.default ze-filter.cf.running $(DESTDIR)/$(CFDIR)/
+	@mkdir -p $(DESTDIR)/var/ze-filter/cdb
+	@chmod 755 $(DESTDIR)/var/ze-filter/cdb
+	@chown ze-filter $(DESTDIR)/var/ze-filter/cdb
+	@chgrp ze-filter $(DESTDIR)/var/ze-filter/cdb
 	@list='$(cdb_remove)'; for file in $$list ;\
 	do \
 	  conf=`basename $$file .org` ;\
@@ -635,7 +635,7 @@ install-data-hook: j-chkmail.cf.running j-chkmail.cf.default j-chkmail.cf.null
 	  $(INSTALL_SCRIPT) $$file $(DESTDIR)/$(CDBDIR)/$$file ;\
 	done
 
-upgrade : j-chkmail.cf.org
+upgrade : ze-filter.cf.org
 	@echo "   * upgrade in etc directory"
 	@list='$(etc_upgrade)'; for file in $$list ;\
 	do \

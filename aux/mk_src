@@ -33,7 +33,7 @@ sub print_header
   print OUT <<EOT;
 /*
  *
- * j-chkmail - Mail Server Filter for sendmail
+ * ze-filter - Mail Server Filter for sendmail
  *
  * Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz
  *
@@ -59,8 +59,8 @@ sub print_header_c
   my ($src, $dst, undef) = @_;
   print OUT <<EOT;
 
-#include <j-sys.h>
-#include <j-chkmail.h>
+#include <ze-sys.h>
+#include <ze-filter.h>
 #include <$src.h>
 
 /* ****************************************************************************

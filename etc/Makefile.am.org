@@ -1,53 +1,53 @@
 
-JCHKMAIL=$(top_srcdir)/src/j-chkmail
-POLICY_SRC = j-policy.base.txt.org j-policy.grey.txt.org j-policy.badmx.txt.org
+JCHKMAIL=$(top_srcdir)/src/ze-chkmail
+POLICY_SRC = ze-policy.base.txt.org ze-policy.grey.txt.org ze-policy.badmx.txt.org
 
-sysconf_DATA  = j-chkmail.cf.org \
- j-error-msg.org \
- j-nets.org \
- j-regex.org \
- j-oradata.org \
- j-xfiles.org \
- j-tables.org
+sysconf_DATA  = ze-filter.cf.org \
+ ze-error-msg.org \
+ ze-nets.org \
+ ze-regex.org \
+ ze-oradata.org \
+ ze-xfiles.org \
+ ze-tables.org
 
-cdb_update = 	j-policy.grey.txt.org \
- j-policy.badmx.txt.org
+cdb_update = 	ze-policy.grey.txt.org \
+ ze-policy.badmx.txt.org
 
-cdb_preserve = 	j-policy.base.txt.org \
- j-policy.local.txt.org \
- j-rcpt.txt.org \
+cdb_preserve = 	ze-policy.base.txt.org \
+ ze-policy.local.txt.org \
+ ze-rcpt.txt.org \
  Makefile.org \
  get-urlbl.org
 
-OBJECTS = j-policy.txt.org j-chkmail.cf.default j-chkmail.cf.running
+OBJECTS = ze-policy.txt.org ze-filter.cf.default ze-filter.cf.running
 
 all: $(OBJECTS)
 
-j-policy.txt.org : $(POLICY_SRC)
-	cat $(POLICY_SRC) > j-policy.txt.org
+ze-policy.txt.org : $(POLICY_SRC)
+	cat $(POLICY_SRC) > ze-policy.txt.org
 
 distclean::clean-hook
 
 clean:: clean-hook
 
 clean-hook:
-	rm -f $(OBJECTS) j-chkmail.cf.org
+	rm -f $(OBJECTS) ze-filter.cf.org
 
 realclean: clean-hook clean-cache distclean
 
-j-chkmail.cf.org: j-chkmail.cf.running
-	cp -p j-chkmail.cf.running j-chkmail.cf.org
+ze-filter.cf.org: ze-filter.cf.running
+	cp -p ze-filter.cf.running ze-filter.cf.org
 
-j-chkmail.cf.running: $(JCHKMAIL) j-chkmail.cf.default
-	cp -p j-chkmail.cf.default j-chkmail.cf.running
-	if [ -f $(DESTDIR)/@CONFDIR@/j-chkmail.cf ] ; then \
-	  $(JCHKMAIL) -m > j-chkmail.cf.running ;\
+ze-filter.cf.running: $(JCHKMAIL) ze-filter.cf.default
+	cp -p ze-filter.cf.default ze-filter.cf.running
+	if [ -f $(DESTDIR)/@CONFDIR@/ze-filter.cf ] ; then \
+	  $(JCHKMAIL) -m > ze-filter.cf.running ;\
 	fi
 
-j-chkmail.cf.default: $(JCHKMAIL)
-	$(JCHKMAIL) -n > j-chkmail.cf.default
+ze-filter.cf.default: $(JCHKMAIL)
+	$(JCHKMAIL) -n > ze-filter.cf.default
 
-install-data-hook: j-chkmail.cf.running j-chkmail.cf.default
+install-data-hook: ze-filter.cf.running ze-filter.cf.default
 	for file in $(sysconf_DATA) ;\
 	do \
 	  conf=`basename $$file .org` ;\
@@ -55,7 +55,7 @@ install-data-hook: j-chkmail.cf.running j-chkmail.cf.default
 	    cp $$file $(DESTDIR)/@CONFDIR@/$$conf ; \
 	  fi ; \
 	done
-	cp j-chkmail.cf.default j-chkmail.cf.running $(DESTDIR)/@CONFDIR@/
+	cp ze-filter.cf.default ze-filter.cf.running $(DESTDIR)/@CONFDIR@/
 	for file in $(cdb_update) ;\
 	do \
 	  conf=`basename $$file .org` ;\

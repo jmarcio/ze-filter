@@ -7,7 +7,7 @@
 #   ######   #    #  #####  #     # #     #
 
 #
-# Some Bad boys detected at j-chkmail author site...
+# Some Bad boys detected at ze-filter author site...
 #
 #
 # NOTE : We here are returning error 421/4.5.1.

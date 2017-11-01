@@ -2,7 +2,7 @@
 ==== General Parameters ====
 
   * **VERSION** (String) - Configuration file version
-    * **Default** : ''2.5.0-120727''
+    * **Default** : ''ze-Filter''
   * **MYSELF** (String) - My own names, IPs and aliases
     * **Default** : ''127.0.0.1 HOSTNAME''
   * **J_HOSTNAME** (Option) - How to get mailserver hostname ?
@@ -11,13 +11,13 @@
   * **PRESENCE** (Option) - Show/Hide presence (presence header)
     * **Values** : ''SHOW/HIDE''
     * **Default** : ''SHOW''
-  * **FOOTER** (Option) - Show/Hide j-chkmail signature at warning message
+  * **FOOTER** (Option) - Show/Hide ze-filter signature at warning message
     * **Values** : ''SHOW/HIDE''
     * **Default** : ''SHOW''
   * **FILTER_URL** (String) - Filter URL (to be included on X-Miltered header)
-    * **Default** : ''http : / / j-chkmail dot ensmp dot fr''
+    * **Default** : ''http : / / ze-filter dot ensmp dot fr''
   * **POLICY_URL** (String) - Policy filtering URL - appended to reply messages
-    * If your domain has a web page to inform people about your email policies, you define this option, with some URL, j-chkmail will append a reference - **See POLICY_URL** - to each reply done in SMTP session
+    * If your domain has a web page to inform people about your email policies, you define this option, with some URL, ze-filter will append a reference - **See POLICY_URL** - to each reply done in SMTP session
     * **Default** : ''''
   * **DAEMON_FILTER_DISABLE** (String) - SMTP daemons to disable filtering
     * When your MTA is listening of different IP addresses and ports, it may be useful to enable/disable filtering for some of them. E.g., if you want to filter incoming messages but not outgoing messages (this isn't yet implemented).
@@ -57,16 +57,16 @@
 
 ==== MTA Communications ====
 
-  * **SOCKET** (String) - Communication socket between sendmail and j-chkmail
+  * **SOCKET** (String) - Communication socket between sendmail and ze-filter
     * **Syntax** : ''inet:PORT@HOSTNAME | local:SOCKET_PATH''
-    * **Default** : ''local:/var/run/jchkmail/j-chkmail.sock''
+    * **Default** : ''local:/var/run/ze-filter/ze-filter.sock''
   * **SM_TIMEOUT** (Integer) - Inactivity timeout (milter <-> sendmail connection)
     * The filter will close sendmail connections inactive for this value long. Busy servers shall be configured with a much lower value (~ 600 s shall be OK)
     * **Default** : ''600s''
 
 ==== Control channel ====
 
-This Section defines how j-ndc command line tool communicates with j-chkmail.
+This Section defines how ze-ndc command line tool communicates with ze-filter.
 
   * **CTRL_CHANNEL_ENABLE** (Option) - Enable remote control channel
     * **Values** : ''NO/YES''
@@ -81,27 +81,27 @@ This Section defines how j-ndc command line tool communicates with j-chkmail.
 
 ==== Configuration Files ====
 
-  * **CONFDIR** (String) - j-chkmail configuration directory
+  * **CONFDIR** (String) - ze-filter configuration directory
     * This is the directory where configuration files and tables will be put in.
-    * **Default** : ''/etc/mail/jchkmail''
+    * **Default** : ''/etc/ze-filter''
   * **ERROR_MSG_FILE** (String) - Notification template
     * This file contains templates for the notification messages sent when a virus or X-file is found inside a message.
-    * **Default** : ''j-error-msg''
+    * **Default** : ''ze-error-msg''
   * **AUTO_RELOAD_TABLES** (Integer) - Periodic configuration reload interval
-    * When this value is greater than 0s, j-chkmail will periodically reload configuration data.
+    * When this value is greater than 0s, ze-filter will periodically reload configuration data.
     * **Default** : ''3600s''
   * **MODULES_CF** (String) - Modules
     * Configuration file for dynamically loaded modules (not fully implemented)
-    * **Default** : ''j-modules''
+    * **Default** : ''ze-modules''
 
 ==== Logging ====
 
   * **LOG_FACILITY** (String) - syslog facility
     * **Default** : ''local5''
-  * **LOG_LEVEL** (Integer) - j-chkmail log level
+  * **LOG_LEVEL** (Integer) - ze-filter log level
     * **Default** : ''10''
   * **LOG_SEVERITY** (Option) - Add a severity tag to syslog lines
-    * When enabled, j-chkmail log lines have a tag like "[ID 000000 local5.notice]", useful in order to find lines with some specific priority (e.g. error)
+    * When enabled, ze-filter log lines have a tag like "[ID 000000 local5.notice]", useful in order to find lines with some specific priority (e.g. error)
     * **Values** : ''NO/YES''
     * **Default** : ''NO''
   * **CLUSTER** (Option) - Filter sharing resources inside a cluster (spool/server)
@@ -129,14 +129,14 @@ This Section defines how j-ndc command line tool communicates with j-chkmail.
 
 ==== Spool and state Files ====
 
-  * **WORKROOT** (String) - j-chkmail root directory
-    * **Default** : ''/var/jchkmail''
-  * **WORKDIR** (String) - j-chkmail work directory (state and specific logs)
-    * **Default** : ''/var/jchkmail/files''
-  * **SPOOLDIR** (String) - j-chkmail message spool directory
-    * **Default** : ''/var/spool/jchkmail''
-  * **PID_FILE** (String) - j-chkmail pid file
-    * **Default** : ''/var/run/jchkmail/j-chkmail.pid''
+  * **WORKROOT** (String) - ze-filter root directory
+    * **Default** : ''/var/ze-filter''
+  * **WORKDIR** (String) - ze-filter work directory (state and specific logs)
+    * **Default** : ''/var/ze-filter/files''
+  * **SPOOLDIR** (String) - ze-filter message spool directory
+    * **Default** : ''/var/spool/ze-filter''
+  * **PID_FILE** (String) - ze-filter pid file
+    * **Default** : ''/var/run/ze-filter/ze-filter.pid''
   * **STATS_FILE** (String) - STATS_FILE
     * **Default** : ''file:j-stats''
 
@@ -154,31 +154,31 @@ This Section defines how j-ndc command line tool communicates with j-chkmail.
   * **QUARANTINE_LOG_FILE** (String) - Quarantine log file
     * **Default** : ''file:j-quarantine''
   * **ARCHIVE** (Option) - Archiving messages
-    * When this option is enabled, j-chkmail will be able to save a copy of each message matching Archive policy.
+    * When this option is enabled, ze-filter will be able to save a copy of each message matching Archive policy.
     * **Values** : ''NO/YES''
     * **Default** : ''NO''
 
 ==== Modules ====
 
   * **MODDIR** (String) - Modules
-    * **Default** : ''/usr/lib/j-chkmail''
+    * **Default** : ''/usr/lib/ze-filter''
 
 ==== Databases ====
 
-  * **WDBDIR** (String) - j-chkmail working databases directory
-    * **Default** : ''/var/jchkmail/wdb''
+  * **WDBDIR** (String) - ze-filter working databases directory
+    * **Default** : ''/var/ze-filter/wdb''
 
 ==== Constant Databases ====
 
-  * **CDBDIR** (String) - j-chkmail constant databases directory
+  * **CDBDIR** (String) - ze-filter constant databases directory
     * Path of the directory where constant databases are installed
-    * **Default** : ''/var/jchkmail/cdb''
+    * **Default** : ''/var/ze-filter/cdb''
   * **DB_CACHE_SIZE** (Integer) - BerkeleyDB constant databases cache size
     * Size of memory cache used by constant databases
     * **Default** : ''32M''
   * **DB_POLICY** (String) - Policy database path
     * File name of policy database
-    * **Default** : ''j-policy.db''
+    * **Default** : ''ze-policy.db''
   * **POLICY_CONFLICT** (Option) - What to do if users policy conflit
     * This option defines how to decide which policy shall be applied when a message is sent to more than one recipient with incompatible policies.
     * **Values** : ''DEFAULT/ONE_WIN/MAJORITY_WIN''
@@ -230,7 +230,7 @@ This Section defines how j-ndc command line tool communicates with j-chkmail.
     * **Values** : ''OK/REJECT/NOTIFY/DISCARD/X-HEADER''
     * **Default** : ''OK''
   * **XFILES_FILE** (String) - X-Files (file extension + MIME type) configuration
-    * **Default** : ''j-xfiles''
+    * **Default** : ''ze-xfiles''
   * **XFILE_SAVE_MSG** (Option) - Shall quarantine messages containing X-Files ?
     * **Values** : ''NO/YES''
     * **Default** : ''YES''
@@ -241,14 +241,14 @@ This Section defines how j-ndc command line tool communicates with j-chkmail.
 
 ==== External virus scanner ====
 
-This section contains the options to connect j-chkmail to an external virus scanner and what to do with the results
+This section contains the options to connect ze-filter to an external virus scanner and what to do with the results
 
   * **SCANNER_ACTION** (Option) - 
     * This option enables the scanner and defines the action to perform whan a virus is found
     * **Values** : ''OK/REJECT/NOTIFY/DISCARD/X-HEADER''
     * **Default** : ''OK''
-  * **SCANNER_SOCK** (String) - Communication socket between j-chkmail and external scanner
-    * This option defines the socket used by j-chkmail to connect to the external scanner.
+  * **SCANNER_SOCK** (String) - Communication socket between ze-filter and external scanner
+    * This option defines the socket used by ze-filter to connect to the external scanner.
     * **Syntax** : ''inet:PORT@HOSTNAME | local:SOCKET_PATH''
     * **Default** : ''inet:2002@localhost''
   * **SCANNER_PROTOCOL** (Option) - Protocol
@@ -256,10 +256,10 @@ This section contains the options to connect j-chkmail to an external virus scan
     * **Values** : ''INTERNAL/CLAMAV''
     * **Default** : ''CLAMAV''
   * **SCANNER_TIMEOUT** (Integer) - Timeout waiting for the scanner answer
-    * This option defines the communication timeout between j-chkmail and the scanner. After this delay, if the scanner doesn't answer, j-chkmail will drop the scanner answer.
+    * This option defines the communication timeout between ze-filter and the scanner. After this delay, if the scanner doesn't answer, ze-filter will drop the scanner answer.
     * **Default** : ''15s''
   * **SCANNER_REJECT_ON_ERROR** (Option) - Reject messages when scanner call returns an error
-    * This option defines the appropriate j-chkmail action when the scanner isn't available or times out : Reject (YES) or Temporary failure (NO).
+    * This option defines the appropriate ze-filter action when the scanner isn't available or times out : Reject (YES) or Temporary failure (NO).
     * **Values** : ''NO/YES''
     * **Default** : ''NO''
   * **SCANNER_MAX_MSG_SIZE** (Integer) - Max message size to pass to scanner
@@ -290,7 +290,7 @@ This section contains the options to connect j-chkmail to an external virus scan
   * **BAYES_UNKNOWN_TOKEN_PROB** (Integer) - Probability assigned to unknown tokens (times 1000)
     * **Default** : ''500''
   * **DB_BAYES** (String) - Path of bayes tokens database
-    * **Default** : ''j-bayes.db''
+    * **Default** : ''ze-bayes.db''
 
 ==== Antispam content check - URL Filtering (URLBL) ====
 
@@ -298,10 +298,10 @@ This section contains the options to connect j-chkmail to an external virus scan
     * **Values** : ''NO/YES''
     * **Default** : ''NO''
   * **DB_URLBL** (String) - Database Real-Time URL Blacklist (used for content checking)
-    * **Default** : ''j-urlbl.db''
+    * **Default** : ''ze-urlbl.db''
   * **DNS_URLBL** (String) - DNS Real-Time URL Blacklist (used for content checking)
     * **Syntax** : ''RBL[/CODE[/SCORE]] - multi.surbl.org/127.0.0.1/10''
-    * **Default** : ''j-tables:DNS-URLBL''
+    * **Default** : ''ze-tables:DNS-URLBL''
 
 ==== Antispam content check - Pattern Matching (REGEX) ====
 
@@ -309,7 +309,7 @@ This section contains the options to connect j-chkmail to an external virus scan
     * **Values** : ''NO/YES''
     * **Default** : ''NO''
   * **REGEX_FILE** (String) - Regular expressions configuration file
-    * **Default** : ''j-regex''
+    * **Default** : ''ze-regex''
   * **REGEX_MAX_SCORE** (Integer) - Stop doing pattern matching when score is reached
     * **Default** : ''50''
   * **SPAM_REGEX_MAX_MSG_SIZE** (Integer) - Max message size to do pattern matching
@@ -328,9 +328,9 @@ This section contains the options to connect j-chkmail to an external virus scan
     * **Values** : ''NO/YES''
     * **Default** : ''NO''
   * **ORACLE_SCORES_FILE** (String) - Oracle scores
-    * **Default** : ''j-oracle:ORACLE-SCORES''
+    * **Default** : ''ze-oracle:ORACLE-SCORES''
   * **ORACLE_DATA_FILE** (String) - Some oracle definitions
-    * **Default** : ''j-oracle:ORACLE-DATA''
+    * **Default** : ''ze-oracle:ORACLE-DATA''
   * **LOG_LEVEL_ORACLE** (Integer) - Heuristic filter log level (0, 1 or 2)
     * **Default** : ''1''
   * **ORACLE_STATS_FILE** (String) - Statistics for Oracle (dumped each STATISTICS_INTERVAL seconds)
@@ -346,35 +346,35 @@ This section contains the options to connect j-chkmail to an external virus scan
   * **SCORE_ON_SUBJECT_TAG** (String) - Tag to be inserted on Subject ?
     * **Default** : ''''
   * **XSTATUS_HEADER** (String) - Status header
-    * **Default** : ''X-j-chkmail-Status''
-  * **XSTATUS_HEADER_HI_CONDITION** (String) - When to add a 'X-j-chkmail-Status: HI' Header
+    * **Default** : ''X-ze-filter-Status''
+  * **XSTATUS_HEADER_HI_CONDITION** (String) - When to add a 'X-ze-filter-Status: HI' Header
     * **Syntax** : ''Ex : (U=####|B=0.9|B=0.8|XXXX.*B=0.7)''
     * **Default** : ''score > 0.75''
-  * **XSTATUS_HEADER_LO_CONDITION** (String) - When to add a 'X-j-chkmail-Status: LO' Header
+  * **XSTATUS_HEADER_LO_CONDITION** (String) - When to add a 'X-ze-filter-Status: LO' Header
     * **Syntax** : ''Ex : (U=####|B=0.9|B=0.8|XXXX.*B=0.7)''
     * **Default** : ''score > 0.65''
-  * **XSTATUS_HEADER_UNSURE_CONDITION** (String) - When to add a 'X-j-chkmail-Status: UNSURE' Header
+  * **XSTATUS_HEADER_UNSURE_CONDITION** (String) - When to add a 'X-ze-filter-Status: UNSURE' Header
     * **Syntax** : ''Ex : (U=####|B=0.9|B=0.8|XXXX.*B=0.7)''
     * **Default** : ''score > 0.25''
-  * **XSTATUS_HEADER_HAM_CONDITION** (String) - When to add a 'X-j-chkmail-Status: HAM' Header
+  * **XSTATUS_HEADER_HAM_CONDITION** (String) - When to add a 'X-ze-filter-Status: HAM' Header
     * **Syntax** : ''Ex : (U=####|B=0.9|B=0.8|XXXX.*B=0.7)''
     * **Default** : ''score < 0.25''
-  * **XSTATUS_REJECT_CONDITION** (String) - Reject message if this regular expression matches score from X-j-chkmail-score header
+  * **XSTATUS_REJECT_CONDITION** (String) - Reject message if this regular expression matches score from X-ze-filter-score header
     * **Syntax** : ''Ex : (U=####|B=0.9|B=0.8|XXXX.*B=0.7)''
     * **Default** : ''''
   * **XSTATUS_REJECT_ONLY_UNKNOWN** (Option) - 
     * **Values** : ''NO/YES''
     * **Syntax** : ''''
     * **Default** : ''YES''
-  * **XSTATUS_QUARANTINE_CONDITION** (String) - If this regular expression matches X-j-chkmail-score header, the message is quarantined
+  * **XSTATUS_QUARANTINE_CONDITION** (String) - If this regular expression matches X-ze-filter-score header, the message is quarantined
     * **Syntax** : ''Ex : (U=####|B=0.9|B=0.8|XXXX.*B=0.7)''
     * **Default** : ''''
   * **REMOVE_HEADERS** (String) - List of headers to remove
-    * X-j-chkmail-Status,X-Spam-Flag,X-Spam-Status
+    * X-ze-filter-Status,X-Spam-Flag,X-Spam-Status
     * **Syntax** : ''NONE | List of comma separated headers''
     * **Default** : ''NONE''
   * **REMOVE_SCORES** (String) - List of headers to remove
-    * X-j-chkmail-Status,X-Spam-Flag,X-Spam-Status
+    * X-ze-filter-Status,X-Spam-Flag,X-Spam-Status
     * **Syntax** : ''NONE | List of comma separated servers''
     * **Default** : ''NONE''
 
@@ -382,19 +382,19 @@ This section contains the options to connect j-chkmail to an external virus scan
 
   * **DNS_IPRBWL** (String) - Real-Time Black/White Lists
     * **Syntax** : ''''
-    * **Default** : ''j-tables:DNS-IP-RBWL''
+    * **Default** : ''ze-tables:DNS-IP-RBWL''
 
 ==== Antispam checks (SMTP client behaviour) ====
 
   * **CHECK_CONN_RATE** (Option) - Enable connection rate limiting
-    * When enabled, j-chkmail will limit the number of connections, per SMTP client, evaluated on a sliding window of size 10 minutes
+    * When enabled, ze-filter will limit the number of connections, per SMTP client, evaluated on a sliding window of size 10 minutes
     * **Values** : ''NO/YES''
     * **Default** : ''NO''
-  * **MAX_CONN_RATE** (Integer) - Max connection rate (can be redefined at j-policy database)
+  * **MAX_CONN_RATE** (Integer) - Max connection rate (can be redefined at ze-policy database)
     * This option defines the default max connection rate. This value can be overriden by those defined at policy database.
     * **Default** : ''15''
   * **CHECK_OPEN_CONNECTIONS** (Option) - Enable simultaneous connections limiting
-    * When this feature is enabled, j-chkmail will limit the number of simultaneous connections, per SMTP client.
+    * When this feature is enabled, ze-filter will limit the number of simultaneous connections, per SMTP client.
     * **Values** : ''NO/YES''
     * **Default** : ''NO''
   * **MAX_CONN_OPEN** (Integer) - Max open connections for a single IP on unknown network
@@ -422,7 +422,7 @@ This section contains the options to connect j-chkmail to an external virus scan
     * **Values** : ''NO/YES''
     * **Default** : ''NO''
   * **DB_RCPT** (String) - Recipient database path
-    * **Default** : ''j-rcpt.db''
+    * **Default** : ''ze-rcpt.db''
   * **SPAMTRAP_RESULT** (Option) - Result from SPAM TRAP check
     * **Values** : ''OK/REJECT/TEMPFAIL''
     * **Default** : ''OK''
@@ -432,7 +432,7 @@ This section contains the options to connect j-chkmail to an external virus scan
   * **CHECK_RCPT_RATE** (Option) - Limit recipient rate for each SMTP client
     * **Values** : ''NO/YES''
     * **Default** : ''NO''
-  * **MAX_RCPT_RATE** (Integer) - Max recipient rate (can be redefined at j-policy database)
+  * **MAX_RCPT_RATE** (Integer) - Max recipient rate (can be redefined at ze-policy database)
     * **Default** : ''100''
   * **CHECK_NB_RCPT** (Option) - Check the number of recipients for each message
     * **Values** : ''NO/YES''
@@ -442,12 +442,32 @@ This section contains the options to connect j-chkmail to an external virus scan
   * **CHECK_MSG_RATE** (Option) - Limit recipient rate for each SMTP client
     * **Values** : ''NO/YES''
     * **Default** : ''NO''
-  * **MAX_MSG_RATE** (Integer) - Max message rate (can be redefined at j-policy database)
+  * **MAX_MSG_RATE** (Integer) - Max message rate (can be redefined at ze-policy database)
     * **Default** : ''100''
   * **CHECK_NB_MSGS** (Option) - Limit the number of messages per connection
     * **Values** : ''NO/YES''
     * **Default** : ''NO''
   * **MAX_MSGS** (Integer) - Maximum number of messages per connection
+    * **Default** : ''100''
+  * **CHECK_FROM_RCPT_RATE** (Option) - Limit recipient rate per from address
+    * **Values** : ''NO/YES''
+    * **Default** : ''NO''
+  * **MAX_FROM_RCPT_RATE** (Integer) - Max recipient rate per from address (can be redefined at ze-policy database)
+    * **Default** : ''100''
+  * **CHECK_NB_FROM_RCPT** (Option) - Check the number of recipients per from address for each message
+    * **Values** : ''NO/YES''
+    * **Default** : ''NO''
+  * **MAX_FROM_RCPT** (Integer) - Max recipient per message per from address
+    * **Default** : ''200''
+  * **CHECK_FROM_MSG_RATE** (Option) - Limit recipient rate per from address
+    * **Values** : ''NO/YES''
+    * **Default** : ''NO''
+  * **MAX_FROM_MSG_RATE** (Integer) - Max message rate per from address (can be redefined at ze-policy database)
+    * **Default** : ''100''
+  * **CHECK_FROM_NB_MSGS** (Option) - Limit the number of messages per from address
+    * **Values** : ''NO/YES''
+    * **Default** : ''NO''
+  * **MAX_FROM_MSGS** (Integer) - Maximum number of messages per from address
     * **Default** : ''100''
 
 ==== Envelope checks ====
@@ -466,7 +486,7 @@ This section contains the options to connect j-chkmail to an external virus scan
     * **Values** : ''NO/YES''
     * **Default** : ''NO''
   * **CHECK_BAD_SENDER_MX** (Option) - Check Bad Sender MX
-    * Enabling this option makes the filter check if the MX of the domain of the sender address is unreacheable, checking if the domain, hostname or IP address matches an entry at j-policy database.
+    * Enabling this option makes the filter check if the MX of the domain of the sender address is unreacheable, checking if the domain, hostname or IP address matches an entry at ze-policy database.
     * **Values** : ''NO/YES''
     * **Default** : ''NO''
   * **DEFAULT_BAD_MX_REPLY** (String) - Default BAD MX reply.
@@ -533,13 +553,13 @@ This section contains the options to connect j-chkmail to an external virus scan
     * **Values** : ''NO/YES''
     * **Default** : ''NO''
   * **GREY_MODE** (Option) - Greylist mode
-    * This option defines if the filter is autonomous with its own data or if it's also access data in a j-greyd greylisting server
+    * This option defines if the filter is autonomous with its own data or if it's also access data in a ze-greyd greylisting server
     * **Values** : ''STANDALONE/CLIENT''
     * **Default** : ''STANDALONE''
   * **GREY_SOCKET** (String) - Remote Greylist Server Socket when running in CLIENT mode
-    * When configured to access a j-greyd server, this option defines the IP address and port where j-greyd listens.
+    * When configured to access a ze-greyd server, this option defines the IP address and port where ze-greyd listens.
     * **Default** : ''inet:2012@127.0.0.1''
-  * **GREY_CONNECT_TIMEOUT** (Integer) - Timeout to connect go j-grey server when running in CLIENT mode
+  * **GREY_CONNECT_TIMEOUT** (Integer) - Timeout to connect go ze-grey server when running in CLIENT mode
     * **Default** : ''10s''
   * **GREY_MIN_DELAY_NORMAL** (Integer) - Greylist delay for normal messages
     * **Default** : ''10m''
@@ -589,22 +609,22 @@ This section contains the options to connect j-chkmail to an external virus scan
     * **Syntax** : ''''
     * **Default** : ''file:j-grey-expire''
 
-==== Greylisting - j-greyd specific ====
+==== Greylisting - ze-greyd specific ====
 
-This section presents parameters which are exclusive to **j-greyd** greylisting server.
+This section presents parameters which are exclusive to **ze-greyd** greylisting server.
 
-  * **GREYD_SOCKET_LISTEN** (String) - j-greyd Listen Socket
-    * This is the j-greyd server listening socket.
+  * **GREYD_SOCKET_LISTEN** (String) - ze-greyd Listen Socket
+    * This is the ze-greyd server listening socket.
     * **Default** : ''inet:2012@0.0.0.0''
   * **GREYD_LOG_FACILITY** (String) - syslog facility
     * **Default** : ''local6''
-  * **GREYD_LOG_LEVEL** (Integer) - j-greyd log level
+  * **GREYD_LOG_LEVEL** (Integer) - ze-greyd log level
     * **Default** : ''10''
-  * **GREYDDIR** (String) - j-greyd working directory
-    * The directory where j-greyd will save its databases.
-    * **Default** : ''/var/jchkmail/jgreydb''
-  * **GREYD_PID_FILE** (String) - j-greyd pid file
-    * **Default** : ''/var/run/jchkmail/j-greyd.pid''
+  * **GREYDDIR** (String) - ze-greyd working directory
+    * The directory where ze-greyd will save its databases.
+    * **Default** : ''/var/ze-filter/jgreydb''
+  * **GREYD_PID_FILE** (String) - ze-greyd pid file
+    * **Default** : ''/var/run/ze-filter/j-greyd.pid''
   * **GREYD_CLIENT_IDLE_MAX** (Integer) - Maximum inactivity time (after this connection will be closed)
-    * j-greyd server will disconnect clients inactive longer than this delay.
+    * ze-greyd server will disconnect clients inactive longer than this delay.
     * **Default** : ''300''

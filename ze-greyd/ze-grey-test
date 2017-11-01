@@ -18,9 +18,9 @@ my $PORT = 2010;
 my $help = 0;
 my $quit = 0;
 
-my @CFFILES = qw(/etc/mail/jchkmail/j-ndc.cf
+my @CFFILES = qw(/etc/ze-filter/j-ndc.cf
 		 /etc/j-ndc.cf
-		 /usr/local/etc/mail/jchkmail/j-ndc.cf
+		 /usr/local/etc/ze-filter/j-ndc.cf
 		 /usr/local/etc/j-ndc.cf);
 
 my %CF = ();

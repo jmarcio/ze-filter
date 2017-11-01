@@ -14,20 +14,20 @@ T.O.C.
 
 Contents of this directory will help you to :
 
-- Create databases used by j-chkmail to do bayesian filtering
+- Create databases used by ze-filter to do bayesian filtering
   (learning)
 
 - Checking messages by hand
 
 The contents of this directory will be installed as 
-    /var/jchkmail/bayes-toolbox
+    /var/ze-filter/bayes-toolbox
 
 
 2. Requirements
 ***************
 
-To use this tools, you need to compile and install j-chkmail. Mainly,
-you'll need two programs from j-chkmail distribution : j-makemap (to
+To use this tools, you need to compile and install ze-filter. Mainly,
+you'll need two programs from ze-filter distribution : j-makemap (to
 handle BerkeleyDB databases) and j-bayes-tbx (to extract tokens from
 messages and check messages).
 
@@ -54,7 +54,7 @@ simply type :
 	make
 
 This will create everything. The filter will look for a database in the
-BerkeleyDB format inside  /var/jchkmail/cdb directory.
+BerkeleyDB format inside  /var/ze-filter/cdb directory.
 
 For your convenience, you can launch :
 
@@ -69,7 +69,7 @@ tell the daemon to use the new database.
 The learn.sh script allows you to manage the learning process. This means,
 if you have some way to collect message samples and want to use them to
 update the training database. It's just enough to put them inside some
-directory and periodically launch this script to feed them into j-chkmail
+directory and periodically launch this script to feed them into ze-filter
 learning chain. learn.sh will do the rest for you.
 
 You'll eventually need to take a look into learn.sh (the documentation is

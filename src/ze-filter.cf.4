@@ -76,9 +76,9 @@ General declaration
 .br
 Syntax :
 .br
-SOCKET local:/var/jchkmail/ze-filter.sock (UNIX socket)
+SOCKET local:/var/ze-filter/ze-filter.sock (UNIX socket)
 .br
-SOCKET unix:/var/jchkmail/ze-filter.sock  (UNIX socket)
+SOCKET unix:/var/ze-filter/ze-filter.sock  (UNIX socket)
 .br
 SOCKET inet:2000@hostname                 (INET socket)
 .TP 
@@ -98,7 +98,7 @@ ze-filter the socket name.
 .br
 Syntax :
 .br
-UNIX_SOCK      /var/jchkmail/ze-filter.sock
+UNIX_SOCK      /var/ze-filter/ze-filter.sock
 .IP \(bu 4
 Warning messages
 
@@ -228,42 +228,42 @@ Work files and directories
 .br
 Syntax (and default file) :
 .br
-SPOOLDIR       /var/spool/jchkmail
+SPOOLDIR       /var/spool/ze-filter
 .TP 
 .B WORKDIR
 
 .br
 Syntax (and default file) :
 .br
-WORKDIR        /var/jchkmail
+WORKDIR        /var/ze-filter
 .TP 
 .B PID_FILE
 
 .br
 Syntax (and default file) :
 .br
-PID_FILE       /var/jchkmail/ze-filter.pid
+PID_FILE       /var/ze-filter/ze-filter.pid
 .TP 
 .B STATS_FILE
 
 .br 
 Syntax (and default file) :
 .br 
-STATS_FILE     /var/jchkmail/j-stats
+STATS_FILE     /var/ze-filter/j-stats
 .TP 
 .B STATE_FILE
 
 .br
 Syntax (and default file) :
 .br
-STATE_FILE     /var/jchkmail/j-state
+STATE_FILE     /var/ze-filter/j-state
 .TP 
 .B XFILES_LOG
 
 .br
 Syntax (and default file) :
 .br
-XFILES_LOG     /var/jchkmail/j-files
+XFILES_LOG     /var/ze-filter/j-files
 
 .IP \(bu 4
 Using internal scanner to filter unsafe X-files

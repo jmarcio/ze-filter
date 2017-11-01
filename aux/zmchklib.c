@@ -1,6 +1,6 @@
 /*
  *
- * j-chkmail - Mail Server Filter for sendmail
+ * ze-filter - Mail Server Filter for sendmail
  *
  * Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz
  *
@@ -20,7 +20,7 @@
 
 
 #include <j-sys.h>
-#include <j-chkmail.h>
+#include <ze-filter.h>
 #include <zmchklib.h>
 
 /* ****************************************************************************

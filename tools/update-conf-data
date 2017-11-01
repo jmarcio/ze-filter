@@ -1,14 +1,14 @@
 #! /usr/bin/perl -w
 
 #
-# This script can be used to update some j-chkmail configuration files
+# This script can be used to update some ze-filter configuration files
 #
 my $ROOTURL = "http://foss.jose-marcio.org/data/conf-data";
 my $CF = "conf-data.txt";
 my $LOG = "/tmp/j-update.log";
 
-my %DIRS = ('cdb' => '/var/jchkmail/cdb',
-            'etc' => '/etc/mail/jchkmail');
+my %DIRS = ('cdb' => '/var/ze-filter/cdb',
+            'etc' => '/etc/ze-filter');
 
 my $r = system("wget -qN $ROOTURL/$CF -o $LOG -O /tmp/$CF");
 if ($r != 0) {

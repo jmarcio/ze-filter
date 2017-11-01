@@ -7,12 +7,12 @@
 # Version: 1.0 (initial release of 2009-08-02)
 #
 # Requires:
-# Jose-Marcio Martins da Cruz' j-chkmail
+# Jose-Marcio Martins da Cruz' ze-filter
 # (see: http://foss.jose-marcio.org/wiki/doku.php/start)
 # and formail (which is part of the procmail package).
 #
 # This script is used for training the bayes classifier
-# with j-chkmail. It has been tested with pine as mail client.
+# with ze-filter. It has been tested with pine as mail client.
 # The first message of each folder created with pine will
 # contain folder internal data and should not be deleted.
 # For other clients not using the first message for
@@ -29,7 +29,7 @@
 # appropriate mailboxes in $DESTPATH and rotate files at the
 # presettable size threshold to keep processing times low.
 # It launches the commands to process the ham and spam messages
-# and to load them into the j-chkmail database.
+# and to load them into the ze-filter database.
 #
 # How to install:
 # 'learn' should be installed in a private path of the user and
@@ -46,7 +46,7 @@
 LOCAL_HAM_FOLDER="corpusham"
 LOCAL_SPAM_FOLDER="corpusspam"
 LOCAL_MAILDIR="Mail"
-JCHKMAILPATH="/var/jchkmail"
+JCHKMAILPATH="/var/ze-filter"
 TOOLBOX_DIR="bayes-toolbox"
 # Maximum size of mailbox in
 # bytes before we rotate:
@@ -118,7 +118,7 @@ for FOLDER in $HFOLDERS ; do
 	MSG=$(cat $FOLDER | formail $FORMAILOPT -1 -s)
 	if test -n "$MSG" ; then
 	    NEWADD=yes
-	    echo "j-chkmail: adding $(basename $FOLDER)  to corpus-ham.hbox"
+	    echo "ze-filter: adding $(basename $FOLDER)  to corpus-ham.hbox"
 	    cat $FOLDER | formail $FORMAILOPT -b -c -s \
 		>> $DESTPATH/corpus-ham.hbox
 	fi
@@ -143,7 +143,7 @@ for FOLDER in $SFOLDERS ; do
 	MSG=$(cat $FOLDER | formail $FORMAILOPT -1 -s)
 	if test -n "$MSG" ; then
 	    NEWADD=yes
-	    echo "j-chkmail: adding $(basename $FOLDER) to corpus-spam.sbox"
+	    echo "ze-filter: adding $(basename $FOLDER) to corpus-spam.sbox"
 	    cat $FOLDER | formail $FORMAILOPT -b -c -s \
 		>> $DESTPATH/corpus-spam.sbox
 	fi
@@ -162,26 +162,26 @@ if test $NEWADD == yes ; then
 	mv $MAILPATH/$LOCAL_SPAM_FOLDER.tmp $MAILPATH/$LOCAL_SPAM_FOLDER
 fi
 
-# Rebuild database for j-chkmail
+# Rebuild database for ze-filter
 if test $NEWADD == yes ; then
 	(cd $JCHKMAILPATH/$TOOLBOX_DIR && make)
 	#
-	# Script 'j-chkmail-rebuild-db' will copy from bayes-toolbox 
+	# Script 'ze-filter-rebuild-db' will copy from bayes-toolbox 
 	# directory to the cdb directory and execute make.
 	# This must be done as user root.
 	# Install the following script in the cdb directory, chown it
 	# to user root and group root and make it executable for root.
 	# Add the following line to /etc/sudoers using the 'visudo'
 	# command as root (example only!):
-	# usrname ALL = (root) NOPASSWD: /var/jchkmail/cdb/j-bayes-rebuild-db
+	# usrname ALL = (root) NOPASSWD: /var/ze-filter/cdb/j-bayes-rebuild-db
 	#
 	# Note: 'usrname' in the line above is your user name.
-	# j-chkmail-rebuild-db looks like this (adapt paths to your needs):
+	# ze-filter-rebuild-db looks like this (adapt paths to your needs):
 	#-----------------------------------------------------------
 	# #!/bin/bash
-	# cp /var/jchkmail/bayes-toolbox/j-bayes.txt \
-	#    /var/jchkmail/cdb/j-bayes.txt
-	# (cd /var/jchkmail/cdb && make)
+	# cp /var/ze-filter/bayes-toolbox/j-bayes.txt \
+	#    /var/ze-filter/cdb/j-bayes.txt
+	# (cd /var/ze-filter/cdb && make)
 	# exit 0
 	#-----------------------------------------------------------
 	sudo $JCHKMAILPATH/cdb/j-bayes-rebuild-db

@@ -10,10 +10,10 @@
    ## ##   #    #  #    #  #    #     #    #    #   ####
 
 
-  You're trying to configure j-chkmail to not use
+  You're trying to configure ze-filter to not use
   static libraries.
 
-  This configuration is not supported and j-chkmail may
+  This configuration is not supported and ze-filter may
   not work as intended.
 
 ***********************************************************

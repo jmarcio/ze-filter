@@ -1,5 +1,5 @@
 
-smtpd_milters = unix:/var/run/jchkmail/j-chkmail.sock
+smtpd_milters = unix:/var/run/ze-filter/ze-filter.sock
 milter_protocol = 4
 
 milter_connect_macros = j {daemon_name} v {client_name}

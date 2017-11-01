@@ -58,18 +58,18 @@ DEFINE       105   FOOTER                         ENUM    PRESENCE
 DESCR        105   
 SYNTAX       105   -----
 DEFAULT      105   SHOW
-LABEL        105   Show/Hide j-chkmail signature at warning message
+LABEL        105   Show/Hide ze-filter signature at warning message
 
 DEFINE       106   FILTER_URL                     STR          256
 DESCR        106   
 SYNTAX       106   -----
-DEFAULT      106   http : // j-chkmail dot ensmp dot fr
+DEFAULT      106   http : // ze-filter dot ensmp dot fr
 LABEL        106   Filter URL (to be included on X-Miltered header)
 
 DEFINE       107   POLICY_URL                     STR          256
 DESCR        107   If your domain has a web page to inform people about your
 DESCR        107   email policies, you define this option, with some URL, 
-DESCR        107   j-chkmail will append a reference - **See POLICY_URL** - to
+DESCR        107   ze-filter will append a reference - **See POLICY_URL** - to
 DESCR        107   each reply done in SMTP session
 SYNTAX       107   -----
 DEFAULT      107   
@@ -177,7 +177,7 @@ DESCR        301
 DESCR        301   
 SYNTAX       301   inet:PORT@HOSTNAME | local:SOCKET_PATH
 DEFAULT      301   J_SMSOCKFILE
-LABEL        301   Communication socket between sendmail and j-chkmail
+LABEL        301   Communication socket between sendmail and ze-filter
 
 DEFINE       302   SM_TIMEOUT                     INT
 DESCR        302   
@@ -193,8 +193,8 @@ LABEL        302   Inactivity timeout (milter <-> sendmail connection)
 #
 SECTION            Control channel
 
-SDESCR       This Section defines how j-ndc command line tool 
-SDESCR       communicates with j-chkmail.
+SDESCR       This Section defines how ze-ndc command line tool 
+SDESCR       communicates with ze-filter.
 
 DEFINE       401   CTRL_CHANNEL_ENABLE            ENUM    NO_YES
 DESCR        401   
@@ -232,20 +232,20 @@ DESCR        501
 DESCR        501   This is the directory where configuration files and tables
 DESCR        501   will be put in.
 SYNTAX       501   -----
-DEFAULT      501   /etc/mail/jchkmail
-LABEL        501   j-chkmail configuration directory
+DEFAULT      501   /etc/ze-filter
+LABEL        501   ze-filter configuration directory
 
 DEFINE       502   ERROR_MSG_FILE                 STR      256
 DESCR        502   
 DESCR        502   This file contains templates for the notification messages
 DESCR        502   sent when a virus or X-file is found inside a message.
 SYNTAX       502   -----
-DEFAULT      502   j-error-msg
+DEFAULT      502   ze-error-msg
 LABEL        502   Notification template
 
 DEFINE       504   AUTO_RELOAD_TABLES             INT
 DESCR        504   
-DESCR        504   When this value is greater than 0s, j-chkmail will 
+DESCR        504   When this value is greater than 0s, ze-filter will 
 DESCR        504   periodically reload configuration data.
 SYNTAX       504   -----
 DEFAULT      504   3600s
@@ -257,7 +257,7 @@ DESCR        505
 DESCR        505   Configuration file for dynamically loaded modules
 DESCR        505   (not fully implemented)
 SYNTAX       505   -----
-DEFAULT      505   j-modules
+DEFAULT      505   ze-modules
 LABEL        505   Modules
 
 
@@ -276,10 +276,10 @@ DEFINE       602   LOG_LEVEL                      INT
 DESCR        602   
 SYNTAX       602   -----
 DEFAULT      602   10
-LABEL        602   j-chkmail log level
+LABEL        602   ze-filter log level
 
 DEFINE       603   LOG_SEVERITY                   ENUM    NO_YES
-DESCR        603   When enabled, j-chkmail log lines have a tag like 
+DESCR        603   When enabled, ze-filter log lines have a tag like 
 DESCR        603   "[ID 000000 local5.notice]", useful in order to find lines with some
 DESCR        603   specific priority (e.g. error)
 SYNTAX       603   -----
@@ -354,28 +354,28 @@ DESCR        701
 DESCR        701   
 SYNTAX       701   -----
 DEFAULT      701   J_WORKROOT
-LABEL        701   j-chkmail root directory 
+LABEL        701   ze-filter root directory 
 
 DEFINE       702   WORKDIR                        STR      256
 DESCR        702   
 DESCR        702   
 SYNTAX       702   -----
 DEFAULT      702   J_WORKDIR
-LABEL        702   j-chkmail work directory (state and specific logs)
+LABEL        702   ze-filter work directory (state and specific logs)
 
 DEFINE       703   SPOOLDIR                       STR      256
 DESCR        703   
 DESCR        703   
 SYNTAX       703   -----
 DEFAULT      703   J_SPOOLDIR
-LABEL        703   j-chkmail message spool directory
+LABEL        703   ze-filter message spool directory
 
 DEFINE       704   PID_FILE                       STR      256
 DESCR        704   
 DESCR        704   
 SYNTAX       704   -----
 DEFAULT      704   J_PID_FILE
-LABEL        704   j-chkmail pid file
+LABEL        704   ze-filter pid file
 
 DEFINE       705   STATS_FILE                     STR      256
 DESCR        705   
@@ -418,7 +418,7 @@ DEFAULT      804   J_QUARANTINE_LOG
 LABEL        804   Quarantine log file
 
 DEFINE       805   ARCHIVE                         ENUM   NO_YES
-DESCR        805   When this option is enabled, j-chkmail will be able to save a copy of
+DESCR        805   When this option is enabled, ze-filter will be able to save a copy of
 DESCR        805   each message matching Archive policy.
 SYNTAX       805   -----
 DEFAULT      805   NO
@@ -433,7 +433,7 @@ DEFINE       901   MODDIR                        STR      256
 DESCR        901   
 DESCR        901   
 SYNTAX       901   -----
-DEFAULT      901   /usr/lib/j-chkmail
+DEFAULT      901   /usr/lib/ze-filter
 LABEL        901   Modules
 
 #
@@ -446,7 +446,7 @@ DESCR       1001
 DESCR       1001   
 SYNTAX      1001   -----
 DEFAULT     1001   J_WDBDIR
-LABEL       1001   j-chkmail working databases directory
+LABEL       1001   ze-filter working databases directory
 
 
 
@@ -460,7 +460,7 @@ DESCR       1101   Path of the directory where constant databases are
 DESCR       1101   installed
 SYNTAX      1101   -----
 DEFAULT     1101   J_CDBDIR
-LABEL       1101   j-chkmail constant databases directory
+LABEL       1101   ze-filter constant databases directory
 
 DEFINE      1102   DB_CACHE_SIZE                 INT
 DESCR       1102   Size of memory cache used by constant databases
@@ -471,7 +471,7 @@ LABEL       1102   BerkeleyDB constant databases cache size
 DEFINE      1103   DB_POLICY                       STR      256
 DESCR       1103   File name of policy database
 SYNTAX      1103   -----
-DEFAULT     1103   j-policy.db
+DEFAULT     1103   ze-policy.db
 LABEL       1103   Policy database path
 
 DEFINE      1104   POLICY_CONFLICT                ENUM         POLICY_CONFLICT
@@ -583,7 +583,7 @@ DEFINE      1402   XFILES_FILE                    STR      256
 DESCR       1402   
 DESCR       1402   
 SYNTAX      1402   -----
-DEFAULT     1402   j-xfiles
+DEFAULT     1402   ze-xfiles
 LABEL       1402   X-Files (file extension + MIME type) configuration
 
 
@@ -616,7 +616,7 @@ LABEL       1405   Detected X-Files log file
 #
 SECTION            External virus scanner
 
-SDESCR      This section contains the options to connect j-chkmail to
+SDESCR      This section contains the options to connect ze-filter to
 SDESCR      an external virus scanner and what to do with the results
 
 DEFINE      1501   SCANNER_ACTION                 ENUM    ACTION
@@ -627,11 +627,11 @@ DEFAULT     1501   OK
 LABEL       1501   
 
 DEFINE      1502   SCANNER_SOCK                   STR     256
-DESCR       1502   This option defines the socket used by j-chkmail
+DESCR       1502   This option defines the socket used by ze-filter
 DESCR       1502   to connect to the external scanner.
 SYNTAX      1502   inet:PORT@HOSTNAME | local:SOCKET_PATH
 DEFAULT     1502   inet:2002@localhost
-LABEL       1502   Communication socket between j-chkmail and external scanner
+LABEL       1502   Communication socket between ze-filter and external scanner
 
 DEFINE      1503   SCANNER_PROTOCOL               ENUM    PROTOCOL
 DESCR       1503   This option defines the protocol to be used with the
@@ -644,14 +644,14 @@ LABEL       1503   Protocol
 
 DEFINE      1504   SCANNER_TIMEOUT               INT
 DESCR       1504   This option defines the communication timeout between
-DESCR       1504   j-chkmail and the scanner. After this delay, if the scanner
-DESCR       1504   doesn't answer, j-chkmail will drop the scanner answer.
+DESCR       1504   ze-filter and the scanner. After this delay, if the scanner
+DESCR       1504   doesn't answer, ze-filter will drop the scanner answer.
 SYNTAX      1504   -----
 DEFAULT     1504   15s
 LABEL       1504   Timeout waiting for the scanner answer
 
 DEFINE      1505   SCANNER_REJECT_ON_ERROR       ENUM     NO_YES
-DESCR       1505   This option defines the appropriate j-chkmail action
+DESCR       1505   This option defines the appropriate ze-filter action
 DESCR       1505   when the scanner isn't available or times out :
 DESCR       1505   Reject (YES) or Temporary failure (NO).
 SYNTAX      1505   -----
@@ -737,7 +737,7 @@ DEFINE      1608   DB_BAYES                       STR    256
 DESCR       1608   
 DESCR       1608   
 SYNTAX      1608   -----
-DEFAULT     1608   j-bayes.db
+DEFAULT     1608   ze-bayes.db
 LABEL       1608   Path of bayes tokens database
 
 
@@ -758,7 +758,7 @@ DEFINE      1702   DB_URLBL                       STR     1024
 DESCR       1702   
 DESCR       1702   
 SYNTAX      1702   -----
-DEFAULT     1702   j-urlbl.db
+DEFAULT     1702   ze-urlbl.db
 LABEL       1702   Database Real-Time URL Blacklist (used for content checking)
 
 
@@ -766,7 +766,7 @@ DEFINE      1703   DNS_URLBL                      STR     1024
 DESCR       1703   
 DESCR       1703   
 SYNTAX      1703   RBL[/CODE[/SCORE]] - multi.surbl.org/127.0.0.1/10
-DEFAULT     1703   j-tables:DNS-URLBL
+DEFAULT     1703   ze-tables:DNS-URLBL
 LABEL       1703   DNS Real-Time URL Blacklist (used for content checking)
 
 
@@ -786,7 +786,7 @@ DEFINE      1802   REGEX_FILE                     STR      256
 DESCR       1802   
 DESCR       1802   
 SYNTAX      1802   -----
-DEFAULT     1802   j-regex
+DEFAULT     1802   ze-regex
 LABEL       1802   Regular expressions configuration file
 
 DEFINE      1803   REGEX_MAX_SCORE               INT
@@ -842,7 +842,7 @@ DEFINE      1902   ORACLE_SCORES_FILE             STR      256
 DESCR       1902   
 DESCR       1902   
 SYNTAX      1902   -----
-DEFAULT     1902   j-oracle:ORACLE-SCORES
+DEFAULT     1902   ze-oracle:ORACLE-SCORES
 LABEL       1902   Oracle scores
 
 
@@ -850,7 +850,7 @@ DEFINE      1903   ORACLE_DATA_FILE               STR      256
 DESCR       1903   
 DESCR       1903   
 SYNTAX      1903   -----
-DEFAULT     1903   j-oracle:ORACLE-DATA
+DEFAULT     1903   ze-oracle:ORACLE-DATA
 LABEL       1903   Some oracle definitions
 
 
@@ -898,7 +898,7 @@ DEFINE      2003   XSTATUS_HEADER                 STR     256
 DESCR       2003   
 DESCR       2003   
 SYNTAX      2003   -----
-DEFAULT     2003   X-j-chkmail-Status
+DEFAULT     2003   X-ze-filter-Status
 LABEL       2003   Status header
 
 DEFINE      2004   XSTATUS_HEADER_HI_CONDITION      STR     512
@@ -906,35 +906,35 @@ DESCR       2004
 DESCR       2004   
 SYNTAX      2004   Ex : (U=####|B=0.9|B=0.8|XXXX.*B=0.7)
 DEFAULT     2004   score > 0.75
-LABEL       2004   When to add a 'X-j-chkmail-Status: HI' Header
+LABEL       2004   When to add a 'X-ze-filter-Status: HI' Header
 
 DEFINE      2005   XSTATUS_HEADER_LO_CONDITION      STR     512
 DESCR       2005   
 DESCR       2005   
 SYNTAX      2005   Ex : (U=####|B=0.9|B=0.8|XXXX.*B=0.7)
 DEFAULT     2005   score > 0.65
-LABEL       2005   When to add a 'X-j-chkmail-Status: LO' Header
+LABEL       2005   When to add a 'X-ze-filter-Status: LO' Header
 
 DEFINE      2006   XSTATUS_HEADER_UNSURE_CONDITION      STR     512
 DESCR       2006   
 DESCR       2006   
 SYNTAX      2006   Ex : (U=####|B=0.9|B=0.8|XXXX.*B=0.7)
 DEFAULT     2006   score > 0.25
-LABEL       2006   When to add a 'X-j-chkmail-Status: UNSURE' Header
+LABEL       2006   When to add a 'X-ze-filter-Status: UNSURE' Header
 
 DEFINE      2007   XSTATUS_HEADER_HAM_CONDITION      STR     512
 DESCR       2007   
 DESCR       2007   
 SYNTAX      2007   Ex : (U=####|B=0.9|B=0.8|XXXX.*B=0.7)
 DEFAULT     2007   score < 0.25
-LABEL       2007   When to add a 'X-j-chkmail-Status: HAM' Header
+LABEL       2007   When to add a 'X-ze-filter-Status: HAM' Header
 
 DEFINE      2008   XSTATUS_REJECT_CONDITION         STR     512
 DESCR       2008   
 DESCR       2008   
 SYNTAX      2008   Ex : (U=####|B=0.9|B=0.8|XXXX.*B=0.7)
 DEFAULT     2008   
-LABEL       2008   Reject message if this regular expression matches score from X-j-chkmail-score header
+LABEL       2008   Reject message if this regular expression matches score from X-ze-filter-score header
 
 DEFINE      2009   XSTATUS_REJECT_ONLY_UNKNOWN      ENUM   NO_YES
 DESCR       2009   
@@ -948,14 +948,14 @@ LABEL       2009
 #DESCR       2010   
 #SYNTAX      2010   Ex : (U=####|B=0.9|B=0.8|XXXX.*B=0.7)
 #DEFAULT     2010   
-#LABEL       2010   Discard message if this regular expression matches score from X-j-chkmail-score header
+#LABEL       2010   Discard message if this regular expression matches score from X-ze-filter-score header
 
 DEFINE      2011   XSTATUS_QUARANTINE_CONDITION     STR     512
 DESCR       2011   
 DESCR       2011   
 SYNTAX      2011   Ex : (U=####|B=0.9|B=0.8|XXXX.*B=0.7)
 DEFAULT     2011   
-LABEL       2011   If this regular expression matches X-j-chkmail-score header, the message is quarantined
+LABEL       2011   If this regular expression matches X-ze-filter-score header, the message is quarantined
 
 #DEFINE      1616   MSG_EVAL_FUNCTION              STR     256
 #SYNTAX      1616   ----
@@ -1002,25 +1002,25 @@ LABEL       2011   If this regular expression matches X-j-chkmail-score header, 
 #DESCR       2011   
 #SYNTAX      2011   ALL | NONE | List of SMTP gateways
 #DEFAULT     2011   ALL
-#LABEL       2011   Preserve score headers added by previous j-chkmail filters
+#LABEL       2011   Preserve score headers added by previous ze-filter filters
 
 #DEFINE      2012   REMOVE_OLD_SCORES            STR     512
 #DESCR       2012   
 #DESCR       2012   
 #SYNTAX      2012   ALL | NONE | List of SMTP gateways
 #DEFAULT     2012   NONE
-#LABEL       2012   Remove score headers added by previous j-chkmail filters
+#LABEL       2012   Remove score headers added by previous ze-filter filters
 
 DEFINE      2012   REMOVE_HEADERS               STR     512
 DESCR       2012   
-DESCR       2012   X-j-chkmail-Status,X-Spam-Flag,X-Spam-Status
+DESCR       2012   X-ze-filter-Status,X-Spam-Flag,X-Spam-Status
 SYNTAX      2012   NONE | List of comma separated headers
 DEFAULT     2012   NONE
 LABEL       2012   List of headers to remove
 
 DEFINE      2013   REMOVE_SCORES                STR     512
 DESCR       2013   
-DESCR       2013   X-j-chkmail-Status,X-Spam-Flag,X-Spam-Status
+DESCR       2013   X-ze-filter-Status,X-Spam-Flag,X-Spam-Status
 SYNTAX      2013   NONE | List of comma separated servers
 DEFAULT     2013   NONE
 LABEL       2013   List of headers to remove
@@ -1045,7 +1045,7 @@ DEFINE      2101   DNS_IPRBWL                            STR     1024
 DESCR       2101   
 DESCR       2101   
 SYNTAX      2101   
-DEFAULT     2101   j-tables:DNS-IP-RBWL
+DEFAULT     2101   ze-tables:DNS-IP-RBWL
 LABEL       2101   Real-Time Black/White Lists 
 
 #
@@ -1062,7 +1062,7 @@ SECTION            Antispam checks (SMTP client behaviour)
 
 DEFINE      2201   CHECK_CONN_RATE            ENUM    NO_YES
 DESCR       2201   
-DESCR       2201   When enabled, j-chkmail will limit the number of connections, per SMTP
+DESCR       2201   When enabled, ze-filter will limit the number of connections, per SMTP
 DESCR       2201   client, evaluated on a sliding window of size 10 minutes
 SYNTAX      2201   -----
 DEFAULT     2201   NO
@@ -1075,11 +1075,11 @@ DESCR       2202   This option defines the default max connection rate. This val
 DESCR       2202   overriden by those defined at policy database.
 SYNTAX      2202   -----
 DEFAULT     2202   15
-LABEL       2202   Max connection rate (can be redefined at j-policy database)
+LABEL       2202   Max connection rate (can be redefined at ze-policy database)
 
 DEFINE      2203   CHECK_OPEN_CONNECTIONS         ENUM    NO_YES
 DESCR       2203   
-DESCR       2203   When this feature is enabled, j-chkmail will limit the number of
+DESCR       2203   When this feature is enabled, ze-filter will limit the number of
 DESCR       2203   simultaneous connections, per SMTP client.
 SYNTAX      2203   -----
 DEFAULT     2203   NO
@@ -1151,7 +1151,7 @@ DEFINE      2304   DB_RCPT                         STR      256
 DESCR       2304   
 DESCR       2304   
 SYNTAX      2304   -----
-DEFAULT     2304   j-rcpt.db
+DEFAULT     2304   ze-rcpt.db
 LABEL       2304   Recipient database path
 
 DEFINE      2305   SPAMTRAP_RESULT                ENUM    REJECT
@@ -1181,7 +1181,7 @@ DESCR       2308
 DESCR       2308   
 SYNTAX      2308   -----
 DEFAULT     2308   100
-LABEL       2308   Max recipient rate (can be redefined at j-policy database)
+LABEL       2308   Max recipient rate (can be redefined at ze-policy database)
 
 
 DEFINE      2309   CHECK_NB_RCPT                  ENUM    NO_YES
@@ -1213,7 +1213,7 @@ DESCR       2312
 DESCR       2312   
 SYNTAX      2312   -----
 DEFAULT     2312   100
-LABEL       2312   Max message rate (can be redefined at j-policy database)
+LABEL       2312   Max message rate (can be redefined at ze-policy database)
 
 DEFINE      2313   CHECK_NB_MSGS            ENUM    NO_YES
 DESCR       2313   
@@ -1242,7 +1242,7 @@ DESCR       2318
 DESCR       2318   
 SYNTAX      2318   -----
 DEFAULT     2318   100
-LABEL       2318   Max recipient rate per from address (can be redefined at j-policy database)
+LABEL       2318   Max recipient rate per from address (can be redefined at ze-policy database)
 
 
 DEFINE      2319   CHECK_NB_FROM_RCPT                  ENUM    NO_YES
@@ -1274,7 +1274,7 @@ DESCR       2322
 DESCR       2322   
 SYNTAX      2322   -----
 DEFAULT     2322   100
-LABEL       2322   Max message rate per from address (can be redefined at j-policy database)
+LABEL       2322   Max message rate per from address (can be redefined at ze-policy database)
 
 DEFINE      2323   CHECK_FROM_NB_MSGS            ENUM    NO_YES
 DESCR       2323   
@@ -1332,7 +1332,7 @@ DEFINE      2404   CHECK_BAD_SENDER_MX            ENUM    NO_YES
 DESCR       2404   Enabling this option makes the filter check if the
 DESCR       2404   MX of the domain of the sender address is unreacheable,
 DESCR       2404   checking if the domain, hostname or IP address matches
-DESCR       2404   an entry at j-policy database.
+DESCR       2404   an entry at ze-policy database.
 SYNTAX      2404   -----
 DEFAULT     2404   NO
 SIMPLE      2404   YES
@@ -1490,13 +1490,13 @@ LABEL       2701   Enable greylisting filter
 DEFINE      2702   GREY_MODE                      ENUM       GREY_MODE
 DESCR       2702   This option defines if the filter is autonomous with
 DESCR       2702   its own data or if it's also access data in a
-DESCR       2702   j-greyd greylisting server
+DESCR       2702   ze-greyd greylisting server
 DEFAULT     2702   STANDALONE
 LABEL       2702   Greylist mode
 
 DEFINE      2703   GREY_SOCKET                    STR        256
-DESCR       2703   When configured to access a j-greyd server, this option
-DESCR       2703   defines the IP address and port where j-greyd listens.
+DESCR       2703   When configured to access a ze-greyd server, this option
+DESCR       2703   defines the IP address and port where ze-greyd listens.
 SYNTAX      2703   -----
 DEFAULT     2703   inet:2012@127.0.0.1
 LABEL       2703   Remote Greylist Server Socket when running in CLIENT mode
@@ -1505,7 +1505,7 @@ DEFINE      2704   GREY_CONNECT_TIMEOUT            INT
 DESCR       2704   
 SYNTAX      2704   -----
 DEFAULT     2704   10s
-LABEL       2704   Timeout to connect go j-grey server when running in CLIENT mode
+LABEL       2704   Timeout to connect go ze-grey server when running in CLIENT mode
 
 DEFINE      2705   GREY_MIN_DELAY_NORMAL           INT
 DESCR       2705   
@@ -1634,17 +1634,17 @@ LABEL       2721   The expired entries log file
 #
 #
 #
-SECTION            Greylisting - j-greyd specific
+SECTION            Greylisting - ze-greyd specific
 
 SDESCR      This section presents parameters which are exclusive to 
-SDESCR      **j-greyd** greylisting server. 
+SDESCR      **ze-greyd** greylisting server. 
 
 DEFINE      2801   GREYD_SOCKET_LISTEN             STR        256
 DESCR       2801   
-DESCR       2801   This is the j-greyd server listening socket.
+DESCR       2801   This is the ze-greyd server listening socket.
 SYNTAX      2801   -----
 DEFAULT     2801   inet:2012@0.0.0.0
-LABEL       2801   j-greyd Listen Socket
+LABEL       2801   ze-greyd Listen Socket
 
 DEFINE      2802   GREYD_LOG_FACILITY                   STR      256
 DESCR       2802   
@@ -1658,26 +1658,26 @@ DESCR       2803
 DESCR       2803   
 SYNTAX      2803   -----
 DEFAULT     2803   10
-LABEL       2803   j-greyd log level
+LABEL       2803   ze-greyd log level
 
 DEFINE      2804   GREYDDIR                             STR      256
 DESCR       2804   
-DESCR       2804   The directory where j-greyd will save its databases.
+DESCR       2804   The directory where ze-greyd will save its databases.
 SYNTAX      2804   -----
 DEFAULT     2804   J_GREYDDIR
-LABEL       2804   j-greyd working directory
+LABEL       2804   ze-greyd working directory
 
 DEFINE      2805   GREYD_PID_FILE                       STR      256
 DESCR       2805   
 DESCR       2805   
 SYNTAX      2805   -----
 DEFAULT     2805   J_GREYD_PID_FILE
-LABEL       2805   j-greyd pid file
+LABEL       2805   ze-greyd pid file
 
 
 DEFINE      2806   GREYD_CLIENT_IDLE_MAX                INT
 DESCR       2806   
-DESCR       2806   j-greyd server will disconnect clients inactive longer than
+DESCR       2806   ze-greyd server will disconnect clients inactive longer than
 DESCR       2806   this delay.
 SYNTAX      2806   -----
 DEFAULT     2806   300

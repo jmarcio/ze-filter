@@ -5,77 +5,77 @@ CDBDIR   = @WORKROOT@/cdb
 CFDIR    = @CONFDIR@
 
 JCHKMAIL=$(top_srcdir)/src/ze-filter
-POLICY_SRC = j-policy.base.txt.org \
- j-policy.z-grey.txt.org \
- j-policy.z-badmx.txt.org \
- j-policy.z-iana.txt.org \
- j-policy.z-defaults.txt.org
+POLICY_SRC = ze-policy.base.txt.org \
+ ze-policy.z-grey.txt.org \
+ ze-policy.z-badmx.txt.org \
+ ze-policy.z-iana.txt.org \
+ ze-policy.z-defaults.txt.org
 
-sysconf_DATA  = j-chkmail.cf.org \
- j-error-msg.org \
- j-regex.org \
- j-oracle.org \
- j-xfiles.org \
- j-modules.org \
- j-tables.org \
- j-ndc.cf.org
+sysconf_DATA  = ze-filter.cf.org \
+ ze-error-msg.org \
+ ze-regex.org \
+ ze-oracle.org \
+ ze-xfiles.org \
+ ze-modules.org \
+ ze-tables.org \
+ ze-ndc.cf.org
 
-etc_upgrade = 	j-chkmail.cf.org \
- j-oracle.org
+etc_upgrade = 	ze-filter.cf.org \
+ ze-oracle.org
 
-cdb_install = 	j-policy.z-grey.txt.org \
- j-policy.z-badmx.txt.org \
- j-policy.z-iana.txt.org \
- j-policy.z-defaults.txt.org
+cdb_install = 	ze-policy.z-grey.txt.org \
+ ze-policy.z-badmx.txt.org \
+ ze-policy.z-iana.txt.org \
+ ze-policy.z-defaults.txt.org
 
-cdb_remove = 	j-policy.grey.txt.org \
- j-policy.badmx.txt.org
+cdb_remove = 	ze-policy.grey.txt.org \
+ ze-policy.badmx.txt.org
 
-cdb_preserve = 	j-policy.base.txt.org \
- j-policy.local.txt.org \
- j-rcpt.txt.org \
- j-bayes.txt.org \
- j-urlbl.txt.org \
+cdb_preserve = 	ze-policy.base.txt.org \
+ ze-policy.local.txt.org \
+ ze-rcpt.txt.org \
+ ze-bayes.txt.org \
+ ze-urlbl.txt.org \
  Makefile.org
 
 script_preserve = get-urlbl.org \
  get-bayes.org
 
-OBJECTS = j-policy.txt.org j-chkmail.cf.default j-chkmail.cf.running j-chkmail.cf.null
+OBJECTS = ze-policy.txt.org ze-filter.cf.default ze-filter.cf.running ze-filter.cf.null
 
 all: $(OBJECTS)
 
-j-policy.txt.org : $(POLICY_SRC)
-	cat $(POLICY_SRC) > j-policy.txt.org
+ze-policy.txt.org : $(POLICY_SRC)
+	cat $(POLICY_SRC) > ze-policy.txt.org
 
 distclean::clean-hook
 
 clean:: clean-hook
 
 clean-hook:
-	rm -f $(OBJECTS) j-chkmail.cf.org
+	rm -f $(OBJECTS) ze-filter.cf.org
 
 realclean: clean-hook clean-cache distclean
 
-j-chkmail.cf.org: j-chkmail.cf.running
-	cp -p j-chkmail.cf.running j-chkmail.cf.org
+ze-filter.cf.org: ze-filter.cf.running
+	cp -p ze-filter.cf.running ze-filter.cf.org
 
-j-chkmail.cf.running: $(JCHKMAIL) j-chkmail.cf.default
-	cp -p j-chkmail.cf.default j-chkmail.cf.running
-	if [ -f $(DESTDIR)/$(CFDIR)/j-chkmail.cf ] ; then \
-	  $(JCHKMAIL) -M running | ./update_running_cf > j-chkmail.cf.running ;\
+ze-filter.cf.running: $(JCHKMAIL) ze-filter.cf.default
+	cp -p ze-filter.cf.default ze-filter.cf.running
+	if [ -f $(DESTDIR)/$(CFDIR)/ze-filter.cf ] ; then \
+	  $(JCHKMAIL) -M running | ./update_running_cf > ze-filter.cf.running ;\
 	fi
 
-j-chkmail.cf.default: $(JCHKMAIL)
-	$(JCHKMAIL) -M default > j-chkmail.cf.default
+ze-filter.cf.default: $(JCHKMAIL)
+	$(JCHKMAIL) -M default > ze-filter.cf.default
 
-j-chkmail.cf.null: $(JCHKMAIL)
-	$(JCHKMAIL) -M null > j-chkmail.cf.null
+ze-filter.cf.null: $(JCHKMAIL)
+	$(JCHKMAIL) -M null > ze-filter.cf.null
 
 iana:
-	../bin/get-iana > j-policy.z-iana.txt.org
+	../bin/get-iana > ze-policy.z-iana.txt.org
 
-install-data-hook: j-chkmail.cf.running j-chkmail.cf.default j-chkmail.cf.null
+install-data-hook: ze-filter.cf.running ze-filter.cf.default ze-filter.cf.null
 	@list='$(sysconf_DATA)'; for file in $$list ;\
 	do \
 	  conf=`basename $$file .org` ;\
@@ -83,7 +83,7 @@ install-data-hook: j-chkmail.cf.running j-chkmail.cf.default j-chkmail.cf.null
 	    $(INSTALL_DATA) $$file $(DESTDIR)/$(CFDIR)/$$conf ; \
 	  fi ; \
 	done
-	cp j-chkmail.cf.default j-chkmail.cf.running $(DESTDIR)/$(CFDIR)/
+	cp ze-filter.cf.default ze-filter.cf.running $(DESTDIR)/$(CFDIR)/
 	@mkdir -p $(DESTDIR)@WORKROOT@/cdb
 	@chmod 755 $(DESTDIR)@WORKROOT@/cdb
 	@chown @USER@ $(DESTDIR)@WORKROOT@/cdb
@@ -118,7 +118,7 @@ install-data-hook: j-chkmail.cf.running j-chkmail.cf.default j-chkmail.cf.null
 	  $(INSTALL_SCRIPT) $$file $(DESTDIR)/$(CDBDIR)/$$file ;\
 	done
 
-upgrade : j-chkmail.cf.org
+upgrade : ze-filter.cf.org
 	@echo "   * upgrade in etc directory"
 	@list='$(etc_upgrade)'; for file in $$list ;\
 	do \

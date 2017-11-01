@@ -1,28 +1,23 @@
 /*
  *
- * j-chkmail - Mail Server Filter for sendmail
+ * ze-filter - Mail Server Filter for sendmail
  *
  * Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz
  *
  *  Auteur     : Jose Marcio Martins da Cruz
- *               jose.marcio.mc@gmail.org
+ *               jose.marcio.mc@gmail.com
  *
  *  Historique :
  *  Creation     : janvier 2005
  *
  * This program is free software, but with restricted license :
  *
- * - j-chkmail is distributed only to registered users
- * - j-chkmail license is available only non-commercial applications,
- *   this means, you can use j-chkmail if you make no profit with it.
- * - redistribution of j-chkmail in any way : binary, source in any
- *   media, is forbidden
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * More details about j-chkmail license can be found at j-chkmail
+ * More details about ze-filter license can be found at ze-filter
  * web site : http://foss.jose-marcio.org
  */
 
@@ -111,7 +106,7 @@ cf_define ()
   cf_add_id_enum (CF_J_HOSTNAME, STRING(J_HOSTNAME), ENUM_HOSTNAME, "SYSTEM");
   cf_add_id_enum (CF_PRESENCE, STRING(PRESENCE), ENUM_PRESENCE, "SHOW");
   cf_add_id_enum (CF_FOOTER, STRING(FOOTER), ENUM_PRESENCE, "SHOW");
-  cf_add_id_str  (CF_FILTER_URL, STRING(FILTER_URL), 256, "http : // j-chkmail dot ensmp dot fr");
+  cf_add_id_str  (CF_FILTER_URL, STRING(FILTER_URL), 256, "http : // ze-filter dot ensmp dot fr");
   cf_add_id_str  (CF_POLICY_URL, STRING(POLICY_URL), 256, "");
   cf_add_id_str  (CF_DAEMON_FILTER_DISABLE, STRING(DAEMON_FILTER_DISABLE), 256, "");
   cf_add_id_str  (CF_USER, STRING(USER), 256, "smmsp");
@@ -128,10 +123,10 @@ cf_define ()
   cf_add_id_enum (CF_CTRL_CHANNEL_ENABLE, STRING(CTRL_CHANNEL_ENABLE), ENUM_NO_YES, "YES");
   cf_add_id_str  (CF_CTRL_SOCKET, STRING(CTRL_SOCKET), 256, "inet:2010@127.0.0.1");
   cf_add_id_enum (CF_CTRL_ACCESS, STRING(CTRL_ACCESS), ENUM_CTRL_ACCESS, "NONE");
-  cf_add_id_str  (CF_CONFDIR, STRING(CONFDIR), 256, "/etc/mail/jchkmail");
-  cf_add_id_str  (CF_ERROR_MSG_FILE, STRING(ERROR_MSG_FILE), 256, "j-error-msg");
+  cf_add_id_str  (CF_CONFDIR, STRING(CONFDIR), 256, "/etc/ze-filter");
+  cf_add_id_str  (CF_ERROR_MSG_FILE, STRING(ERROR_MSG_FILE), 256, "ze-error-msg");
   cf_add_id_int  (CF_AUTO_RELOAD_TABLES, STRING(AUTO_RELOAD_TABLES), "3600s");
-  cf_add_id_str  (CF_MODULES_CF, STRING(MODULES_CF), 256, "j-modules");
+  cf_add_id_str  (CF_MODULES_CF, STRING(MODULES_CF), 256, "ze-modules");
   cf_add_id_str  (CF_LOG_FACILITY, STRING(LOG_FACILITY), 256, "local5");
   cf_add_id_int  (CF_LOG_LEVEL, STRING(LOG_LEVEL), "10");
   cf_add_id_enum (CF_LOG_SEVERITY, STRING(LOG_SEVERITY), ENUM_NO_YES, "NO");
@@ -153,11 +148,11 @@ cf_define ()
   cf_add_id_enum (CF_QUARANTINE_ADD_FROM_LINE, STRING(QUARANTINE_ADD_FROM_LINE), ENUM_NO_YES, "YES");
   cf_add_id_str  (CF_QUARANTINE_LOG_FILE, STRING(QUARANTINE_LOG_FILE), 256, J_QUARANTINE_LOG);
   cf_add_id_enum (CF_ARCHIVE, STRING(ARCHIVE), ENUM_NO_YES, "NO");
-  cf_add_id_str  (CF_MODDIR, STRING(MODDIR), 256, "/usr/lib/j-chkmail");
+  cf_add_id_str  (CF_MODDIR, STRING(MODDIR), 256, "/usr/lib/ze-filter");
   cf_add_id_str  (CF_WDBDIR, STRING(WDBDIR), 256, J_WDBDIR);
   cf_add_id_str  (CF_CDBDIR, STRING(CDBDIR), 256, J_CDBDIR);
   cf_add_id_int  (CF_DB_CACHE_SIZE, STRING(DB_CACHE_SIZE), "32M");
-  cf_add_id_str  (CF_DB_POLICY, STRING(DB_POLICY), 256, "j-policy.db");
+  cf_add_id_str  (CF_DB_POLICY, STRING(DB_POLICY), 256, "ze-policy.db");
   cf_add_id_enum (CF_POLICY_CONFLICT, STRING(POLICY_CONFLICT), ENUM_POLICY_CONFLICT, "DEFAULT");
   cf_add_id_str  (CF_FROM_PASS_TOKEN, STRING(FROM_PASS_TOKEN), 256, "");
   cf_add_id_str  (CF_TO_PASS_TOKEN, STRING(TO_PASS_TOKEN), 256, "");
@@ -170,7 +165,7 @@ cf_define ()
   cf_add_id_enum (CF_J_SENDER, STRING(J_SENDER), ENUM_SENDER, "SENDER");
   cf_add_id_enum (CF_J_SUBJECT, STRING(J_SUBJECT), ENUM_SUBJECT, "SUBJECT");
   cf_add_id_enum (CF_XFILES, STRING(XFILES), ENUM_ACTION, "OK");
-  cf_add_id_str  (CF_XFILES_FILE, STRING(XFILES_FILE), 256, "j-xfiles");
+  cf_add_id_str  (CF_XFILES_FILE, STRING(XFILES_FILE), 256, "ze-xfiles");
   cf_add_id_enum (CF_XFILE_SAVE_MSG, STRING(XFILE_SAVE_MSG), ENUM_NO_YES, "YES");
   cf_add_id_str  (CF_XFILE_SUBJECT_TAG, STRING(XFILE_SUBJECT_TAG), 256, "");
   cf_add_id_str  (CF_XFILES_LOG_FILE, STRING(XFILES_LOG_FILE), 256, J_XFILES_LOG);
@@ -189,26 +184,26 @@ cf_define ()
   cf_add_id_int  (CF_BAYES_NB_TOKENS, STRING(BAYES_NB_TOKENS), "48");
   cf_add_id_int  (CF_BAYES_UNKNOWN_TOKEN_PROB, STRING(BAYES_UNKNOWN_TOKEN_PROB), "500");
   cf_add_id_double  (CF_ACTIVE_LEARNING_MARGIN, STRING(ACTIVE_LEARNING_MARGIN), "0.35");
-  cf_add_id_str  (CF_DB_BAYES, STRING(DB_BAYES), 256, "j-bayes.db");
+  cf_add_id_str  (CF_DB_BAYES, STRING(DB_BAYES), 256, "ze-bayes.db");
   cf_add_id_enum (CF_SPAM_URLBL, STRING(SPAM_URLBL), ENUM_NO_YES, "NO");
-  cf_add_id_str  (CF_DB_URLBL, STRING(DB_URLBL), 1024, "j-urlbl.db");
-  cf_add_id_str  (CF_DNS_URLBL, STRING(DNS_URLBL), 1024, "j-tables:DNS-URLBL");
+  cf_add_id_str  (CF_DB_URLBL, STRING(DB_URLBL), 1024, "ze-urlbl.db");
+  cf_add_id_str  (CF_DNS_URLBL, STRING(DNS_URLBL), 1024, "ze-tables:DNS-URLBL");
   cf_add_id_enum (CF_SPAM_REGEX, STRING(SPAM_REGEX), ENUM_NO_YES, "NO");
-  cf_add_id_str  (CF_REGEX_FILE, STRING(REGEX_FILE), 256, "j-regex");
+  cf_add_id_str  (CF_REGEX_FILE, STRING(REGEX_FILE), 256, "ze-regex");
   cf_add_id_int  (CF_REGEX_MAX_SCORE, STRING(REGEX_MAX_SCORE), "50");
   cf_add_id_int  (CF_SPAM_REGEX_MAX_MSG_SIZE, STRING(SPAM_REGEX_MAX_MSG_SIZE), "40000");
   cf_add_id_int  (CF_SPAM_REGEX_MAX_MIME_SIZE, STRING(SPAM_REGEX_MAX_MIME_SIZE), "15000");
   cf_add_id_enum (CF_DUMP_FOUND_REGEX, STRING(DUMP_FOUND_REGEX), ENUM_NO_YES, "YES");
   cf_add_id_str  (CF_REGEX_LOG_FILE, STRING(REGEX_LOG_FILE), 256, J_REGEX_LOG);
   cf_add_id_enum (CF_SPAM_ORACLE, STRING(SPAM_ORACLE), ENUM_NO_YES, "NO");
-  cf_add_id_str  (CF_ORACLE_SCORES_FILE, STRING(ORACLE_SCORES_FILE), 256, "j-oracle:ORACLE-SCORES");
-  cf_add_id_str  (CF_ORACLE_DATA_FILE, STRING(ORACLE_DATA_FILE), 256, "j-oracle:ORACLE-DATA");
+  cf_add_id_str  (CF_ORACLE_SCORES_FILE, STRING(ORACLE_SCORES_FILE), 256, "ze-oracle:ORACLE-SCORES");
+  cf_add_id_str  (CF_ORACLE_DATA_FILE, STRING(ORACLE_DATA_FILE), 256, "ze-oracle:ORACLE-DATA");
   cf_add_id_int  (CF_LOG_LEVEL_ORACLE, STRING(LOG_LEVEL_ORACLE), "1");
   cf_add_id_str  (CF_ORACLE_STATS_FILE, STRING(ORACLE_STATS_FILE), 256, "oracle-stats.log");
   cf_add_id_str  (CF_ORACLE_COUNTERS_FILE, STRING(ORACLE_COUNTERS_FILE), 256, "oracle-counters.log");
   cf_add_id_enum (CF_SCORE_ON_SUBJECT, STRING(SCORE_ON_SUBJECT), ENUM_NO_YES, "NO");
   cf_add_id_str  (CF_SCORE_ON_SUBJECT_TAG, STRING(SCORE_ON_SUBJECT_TAG), 256, "");
-  cf_add_id_str  (CF_XSTATUS_HEADER, STRING(XSTATUS_HEADER), 256, "X-j-chkmail-Status");
+  cf_add_id_str  (CF_XSTATUS_HEADER, STRING(XSTATUS_HEADER), 256, "X-ze-filter-Status");
   cf_add_id_str  (CF_XSTATUS_HEADER_HI_CONDITION, STRING(XSTATUS_HEADER_HI_CONDITION), 512, "score > 0.75");
   cf_add_id_str  (CF_XSTATUS_HEADER_LO_CONDITION, STRING(XSTATUS_HEADER_LO_CONDITION), 512, "score > 0.65");
   cf_add_id_str  (CF_XSTATUS_HEADER_UNSURE_CONDITION, STRING(XSTATUS_HEADER_UNSURE_CONDITION), 512, "score > 0.25");
@@ -218,7 +213,7 @@ cf_define ()
   cf_add_id_str  (CF_XSTATUS_QUARANTINE_CONDITION, STRING(XSTATUS_QUARANTINE_CONDITION), 512, "");
   cf_add_id_str  (CF_REMOVE_HEADERS, STRING(REMOVE_HEADERS), 512, "NONE");
   cf_add_id_str  (CF_REMOVE_SCORES, STRING(REMOVE_SCORES), 512, "NONE");
-  cf_add_id_str  (CF_DNS_IPRBWL, STRING(DNS_IPRBWL), 1024, "j-tables:DNS-IP-RBWL");
+  cf_add_id_str  (CF_DNS_IPRBWL, STRING(DNS_IPRBWL), 1024, "ze-tables:DNS-IP-RBWL");
   cf_add_id_enum (CF_CHECK_CONN_RATE, STRING(CHECK_CONN_RATE), ENUM_NO_YES, "NO");
   cf_add_id_int  (CF_MAX_CONN_RATE, STRING(MAX_CONN_RATE), "15");
   cf_add_id_enum (CF_CHECK_OPEN_CONNECTIONS, STRING(CHECK_OPEN_CONNECTIONS), ENUM_NO_YES, "NO");
@@ -229,7 +224,7 @@ cf_define ()
   cf_add_id_enum (CF_CHECK_BADRCPTS, STRING(CHECK_BADRCPTS), ENUM_NO_YES, "NO");
   cf_add_id_int  (CF_MAX_BADRCPTS, STRING(MAX_BADRCPTS), "10");
   cf_add_id_enum (CF_CHECK_RCPT_ACCESS, STRING(CHECK_RCPT_ACCESS), ENUM_NO_YES, "NO");
-  cf_add_id_str  (CF_DB_RCPT, STRING(DB_RCPT), 256, "j-rcpt.db");
+  cf_add_id_str  (CF_DB_RCPT, STRING(DB_RCPT), 256, "ze-rcpt.db");
   cf_add_id_enum (CF_SPAMTRAP_RESULT, STRING(SPAMTRAP_RESULT), ENUM_REJECT, "OK");
   cf_add_id_enum (CF_CHECK_SPAMTRAP_HISTORY, STRING(CHECK_SPAMTRAP_HISTORY), ENUM_NO_YES, "NO");
   cf_add_id_enum (CF_CHECK_RCPT_RATE, STRING(CHECK_RCPT_RATE), ENUM_NO_YES, "NO");
@@ -310,7 +305,7 @@ cf_defaults ()
   cf_set_val (CF_J_HOSTNAME, "SYSTEM");
   cf_set_val (CF_PRESENCE, "SHOW");
   cf_set_val (CF_FOOTER, "SHOW");
-  cf_set_val (CF_FILTER_URL, "http : // j-chkmail dot ensmp dot fr");
+  cf_set_val (CF_FILTER_URL, "http : // ze-filter dot ensmp dot fr");
   cf_set_val (CF_POLICY_URL, "");
   cf_set_val (CF_DAEMON_FILTER_DISABLE, "");
   cf_set_val (CF_USER, "smmsp");
@@ -327,10 +322,10 @@ cf_defaults ()
   cf_set_val (CF_CTRL_CHANNEL_ENABLE, "YES");
   cf_set_val (CF_CTRL_SOCKET, "inet:2010@127.0.0.1");
   cf_set_val (CF_CTRL_ACCESS, "NONE");
-  cf_set_val (CF_CONFDIR, "/etc/mail/jchkmail");
-  cf_set_val (CF_ERROR_MSG_FILE, "j-error-msg");
+  cf_set_val (CF_CONFDIR, "/etc/ze-filter");
+  cf_set_val (CF_ERROR_MSG_FILE, "ze-error-msg");
   cf_set_val (CF_AUTO_RELOAD_TABLES, "3600s");
-  cf_set_val (CF_MODULES_CF, "j-modules");
+  cf_set_val (CF_MODULES_CF, "ze-modules");
   cf_set_val (CF_LOG_FACILITY, "local5");
   cf_set_val (CF_LOG_LEVEL, "10");
   cf_set_val (CF_LOG_SEVERITY, "NO");
@@ -352,11 +347,11 @@ cf_defaults ()
   cf_set_val (CF_QUARANTINE_ADD_FROM_LINE, "YES");
   cf_set_val (CF_QUARANTINE_LOG_FILE, J_QUARANTINE_LOG);
   cf_set_val (CF_ARCHIVE, "NO");
-  cf_set_val (CF_MODDIR, "/usr/lib/j-chkmail");
+  cf_set_val (CF_MODDIR, "/usr/lib/ze-filter");
   cf_set_val (CF_WDBDIR, J_WDBDIR);
   cf_set_val (CF_CDBDIR, J_CDBDIR);
   cf_set_val (CF_DB_CACHE_SIZE, "32M");
-  cf_set_val (CF_DB_POLICY, "j-policy.db");
+  cf_set_val (CF_DB_POLICY, "ze-policy.db");
   cf_set_val (CF_POLICY_CONFLICT, "DEFAULT");
   cf_set_val (CF_FROM_PASS_TOKEN, "");
   cf_set_val (CF_TO_PASS_TOKEN, "");
@@ -369,7 +364,7 @@ cf_defaults ()
   cf_set_val (CF_J_SENDER, "SENDER");
   cf_set_val (CF_J_SUBJECT, "SUBJECT");
   cf_set_val (CF_XFILES, "OK");
-  cf_set_val (CF_XFILES_FILE, "j-xfiles");
+  cf_set_val (CF_XFILES_FILE, "ze-xfiles");
   cf_set_val (CF_XFILE_SAVE_MSG, "YES");
   cf_set_val (CF_XFILE_SUBJECT_TAG, "");
   cf_set_val (CF_XFILES_LOG_FILE, J_XFILES_LOG);
@@ -388,26 +383,26 @@ cf_defaults ()
   cf_set_val (CF_BAYES_NB_TOKENS, "48");
   cf_set_val (CF_BAYES_UNKNOWN_TOKEN_PROB, "500");
   cf_set_val (CF_ACTIVE_LEARNING_MARGIN, "0.35");
-  cf_set_val (CF_DB_BAYES, "j-bayes.db");
+  cf_set_val (CF_DB_BAYES, "ze-bayes.db");
   cf_set_val (CF_SPAM_URLBL, "NO");
-  cf_set_val (CF_DB_URLBL, "j-urlbl.db");
-  cf_set_val (CF_DNS_URLBL, "j-tables:DNS-URLBL");
+  cf_set_val (CF_DB_URLBL, "ze-urlbl.db");
+  cf_set_val (CF_DNS_URLBL, "ze-tables:DNS-URLBL");
   cf_set_val (CF_SPAM_REGEX, "NO");
-  cf_set_val (CF_REGEX_FILE, "j-regex");
+  cf_set_val (CF_REGEX_FILE, "ze-regex");
   cf_set_val (CF_REGEX_MAX_SCORE, "50");
   cf_set_val (CF_SPAM_REGEX_MAX_MSG_SIZE, "40000");
   cf_set_val (CF_SPAM_REGEX_MAX_MIME_SIZE, "15000");
   cf_set_val (CF_DUMP_FOUND_REGEX, "YES");
   cf_set_val (CF_REGEX_LOG_FILE, J_REGEX_LOG);
   cf_set_val (CF_SPAM_ORACLE, "NO");
-  cf_set_val (CF_ORACLE_SCORES_FILE, "j-oracle:ORACLE-SCORES");
-  cf_set_val (CF_ORACLE_DATA_FILE, "j-oracle:ORACLE-DATA");
+  cf_set_val (CF_ORACLE_SCORES_FILE, "ze-oracle:ORACLE-SCORES");
+  cf_set_val (CF_ORACLE_DATA_FILE, "ze-oracle:ORACLE-DATA");
   cf_set_val (CF_LOG_LEVEL_ORACLE, "1");
   cf_set_val (CF_ORACLE_STATS_FILE, "oracle-stats.log");
   cf_set_val (CF_ORACLE_COUNTERS_FILE, "oracle-counters.log");
   cf_set_val (CF_SCORE_ON_SUBJECT, "NO");
   cf_set_val (CF_SCORE_ON_SUBJECT_TAG, "");
-  cf_set_val (CF_XSTATUS_HEADER, "X-j-chkmail-Status");
+  cf_set_val (CF_XSTATUS_HEADER, "X-ze-filter-Status");
   cf_set_val (CF_XSTATUS_HEADER_HI_CONDITION, "score > 0.75");
   cf_set_val (CF_XSTATUS_HEADER_LO_CONDITION, "score > 0.65");
   cf_set_val (CF_XSTATUS_HEADER_UNSURE_CONDITION, "score > 0.25");
@@ -417,7 +412,7 @@ cf_defaults ()
   cf_set_val (CF_XSTATUS_QUARANTINE_CONDITION, "");
   cf_set_val (CF_REMOVE_HEADERS, "NONE");
   cf_set_val (CF_REMOVE_SCORES, "NONE");
-  cf_set_val (CF_DNS_IPRBWL, "j-tables:DNS-IP-RBWL");
+  cf_set_val (CF_DNS_IPRBWL, "ze-tables:DNS-IP-RBWL");
   cf_set_val (CF_CHECK_CONN_RATE, "NO");
   cf_set_val (CF_MAX_CONN_RATE, "15");
   cf_set_val (CF_CHECK_OPEN_CONNECTIONS, "NO");
@@ -428,7 +423,7 @@ cf_defaults ()
   cf_set_val (CF_CHECK_BADRCPTS, "NO");
   cf_set_val (CF_MAX_BADRCPTS, "10");
   cf_set_val (CF_CHECK_RCPT_ACCESS, "NO");
-  cf_set_val (CF_DB_RCPT, "j-rcpt.db");
+  cf_set_val (CF_DB_RCPT, "ze-rcpt.db");
   cf_set_val (CF_SPAMTRAP_RESULT, "OK");
   cf_set_val (CF_CHECK_SPAMTRAP_HISTORY, "NO");
   cf_set_val (CF_CHECK_RCPT_RATE, "NO");
@@ -537,23 +532,23 @@ static cfvar_t cfvar[] = {
               "-----",
               "SHOW"},
 
-             /* Show/Hide j-chkmail signature at warning message */
+             /* Show/Hide ze-filter signature at warning message */
              {CF_FOOTER, J_ENUM, ENUM_PRESENCE, 0,
               "FOOTER", 
               "SHOW",
               "General Parameters",
-              "Show/Hide j-chkmail signature at warning message",
+              "Show/Hide ze-filter signature at warning message",
               "-----",
               "SHOW"},
 
              /* Filter URL (to be included on X-Miltered header) */
              {CF_FILTER_URL, J_STR, NULL, 256,
               "FILTER_URL", 
-              "http : // j-chkmail dot ensmp dot fr",
+              "http : // ze-filter dot ensmp dot fr",
               "General Parameters",
               "Filter URL (to be included on X-Miltered header)",
               "-----",
-              "http : // j-chkmail dot ensmp dot fr"},
+              "http : // ze-filter dot ensmp dot fr"},
 
              /* Policy filtering URL - appended to reply messages */
              {CF_POLICY_URL, J_STR, NULL, 256,
@@ -654,12 +649,12 @@ static cfvar_t cfvar[] = {
               "-----",
               "500"},
 
-             /* Communication socket between sendmail and j-chkmail */
+             /* Communication socket between sendmail and ze-filter */
              {CF_SOCKET, J_STR, NULL, 256,
               "SOCKET", 
               J_SMSOCKFILE,
               "MTA Communications",
-              "Communication socket between sendmail and j-chkmail",
+              "Communication socket between sendmail and ze-filter",
               "inet:PORT@HOSTNAME | local:SOCKET_PATH",
               J_SMSOCKFILE},
 
@@ -699,23 +694,23 @@ static cfvar_t cfvar[] = {
               "-----",
               "NONE"},
 
-             /* j-chkmail configuration directory */
+             /* ze-filter configuration directory */
              {CF_CONFDIR, J_STR, NULL, 256,
               "CONFDIR", 
-              "/etc/mail/jchkmail",
+              "/etc/ze-filter",
               "Configuration Files",
-              "j-chkmail configuration directory",
+              "ze-filter configuration directory",
               "-----",
-              "/etc/mail/jchkmail"},
+              "/etc/ze-filter"},
 
              /* Notification template */
              {CF_ERROR_MSG_FILE, J_STR, NULL, 256,
               "ERROR_MSG_FILE", 
-              "j-error-msg",
+              "ze-error-msg",
               "Configuration Files",
               "Notification template",
               "-----",
-              "j-error-msg"},
+              "ze-error-msg"},
 
              /* Periodic configuration reload interval */
              {CF_AUTO_RELOAD_TABLES, J_INT, NULL, 0,
@@ -729,11 +724,11 @@ static cfvar_t cfvar[] = {
              /* Modules */
              {CF_MODULES_CF, J_STR, NULL, 256,
               "MODULES_CF", 
-              "j-modules",
+              "ze-modules",
               "Configuration Files",
               "Modules",
               "-----",
-              "j-modules"},
+              "ze-modules"},
 
              /* syslog facility */
              {CF_LOG_FACILITY, J_STR, NULL, 256,
@@ -744,12 +739,12 @@ static cfvar_t cfvar[] = {
               "-----",
               "local5"},
 
-             /* j-chkmail log level */
+             /* ze-filter log level */
              {CF_LOG_LEVEL, J_INT, NULL, 0,
               "LOG_LEVEL", 
               "10",
               "Logging",
-              "j-chkmail log level",
+              "ze-filter log level",
               "-----",
               "10"},
 
@@ -834,39 +829,39 @@ static cfvar_t cfvar[] = {
               "-----",
               "256"},
 
-             /* j-chkmail root directory  */
+             /* ze-filter root directory  */
              {CF_WORKROOT, J_STR, NULL, 256,
               "WORKROOT", 
               J_WORKROOT,
               "Spool and state Files",
-              "j-chkmail root directory ",
+              "ze-filter root directory ",
               "-----",
               J_WORKROOT},
 
-             /* j-chkmail work directory (state and specific logs) */
+             /* ze-filter work directory (state and specific logs) */
              {CF_WORKDIR, J_STR, NULL, 256,
               "WORKDIR", 
               J_WORKDIR,
               "Spool and state Files",
-              "j-chkmail work directory (state and specific logs)",
+              "ze-filter work directory (state and specific logs)",
               "-----",
               J_WORKDIR},
 
-             /* j-chkmail message spool directory */
+             /* ze-filter message spool directory */
              {CF_SPOOLDIR, J_STR, NULL, 256,
               "SPOOLDIR", 
               J_SPOOLDIR,
               "Spool and state Files",
-              "j-chkmail message spool directory",
+              "ze-filter message spool directory",
               "-----",
               J_SPOOLDIR},
 
-             /* j-chkmail pid file */
+             /* ze-filter pid file */
              {CF_PID_FILE, J_STR, NULL, 256,
               "PID_FILE", 
               J_PID_FILE,
               "Spool and state Files",
-              "j-chkmail pid file",
+              "ze-filter pid file",
               "-----",
               J_PID_FILE},
 
@@ -927,27 +922,27 @@ static cfvar_t cfvar[] = {
              /* Modules */
              {CF_MODDIR, J_STR, NULL, 256,
               "MODDIR", 
-              "/usr/lib/j-chkmail",
+              "/usr/lib/ze-filter",
               "Modules",
               "Modules",
               "-----",
-              "/usr/lib/j-chkmail"},
+              "/usr/lib/ze-filter"},
 
-             /* j-chkmail working databases directory */
+             /* ze-filter working databases directory */
              {CF_WDBDIR, J_STR, NULL, 256,
               "WDBDIR", 
               J_WDBDIR,
               "Databases",
-              "j-chkmail working databases directory",
+              "ze-filter working databases directory",
               "-----",
               J_WDBDIR},
 
-             /* j-chkmail constant databases directory */
+             /* ze-filter constant databases directory */
              {CF_CDBDIR, J_STR, NULL, 256,
               "CDBDIR", 
               J_CDBDIR,
               "Constant Databases",
-              "j-chkmail constant databases directory",
+              "ze-filter constant databases directory",
               "-----",
               J_CDBDIR},
 
@@ -963,11 +958,11 @@ static cfvar_t cfvar[] = {
              /* Policy database path */
              {CF_DB_POLICY, J_STR, NULL, 256,
               "DB_POLICY", 
-              "j-policy.db",
+              "ze-policy.db",
               "Constant Databases",
               "Policy database path",
               "-----",
-              "j-policy.db"},
+              "ze-policy.db"},
 
              /* What to do if users policy conflit */
              {CF_POLICY_CONFLICT, J_ENUM, ENUM_POLICY_CONFLICT, 0,
@@ -1080,11 +1075,11 @@ static cfvar_t cfvar[] = {
              /* X-Files (file extension + MIME type) configuration */
              {CF_XFILES_FILE, J_STR, NULL, 256,
               "XFILES_FILE", 
-              "j-xfiles",
+              "ze-xfiles",
               "Built-in X-File scanner",
               "X-Files (file extension + MIME type) configuration",
               "-----",
-              "j-xfiles"},
+              "ze-xfiles"},
 
              /* Shall quarantine messages containing X-Files ? */
              {CF_XFILE_SAVE_MSG, J_ENUM, ENUM_NO_YES, 0,
@@ -1122,12 +1117,12 @@ static cfvar_t cfvar[] = {
               "-----",
               "OK"},
 
-             /* Communication socket between j-chkmail and external scanner */
+             /* Communication socket between ze-filter and external scanner */
              {CF_SCANNER_SOCK, J_STR, NULL, 256,
               "SCANNER_SOCK", 
               "inet:2002@localhost",
               "External virus scanner",
-              "Communication socket between j-chkmail and external scanner",
+              "Communication socket between ze-filter and external scanner",
               "inet:PORT@HOSTNAME | local:SOCKET_PATH",
               "inet:2002@localhost"},
 
@@ -1251,11 +1246,11 @@ static cfvar_t cfvar[] = {
              /* Path of bayes tokens database */
              {CF_DB_BAYES, J_STR, NULL, 256,
               "DB_BAYES", 
-              "j-bayes.db",
+              "ze-bayes.db",
               "Antispam checks (bayesian filter)",
               "Path of bayes tokens database",
               "-----",
-              "j-bayes.db"},
+              "ze-bayes.db"},
 
              /* Do pattern matching */
              {CF_SPAM_URLBL, J_ENUM, ENUM_NO_YES, 0,
@@ -1269,20 +1264,20 @@ static cfvar_t cfvar[] = {
              /* Database Real-Time URL Blacklist (used for content checking) */
              {CF_DB_URLBL, J_STR, NULL, 1024,
               "DB_URLBL", 
-              "j-urlbl.db",
+              "ze-urlbl.db",
               "Antispam content check - URL Filtering (URLBL)",
               "Database Real-Time URL Blacklist (used for content checking)",
               "-----",
-              "j-urlbl.db"},
+              "ze-urlbl.db"},
 
              /* DNS Real-Time URL Blacklist (used for content checking) */
              {CF_DNS_URLBL, J_STR, NULL, 1024,
               "DNS_URLBL", 
-              "j-tables:DNS-URLBL",
+              "ze-tables:DNS-URLBL",
               "Antispam content check - URL Filtering (URLBL)",
               "DNS Real-Time URL Blacklist (used for content checking)",
               "RBL[/CODE[/SCORE]] - multi.surbl.org/127.0.0.1/10",
-              "j-tables:DNS-URLBL"},
+              "ze-tables:DNS-URLBL"},
 
              /* Do pattern matching */
              {CF_SPAM_REGEX, J_ENUM, ENUM_NO_YES, 0,
@@ -1296,11 +1291,11 @@ static cfvar_t cfvar[] = {
              /* Regular expressions configuration file */
              {CF_REGEX_FILE, J_STR, NULL, 256,
               "REGEX_FILE", 
-              "j-regex",
+              "ze-regex",
               "Antispam content check - Pattern Matching (REGEX)",
               "Regular expressions configuration file",
               "-----",
-              "j-regex"},
+              "ze-regex"},
 
              /* Stop doing pattern matching when score is reached */
              {CF_REGEX_MAX_SCORE, J_INT, NULL, 0,
@@ -1359,20 +1354,20 @@ static cfvar_t cfvar[] = {
              /* Oracle scores */
              {CF_ORACLE_SCORES_FILE, J_STR, NULL, 256,
               "ORACLE_SCORES_FILE", 
-              "j-oracle:ORACLE-SCORES",
+              "ze-oracle:ORACLE-SCORES",
               "Antispam content check - Heuristic filtering (ORACLE)",
               "Oracle scores",
               "-----",
-              "j-oracle:ORACLE-SCORES"},
+              "ze-oracle:ORACLE-SCORES"},
 
              /* Some oracle definitions */
              {CF_ORACLE_DATA_FILE, J_STR, NULL, 256,
               "ORACLE_DATA_FILE", 
-              "j-oracle:ORACLE-DATA",
+              "ze-oracle:ORACLE-DATA",
               "Antispam content check - Heuristic filtering (ORACLE)",
               "Some oracle definitions",
               "-----",
-              "j-oracle:ORACLE-DATA"},
+              "ze-oracle:ORACLE-DATA"},
 
              /* Heuristic filter log level (0, 1 or 2) */
              {CF_LOG_LEVEL_ORACLE, J_INT, NULL, 0,
@@ -1422,54 +1417,54 @@ static cfvar_t cfvar[] = {
              /* Status header */
              {CF_XSTATUS_HEADER, J_STR, NULL, 256,
               "XSTATUS_HEADER", 
-              "X-j-chkmail-Status",
+              "X-ze-filter-Status",
               "Antispam content check - Resulting score handling",
               "Status header",
               "-----",
-              "X-j-chkmail-Status"},
+              "X-ze-filter-Status"},
 
-             /* When to add a 'X-j-chkmail-Status: HI' Header */
+             /* When to add a 'X-ze-filter-Status: HI' Header */
              {CF_XSTATUS_HEADER_HI_CONDITION, J_STR, NULL, 512,
               "XSTATUS_HEADER_HI_CONDITION", 
               "score > 0.75",
               "Antispam content check - Resulting score handling",
-              "When to add a 'X-j-chkmail-Status: HI' Header",
+              "When to add a 'X-ze-filter-Status: HI' Header",
               "Ex : (U=####|B=0.9|B=0.8|XXXX.*B=0.7)",
               "score > 0.75"},
 
-             /* When to add a 'X-j-chkmail-Status: LO' Header */
+             /* When to add a 'X-ze-filter-Status: LO' Header */
              {CF_XSTATUS_HEADER_LO_CONDITION, J_STR, NULL, 512,
               "XSTATUS_HEADER_LO_CONDITION", 
               "score > 0.65",
               "Antispam content check - Resulting score handling",
-              "When to add a 'X-j-chkmail-Status: LO' Header",
+              "When to add a 'X-ze-filter-Status: LO' Header",
               "Ex : (U=####|B=0.9|B=0.8|XXXX.*B=0.7)",
               "score > 0.65"},
 
-             /* When to add a 'X-j-chkmail-Status: UNSURE' Header */
+             /* When to add a 'X-ze-filter-Status: UNSURE' Header */
              {CF_XSTATUS_HEADER_UNSURE_CONDITION, J_STR, NULL, 512,
               "XSTATUS_HEADER_UNSURE_CONDITION", 
               "score > 0.25",
               "Antispam content check - Resulting score handling",
-              "When to add a 'X-j-chkmail-Status: UNSURE' Header",
+              "When to add a 'X-ze-filter-Status: UNSURE' Header",
               "Ex : (U=####|B=0.9|B=0.8|XXXX.*B=0.7)",
               "score > 0.25"},
 
-             /* When to add a 'X-j-chkmail-Status: HAM' Header */
+             /* When to add a 'X-ze-filter-Status: HAM' Header */
              {CF_XSTATUS_HEADER_HAM_CONDITION, J_STR, NULL, 512,
               "XSTATUS_HEADER_HAM_CONDITION", 
               "score < 0.25",
               "Antispam content check - Resulting score handling",
-              "When to add a 'X-j-chkmail-Status: HAM' Header",
+              "When to add a 'X-ze-filter-Status: HAM' Header",
               "Ex : (U=####|B=0.9|B=0.8|XXXX.*B=0.7)",
               "score < 0.25"},
 
-             /* Reject message if this regular expression matches score from X-j-chkmail-score header */
+             /* Reject message if this regular expression matches score from X-ze-filter-score header */
              {CF_XSTATUS_REJECT_CONDITION, J_STR, NULL, 512,
               "XSTATUS_REJECT_CONDITION", 
               "",
               "Antispam content check - Resulting score handling",
-              "Reject message if this regular expression matches score from X-j-chkmail-score header",
+              "Reject message if this regular expression matches score from X-ze-filter-score header",
               "Ex : (U=####|B=0.9|B=0.8|XXXX.*B=0.7)",
               ""},
 
@@ -1482,12 +1477,12 @@ static cfvar_t cfvar[] = {
               "",
               "YES"},
 
-             /* If this regular expression matches X-j-chkmail-score header, the message is quarantined */
+             /* If this regular expression matches X-ze-filter-score header, the message is quarantined */
              {CF_XSTATUS_QUARANTINE_CONDITION, J_STR, NULL, 512,
               "XSTATUS_QUARANTINE_CONDITION", 
               "",
               "Antispam content check - Resulting score handling",
-              "If this regular expression matches X-j-chkmail-score header, the message is quarantined",
+              "If this regular expression matches X-ze-filter-score header, the message is quarantined",
               "Ex : (U=####|B=0.9|B=0.8|XXXX.*B=0.7)",
               ""},
 
@@ -1512,11 +1507,11 @@ static cfvar_t cfvar[] = {
              /* Real-Time Black/White Lists  */
              {CF_DNS_IPRBWL, J_STR, NULL, 1024,
               "DNS_IPRBWL", 
-              "j-tables:DNS-IP-RBWL",
+              "ze-tables:DNS-IP-RBWL",
               "DNS Realtime Black/White Lists",
               "Real-Time Black/White Lists ",
               "",
-              "j-tables:DNS-IP-RBWL"},
+              "ze-tables:DNS-IP-RBWL"},
 
              /* Enable connection rate limiting */
              {CF_CHECK_CONN_RATE, J_ENUM, ENUM_NO_YES, 0,
@@ -1527,12 +1522,12 @@ static cfvar_t cfvar[] = {
               "-----",
               "YES"},
 
-             /* Max connection rate (can be redefined at j-policy database) */
+             /* Max connection rate (can be redefined at ze-policy database) */
              {CF_MAX_CONN_RATE, J_INT, NULL, 0,
               "MAX_CONN_RATE", 
               "15",
               "Antispam checks (SMTP client behaviour)",
-              "Max connection rate (can be redefined at j-policy database)",
+              "Max connection rate (can be redefined at ze-policy database)",
               "-----",
               "15"},
 
@@ -1611,11 +1606,11 @@ static cfvar_t cfvar[] = {
              /* Recipient database path */
              {CF_DB_RCPT, J_STR, NULL, 256,
               "DB_RCPT", 
-              "j-rcpt.db",
+              "ze-rcpt.db",
               "Recipient checks",
               "Recipient database path",
               "-----",
-              "j-rcpt.db"},
+              "ze-rcpt.db"},
 
              /* Result from SPAM TRAP check */
              {CF_SPAMTRAP_RESULT, J_ENUM, ENUM_REJECT, 0,
@@ -1644,12 +1639,12 @@ static cfvar_t cfvar[] = {
               "-----",
               "NO"},
 
-             /* Max recipient rate (can be redefined at j-policy database) */
+             /* Max recipient rate (can be redefined at ze-policy database) */
              {CF_MAX_RCPT_RATE, J_INT, NULL, 0,
               "MAX_RCPT_RATE", 
               "100",
               "Recipient checks",
-              "Max recipient rate (can be redefined at j-policy database)",
+              "Max recipient rate (can be redefined at ze-policy database)",
               "-----",
               "100"},
 
@@ -1680,12 +1675,12 @@ static cfvar_t cfvar[] = {
               "-----",
               "YES"},
 
-             /* Max message rate (can be redefined at j-policy database) */
+             /* Max message rate (can be redefined at ze-policy database) */
              {CF_MAX_MSG_RATE, J_INT, NULL, 0,
               "MAX_MSG_RATE", 
               "100",
               "Recipient checks",
-              "Max message rate (can be redefined at j-policy database)",
+              "Max message rate (can be redefined at ze-policy database)",
               "-----",
               "100"},
 
@@ -1716,12 +1711,12 @@ static cfvar_t cfvar[] = {
               "-----",
               "NO"},
 
-             /* Max recipient rate per from address (can be redefined at j-policy database) */
+             /* Max recipient rate per from address (can be redefined at ze-policy database) */
              {CF_MAX_FROM_RCPT_RATE, J_INT, NULL, 0,
               "MAX_FROM_RCPT_RATE", 
               "100",
               "Recipient checks",
-              "Max recipient rate per from address (can be redefined at j-policy database)",
+              "Max recipient rate per from address (can be redefined at ze-policy database)",
               "-----",
               "100"},
 
@@ -1752,12 +1747,12 @@ static cfvar_t cfvar[] = {
               "-----",
               "YES"},
 
-             /* Max message rate per from address (can be redefined at j-policy database) */
+             /* Max message rate per from address (can be redefined at ze-policy database) */
              {CF_MAX_FROM_MSG_RATE, J_INT, NULL, 0,
               "MAX_FROM_MSG_RATE", 
               "100",
               "Recipient checks",
-              "Max message rate per from address (can be redefined at j-policy database)",
+              "Max message rate per from address (can be redefined at ze-policy database)",
               "-----",
               "100"},
 
@@ -1977,12 +1972,12 @@ static cfvar_t cfvar[] = {
               "-----",
               "inet:2012@127.0.0.1"},
 
-             /* Timeout to connect go j-grey server when running in CLIENT mode */
+             /* Timeout to connect go ze-grey server when running in CLIENT mode */
              {CF_GREY_CONNECT_TIMEOUT, J_INT, NULL, 0,
               "GREY_CONNECT_TIMEOUT", 
               "10s",
               "Greylisting",
-              "Timeout to connect go j-grey server when running in CLIENT mode",
+              "Timeout to connect go ze-grey server when running in CLIENT mode",
               "-----",
               "10s"},
 
@@ -2139,12 +2134,12 @@ static cfvar_t cfvar[] = {
               "",
               J_GREY_LOG},
 
-             /* j-greyd Listen Socket */
+             /* ze-greyd Listen Socket */
              {CF_GREYD_SOCKET_LISTEN, J_STR, NULL, 256,
               "GREYD_SOCKET_LISTEN", 
               "inet:2012@0.0.0.0",
-              "Greylisting - j-greyd specific",
-              "j-greyd Listen Socket",
+              "Greylisting - ze-greyd specific",
+              "ze-greyd Listen Socket",
               "-----",
               "inet:2012@0.0.0.0"},
 
@@ -2152,35 +2147,35 @@ static cfvar_t cfvar[] = {
              {CF_GREYD_LOG_FACILITY, J_STR, NULL, 256,
               "GREYD_LOG_FACILITY", 
               "local6",
-              "Greylisting - j-greyd specific",
+              "Greylisting - ze-greyd specific",
               "syslog facility",
               "-----",
               "local6"},
 
-             /* j-greyd log level */
+             /* ze-greyd log level */
              {CF_GREYD_LOG_LEVEL, J_INT, NULL, 0,
               "GREYD_LOG_LEVEL", 
               "10",
-              "Greylisting - j-greyd specific",
-              "j-greyd log level",
+              "Greylisting - ze-greyd specific",
+              "ze-greyd log level",
               "-----",
               "10"},
 
-             /* j-greyd working directory */
+             /* ze-greyd working directory */
              {CF_GREYDDIR, J_STR, NULL, 256,
               "GREYDDIR", 
               J_GREYDDIR,
-              "Greylisting - j-greyd specific",
-              "j-greyd working directory",
+              "Greylisting - ze-greyd specific",
+              "ze-greyd working directory",
               "-----",
               J_GREYDDIR},
 
-             /* j-greyd pid file */
+             /* ze-greyd pid file */
              {CF_GREYD_PID_FILE, J_STR, NULL, 256,
               "GREYD_PID_FILE", 
               J_GREYD_PID_FILE,
-              "Greylisting - j-greyd specific",
-              "j-greyd pid file",
+              "Greylisting - ze-greyd specific",
+              "ze-greyd pid file",
               "-----",
               J_GREYD_PID_FILE},
 
@@ -2188,7 +2183,7 @@ static cfvar_t cfvar[] = {
              {CF_GREYD_CLIENT_IDLE_MAX, J_INT, NULL, 0,
               "GREYD_CLIENT_IDLE_MAX", 
               "300",
-              "Greylisting - j-greyd specific",
+              "Greylisting - ze-greyd specific",
               "Maximum inactivity time (after this connection will be closed)",
               "-----",
               "300"},

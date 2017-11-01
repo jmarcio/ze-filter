@@ -1,6 +1,6 @@
 /*
  *
- * j-chkmail - Mail Server Filter for sendmail
+ * ze-filter - Mail Server Filter for sendmail
  *
  * Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz
  *
@@ -12,17 +12,12 @@
  *
  * This program is free software, but with restricted license :
  *
- * - j-chkmail is distributed only to registered users
- * - j-chkmail license is available only non-commercial applications,
- *   this means, you can use j-chkmail if you make no profit with it.
- * - redistribution of j-chkmail in any way : binary, source in any
- *   media, is forbidden
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * More details about j-chkmail license can be found at j-chkmail
+ * More details about ze-filter license can be found at ze-filter
  * web site : http://foss.jose-marcio.org
  */
 #include <ze-sys.h>
@@ -387,7 +382,7 @@ mk_cf_file(fd, inuse, verbose)
   }
 
   FD_PRINTF(fd, "#\n");
-  FD_PRINTF(fd, "# j-chkmail - (c) Ecole des Mines de Paris 2008, 2009\n");
+  FD_PRINTF(fd, "# ze-filter - (c) Ecole des Mines de Paris 2008, 2009\n");
   FD_PRINTF(fd, "# Creation date : %s\n", tstr);
   switch (inuse) {
     case MK_CF_DEFAULT:
@@ -1122,7 +1117,7 @@ configure_after(app)
 {
   char               *p;
 
-  app = STRNULL(app, "j-chkmail");
+  app = STRNULL(app, "ze-filter");
   /* Log level */
   log_severity = cf_get_int(CF_LOG_SEVERITY) != OPT_NO;
   log_level = cf_get_int(CF_LOG_LEVEL);
@@ -1210,7 +1205,7 @@ configure(app, fname, only_cf)
 {
   static bool         init_ok = FALSE;
 
-  MESSAGE_INFO(9, "Loading j-chkmail configuration");
+  MESSAGE_INFO(9, "Loading ze-filter configuration");
 
   if (!init_ok) {
     if (cf_init() != 0) {

@@ -102,7 +102,7 @@ am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/include/config.h
 CONFIG_CLEAN_FILES = include/version.h include/defs.h \
-	bin/jchkmail.init bin/jgreyd.init
+	bin/ze-filter.init bin/ze-greyd.init bin/ze-filter.init.rhel
 CONFIG_CLEAN_VPATH_FILES =
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -161,8 +161,9 @@ CTAGS = ctags
 CSCOPE = cscope
 DIST_SUBDIRS = $(SUBDIRS)
 am__DIST_COMMON = $(srcdir)/Makefile.in \
-	$(top_srcdir)/bin/jchkmail.init.in \
-	$(top_srcdir)/bin/jgreyd.init.in \
+	$(top_srcdir)/bin/ze-filter.init.in \
+	$(top_srcdir)/bin/ze-filter.init.rhel.in \
+	$(top_srcdir)/bin/ze-greyd.init.in \
 	$(top_srcdir)/include/config.h.in \
 	$(top_srcdir)/include/defs.h.in \
 	$(top_srcdir)/include/version.h.in AUTHORS COPYING ChangeLog \
@@ -435,9 +436,11 @@ include/version.h: $(top_builddir)/config.status $(top_srcdir)/include/version.h
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 include/defs.h: $(top_builddir)/config.status $(top_srcdir)/include/defs.h.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
-bin/jchkmail.init: $(top_builddir)/config.status $(top_srcdir)/bin/jchkmail.init.in
+bin/ze-filter.init: $(top_builddir)/config.status $(top_srcdir)/bin/ze-filter.init.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
-bin/jgreyd.init: $(top_builddir)/config.status $(top_srcdir)/bin/jgreyd.init.in
+bin/ze-greyd.init: $(top_builddir)/config.status $(top_srcdir)/bin/ze-greyd.init.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+bin/ze-filter.init.rhel: $(top_builddir)/config.status $(top_srcdir)/bin/ze-filter.init.rhel.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 
 mostlyclean-libtool:
@@ -886,8 +889,8 @@ clean-cache:
 realclean: clean-hook clean-cache distclean
 
 clean-data:
-	rm -f $(DESTDIR)@WORKROOT@/j-history
-	rm -f $(DESTDIR)@WORKROOT@/j-*data
+	rm -f $(DESTDIR)@WORKROOT@/ze-history
+	rm -f $(DESTDIR)@WORKROOT@/ze-*data
 
 install-workroot:
 	@echo "  * Installing $(DESTDIR)@WORKROOT@"
@@ -911,10 +914,10 @@ install-workroot:
 	@chmod 755 $(DESTDIR)@WORKROOT@/files
 	@chown @USER@ $(DESTDIR)@WORKROOT@/files
 	@chgrp @GROUP@ $(DESTDIR)@WORKROOT@/files
-	@$(mkdir_p) $(DESTDIR)@WORKROOT@/jgreydb
-	@chmod 755 $(DESTDIR)@WORKROOT@/jgreydb
-	@chown @USER@ $(DESTDIR)@WORKROOT@/jgreydb
-	@chgrp @GROUP@ $(DESTDIR)@WORKROOT@/jgreydb
+	@$(mkdir_p) $(DESTDIR)@WORKROOT@/ze-greydb
+	@chmod 755 $(DESTDIR)@WORKROOT@/ze-greydb
+	@chown @USER@ $(DESTDIR)@WORKROOT@/ze-greydb
+	@chgrp @GROUP@ $(DESTDIR)@WORKROOT@/ze-greydb
 
 install-dbtools:
 	@echo "  * Installing dbtools"
@@ -922,7 +925,7 @@ install-dbtools:
 	@chmod 755 $(DESTDIR)@WORKROOT@/dbtools
 	@list='$(DBTOOLS)'; for p in $$list ; do \
 		$(install_sh_PROGRAM) berkdb/$$p \
-			$(DESTDIR)@WORKROOT@/dbtools/j-$$p ;\
+			$(DESTDIR)@WORKROOT@/dbtools/ze-$$p ;\
 	done
 
 install-workdirs:
@@ -938,11 +941,11 @@ install-workdirs:
 
 install-tools:
 	@echo "  * Installing Tools"
-	$(INSTALL_SCRIPT) bin/jchkmail.init $(DESTDIR)@RCDIR@/@RCSCRIPT@
-	$(INSTALL_SCRIPT) bin/jgreyd.init   $(DESTDIR)@RCDIR@/@RCGREYD@
-	$(INSTALL_SCRIPT) bin/j-ndc          $(DESTDIR)@prefix@/bin
+	$(INSTALL_SCRIPT) bin/ze-filter.init $(DESTDIR)@RCDIR@/@RCSCRIPT@
+	$(INSTALL_SCRIPT) bin/ze-greyd.init   $(DESTDIR)@RCDIR@/@RCGREYD@
+	$(INSTALL_SCRIPT) bin/ze-ndc          $(DESTDIR)@prefix@/bin
 	$(INSTALL_SCRIPT) bin/get-iana       $(DESTDIR)@WORKROOT@/bin
-	$(INSTALL_SCRIPT) tools/j-easy-install $(DESTDIR)@prefix@/bin
+	$(INSTALL_SCRIPT) tools/ze-easy-install $(DESTDIR)@prefix@/bin
 	$(INSTALL_SCRIPT) tools/update-wdb-databases $(DESTDIR)@WORKROOT@/bin
 	$(INSTALL_SCRIPT) tools/check-mta-conf $(DESTDIR)@WORKROOT@/bin
 
@@ -965,19 +968,19 @@ checkcf :
 
 dbsave :
 	@echo "  * Dumping work databases"
-	@tools/update-wdb-databases -d $(DESTDIR)@WORKROOT@/jgreydb save
+	@tools/update-wdb-databases -d $(DESTDIR)@WORKROOT@/ze-greydb save
 	@tools/update-wdb-databases -d $(DESTDIR)@WORKROOT@/wdb     save
 	@sleep 1
 
 dbrestore :
 	@echo "  * Restoring work databases"
-	@tools/update-wdb-databases -d $(DESTDIR)@WORKROOT@/jgreydb restore
+	@tools/update-wdb-databases -d $(DESTDIR)@WORKROOT@/ze-greydb restore
 	@tools/update-wdb-databases -d $(DESTDIR)@WORKROOT@/wdb     restore
 	@sleep 1
 
 dbupgrade :
 	@echo "  * Upgrading work databases"
-	@tools/update-wdb-databases -d $(DESTDIR)@WORKROOT@/jgreydb upgrade
+	@tools/update-wdb-databases -d $(DESTDIR)@WORKROOT@/ze-greydb upgrade
 	@tools/update-wdb-databases -d $(DESTDIR)@WORKROOT@/wdb     upgrade
 	@sleep 1
 

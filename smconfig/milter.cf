@@ -10,11 +10,11 @@
 #####################################################################
 #
 
-#Xj-chkmail, S=inet:2000@localhost, T=C:2m;S:20s;R:40s;E:5m
-Xj-chkmail, S=local:/var/run/jchkmail/j-chkmail.sock, T=C:2m;S:20s;R:40s;E:5m
+#Xze-filter, S=inet:2000@localhost, T=C:2m;S:20s;R:40s;E:5m
+Xze-filter, S=local:/var/run/ze-filter/ze-filter.sock, T=C:2m;S:20s;R:40s;E:5m
 
 # Input mail filters
-O InputMailFilters=j-chkmail
+O InputMailFilters=ze-filter
 
 # Milter options
 O Milter.LogLevel=9

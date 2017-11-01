@@ -1,6 +1,6 @@
 /*
  *
- * j-chkmail - Mail Server Filter for sendmail
+ * ze-filter - Mail Server Filter for sendmail
  *
  * Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz
  *
@@ -12,17 +12,12 @@
  *
  * This program is free software, but with restricted license :
  *
- * - j-chkmail is distributed only to registered users
- * - j-chkmail license is available only non-commercial applications,
- *   this means, you can use j-chkmail if you make no profit with it.
- * - redistribution of j-chkmail in any way : binary, source in any
- *   media, is forbidden
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * More details about j-chkmail license can be found at j-chkmail
+ * More details about ze-filter license can be found at ze-filter
  * web site : http://foss.jose-marcio.org
  */
 
@@ -824,7 +819,7 @@ create_msg_score_header(buf, size, id, hostname, scp)
     hostname = STRNULL(hostname, "UNKNOWN");
 
     snprintf(buf, size,
-             "MSGID : %s on %s : j-chkmail score : %s : R=%s U=%s O=%s B=%.3f -> S=%.3f",
+             "MSGID : %s on %s : ze-filter score : %s : R=%s U=%s O=%s B=%.3f -> S=%.3f",
              id, hostname, sout, sr, su, so, scp->bayes, score);
   }
 

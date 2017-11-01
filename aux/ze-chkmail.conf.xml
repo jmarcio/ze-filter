@@ -52,7 +52,7 @@
   <attribute>
     <id>105</id>
     <name>FOOTER</name>
-    <label>Show/Hide j-chkmail signature at warning message</label>
+    <label>Show/Hide ze-filter signature at warning message</label>
     <type>ENUM</type>
     <enumtype>PRESENCE</enumtype>
     <values>SHOW HIDE</values>
@@ -67,7 +67,7 @@
     <label>Filter URL (to be included on X-Miltered header)</label>
     <type>STR</type>
     <length>256</length>
-    <default>http : // j-chkmail dot ensmp dot fr</default>
+    <default>http : // ze-filter dot ensmp dot fr</default>
     <syntax>-----</syntax>
     <description></description>
   <attribute>
@@ -80,7 +80,7 @@
     <length>256</length>
     <default></default>
     <syntax>-----</syntax>
-    <description> If your domain has a web page to inform people about your email policies, you define this option, with some URL,  j-chkmail will append a reference - **See POLICY_URL** - to each reply done in SMTP session</description>
+    <description> If your domain has a web page to inform people about your email policies, you define this option, with some URL,  ze-filter will append a reference - **See POLICY_URL** - to each reply done in SMTP session</description>
   <attribute>
 
   <attribute>
@@ -206,7 +206,7 @@
   <attribute>
     <id>301</id>
     <name>SOCKET</name>
-    <label>Communication socket between sendmail and j-chkmail</label>
+    <label>Communication socket between sendmail and ze-filter</label>
     <type>STR</type>
     <length>256</length>
     <default>J_SMSOCKFILE</default>
@@ -276,10 +276,10 @@
   <attribute>
     <id>501</id>
     <name>CONFDIR</name>
-    <label>j-chkmail configuration directory</label>
+    <label>ze-filter configuration directory</label>
     <type>STR</type>
     <length>256</length>
-    <default>/etc/mail/jchkmail</default>
+    <default>/etc/ze-filter</default>
     <syntax>-----</syntax>
     <description> This is the directory where configuration files and tables will be put in.</description>
   <attribute>
@@ -302,7 +302,7 @@
     <type>INT</type>
     <default>3600s</default>
     <syntax>-----</syntax>
-    <description> When this value is greater than 0s, j-chkmail will  periodically reload configuration data.</description>
+    <description> When this value is greater than 0s, ze-filter will  periodically reload configuration data.</description>
   <attribute>
 
   <attribute>
@@ -337,7 +337,7 @@
   <attribute>
     <id>602</id>
     <name>LOG_LEVEL</name>
-    <label>j-chkmail log level</label>
+    <label>ze-filter log level</label>
     <type>INT</type>
     <default>10</default>
     <syntax>-----</syntax>
@@ -353,7 +353,7 @@
     <values>NO YES</values>
     <default>NO</default>
     <syntax>-----</syntax>
-    <description> When enabled, j-chkmail log lines have a tag like  "[ID 000000 local5.notice]", useful in order to find lines with some specific priority (e.g. error)</description>
+    <description> When enabled, ze-filter log lines have a tag like  "[ID 000000 local5.notice]", useful in order to find lines with some specific priority (e.g. error)</description>
   <attribute>
 
   <attribute>
@@ -458,7 +458,7 @@
   <attribute>
     <id>701</id>
     <name>WORKROOT</name>
-    <label>j-chkmail root directory </label>
+    <label>ze-filter root directory </label>
     <type>STR</type>
     <length>256</length>
     <default>J_WORKROOT</default>
@@ -469,7 +469,7 @@
   <attribute>
     <id>702</id>
     <name>WORKDIR</name>
-    <label>j-chkmail work directory (state and specific logs)</label>
+    <label>ze-filter work directory (state and specific logs)</label>
     <type>STR</type>
     <length>256</length>
     <default>J_WORKDIR</default>
@@ -480,7 +480,7 @@
   <attribute>
     <id>703</id>
     <name>SPOOLDIR</name>
-    <label>j-chkmail message spool directory</label>
+    <label>ze-filter message spool directory</label>
     <type>STR</type>
     <length>256</length>
     <default>J_SPOOLDIR</default>
@@ -491,7 +491,7 @@
   <attribute>
     <id>704</id>
     <name>PID_FILE</name>
-    <label>j-chkmail pid file</label>
+    <label>ze-filter pid file</label>
     <type>STR</type>
     <length>256</length>
     <default>J_PID_FILE</default>
@@ -569,7 +569,7 @@
     <values>NO YES</values>
     <default>NO</default>
     <syntax>-----</syntax>
-    <description> When this option is enabled, j-chkmail will be able to save a copy of each message matching Archive policy.</description>
+    <description> When this option is enabled, ze-filter will be able to save a copy of each message matching Archive policy.</description>
   <attribute>
 </section>
 
@@ -585,7 +585,7 @@
     <label>Modules</label>
     <type>STR</type>
     <length>256</length>
-    <default>/usr/lib/j-chkmail</default>
+    <default>/usr/lib/ze-filter</default>
     <syntax>-----</syntax>
     <description></description>
   <attribute>
@@ -600,7 +600,7 @@
   <attribute>
     <id>1001</id>
     <name>WDBDIR</name>
-    <label>j-chkmail working databases directory</label>
+    <label>ze-filter working databases directory</label>
     <type>STR</type>
     <length>256</length>
     <default>J_WDBDIR</default>
@@ -618,7 +618,7 @@
   <attribute>
     <id>1101</id>
     <name>CDBDIR</name>
-    <label>j-chkmail constant databases directory</label>
+    <label>ze-filter constant databases directory</label>
     <type>STR</type>
     <length>256</length>
     <default>J_CDBDIR</default>
@@ -871,12 +871,12 @@
   <attribute>
     <id>1502</id>
     <name>SCANNER_SOCK</name>
-    <label>Communication socket between j-chkmail and external scanner</label>
+    <label>Communication socket between ze-filter and external scanner</label>
     <type>STR</type>
     <length>256</length>
     <default>inet:2002@localhost</default>
     <syntax>inet:PORT@HOSTNAME | local:SOCKET_PATH</syntax>
-    <description> This option defines the socket used by j-chkmail to connect to the external scanner.</description>
+    <description> This option defines the socket used by ze-filter to connect to the external scanner.</description>
   <attribute>
 
   <attribute>
@@ -898,7 +898,7 @@
     <type>INT</type>
     <default>15s</default>
     <syntax>-----</syntax>
-    <description> This option defines the communication timeout between j-chkmail and the scanner. After this delay, if the scanner doesn't answer, j-chkmail will drop the scanner answer.</description>
+    <description> This option defines the communication timeout between ze-filter and the scanner. After this delay, if the scanner doesn't answer, ze-filter will drop the scanner answer.</description>
   <attribute>
 
   <attribute>
@@ -910,7 +910,7 @@
     <values>NO YES</values>
     <default>NO</default>
     <syntax>-----</syntax>
-    <description> This option defines the appropriate j-chkmail action when the scanner isn't available or times out : Reject (YES) or Temporary failure (NO).</description>
+    <description> This option defines the appropriate ze-filter action when the scanner isn't available or times out : Reject (YES) or Temporary failure (NO).</description>
   <attribute>
 
   <attribute>
@@ -1269,7 +1269,7 @@
     <label>Status header</label>
     <type>STR</type>
     <length>256</length>
-    <default>X-j-chkmail-Status</default>
+    <default>X-ze-filter-Status</default>
     <syntax>-----</syntax>
     <description></description>
   <attribute>
@@ -1277,7 +1277,7 @@
   <attribute>
     <id>2004</id>
     <name>XSTATUS_HEADER_HI_CONDITION</name>
-    <label>When to add a 'X-j-chkmail-Status: HI' Header</label>
+    <label>When to add a 'X-ze-filter-Status: HI' Header</label>
     <type>STR</type>
     <length>512</length>
     <default>score > 0.75</default>
@@ -1288,7 +1288,7 @@
   <attribute>
     <id>2005</id>
     <name>XSTATUS_HEADER_LO_CONDITION</name>
-    <label>When to add a 'X-j-chkmail-Status: LO' Header</label>
+    <label>When to add a 'X-ze-filter-Status: LO' Header</label>
     <type>STR</type>
     <length>512</length>
     <default>score > 0.65</default>
@@ -1299,7 +1299,7 @@
   <attribute>
     <id>2006</id>
     <name>XSTATUS_HEADER_UNSURE_CONDITION</name>
-    <label>When to add a 'X-j-chkmail-Status: UNSURE' Header</label>
+    <label>When to add a 'X-ze-filter-Status: UNSURE' Header</label>
     <type>STR</type>
     <length>512</length>
     <default>score > 0.25</default>
@@ -1310,7 +1310,7 @@
   <attribute>
     <id>2007</id>
     <name>XSTATUS_HEADER_HAM_CONDITION</name>
-    <label>When to add a 'X-j-chkmail-Status: HAM' Header</label>
+    <label>When to add a 'X-ze-filter-Status: HAM' Header</label>
     <type>STR</type>
     <length>512</length>
     <default>score < 0.25</default>
@@ -1321,7 +1321,7 @@
   <attribute>
     <id>2008</id>
     <name>XSTATUS_REJECT_CONDITION</name>
-    <label>Reject message if this regular expression matches score from X-j-chkmail-score header</label>
+    <label>Reject message if this regular expression matches score from X-ze-filter-score header</label>
     <type>STR</type>
     <length>512</length>
     <default></default>
@@ -1344,7 +1344,7 @@
   <attribute>
     <id>2011</id>
     <name>XSTATUS_QUARANTINE_CONDITION</name>
-    <label>If this regular expression matches X-j-chkmail-score header, the message is quarantined</label>
+    <label>If this regular expression matches X-ze-filter-score header, the message is quarantined</label>
     <type>STR</type>
     <length>512</length>
     <default></default>
@@ -1360,7 +1360,7 @@
     <length>512</length>
     <default>NONE</default>
     <syntax>NONE | List of comma separated headers</syntax>
-    <description> X-j-chkmail-Status,X-Spam-Flag,X-Spam-Status</description>
+    <description> X-ze-filter-Status,X-Spam-Flag,X-Spam-Status</description>
   <attribute>
 
   <attribute>
@@ -1371,7 +1371,7 @@
     <length>512</length>
     <default>NONE</default>
     <syntax>NONE | List of comma separated servers</syntax>
-    <description> X-j-chkmail-Status,X-Spam-Flag,X-Spam-Status</description>
+    <description> X-ze-filter-Status,X-Spam-Flag,X-Spam-Status</description>
   <attribute>
 </section>
 
@@ -1408,7 +1408,7 @@
     <values>NO YES</values>
     <default>NO</default>
     <syntax>-----</syntax>
-    <description> When enabled, j-chkmail will limit the number of connections, per SMTP client, evaluated on a sliding window of size 10 minutes</description>
+    <description> When enabled, ze-filter will limit the number of connections, per SMTP client, evaluated on a sliding window of size 10 minutes</description>
   <attribute>
 
   <attribute>
@@ -1430,7 +1430,7 @@
     <values>NO YES</values>
     <default>NO</default>
     <syntax>-----</syntax>
-    <description> When this feature is enabled, j-chkmail will limit the number of simultaneous connections, per SMTP client.</description>
+    <description> When this feature is enabled, ze-filter will limit the number of simultaneous connections, per SMTP client.</description>
   <attribute>
 
   <attribute>

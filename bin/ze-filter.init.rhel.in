@@ -1,20 +1,20 @@
 #!/bin/sh
 #
-# j-chkmail 2.4.0
+# ze-filter 2.4.0
 #
 # chkconfig: 2345 80 30
-# description: j-chkmail - Joe's j-chkmail
+# description: ze-filter - Joe's ze-filter
 #		filtre de messagerie
 
 ### BEGIN INIT INFO
-# Provides:                     j-chkmail
+# Provides:                     ze-filter
 # Required-Start:               $remote_fs
 # Required-Stop:
 # X-UnitedLinux-Should-Start:
 # X-UnitedLinux-Should-Stop:
 # Default-Start:                3 5
 # Default-Stop:
-# Description:                  Start j-chmail (milter)
+# Description:                  Start ze-filter (milter)
 ### END INIT INFO
 
 # Source function library.
@@ -29,25 +29,25 @@
 #
 JCHKMAIL_HOME=/usr/local/sbin
 
-JCHKMAIL_BIN=j-chkmail
+JCHKMAIL_BIN=ze-filter
 
 OPTIONS=" "
 
-WORKROOT=/var/jchkmail
-STATEDIR=/var/run/jchkmail
-CONFDIR=/etc/mail/jchkmail
+WORKROOT=/var/ze-filter
+STATEDIR=/var/run/ze-filter
+CONFDIR=/etc/mail/ze-filter
 
 
 # Get config.
 
-test -f /etc/sysconfig/jchkmail && . /etc/sysconfig/jchkmail
+test -f /etc/sysconfig/ze-filter && . /etc/sysconfig/ze-filter
 
-test -f /etc/default/jchkmail   && . /etc/default/jchkmail
+test -f /etc/default/ze-filter   && . /etc/default/ze-filter
 
 
-PIDFILE=$STATEDIR/j-chkmail.pid
-SOCKFILE=$STATEDIR/j-chkmail.sock
-CFFILE=$CONFDIR/j-chkmail.cf
+PIDFILE=$STATEDIR/ze-filter.pid
+SOCKFILE=$STATEDIR/ze-filter.sock
+CFFILE=$CONFDIR/ze-filter.cf
 
 #
 # Get unix socket file from configuration file
@@ -234,7 +234,7 @@ restart)
 	restart
 	;;
 status)
-        status j-chkmail
+        status ze-filter
         RETVAL=$?
         ;;
 reload)
@@ -251,10 +251,10 @@ clearstats)
 *)
 	echo "Usage: $0 { start | stop | restart | reload | dumpstats | clearstats }"
         cat <<EOF
-start      - start j-chkmail
-stop       - stop j-chkmail
-restart    - stop and start j-chkmail
-reload     - reload j-chkmail configuration files 
+start      - start ze-filter
+stop       - stop ze-filter
+restart    - stop and start ze-filter
+reload     - reload ze-filter configuration files 
              (send SIGHUP to the daemon)
 dumpstats  - dump internal counters
              (send SUGUSR1 to the daemon)

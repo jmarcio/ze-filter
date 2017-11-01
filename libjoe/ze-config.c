@@ -1,6 +1,6 @@
 /*
  *
- * j-chkmail - Mail Server Filter for sendmail
+ * ze-filter - Mail Server Filter for sendmail
  *
  * Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz
  *
@@ -12,17 +12,12 @@
  *
  * This program is free software, but with restricted license :
  *
- * - j-chkmail is distributed only to registered users
- * - j-chkmail license is available only non-commercial applications,
- *   this means, you can use j-chkmail if you make no profit with it.
- * - redistribution of j-chkmail in any way : binary, source in any
- *   media, is forbidden
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * More details about j-chkmail license can be found at j-chkmail
+ * More details about ze-filter license can be found at ze-filter
  * web site : http://foss.jose-marcio.org
  */
 
@@ -761,13 +756,13 @@ dump_j_conf(fd)
     fd = STDOUT_FILENO;
 #endif
 
-  FD_PRINTF(fd, "Joe's j-chkmail configuration : %s\n", PACKAGE);
+  FD_PRINTF(fd, "Joe's ze-filter configuration : %s\n", PACKAGE);
 
   if (cf_opt.arg_v > 1)
   {
 
     FD_PRINTF(fd, "\n");
-    FD_PRINTF(fd, "---> j-chkmail compile-time configuration\n");
+    FD_PRINTF(fd, "---> ze-filter compile-time configuration\n");
     FD_PRINTF(fd, "     Compiled on %s %s\n", __DATE__, __TIME__);
     FD_PRINTF(fd, "     %s\n\n", UNAME);
 
@@ -789,7 +784,7 @@ dump_j_conf(fd)
     FD_PRINTF(fd, "      \n");
   }
 
-  FD_PRINTF(fd, "--> j-chkmail command line options\n");
+  FD_PRINTF(fd, "--> ze-filter command line options\n");
   *str = '\0';
   if (cf_opt.arg_h)
   {

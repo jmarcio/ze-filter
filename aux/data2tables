@@ -2,7 +2,7 @@
 
 use strict;
 
-my $cfdir = "/etc/mail/jchkmail";
+my $cfdir = "/etc/ze-filter";
 
 my @FILES = qw(j-regex j-oradata j-access);
 

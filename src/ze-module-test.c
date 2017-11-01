@@ -12,11 +12,6 @@
  *
  * This program is free software, but with restricted license :
  *
- * - ze-filter is distributed only to registered users
- * - ze-filter license is available only non-commercial applications,
- *   this means, you can use ze-filter if you make no profit with it.
- * - redistribution of ze-filter in any way : binary, source in any
- *   media, is forbidden
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -48,7 +43,7 @@ main(argc, argv)
 
   printf("Hello, world\n");
 
-  load_all_modules("/etc/mail/jchkmail", "j-modules", "/usr/lib/ze-filter");
+  load_all_modules("/etc/ze-filter", "j-modules", "/usr/lib/ze-filter");
 
   module_info();
 

@@ -4,9 +4,9 @@
   may affect your configuration file.
 
   Mainly, installation scripts will install two files named 
-    j-chkmail.cf.defaults  - default configuration
+    ze-filter.cf.defaults  - default configuration
   and
-    j-chkmail.cf.running   - running configuration
+    ze-filter.cf.running   - running configuration
   at your configuration directory.
 
   You may consider replacing your current configuration file by the

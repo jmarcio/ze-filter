@@ -1,7 +1,7 @@
 
 RSYNCSERVER = foss.jose-marcio.org
 
-CDBDIR = /var/jchkmail/cdb
+CDBDIR = /var/ze-filter/cdb
 BINDIR = /usr/bin
 
 OPT = -l -e sha1

@@ -2,7 +2,7 @@
 
 How to use this stuff.
 
-This stuff allows using URL blacklists with j-chkmail.
+This stuff allows using URL blacklists with ze-filter.
 
 The following files are important to you :
 
@@ -10,16 +10,16 @@ j-urlbl.txt
   This file is a startup database. 
   It contains spammers URLs from two sources :
   - URLs from surlbl.org ( check their site )
-  - URLs from SPAMs sent or given to j-chkmail author.
+  - URLs from SPAMs sent or given to ze-filter author.
 
-etc directory - Two scripts are installed at /etc/mail/jchkmail
+etc directory - Two scripts are installed at /etc/ze-filter
   directory :
 
   - get-urlbl - this script shall be called a number of
     times a day (say each 6 or 12 hours) to update database. 
-    It connects to j-chkmail rsync server, gets a new text 
+    It connects to ze-filter rsync server, gets a new text 
     version of the database and create the corresponding 
-    BerkeleyDB databases used by j-chkmail.
+    BerkeleyDB databases used by ze-filter.
 
   - Makefile.db - this makefile is used by the above script
     and defines how text database is converted to BerkeleyDB
@@ -27,12 +27,12 @@ etc directory - Two scripts are installed at /etc/mail/jchkmail
 
   So, you shall add something at your crontab :
 
-  10 9,21 * * * cd /etc/mail/jchkmail; ./get-urlbl
+  10 9,21 * * * cd /etc/ze-filter; ./get-urlbl
 
 src directory - this is a working directory, not necessary
   for the moment, and will be used someday, if you want to
   convert text databases (one URL per line) into the text 
-  database format used by j-chkmail. Other usage of the
+  database format used by ze-filter. Other usage of the
   contents of this directory is to get and converts URLs
   database from surbl.org. surbl.org databases are in the
   format of rbldnsd server.

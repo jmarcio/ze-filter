@@ -9,7 +9,7 @@ VDBN=
 
 default_wdb()
 {
-  for JBIN in src/j-chkmail /usr/sbin/j-chkmail
+  for JBIN in src/ze-filter /usr/sbin/ze-filter
   do
     if [ -x $JBIN ]
     then

@@ -6,7 +6,7 @@ RSERVER="foss.jose-marcio.org:1873"
 MAKE=make
 RSYNC=rsync
 
-CDBDIR=/var/jchkmail/cdb
+CDBDIR=/var/ze-filter/cdb
 BINDIR=/usr/bin
 
 FILES2GET="urlbl/j-urlbl.txt"

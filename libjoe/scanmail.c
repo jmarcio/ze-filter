@@ -1,6 +1,6 @@
 /*
  *
- * j-chkmail - Mail Server Filter for sendmail
+ * ze-filter - Mail Server Filter for sendmail
  *
  * Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz
  *
@@ -12,17 +12,12 @@
  *
  * This program is free software, but with restricted license :
  *
- * - j-chkmail is distributed only to registered users
- * - j-chkmail license is available only non-commercial applications,
- *   this means, you can use j-chkmail if you make no profit with it.
- * - redistribution of j-chkmail in any way : binary, source in any
- *   media, is forbidden
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * More details about j-chkmail license can be found at j-chkmail
+ * More details about ze-filter license can be found at ze-filter
  * web site : http://foss.jose-marcio.org
  */
 
@@ -369,10 +364,10 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
 
     if (strlen(work) + szc > SZ_WORK)
     {
-      /* Feb 24 00:30:08 paris j-chkmail[19028]: [ID 447404 local5.warning] scan_block : 
+      /* Feb 24 00:30:08 paris ze-filter[19028]: [ID 447404 local5.warning] scan_block : 
          strlen(work) + szc = 130975
          Feb 24 00:30:08 paris sendmail[17502]: [ID 801593 mail.error] g1NNU6WZ017502:
-         milter_read(j-chkmail): cmd read returned 0, expecting 5
+         milter_read(ze-filter): cmd read returned 0, expecting 5
        */
       LOG_MSG_NOTICE("%-12s scan_block : strlen(work) + szc = %ld, %ld",
                      id, (long) (strlen(work) + szc), (long) szc);

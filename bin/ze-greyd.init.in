@@ -3,18 +3,18 @@
 # @PACKAGE@ @VERSION@
 #
 # chkconfig: 2345 80 30
-# description: j-greyd - Joe's j-greyd
+# description: ze-greyd - Joe's ze-greyd
 #		filtre de messagerie
 
 ### BEGIN INIT INFO
-# Provides:                     j-greyd
+# Provides:                     ze-greyd
 # Required-Start:               $remote_fs
 # Required-Stop:
 # X-UnitedLinux-Should-Start:
 # X-UnitedLinux-Should-Stop:
 # Default-Start:                3 5
 # Default-Stop:
-# Description:                  Start j-chmail (filtre mail)
+# Description:                  Start ze-filter (filtre mail)
 ### END INIT INFO
 
 #
@@ -22,7 +22,7 @@
 #
 JGREYD_HOME=@prefix@/sbin
 
-JGREYD_BIN=j-greyd
+JGREYD_BIN=ze-greyd
 
 OPTIONS=" "
 
@@ -37,9 +37,9 @@ test -f /etc/sysconfig/jgreyd && . /etc/sysconfig/jgreyd
 test -f /etc/default/jgreyd   && . /etc/default/jgreyd
 
 
-GREYD_PIDFILE=$STATEDIR/j-greyd.pid
-SOCKFILE=$STATEDIR/j-greyd.sock
-CFFILE=$CONFDIR/j-chkmail.cf
+GREYD_PIDFILE=$STATEDIR/ze-greyd.pid
+SOCKFILE=$STATEDIR/ze-greyd.sock
+CFFILE=$CONFDIR/ze-filter.cf
 
 #
 # Get unix socket file from configuration file
@@ -207,9 +207,9 @@ case "$1" in
 *)
 	echo "Usage: $0 { start | stop | restart | help }"
         cat <<EOF
-start      - start j-greyd
-stop       - stop j-greyd
-restart    - stop and start j-greyd
+start      - start ze-greyd
+stop       - stop ze-greyd
+restart    - stop and start ze-greyd
              (send SIGUSR2 to the daemon)
 help       - this screen
 

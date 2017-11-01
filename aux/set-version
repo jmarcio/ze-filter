@@ -5,6 +5,6 @@ echo $DATE > aux/timestamp
 
 HERE=`pwd`
 VERSION=`basename $HERE`
-VERSION=`echo $VERSION | sed s/jchkmail-// | sed s/j-chkmail-//`
+VERSION=`echo $VERSION | sed s/zefilter-// | sed s/ze-filter-//`
 echo $VERSION > aux/version
 

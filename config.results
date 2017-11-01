@@ -1,24 +1,24 @@
 
-Configuration results : Wed Nov  1 14:00:08 CET 2017
+Configuration results : Wed Nov  1 18:50:43 CET 2017
 -----------------------
   configure arguments      : 
 
-  Source directory         : /data/FOSS/dev-j-chkmail/ze-Filter
-  Package                  : j-chkmail
+  Source directory         : /data/FOSS/dev-ze-filter/ze-Filter
+  Package                  : ze-filter
   Version                  : ze-Filter
   Host type                : x86_64-pc-linux-gnu
   Host OS                  : linux-gnu
   Host CPU                 : x86_64
-  j-chkmail user           : smmsp
-  j-chkmail group          : smmsp
+  ze-filter user           : ze-filter
+  ze-filter group          : ze-filter
   prefix dir               : /usr
   start-up script dir      : /etc/init.d
-  start-up scripts         : jchkmail jgreyd
-  configuration files dir  : /etc/mail/jchkmail
-  work dir                 : /var/jchkmail
-  state dir                : /var/run/jchkmail
-  spool dir                : /var/spool/jchkmail
-  jgreyd dir               : /var/jchkmail/jgreydb
+  start-up scripts         : ze-filter ze-greyd
+  configuration files dir  : /etc/ze-filter
+  work dir                 : /var/ze-filter
+  state dir                : /var/run/ze-filter
+  spool dir                : /var/spool/ze-filter
+  ze-greyd dir               : /var/ze-filter/ze-greydb
   
   USE PCRE                 : bundled - pcre-8.31
   USE BerkeleyDB           : bundled - db-5.3.21
@@ -38,9 +38,9 @@ Configuration results : Wed Nov  1 14:00:08 CET 2017
   may affect your configuration file.
 
   Mainly, installation scripts will install two files named 
-    j-chkmail.cf.defaults  - default configuration
+    ze-filter.cf.defaults  - default configuration
   and
-    j-chkmail.cf.running   - running configuration
+    ze-filter.cf.running   - running configuration
   at your configuration directory.
 
   You may consider replacing your current configuration file by the

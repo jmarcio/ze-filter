@@ -4,11 +4,11 @@
 use strict;
 
 
-my $cmd = "j-chkmail -m |";
+my $cmd = "ze-filter -m |";
 my @CONF = get_conf($cmd);
 my  %CUR_CONF = map { split " ", $_, 2} @CONF;
 
-$cmd = "src/j-chkmail -m |";
+$cmd = "src/ze-filter -m |";
 @CONF = get_conf($cmd);
 my  %NEW_CONF = map { split " ", $_, 2} @CONF;
 

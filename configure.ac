@@ -1,10 +1,10 @@
 
-AC_INIT(j-chkmail, 2.7.0, jose.marcio.mc@gmail.com)
+AC_INIT(ze-filter, 0.0.1, jose.marcio.mc@gmail.com)
 AC_COPYRIGHT([Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz])
 AC_CONFIG_SRCDIR([src/ze-filter.c])
 AM_INIT_AUTOMAKE([no-define])
 
-PACKAGE="j-chkmail"
+PACKAGE="ze-filter"
 if [ test -f aux/timestamp ]; then
   DATE=`head -1 aux/timestamp`
 else
@@ -135,7 +135,7 @@ then
   LDFLAGS="$LDFLAGS $CONF_LDFLAGS"
 fi
 
-sysconfdir="/etc/mail/jchkmail"
+sysconfdir="/etc/ze-filter"
 if test -n "$CONF_CONFDIR" ;
 then
   sysconfdir=$CONF_CONFDIR
@@ -153,32 +153,32 @@ else
   CFLAGS="$CFLAGS"
 fi
 
-USER=smmsp
+USER=ze-filter
 if test -n "$CONF_USER" ;
 then
   USER=$CONF_USER
 fi
-GROUP=smmsp
+GROUP=ze-filter
 if test -n "$CONF_GROUP" ;
 then
   GROUP=$CONF_GROUP
 fi
-SPOOLDIR=/var/spool/jchkmail
+SPOOLDIR=/var/spool/ze-filter
 if test -n "$CONF_SPOOLDIR" ;
 then
   SPOOLDIR=$CONF_SPOOLDIR
 fi
-CONFDIR=/etc/mail/jchkmail
+CONFDIR=/etc/ze-filter
 if test -n "$CONF_CONFDIR" ;
 then
   CONFDIR=$CONF_CONFDIR
 fi
-WORKROOT=/var/jchkmail
+WORKROOT=/var/ze-filter
 if test -n "$CONF_WORKROOT" ;
 then
   WORKROOT=$CONF_WORKROOT
 fi
-JGREYDDIR=$WORKROOT/jgreydb
+JGREYDDIR=$WORKROOT/ze-greydb
 if test -n "$CONF_JGREYDDIR" ;
 then
   JGREYDDIR=$CONF_JGREYDDIR
@@ -326,46 +326,46 @@ dnl Let's read configure arguments
 
 dnl
 dnl
-dnl USER=smmsp
+dnl USER=ze-filter
 AC_ARG_WITH(user,
   AC_HELP_STRING([--with-user=USER],
-	               [set j-chkmail user name  (default smmsp)]),
+	               [set ze-filter user name  (default ze-filter)]),
   [USER="$withval"])
 AC_SUBST(USER)
 
 dnl
 dnl
-dnl GROUP=smmsp
+dnl GROUP=ze-filter
 AC_ARG_WITH(group,
   AC_HELP_STRING([--with-group=GROUP],
-	               [set j-chkmail group name  (default smmsp)]),
+	               [set ze-filter group name  (default ze-filter)]),
   [GROUP="$withval"])
 AC_SUBST(GROUP)
 
 dnl
 dnl
-dnl WORKROOT=/var/jchkmail
+dnl WORKROOT=/var/ze-filter
 AC_ARG_WITH(work-dir,
   AC_HELP_STRING([--with-work-dir=PATH],
-                 [set j-chkmail work dir   (default /var/jchkmail)]),
+                 [set ze-filter work dir   (default /var/ze-filter)]),
   [WORKROOT="$withval"])
 AC_SUBST(WORKROOT)
 
 dnl
 dnl
-dnl JGREYDDIR=/var/jchkmail/jgreydb
-AC_ARG_WITH(jgreyd-dir,
-  AC_HELP_STRING([--with-jgreyd-dir=PATH],
-                 [set j-greyd work dir   (default /var/jchkmail/jgreydb)]),
+dnl JGREYDDIR=/var/ze-filter/ze-greydb
+AC_ARG_WITH(ze-greyd-dir,
+  AC_HELP_STRING([--with-ze-greyd-dir=PATH],
+                 [set j-greyd work dir   (default /var/ze-filter/ze-greydb)]),
   [JGREYDDIR="$withval"])
 AC_SUBST(JGREYDDIR)
 
 dnl
 dnl
-dnl SPOOLDIR=/var/spool/jchkmail
+dnl SPOOLDIR=/var/spool/ze-filter
 AC_ARG_WITH(spool-dir,
   AC_HELP_STRING([--with-spool-dir=PATH],
-                 [set j-chkmail spool dir (default /var/spool/jchkmail)]),
+                 [set ze-filter spool dir (default /var/spool/ze-filter)]),
   [SPOOLDIR="$withval"])
 AC_SUBST(SPOOLDIR)
 
@@ -374,7 +374,7 @@ dnl
 AC_MSG_CHECKING([where process state files shall be...])
 STATEDIR=/var/run
 if test -d $STATEDIR ; then
-  STATEDIR=/var/run/jchkmail
+  STATEDIR=/var/run/ze-filter
 else
   STATEDIR=$WORKROOT
 fi
@@ -388,7 +388,7 @@ dnl
 dnl CONFDIR=$sysconfdir
 AC_ARG_WITH(conf-dir,
   AC_HELP_STRING([--with-conf-dir=PATH],
-                 [set j-chkmail config dir (default /etc/mail/jchkmail)]),
+                 [set ze-filter config dir (default /etc/ze-filter)]),
   [CONFDIR="$withval"])
 AC_SUBST(CONFDIR)
 sysconfdir=$CONFDIR
@@ -433,12 +433,12 @@ AC_SUBST(RCDIR)
 case $build
 in
   *freebsd*)
-    RCSCRIPT="jchkmail.sh"
-    RCGREYD="jgreyd.sh"
+    RCSCRIPT="ze-filter.sh"
+    RCGREYD="ze-greyd.sh"
     ;;
   *)
-    RCSCRIPT="jchkmail"
-    RCGREYD="jgreyd"
+    RCSCRIPT="ze-filter"
+    RCGREYD="ze-greyd"
     ;;
 esac
 AC_SUBST(RCSCRIPT)
@@ -701,13 +701,13 @@ fi
 
 
 dnl
-dnl Add code here to enable j-chkmail building without libmilter
-dnl Surely, when doing this, j-chkmail build will be done without
+dnl Add code here to enable ze-filter building without libmilter
+dnl Surely, when doing this, ze-filter build will be done without
 dnl online filter
 dnl
 SAVELIBS=$LIBS
 AC_CHECK_LIB(milter, main,,\
-	AC_MSG_ERROR(Can't compile j-chkmail without libmilter...))
+	AC_MSG_ERROR(Can't compile ze-filter without libmilter...))
 
 
 AC_CHECK_LIB(milter,mi_stop,AC_DEFINE([HAVE_MI_STOP], 1, [MI_STOP]))
@@ -1448,13 +1448,13 @@ AC_CONFIG_FILES(src/Makefile scratch/Makefile ze-bayes-tbx/Makefile ze-makemap/M
 
 AC_CONFIG_FILES(etc/Makefile etc/Makefile.org)
 AC_CONFIG_FILES(etc/get-urlbl.org etc/get-bayes.org)
-AC_CONFIG_FILES(bin/jchkmail.init bin/jgreyd.init)
+AC_CONFIG_FILES(bin/ze-filter.init bin/ze-greyd.init bin/ze-filter.init.rhel)
 
 dnl AC_CONFIG_FILES([$MODMAKE])
 
-AC_CONFIG_COMMANDS([default],[[chmod 755 bin/jchkmail.init]
-			      [chmod 755 bin/jchkmail.init.rhel]
-			      [chmod 755 bin/jgreyd.init]
+AC_CONFIG_COMMANDS([default],[[chmod 755 bin/ze-filter.init]
+			      [chmod 755 bin/ze-filter.init.rhel]
+			      [chmod 755 bin/ze-greyd.init]
 			      [chmod 755 etc/get-urlbl.org]
 			      [chmod 755 etc/get-bayes.org]
                               [echo ""]
@@ -1502,16 +1502,16 @@ echo "  Version                  : $VERSION" >> config.results
 echo "  Host type                : $host" >> config.results
 echo "  Host OS                  : $host_os" >> config.results
 echo "  Host CPU                 : $host_cpu" >> config.results
-echo "  j-chkmail user           : $USER" >> config.results
-echo "  j-chkmail group          : $GROUP" >> config.results
+echo "  ze-filter user           : $USER" >> config.results
+echo "  ze-filter group          : $GROUP" >> config.results
 echo "  prefix dir               : $prefix" >> config.results
 echo "  start-up script dir      : $RCDIR" >> config.results
-echo "  start-up scripts         : jchkmail$RCSUFFIX jgreyd$RCSUFFIX" >> config.results
+echo "  start-up scripts         : ze-filter$RCSUFFIX ze-greyd$RCSUFFIX" >> config.results
 echo "  configuration files dir  : $CONFDIR" >> config.results
 echo "  work dir                 : $WORKROOT" >> config.results
 echo "  state dir                : $STATEDIR" >> config.results
 echo "  spool dir                : $SPOOLDIR" >> config.results
-echo "  jgreyd dir               : $JGREYDDIR" >> config.results
+echo "  ze-greyd dir               : $JGREYDDIR" >> config.results
 echo "  " >> config.results
 echo "  USE PCRE                 : $USE_LIBPCRE - $PCREVER" >> config.results
 echo "  USE BerkeleyDB           : $USE_LIBDB - $BDBVER" >> config.results

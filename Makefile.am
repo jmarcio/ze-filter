@@ -37,8 +37,8 @@ clean-cache:
 realclean: clean-hook clean-cache distclean
 
 clean-data:
-	rm -f $(DESTDIR)@WORKROOT@/j-history
-	rm -f $(DESTDIR)@WORKROOT@/j-*data
+	rm -f $(DESTDIR)@WORKROOT@/ze-history
+	rm -f $(DESTDIR)@WORKROOT@/ze-*data
 
 install-workroot:
 	@echo "  * Installing $(DESTDIR)@WORKROOT@"
@@ -62,10 +62,10 @@ install-workroot:
 	@chmod 755 $(DESTDIR)@WORKROOT@/files
 	@chown @USER@ $(DESTDIR)@WORKROOT@/files
 	@chgrp @GROUP@ $(DESTDIR)@WORKROOT@/files
-	@$(mkdir_p) $(DESTDIR)@WORKROOT@/jgreydb
-	@chmod 755 $(DESTDIR)@WORKROOT@/jgreydb
-	@chown @USER@ $(DESTDIR)@WORKROOT@/jgreydb
-	@chgrp @GROUP@ $(DESTDIR)@WORKROOT@/jgreydb
+	@$(mkdir_p) $(DESTDIR)@WORKROOT@/ze-greydb
+	@chmod 755 $(DESTDIR)@WORKROOT@/ze-greydb
+	@chown @USER@ $(DESTDIR)@WORKROOT@/ze-greydb
+	@chgrp @GROUP@ $(DESTDIR)@WORKROOT@/ze-greydb
 
 
 install-dbtools:
@@ -74,7 +74,7 @@ install-dbtools:
 	@chmod 755 $(DESTDIR)@WORKROOT@/dbtools
 	@list='$(DBTOOLS)'; for p in $$list ; do \
 		$(install_sh_PROGRAM) berkdb/$$p \
-			$(DESTDIR)@WORKROOT@/dbtools/j-$$p ;\
+			$(DESTDIR)@WORKROOT@/dbtools/ze-$$p ;\
 	done
 
 install-workdirs:
@@ -90,11 +90,11 @@ install-workdirs:
 
 install-tools:
 	@echo "  * Installing Tools"
-	$(INSTALL_SCRIPT) bin/jchkmail.init $(DESTDIR)@RCDIR@/@RCSCRIPT@
-	$(INSTALL_SCRIPT) bin/jgreyd.init   $(DESTDIR)@RCDIR@/@RCGREYD@
-	$(INSTALL_SCRIPT) bin/j-ndc          $(DESTDIR)@prefix@/bin
+	$(INSTALL_SCRIPT) bin/ze-filter.init $(DESTDIR)@RCDIR@/@RCSCRIPT@
+	$(INSTALL_SCRIPT) bin/ze-greyd.init   $(DESTDIR)@RCDIR@/@RCGREYD@
+	$(INSTALL_SCRIPT) bin/ze-ndc          $(DESTDIR)@prefix@/bin
 	$(INSTALL_SCRIPT) bin/get-iana       $(DESTDIR)@WORKROOT@/bin
-	$(INSTALL_SCRIPT) tools/j-easy-install $(DESTDIR)@prefix@/bin
+	$(INSTALL_SCRIPT) tools/ze-easy-install $(DESTDIR)@prefix@/bin
 	$(INSTALL_SCRIPT) tools/update-wdb-databases $(DESTDIR)@WORKROOT@/bin
 	$(INSTALL_SCRIPT) tools/check-mta-conf $(DESTDIR)@WORKROOT@/bin
 
@@ -118,19 +118,19 @@ checkcf :
 
 dbsave :
 	@echo "  * Dumping work databases"
-	@tools/update-wdb-databases -d $(DESTDIR)@WORKROOT@/jgreydb save
+	@tools/update-wdb-databases -d $(DESTDIR)@WORKROOT@/ze-greydb save
 	@tools/update-wdb-databases -d $(DESTDIR)@WORKROOT@/wdb     save
 	@sleep 1
 
 dbrestore :
 	@echo "  * Restoring work databases"
-	@tools/update-wdb-databases -d $(DESTDIR)@WORKROOT@/jgreydb restore
+	@tools/update-wdb-databases -d $(DESTDIR)@WORKROOT@/ze-greydb restore
 	@tools/update-wdb-databases -d $(DESTDIR)@WORKROOT@/wdb     restore
 	@sleep 1
 
 dbupgrade :
 	@echo "  * Upgrading work databases"
-	@tools/update-wdb-databases -d $(DESTDIR)@WORKROOT@/jgreydb upgrade
+	@tools/update-wdb-databases -d $(DESTDIR)@WORKROOT@/ze-greydb upgrade
 	@tools/update-wdb-databases -d $(DESTDIR)@WORKROOT@/wdb     upgrade
 	@sleep 1
 

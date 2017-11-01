@@ -2,11 +2,11 @@ dnl MILTER
 dnl
 dnl
 dnl
-dnl INPUT_MAIL_FILTER(`j-chkmail',`S=inet:2000@localhost, T=C:2m;S:20s;R:40s;E:5m')
+dnl INPUT_MAIL_FILTER(`ze-filter',`S=inet:2000@localhost, T=C:2m;S:20s;R:40s;E:5m')
 dnl
-INPUT_MAIL_FILTER(`j-chkmail',`S=local:/var/run/jchkmail/j-chkmail.sock, T=C:2m;S:20s;R:40s;E:5m')
+INPUT_MAIL_FILTER(`ze-filter',`S=local:/var/run/ze-filter/ze-filter.sock, T=C:2m;S:20s;R:40s;E:5m')
 dnl
-define(`confINPUT_MAIL_FILTERS',`j-chkmail')
+define(`confINPUT_MAIL_FILTERS',`ze-filter')
 dnl
 define(`confMILTER_MACROS_CONNECT',`_, j, v, {client_addr}, {client_name}, {client_ptr}, {client_resolve}, {daemon_addr}, {daemon_name}, {daemon_port}, {if_addr}, {if_name}')
 define(`confMILTER_MACROS_DATA',`')
