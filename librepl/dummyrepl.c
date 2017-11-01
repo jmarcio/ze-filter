@@ -4,7 +4,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif             /* HAVE_CONFIG_H */
-#include <j-sys.h>
+#include <ze-sys.h>
 
 /*
 **  DUMMY - just to ensure libreply isn't empty at all

@@ -88,8 +88,8 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-noinst_PROGRAMS = j-msg-entropy$(EXEEXT) j-extract-url$(EXEEXT) \
-	j-mfilter$(EXEEXT) j-lr$(EXEEXT) j-lr-sim$(EXEEXT)
+noinst_PROGRAMS = ze-msg-entropy$(EXEEXT) ze-extract-url$(EXEEXT) \
+	ze-mfilter$(EXEEXT) ze-lr$(EXEEXT) ze-lr-sim$(EXEEXT)
 subdir = scratch
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -104,30 +104,30 @@ CONFIG_HEADER = $(top_builddir)/include/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 PROGRAMS = $(noinst_PROGRAMS)
-am_j_extract_url_OBJECTS = j-extract-url.$(OBJEXT)
-j_extract_url_OBJECTS = $(am_j_extract_url_OBJECTS)
-j_extract_url_LDADD = $(LDADD)
-j_extract_url_DEPENDENCIES =
+am_ze_extract_url_OBJECTS = ze-extract-url.$(OBJEXT)
+ze_extract_url_OBJECTS = $(am_ze_extract_url_OBJECTS)
+ze_extract_url_LDADD = $(LDADD)
+ze_extract_url_DEPENDENCIES =
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
-am_j_lr_OBJECTS = j-lr.$(OBJEXT)
-j_lr_OBJECTS = $(am_j_lr_OBJECTS)
-j_lr_LDADD = $(LDADD)
-j_lr_DEPENDENCIES =
-am_j_lr_sim_OBJECTS = j-lr-sim.$(OBJEXT)
-j_lr_sim_OBJECTS = $(am_j_lr_sim_OBJECTS)
-j_lr_sim_LDADD = $(LDADD)
-j_lr_sim_DEPENDENCIES =
-am_j_mfilter_OBJECTS = j-mfilter.$(OBJEXT)
-j_mfilter_OBJECTS = $(am_j_mfilter_OBJECTS)
-j_mfilter_LDADD = $(LDADD)
-j_mfilter_DEPENDENCIES =
-am_j_msg_entropy_OBJECTS = j-msg-entropy.$(OBJEXT)
-j_msg_entropy_OBJECTS = $(am_j_msg_entropy_OBJECTS)
-j_msg_entropy_LDADD = $(LDADD)
-j_msg_entropy_DEPENDENCIES =
+am_ze_lr_OBJECTS = ze-lr.$(OBJEXT)
+ze_lr_OBJECTS = $(am_ze_lr_OBJECTS)
+ze_lr_LDADD = $(LDADD)
+ze_lr_DEPENDENCIES =
+am_ze_lr_sim_OBJECTS = ze-lr-sim.$(OBJEXT)
+ze_lr_sim_OBJECTS = $(am_ze_lr_sim_OBJECTS)
+ze_lr_sim_LDADD = $(LDADD)
+ze_lr_sim_DEPENDENCIES =
+am_ze_mfilter_OBJECTS = ze-mfilter.$(OBJEXT)
+ze_mfilter_OBJECTS = $(am_ze_mfilter_OBJECTS)
+ze_mfilter_LDADD = $(LDADD)
+ze_mfilter_DEPENDENCIES =
+am_ze_msg_entropy_OBJECTS = ze-msg-entropy.$(OBJEXT)
+ze_msg_entropy_OBJECTS = $(am_ze_msg_entropy_OBJECTS)
+ze_msg_entropy_LDADD = $(LDADD)
+ze_msg_entropy_DEPENDENCIES =
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -162,11 +162,12 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(j_extract_url_SOURCES) $(j_lr_SOURCES) $(j_lr_sim_SOURCES) \
-	$(j_mfilter_SOURCES) $(j_msg_entropy_SOURCES)
-DIST_SOURCES = $(j_extract_url_SOURCES) $(j_lr_SOURCES) \
-	$(j_lr_sim_SOURCES) $(j_mfilter_SOURCES) \
-	$(j_msg_entropy_SOURCES)
+SOURCES = $(ze_extract_url_SOURCES) $(ze_lr_SOURCES) \
+	$(ze_lr_sim_SOURCES) $(ze_mfilter_SOURCES) \
+	$(ze_msg_entropy_SOURCES)
+DIST_SOURCES = $(ze_extract_url_SOURCES) $(ze_lr_SOURCES) \
+	$(ze_lr_sim_SOURCES) $(ze_mfilter_SOURCES) \
+	$(ze_msg_entropy_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -341,14 +342,14 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 
-#j_detach_SOURCES 	 = j-detach.c 
-j_msg_entropy_SOURCES = j-msg-entropy.c 
-j_extract_url_SOURCES = j-extract-url.c 
-j_lr_SOURCES = j-lr.c 
-j_lr_sim_SOURCES = j-lr-sim.c 
+#ze_detach_SOURCES 	 = ze-detach.c 
+ze_msg_entropy_SOURCES = ze-msg-entropy.c 
+ze_extract_url_SOURCES = ze-extract-url.c 
+ze_lr_SOURCES = ze-lr.c 
+ze_lr_sim_SOURCES = ze-lr-sim.c 
 
-#j_uufile_SOURCES 	 = j-uufile.c 
-j_mfilter_SOURCES = j-mfilter.c
+#ze_uufile_SOURCES 	 = ze-uufile.c 
+ze_mfilter_SOURCES = ze-mfilter.c
 LDADD = @JCHKLIBS@   @LDLIBPCRE@ @BDBLIBS@
 AM_CPPFLAGS = -I../zeinc -I../zechkinc @BDBINCS@
 all: all-am
@@ -394,25 +395,25 @@ clean-noinstPROGRAMS:
 	echo " rm -f" $$list; \
 	rm -f $$list
 
-j-extract-url$(EXEEXT): $(j_extract_url_OBJECTS) $(j_extract_url_DEPENDENCIES) $(EXTRA_j_extract_url_DEPENDENCIES) 
-	@rm -f j-extract-url$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(j_extract_url_OBJECTS) $(j_extract_url_LDADD) $(LIBS)
+ze-extract-url$(EXEEXT): $(ze_extract_url_OBJECTS) $(ze_extract_url_DEPENDENCIES) $(EXTRA_ze_extract_url_DEPENDENCIES) 
+	@rm -f ze-extract-url$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ze_extract_url_OBJECTS) $(ze_extract_url_LDADD) $(LIBS)
 
-j-lr$(EXEEXT): $(j_lr_OBJECTS) $(j_lr_DEPENDENCIES) $(EXTRA_j_lr_DEPENDENCIES) 
-	@rm -f j-lr$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(j_lr_OBJECTS) $(j_lr_LDADD) $(LIBS)
+ze-lr$(EXEEXT): $(ze_lr_OBJECTS) $(ze_lr_DEPENDENCIES) $(EXTRA_ze_lr_DEPENDENCIES) 
+	@rm -f ze-lr$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ze_lr_OBJECTS) $(ze_lr_LDADD) $(LIBS)
 
-j-lr-sim$(EXEEXT): $(j_lr_sim_OBJECTS) $(j_lr_sim_DEPENDENCIES) $(EXTRA_j_lr_sim_DEPENDENCIES) 
-	@rm -f j-lr-sim$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(j_lr_sim_OBJECTS) $(j_lr_sim_LDADD) $(LIBS)
+ze-lr-sim$(EXEEXT): $(ze_lr_sim_OBJECTS) $(ze_lr_sim_DEPENDENCIES) $(EXTRA_ze_lr_sim_DEPENDENCIES) 
+	@rm -f ze-lr-sim$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ze_lr_sim_OBJECTS) $(ze_lr_sim_LDADD) $(LIBS)
 
-j-mfilter$(EXEEXT): $(j_mfilter_OBJECTS) $(j_mfilter_DEPENDENCIES) $(EXTRA_j_mfilter_DEPENDENCIES) 
-	@rm -f j-mfilter$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(j_mfilter_OBJECTS) $(j_mfilter_LDADD) $(LIBS)
+ze-mfilter$(EXEEXT): $(ze_mfilter_OBJECTS) $(ze_mfilter_DEPENDENCIES) $(EXTRA_ze_mfilter_DEPENDENCIES) 
+	@rm -f ze-mfilter$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ze_mfilter_OBJECTS) $(ze_mfilter_LDADD) $(LIBS)
 
-j-msg-entropy$(EXEEXT): $(j_msg_entropy_OBJECTS) $(j_msg_entropy_DEPENDENCIES) $(EXTRA_j_msg_entropy_DEPENDENCIES) 
-	@rm -f j-msg-entropy$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(j_msg_entropy_OBJECTS) $(j_msg_entropy_LDADD) $(LIBS)
+ze-msg-entropy$(EXEEXT): $(ze_msg_entropy_OBJECTS) $(ze_msg_entropy_DEPENDENCIES) $(EXTRA_ze_msg_entropy_DEPENDENCIES) 
+	@rm -f ze-msg-entropy$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ze_msg_entropy_OBJECTS) $(ze_msg_entropy_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -420,11 +421,11 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-extract-url.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-lr-sim.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-lr.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-mfilter.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/j-msg-entropy.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-extract-url.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-lr-sim.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-lr.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-mfilter.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-msg-entropy.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

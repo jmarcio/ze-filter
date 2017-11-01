@@ -27,9 +27,9 @@
  */
 
 
-#include <j-sys.h>
-#include <j-chkmail.h>
-#include <j-read-conf-data.h>
+#include <ze-sys.h>
+#include <ze-chkmail.h>
+#include <ze-read-conf-data.h>
 
 
 bool

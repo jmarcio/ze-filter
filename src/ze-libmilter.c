@@ -27,10 +27,10 @@
  */
 
 
-#include <j-sys.h>
+#include <ze-sys.h>
 #include <ze-filter.h>
-#include <j-filter.h>
-#include <j-libmilter.h>
+#include <ze-filter-data.h>
+#include <ze-libmilter.h>
 
 
 /******************************************************************************

@@ -27,10 +27,10 @@
  */
 
 
-#include <j-sys.h>
-#include <j-chkmail.h>
-#include <j-filter.h>
-#include <j-modules.h>
+#include <ze-sys.h>
+#include <ze-chkmail.h>
+#include <ze-filter.h>
+#include <ze-modules.h>
 
 
 

@@ -26,9 +26,9 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#include <j-sys.h>
+#include <ze-sys.h>
 
-#include "j-libjc.h"
+#include "ze-libjc.h"
 
 
 int                 j_rd_text_file(char *, int, int, char *,

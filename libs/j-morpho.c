@@ -26,9 +26,9 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#include <j-sys.h>
+#include <ze-sys.h>
 
-#include "j-libjc.h"
+#include "ze-libjc.h"
 
 #define    MAX3(a,b,c)    ((a) > (b) ? \
                            ((a) > (c) ? (a) : (c)) : \

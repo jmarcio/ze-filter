@@ -27,9 +27,9 @@
  */
 
 
-#include <j-sys.h>
-#include <j-chkmail.h>
-#include <j-grey-cleanup.h>
+#include <ze-sys.h>
+#include <ze-chkmail.h>
+#include <ze-grey-cleanup.h>
 
 static double       threshold = -1;
 static bool         threshok = FALSE;

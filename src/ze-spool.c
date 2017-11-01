@@ -27,12 +27,11 @@
  */
 
 
-#include <j-sys.h>
+#include <ze-sys.h>
 
 #include "ze-filter.h"
-
-#include "j-filter.h"
-#include "j-spool.h"
+#include "ze-filter-data.h"
+#include "ze-spool.h"
 
 #define SWAP_PTR(a,b)         do { void *c = a; a = b; b = c;} while (0)
 

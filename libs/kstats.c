@@ -40,7 +40,7 @@
 #include <config.h>
 #endif
 
-#include <j-sys.h>
+#include <ze-sys.h>
 
 #include "kstats.h"
 

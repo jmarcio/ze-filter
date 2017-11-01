@@ -27,11 +27,11 @@
  */
 
 
-#include <j-sys.h>
+#include <ze-sys.h>
 #include <ze-filter.h>
-#include <j-filter.h>
-#include <j-log-quarantine.h>
-#include <j-spool.h>
+#include <ze-filter-data.h>
+#include <ze-log-quarantine.h>
+#include <ze-spool.h>
 
 /******************************************************************************
  *                                                                            *

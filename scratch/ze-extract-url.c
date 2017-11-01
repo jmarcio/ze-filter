@@ -26,17 +26,49 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#if 1 || _FFR_LOGREG
-#include <j-lr-main.c>
-#else
-#include <stdlib.h>
-#include <stdio.h>
+#include <ze-sys.h>
 
+#include "ze-chkmail.h"
+
+
+#define JDEBUG 0
+
+
+
+/* ****************************************************************************
+ *                                                                            * 
+ *                                                                            *
+ **************************************************************************** */
 int
 main(argc, argv)
      int                 argc;
      char              **argv;
 {
-  printf("Hello, World !!! \n");
-}
+  int                 i;
+
+  set_log_output(FALSE, TRUE);
+
+  log_level = 0;
+
+  init_default_file_extensions();
+
+  if (cf_opt.arg_c != NULL)
+    conf_file = cf_opt.arg_c;
+
+#if 0
+  configure(conf_file, FALSE);
 #endif
+
+  set_mime_debug(FALSE);
+
+  for (i = 1; i < argc; i++)
+  {
+    char                id[256];
+
+    snprintf(id, sizeof (id), "%06d.000", i);
+    message_extract_http_urls(id, argv[i]);
+  }
+
+  return 0;
+
+}

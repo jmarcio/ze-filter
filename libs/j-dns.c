@@ -69,11 +69,11 @@
  */
 
 
-#include <j-sys.h>
+#include <ze-sys.h>
 
-#include "j-libjc.h"
+#include "ze-libjc.h"
 
-#include "j-dns.h"
+#include "ze-dns.h"
 
 #ifndef MAXHOSTNAMELEN
 # define MAXHOSTNAMELEN 256

@@ -27,10 +27,10 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#include <j-sys.h>
-#include <j-chkmail.h>
+#include <ze-sys.h>
+#include <ze-chkmail.h>
 
-#include "j-fileexp.h"
+#include "ze-fileexp.h"
 
 #define SZ_BLOCK    32
 

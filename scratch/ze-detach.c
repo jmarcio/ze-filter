@@ -26,9 +26,9 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#include <j-sys.h>
+#include <ze-sys.h>
 
-#include "j-chkmail.h"
+#include "ze-chkmail.h"
 
 
 #define JDEBUG 0
@@ -46,28 +46,16 @@ main(argc, argv)
 {
   char               *id = "000000.000";
   char               *fname;
+  char                prefix[PATH_MAX];
 
-  set_log_output(FALSE, TRUE);
-
-  log_level = 0;
-
-  init_default_file_extensions();
-
-  if (cf_opt.arg_c != NULL)
-    conf_file = cf_opt.arg_c;
-
-  configure("j-msg-entropy", conf_file, FALSE);
-
-  set_mime_debug(FALSE);
+  set_mime_debug(TRUE);
 
   fname = (argc > 0 ? argv[1] : "virus-zippe");
-  message_entropy(id, fname);
+  unattach(id, fname, ".", NULL);
+  getchar();
+  snprintf(prefix, sizeof (prefix), "./%s.dir", fname);
+  /* remove_dir (prefix); */
 
   return 0;
 
 }
-
-
-
-
-

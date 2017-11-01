@@ -27,9 +27,9 @@
  */
 
 
-#include <j-sys.h>
-#include <j-chkmail.h>
-#include <j-ipv6.h>
+#include <ze-sys.h>
+#include <ze-chkmail.h>
+#include <ze-ipv6.h>
 
 /* ****************************************************************************
  *                                                                            *

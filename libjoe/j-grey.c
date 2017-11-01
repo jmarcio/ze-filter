@@ -26,10 +26,10 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#include <j-sys.h>
-#include <j-chkmail.h>
-#include <j-grey.h>
-#include <j-log-grey.h>
+#include <ze-sys.h>
+#include <ze-chkmail.h>
+#include <ze-grey.h>
+#include <ze-log-grey.h>
 
 /* ****************************************************************************
  *                                                                            *

@@ -1,22 +1,22 @@
 
-# j-dettach  j-uufile
+# ze-dettach  j-uufile
 noinst_PROGRAMS =  \
-		j-msg-entropy \
-		j-extract-url \
-                j-mfilter \
-		j-lr \
-		j-lr-sim
+		ze-msg-entropy \
+		ze-extract-url \
+                ze-mfilter \
+		ze-lr \
+		ze-lr-sim
 
-#j_detach_SOURCES 	 = j-detach.c 
+#ze_detach_SOURCES 	 = ze-detach.c 
 
-j_msg_entropy_SOURCES 	 = j-msg-entropy.c 
-j_extract_url_SOURCES    = j-extract-url.c 
-j_lr_SOURCES             = j-lr.c 
-j_lr_sim_SOURCES         = j-lr-sim.c 
+ze_msg_entropy_SOURCES 	 = ze-msg-entropy.c 
+ze_extract_url_SOURCES    = ze-extract-url.c 
+ze_lr_SOURCES             = ze-lr.c 
+ze_lr_sim_SOURCES         = ze-lr-sim.c 
 
-#j_uufile_SOURCES 	 = j-uufile.c 
+#ze_uufile_SOURCES 	 = ze-uufile.c 
 
-j_mfilter_SOURCES        = j-mfilter.c
+ze_mfilter_SOURCES        = ze-mfilter.c
 
 LDADD                    = @JCHKLIBS@   @LDLIBPCRE@ @BDBLIBS@
 

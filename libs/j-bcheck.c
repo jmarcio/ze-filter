@@ -27,10 +27,10 @@
  */
 
 
-#include <j-sys.h>
-#include <j-chkmail.h>
-#include <j-bfilter.h>
-#include <j-bcheck.h>
+#include <ze-sys.h>
+#include <ze-chkmail.h>
+#include <ze-bfilter.h>
+#include <ze-bcheck.h>
 
 
 /* ****************************************************************************

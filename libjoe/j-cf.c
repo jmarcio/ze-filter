@@ -25,11 +25,11 @@
  * More details about j-chkmail license can be found at j-chkmail
  * web site : http://foss.jose-marcio.org
  */
-#include <j-sys.h>
+#include <ze-sys.h>
 
-#include "j-cf.h"
+#include "ze-cf.h"
 
-#include "j-chkmail.h"
+#include "ze-chkmail.h"
 
 /* ****************************************************************************
  *                                                                            *

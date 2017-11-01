@@ -27,9 +27,9 @@
  */
 
 
-#include <j-sys.h>
-#include <j-chkmail.h>
-#include <j-convert-8to7.h>
+#include <ze-sys.h>
+#include <ze-chkmail.h>
+#include <ze-convert-8to7.h>
 
 /* ****************************************************************************
  *                                                                            *

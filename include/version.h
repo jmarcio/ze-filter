@@ -26,36 +26,11 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#include <j-sys.h>
+#undef  VERSION
+#define VERSION    "vze-Filter"
 
-#include "j-chkmail.h"
-
-
-#define JDEBUG 0
-
+#undef  PACKAGE
+#define PACKAGE    "Joe's j-chkmail vze-Filter"
 
 
-/* ****************************************************************************
- *                                                                            * 
- *                                                                            *
- **************************************************************************** */
-int
-main(argc, argv)
-     int                 argc;
-     char              **argv;
-{
-  char               *id = "000000.000";
-  char               *fname;
-  char                prefix[PATH_MAX];
 
-  set_mime_debug(TRUE);
-
-  fname = (argc > 0 ? argv[1] : "virus-zippe");
-  unattach(id, fname, ".", NULL);
-  getchar();
-  snprintf(prefix, sizeof (prefix), "./%s.dir", fname);
-  /* remove_dir (prefix); */
-
-  return 0;
-
-}

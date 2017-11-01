@@ -27,9 +27,9 @@
  */
 
 
-#include <j-sys.h>
-#include <j-libjc.h>
-#include <j-resolve-cache.h>
+#include <ze-sys.h>
+#include <ze-libjc.h>
+#include <ze-resolve-cache.h>
 
 static void         resolve_cache_close();
 static void        *resolve_cache_clean(void *);

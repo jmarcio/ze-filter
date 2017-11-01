@@ -26,13 +26,13 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#include <j-sys.h>
+#include <ze-sys.h>
 
 #include "libmilter/mfapi.h"
 
-#include "j-chkmail.h"
+#include "ze-chkmail.h"
 
-#include "j-filter.h"
+#include "ze-filter-data.h"
 
 
 /* ****************************************************************************

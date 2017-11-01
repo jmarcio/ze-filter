@@ -26,46 +26,48 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#include <j-sys.h>
+#include <ze-sys.h>
 
-#include "j-chkmail.h"
+#include "ze-chkmail.h"
 
 
+#define JDEBUG 0
+
+
+
+/* ****************************************************************************
+ *                                                                            * 
+ *                                                                            *
+ **************************************************************************** */
 int
 main(argc, argv)
      int                 argc;
      char              **argv;
 {
-  bool                ok;
-  UU_BLOCK_T          uublk;
+  char               *id = "000000.000";
+  char               *fname;
 
-  memset(&uublk, 0, sizeof (uublk));
-  ok = uudecode_file("uutoto", &uublk);
-  if ((uublk.signature == SIGNATURE) && (uublk.buf != NULL))
-  {
-    printf("**********************\n");
-#if 0
-    printf("%s", (char *) uublk.buf);
-    printf("**********************\n");
-#endif
-    printf("BUF SIZE  : %8d\n", uublk.size);
-    printf("BUF NAME  : %s\n", uublk.name != NULL ? uublk.name : "(NULL)");
-    printf("BUF MODE  : %6lo\n", (long) uublk.mode);
-    printf("SIGNATURE : %08lX\n", (long) uublk.signature);
-  } else
-    MESSAGE_INFO(0, "UU BLOCK NON VALIDE");
+  set_log_output(FALSE, TRUE);
 
-  free_uu_block(&uublk);
+  log_level = 0;
 
-  if ((uublk.signature == SIGNATURE) && (uublk.buf != NULL))
-  {
-    printf("**********************\n");
-    printf("%s", (char *) uublk.buf);
-    printf("**********************\n");
-    printf("BUF SIZE  : %8d\n", uublk.size);
-    printf("SIGNATURE : %08lX\n", (long) uublk.signature);
-  } else
-    MESSAGE_INFO(0, "UU BLOCK NON VALIDE");
+  init_default_file_extensions();
+
+  if (cf_opt.arg_c != NULL)
+    conf_file = cf_opt.arg_c;
+
+  configure("j-msg-entropy", conf_file, FALSE);
+
+  set_mime_debug(FALSE);
+
+  fname = (argc > 0 ? argv[1] : "virus-zippe");
+  message_entropy(id, fname);
 
   return 0;
+
 }
+
+
+
+
+

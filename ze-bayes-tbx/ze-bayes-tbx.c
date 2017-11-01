@@ -28,10 +28,10 @@
 
 
 
-#include <j-sys.h>
+#include <ze-sys.h>
 #include "ze-filter.h"
-#include <j-bfilter.h>
-#include <j-bcheck.h>
+#include <ze-bfilter.h>
+#include <ze-bcheck.h>
 
 static void         usage(char *);
 

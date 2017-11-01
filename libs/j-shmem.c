@@ -34,11 +34,11 @@
 
 #include <config.h>
 
-#include <j-sys.h>
+#include <ze-sys.h>
 
-#include "j-libjc.h"
+#include "ze-libjc.h"
 
-#include "j-shmem.h"
+#include "ze-shmem.h"
 
 
 

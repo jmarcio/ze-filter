@@ -27,9 +27,9 @@
  */
 
 
-#include <j-sys.h>
-#include <j-chkmail.h>
-#include <j-client.h>
+#include <ze-sys.h>
+#include <ze-chkmail.h>
+#include <ze-client.h>
 
 /* ****************************************************************************
  *                                                                            *

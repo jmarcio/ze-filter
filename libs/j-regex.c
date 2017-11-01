@@ -26,7 +26,7 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#include <j-sys.h>
+#include <ze-sys.h>
 
 /* ****************************************************************************
  *                                                                            *
@@ -42,9 +42,9 @@
 #define JREGCOMP_FLAGS         (REG_ICASE | REG_EXTENDED)
 #define JREGEXEC_FLAGS          0
 
-#include "j-libjc.h"
+#include "ze-libjc.h"
 
-#include <j-regex.h>
+#include <ze-regex.h>
 
 #if USE_PCRE
 static bool         use_pcre = TRUE;

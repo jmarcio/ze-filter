@@ -29,7 +29,7 @@
 
 #ifndef __JREPLY_H__
 
-#include <j-reply-local.h>
+#include <ze-reply-local.h>
 
 bool                get_reply_msg(SMFICTX *, char *, char *, size_t, char *, char *);
 

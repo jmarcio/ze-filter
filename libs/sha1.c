@@ -36,7 +36,7 @@
 
 #include "config.h"
 
-#include <j-sys.h>
+#include <ze-sys.h>
 #include <macros.h>
 #include <sha1.h>
 

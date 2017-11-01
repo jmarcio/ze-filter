@@ -27,9 +27,9 @@
  */
 
 
-#include <j-sys.h>
-#include <j-chkmail.h>
-#include <j-msg-score.h>
+#include <ze-sys.h>
+#include <ze-chkmail.h>
+#include <ze-msg-score.h>
 
 
 #define SQR(x)       ((x) * (x))

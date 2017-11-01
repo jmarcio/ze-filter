@@ -28,9 +28,9 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#include <j-sys.h>
-#include <j-libjc.h>
-#include <j-name2id.h>
+#include <ze-sys.h>
+#include <ze-libjc.h>
+#include <ze-name2id.h>
 
 /* ****************************************************************************
  *                                                                            *

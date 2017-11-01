@@ -44,8 +44,8 @@
 #define SMFI_VERSION_MINOR       SM_LM_VRS_MINOR(SMFI_VERSION)
 #define SMFI_VERSION_PLVL        SM_LM_VRS_PLVL(SMFI_VERSION)
 
-#include "j-smmacros.h"
-#include "j-reply.h"
+#include "ze-smmacros.h"
+#include "ze-reply.h"
 
 #if 0
 #ifndef LIBMILTER_VERSION_MAJOR
@@ -55,7 +55,7 @@
 #endif
 #endif
 
-#include "j-history.h"
+#include "ze-history.h"
 
 typedef struct
 {
@@ -266,20 +266,20 @@ typedef struct
    STREMPTY(priv->netclass.label, NET_CLASS_LABEL(priv->netclass.class)) : \
    "UNKNOWN")
 
-#include <j-check-connection.h>
+#include <ze-check-connection.h>
 
-#include <j-callback.h>
-#include <j-callbackchecks.h>
-#include <j-callbacklogs.h>
+#include <ze-callback.h>
+#include <ze-callbackchecks.h>
+#include <ze-callbacklogs.h>
 
-#include <j-log-files.h>
-#include <j-log-virus.h>
-#include <j-log-quarantine.h>
-#include <j-log-grey.h>
-#include <j-log-regex.h>
+#include <ze-log-files.h>
+#include <ze-log-virus.h>
+#include <ze-log-quarantine.h>
+#include <ze-log-grey.h>
+#include <ze-log-regex.h>
 
-#include <j-libmilter.h>
-#include <j-mod-tools.h>
+#include <ze-libmilter.h>
+#include <ze-mod-tools.h>
 
 extern char         my_hostname[];
 

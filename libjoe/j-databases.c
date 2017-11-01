@@ -27,9 +27,9 @@
  */
 
 
-#include <j-sys.h>
-#include <j-chkmail.h>
-#include <j-databases.h>
+#include <ze-sys.h>
+#include <ze-chkmail.h>
+#include <ze-databases.h>
 
 JDB_ENV_T          *work_db_env = NULL;
 char               *work_db_dir = NULL;

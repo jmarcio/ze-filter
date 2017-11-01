@@ -26,11 +26,11 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#include <j-sys.h>
+#include <ze-sys.h>
 #include <ze-filter.h>
-#include <j-filter.h>
-#include <j-spool.h>
-#include <j-callbackchecks.h>
+#include <ze-filter-data.h>
+#include <ze-spool.h>
+#include <ze-callbackchecks.h>
 
 static bool         check_condition(char *cond,
                                     char *header, msg_scores_T * scoreRec);

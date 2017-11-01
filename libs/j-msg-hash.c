@@ -27,9 +27,9 @@
  */
 
 
-#include <j-sys.h>
-#include <j-libjc.h>
-#include <j-msg-hash.h>
+#include <ze-sys.h>
+#include <ze-libjc.h>
+#include <ze-msg-hash.h>
 
 
 /* ****************************************************************************

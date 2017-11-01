@@ -27,9 +27,9 @@
  */
 
 
-#include <j-sys.h>
+#include <ze-sys.h>
 
-#include <j-libjc.h>
+#include <ze-libjc.h>
 
 #define  DEBUG_LEVEL      15
 

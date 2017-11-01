@@ -26,16 +26,15 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#include <j-sys.h>
+#include <ze-sys.h>
 
 #include "ze-filter.h"
-
-#include "j-filter.h"
-#include "j-spool.h"
-#include "j-chkcontent.h"
-#include "j-callbackchecks.h"
-#include "j-callbacklogs.h"
-#include "j-mxcheck.h"
+#include "ze-filter-data.h"
+#include "ze-spool.h"
+#include "ze-chkcontent.h"
+#include "ze-callbackchecks.h"
+#include "ze-callbacklogs.h"
+#include "ze-mxcheck.h"
 
 /******************************************************************************
  *                                                                            *

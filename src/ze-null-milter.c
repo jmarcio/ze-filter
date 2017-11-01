@@ -26,7 +26,7 @@
  * web site : http://foss.jose-marcio.org
  */
 #if 0
-#include <j-sys.h>
+#include <ze-sys.h>
 #else
 #include <stdlib.h>
 #include <stdio.h>

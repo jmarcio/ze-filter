@@ -26,10 +26,10 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#include <j-sys.h>
+#include <ze-sys.h>
 
-#include "j-libjc.h"
-#include "j-base64.h"
+#include "ze-libjc.h"
+#include "ze-base64.h"
 
 
 /* ****************************************************************************

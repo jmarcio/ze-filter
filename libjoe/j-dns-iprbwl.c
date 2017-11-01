@@ -26,11 +26,11 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#include <j-sys.h>
+#include <ze-sys.h>
 
-#include "j-dns-iprbwl.h"
+#include "ze-dns-iprbwl.h"
 
-#include "j-chkmail.h"
+#include "ze-chkmail.h"
 
 #define        RBWL_NONE               0
 
