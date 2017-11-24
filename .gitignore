@@ -107,3 +107,6 @@ config.status
 /texinfo.tex
 
 # End of https://www.gitignore.io/api/autotools
+#
+tmp/*
+
