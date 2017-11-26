@@ -81,7 +81,7 @@ main(argc, argv)
   to = "nobody@localdomain";
   key = "0.0.0.0";
 
-  configure("j-policy-test", conf_file, FALSE);
+  configure("ze-policy-test", conf_file, FALSE);
 
   set_log_output(FALSE, TRUE);
   log_level = 10;

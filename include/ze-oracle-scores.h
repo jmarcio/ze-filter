@@ -22,7 +22,7 @@
  */
 
 
-#ifndef J_ORACLE_SCORES_H
+#ifndef ZE_ORACLE_SCORES_H
 
 
 #define SPAM_CONN_RESOLVE_FAIL          1
@@ -123,6 +123,6 @@ int                 oracle_compute_score(char *, char *, spamchk_T *);
 
 
 
-# define J_ORACLE_SCORES_H    1
+# define ZE_ORACLE_SCORES_H    1
 #endif /* J_ORACLE_SCORES_H */
 

@@ -241,7 +241,7 @@ main(argc, argv)
   log_level = 10;
 
   if (0)
-    configure("j-lr", conf_file, FALSE);
+    configure("ze-lr", conf_file, FALSE);
   set_mime_debug(FALSE);
 
   if (xmode != NULL)

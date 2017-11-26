@@ -22,11 +22,11 @@
  */
 
 
-#ifndef J_CONVERT_8TO7_H
+#ifndef ZE_CONVERT_8TO7_H
 
 void                convert_8to7(char *buf, bool convert_spaces);
 
 void                convert_filename_8to7(char *buf);
 
-# define J_CONVERT_8TO7_H    1
+# define ZE_CONVERT_8TO7_H    1
 #endif             /* J_CONVERT_8TO7_H */

@@ -9,7 +9,7 @@ RSYNC=rsync
 CDBDIR=/var/ze-filter/cdb
 BINDIR=/usr/bin
 
-FILES2GET="urlbl/j-urlbl.txt"
+FILES2GET="urlbl/ze-urlbl.txt"
 
 cd $CDBDIR
 for file in $FILES2GET

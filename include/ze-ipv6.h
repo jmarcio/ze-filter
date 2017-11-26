@@ -22,7 +22,7 @@
  */
 
 
-#ifndef J_IPV6_H
+#ifndef ZE_IPV6_H
 
 typedef struct
 {
@@ -59,5 +59,5 @@ void                ipv6_prefix_str(ipv6_T *addr, char *buf, size_t size, int n)
  * ipv6_truncate
  */
 
-# define J_IPV6_H    1
+# define ZE_IPV6_H    1
 #endif             /* J_IPV6_H */

@@ -1,6 +1,6 @@
 /* include/config.h.in.  Generated from configure.ac by autoheader.  */
 
-/* needed by j-dns */
+/* needed by ze-dns */
 #undef BIND_8_COMPAT
 
 /* Thread safe resolver */

@@ -461,15 +461,15 @@ typedef int         bool;
 #endif             /* USE_BerkeleyDB */
 
 #if defined(HAVE_DECL___FUNC__) && (HAVE_DECL___FUNC__ == 1)
-# define J_FUNCTION         __func__
-# define J_PRETTY_FUNCTION  __func__
+# define ZE_FUNCTION         __func__
+# define ZE_PRETTY_FUNCTION  __func__
 #else
 # if defined(HAVE_DECL___FUNCTION__) && (HAVE_DECL___FUNCTION__ == 1)
-#  define J_FUNCTION         __FUNCTION__
-#  define J_PRETTY_FUNCTION  __PRETTY_FUNCTION__
+#  define ZE_FUNCTION         __FUNCTION__
+#  define ZE_PRETTY_FUNCTION  __PRETTY_FUNCTION__
 # else
-#  define J_FUNCTION         __FILE__
-#  define J_PRETTY_FUNCTION  __FILE__
+#  define ZE_FUNCTION         __FILE__
+#  define ZE_PRETTY_FUNCTION  __FILE__
 # endif
 #endif
 

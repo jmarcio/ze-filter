@@ -22,7 +22,7 @@
  */
 
 
-#ifndef J_MBOX_H
+#ifndef ZE_MBOX_H
 
 typedef             bool(*mbox_F) (char *fname, int id, void *arg);
 
@@ -30,5 +30,5 @@ int                 mbox_handle(char *fname, mbox_F func, void *arg);
 
 int                 maildir_handle(char *dirname, mbox_F func, void *arg);
 
-# define J_MBOX_H    1
+# define ZE_MBOX_H    1
 #endif             /* J_MBOX_H */

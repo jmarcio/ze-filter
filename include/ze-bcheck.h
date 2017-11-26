@@ -22,7 +22,7 @@
  */
 
 
-#ifndef J_BCHECK_H
+#ifndef ZE_BCHECK_H
 
 #define MAX_TOK          128
 
@@ -70,5 +70,5 @@ double              sfilter_check_message(char *id, char *fname,
                                           sfilter_vsm_T * bcheck);
 
 
-# define J_BCHECK_H    1
+# define ZE_BCHECK_H    1
 #endif             /* J_BCHECK_H */

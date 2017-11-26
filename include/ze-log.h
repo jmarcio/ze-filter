@@ -22,10 +22,10 @@
  */
 
 
-#ifndef J_LOG_H
+#ifndef ZE_LOG_H
 
 
 
-# define J_LOG_H    1
+# define ZE_LOG_H    1
 #endif /* J_LOG_H */
 

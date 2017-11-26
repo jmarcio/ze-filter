@@ -64,7 +64,7 @@ main(argc, argv)
 
   char               *s = NULL;
 
-  configure("j-module-test", conf_file, FALSE);
+  configure("ze-module-test", conf_file, FALSE);
 
   set_log_output(FALSE, TRUE);
   log_level = 10;

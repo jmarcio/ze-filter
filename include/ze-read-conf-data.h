@@ -22,7 +22,7 @@
  */
 
 
-#ifndef J_READ_CONF_DATA_H
+#ifndef ZE_READ_CONF_DATA_H
 
 typedef bool  (*read_conf_data_file_F)(char *, char *);
 
@@ -32,6 +32,6 @@ read_conf_data_file(char *cfdir,
 		    char *dfile,
 		    read_conf_data_file_F func);
 
-# define J_READ_CONF_DATA_H    1
+# define ZE_READ_CONF_DATA_H    1
 #endif /* J_READ_CONF_DATA_H */
 

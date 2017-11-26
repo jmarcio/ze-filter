@@ -36,10 +36,10 @@
 
 #define    DT_CHECK            10
 
-#define    J_FD_MAX            -1
-#define    J_FD_DFL             0
+#define    ZE_FD_MAX            -1
+#define    ZE_FD_DFL             0
 
-#define    J_NOFILE           256
+#define    ZE_NOFILE           256
 
 static long         fd_last = 0;
 static long         fd_open = 0;
@@ -50,7 +50,7 @@ static rlim_t       fd_max = 0;
 static rlim_t       fd_soft = 0;
 static rlim_t       fd_hard = 0;
 
-static long         fd_conf = J_FD_DFL;
+static long         fd_conf = ZE_FD_DFL;
 static rlim_t       fd_cur = 0;
 
 static pthread_mutex_t st_mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -272,13 +272,13 @@ setup_file_descriptors()
   if (strlim != NULL)
   {
     if (strcasecmp(strlim, "DEFAULT") == 0)
-      fd_conf = J_FD_DFL;
+      fd_conf = ZE_FD_DFL;
     else
     {
       if (strcasecmp(strlim, "MAX") == 0)
       {
 #if 0
-        fd_conf = J_FD_MAX;
+        fd_conf = ZE_FD_MAX;
 #else
         fd_conf = fd_hard;
 #endif
@@ -286,9 +286,9 @@ setup_file_descriptors()
       {
         long                n;
 
-        n = str2long(strlim, NULL, J_FD_DFL);
+        n = str2long(strlim, NULL, ZE_FD_DFL);
         if (errno == ERANGE || errno == EINVAL || n <= 0 || n > fd_hard)
-          n = J_FD_DFL;
+          n = ZE_FD_DFL;
         fd_conf = n;
       }
     }
@@ -301,21 +301,21 @@ setup_file_descriptors()
     fd_conf = fd_hard;
   }
 
-  if ((fd_conf > 1) && (fd_conf < J_NOFILE))
+  if ((fd_conf > 1) && (fd_conf < ZE_NOFILE))
   {
-    fd_conf = J_NOFILE;
+    fd_conf = ZE_NOFILE;
   }
 
   switch (fd_conf)
   {
-    case J_FD_DFL:
+    case ZE_FD_DFL:
       fd_cur = fd_soft;
       break;
-    case J_FD_MAX:
+    case ZE_FD_MAX:
       fd_cur = fd_hard;
       break;
     default:
-      fd_cur = (fd_conf >= J_NOFILE ? fd_conf : J_NOFILE);
+      fd_cur = (fd_conf >= ZE_NOFILE ? fd_conf : ZE_NOFILE);
       break;
   }
 

@@ -69,7 +69,7 @@ sub print_header_c
   my ($src, $dst, undef) = @_;
   print OUT <<EOT;
 
-#include <j-sys.h>
+#include <ze-sys.h>
 #include <ze-filter.h>
 #include <$src.h>
 

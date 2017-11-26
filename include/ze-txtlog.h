@@ -22,7 +22,7 @@
  */
 
 
-#ifndef J_TXTLOG_H
+#ifndef ZE_TXTLOG_H
 
 #define     JC_LOG_NONE     0
 #define     JC_LOG_SYSLOG   1
@@ -141,5 +141,5 @@ int            log_error(LOG_T *);
   } while (FALSE);
 
 
-# define J_TXTLOG_H    1
+# define ZE_TXTLOG_H    1
 #endif             /* J_TXTLOG_H */

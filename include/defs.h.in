@@ -27,43 +27,43 @@
 #undef  RUN_AS_GROUP
 #define RUN_AS_GROUP       "@GROUP@"
 
-#define J_SPOOLDIR         "@SPOOLDIR@"
+#define ZE_SPOOLDIR         "@SPOOLDIR@"
 
-#define J_WORKROOT         "@WORKROOT@"
-#define J_WORKDIR          "@WORKROOT@/files" 
-#define J_CDBDIR           "@WORKROOT@/cdb" 
-#define J_WDBDIR           "@WORKROOT@/wdb" 
-#define J_CONFDIR          "@CONFDIR@"
+#define ZE_WORKROOT         "@WORKROOT@"
+#define ZE_WORKDIR          "@WORKROOT@/files" 
+#define ZE_CDBDIR           "@WORKROOT@/cdb" 
+#define ZE_WDBDIR           "@WORKROOT@/wdb" 
+#define ZE_CONFDIR          "@CONFDIR@"
 
-#define J_GREYDDIR         "@JGREYDDIR@"
-#define J_GREYD_PID_FILE   "@STATEDIR@/j-greyd.pid"
-#define J_CONF_FILE        "@CONFDIR@/ze-filter.cf"
+#define ZE_GREYDDIR         "@JGREYDDIR@"
+#define ZE_GREYD_PID_FILE   "@STATEDIR@/ze-greyd.pid"
+#define ZE_CONF_FILE        "@CONFDIR@/ze-filter.cf"
 
-#define J_STATS_FILE       "file:j-stats"
-#define J_XFILES_LOG       "file:j-files"
-#define J_VIRUS_LOG        "file:j-virus"
-#define J_REGEX_LOG        "file:j-regex"
-#define J_GREY_LOG         "file:j-grey-expire"
-#define J_QUARANTINE_LOG   "file:j-quarantine"
+#define ZE_STATS_FILE       "file:ze-stats"
+#define ZE_XFILES_LOG       "file:ze-files"
+#define ZE_VIRUS_LOG        "file:ze-virus"
+#define ZE_REGEX_LOG        "file:ze-regex"
+#define ZE_GREY_LOG         "file:ze-grey-expire"
+#define ZE_QUARANTINE_LOG   "file:ze-quarantine"
 
-#define J_USERS_FILE       "j-local-users"
-#define J_ERROR_MSG_FILE   "j-error-msg"
-#define J_NETS_FILE        "j-nets"
-#define J_REGEX_FILE       "j-regex"
-#define J_XFILES_FILE      "j-xfiles"
-#define J_ORADATA_FILE     "j-oradata"
+#define ZE_USERS_FILE       "ze-local-users"
+#define ZE_ERROR_MSG_FILE   "ze-error-msg"
+#define ZE_NETS_FILE        "ze-nets"
+#define ZE_REGEX_FILE       "ze-regex"
+#define ZE_XFILES_FILE      "ze-xfiles"
+#define ZE_ORADATA_FILE     "ze-oradata"
 
-#define J_URLBL_DB         "j-urlbl.db"
-#define J_POLICY_DB        "j-policy.db"
-#define J_RCPT_DB          "j-rcpt.db"
+#define ZE_URLBL_DB         "ze-urlbl.db"
+#define ZE_POLICY_DB        "ze-policy.db"
+#define ZE_RCPT_DB          "ze-rcpt.db"
 
-#define J_STATEDIR         "@STATEDIR@"
-#define J_SMSOCKFILE       "local:@STATEDIR@/ze-filter.sock"
-#define J_PID_FILE         "@STATEDIR@/ze-filter.pid"
+#define ZE_STATEDIR         "@STATEDIR@"
+#define ZE_SMSOCKFILE       "local:@STATEDIR@/ze-filter.sock"
+#define ZE_PID_FILE         "@STATEDIR@/ze-filter.pid"
 
-#define J_CW_FILE          "/etc/mail/local-host-names"
+#define ZE_CW_FILE          "/etc/mail/local-host-names"
 
-#define J_CFARGS           "@CFARGS@"
+#define ZE_CFARGS           "@CFARGS@"
 
 #define LANG_EN            0
 #define LANG_FR            1

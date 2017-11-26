@@ -1,3 +1,3 @@
 
-./j-message-tbx -t interactive -l 10 -m bayes -S -s 0.6
+./ze-message-tbx -t interactive -l 10 -m bayes -S -s 0.6
 

@@ -61,7 +61,7 @@ db_open_blacklist()
   bool                res = TRUE;
   char                path[1024];
 
-  snprintf(path, sizeof (path), "%s/%s", cf_get_str(CF_WDBDIR), "j-dbbl.db");
+  snprintf(path, sizeof (path), "%s/%s", cf_get_str(CF_WDBDIR), "ze-dbbl.db");
 
   if (jdb_ok(&hdb))
     return TRUE;

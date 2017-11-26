@@ -36,7 +36,7 @@
 # made executable for this user. $HOME/bin is a good place, if this
 # is within the user's path.
 #
-# A small companion script named 'j-bayes-rebuild-db' has to be
+# A small companion script named 'ze-bayes-rebuild-db' has to be
 # installed and the user must have permission to execute it with 
 # sudo as root. See the code at the end of this script.
 #
@@ -173,18 +173,18 @@ if test $NEWADD == yes ; then
 	# to user root and group root and make it executable for root.
 	# Add the following line to /etc/sudoers using the 'visudo'
 	# command as root (example only!):
-	# usrname ALL = (root) NOPASSWD: /var/ze-filter/cdb/j-bayes-rebuild-db
+	# usrname ALL = (root) NOPASSWD: /var/ze-filter/cdb/ze-bayes-rebuild-db
 	#
 	# Note: 'usrname' in the line above is your user name.
 	# ze-filter-rebuild-db looks like this (adapt paths to your needs):
 	#-----------------------------------------------------------
 	# #!/bin/bash
-	# cp /var/ze-filter/bayes-toolbox/j-bayes.txt \
-	#    /var/ze-filter/cdb/j-bayes.txt
+	# cp /var/ze-filter/bayes-toolbox/ze-bayes.txt \
+	#    /var/ze-filter/cdb/ze-bayes.txt
 	# (cd /var/ze-filter/cdb && make)
 	# exit 0
 	#-----------------------------------------------------------
-	sudo $JCHKMAILPATH/cdb/j-bayes-rebuild-db
+	sudo $JCHKMAILPATH/cdb/ze-bayes-rebuild-db
 fi
 
 exit 0

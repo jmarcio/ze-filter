@@ -117,13 +117,13 @@ add_fext(str)
 #define MAX_EXT    1024
 #endif
 
-char               *J_FILE_EXT = NULL;
+char               *ZE_FILE_EXT = NULL;
 
 static char        *default_xfiles = CONF_XFILES_DEF;
 
 static char       **sorted_ext = NULL;
 
-char               *J_DEFAULT_EXT = NULL;
+char               *ZE_DEFAULT_EXT = NULL;
 
 /* ************************************
  *                                    *
@@ -199,7 +199,7 @@ init_default_file_extensions()
 
   FEXT_LOCK();
 
-  if (J_DEFAULT_EXT == NULL) {
+  if (ZE_DEFAULT_EXT == NULL) {
     if ((envext = getenv("FILE_EXT")) != NULL) {
       int                 n = 0;
 
@@ -234,8 +234,8 @@ init_default_file_extensions()
     }
     sprintf(sout, "[.](%s)$", sin);
 
-    FREE(J_DEFAULT_EXT);
-    J_DEFAULT_EXT = strdup(sout);
+    FREE(ZE_DEFAULT_EXT);
+    ZE_DEFAULT_EXT = strdup(sout);
   }
   FEXT_UNLOCK();
 }
@@ -250,12 +250,12 @@ init_file_extension_regex()
   char                sin[2048], sout[2048];
   int                 i;
 
-  if (J_DEFAULT_EXT == NULL)
+  if (ZE_DEFAULT_EXT == NULL)
     init_default_file_extensions();
 
-  if ((J_FILE_EXT != NULL) && J_FILE_EXT != J_DEFAULT_EXT) {
-    free(J_FILE_EXT);
-    J_FILE_EXT = NULL;
+  if ((ZE_FILE_EXT != NULL) && ZE_FILE_EXT != ZE_DEFAULT_EXT) {
+    free(ZE_FILE_EXT);
+    ZE_FILE_EXT = NULL;
   }
 
   if (nb_fext == 0) {
@@ -279,13 +279,13 @@ init_file_extension_regex()
     } else
       strlcpy(sout, "^$", sizeof (sout));
 
-    J_FILE_EXT = strdup(sout);
+    ZE_FILE_EXT = strdup(sout);
     if (debug) {
       LOG_MSG_WARNING(" nb_fext = %d", nb_fext);
-      LOG_MSG_WARNING(" EXTENSIONS = %s", STRNULL(J_FILE_EXT, ""));
+      LOG_MSG_WARNING(" EXTENSIONS = %s", STRNULL(ZE_FILE_EXT, ""));
     }
   } else {
-    J_FILE_EXT = J_DEFAULT_EXT;
+    ZE_FILE_EXT = ZE_DEFAULT_EXT;
   }
 }
 
@@ -313,7 +313,7 @@ list_filename_extensions(fd)
     }
     if (strlen(line) > 0)
       FD_PRINTF(fd, "    -  EXT    : %s\n", line);
-    FD_PRINTF(fd, "    -  REGEXP : %s\n", STRNULL(J_FILE_EXT, "NULL"));
+    FD_PRINTF(fd, "    -  REGEXP : %s\n", STRNULL(ZE_FILE_EXT, "NULL"));
   } else {
     char              **p;
 
@@ -347,17 +347,17 @@ check_filename_xfile(fname)
   if ((fname == NULL) || (strlen(fname) == 0))
     return res;
 
-  if ((J_FILE_EXT == NULL) || (strlen(J_FILE_EXT) == 0))
+  if ((ZE_FILE_EXT == NULL) || (strlen(ZE_FILE_EXT) == 0))
     return 0;
 
   FEXT_LOCK();
-  if (regcomp(&re, J_FILE_EXT, REG_ICASE | REG_EXTENDED) == 0) {
+  if (regcomp(&re, ZE_FILE_EXT, REG_ICASE | REG_EXTENDED) == 0) {
     res = (regexec(&re, fname, (size_t) 0, NULL, 0) == 0);
     regfree(&re);
   }
   FEXT_UNLOCK();
 
-  MESSAGE_INFO(15, " %-20s -> %d (%s)", fname, res, J_FILE_EXT);
+  MESSAGE_INFO(15, " %-20s -> %d (%s)", fname, res, ZE_FILE_EXT);
 
   return res;
 }
@@ -590,7 +590,7 @@ load_xfiles_table(cfdir, fname)
     res = j_table_clear(&htbl);
 
   if (res == 0)
-    result = read_conf_data_file(cfdir, fname, "j-xfiles", read_it);
+    result = read_conf_data_file(cfdir, fname, "ze-xfiles", read_it);
 
   DATA_UNLOCK();
 
@@ -645,7 +645,7 @@ check_xfiles(fname, mime, msgsize, saction, bufsize)
 
         switch (id) {
           case XFILES_DEFAULT:
-            if (!strexpr(fname, J_DEFAULT_EXT, NULL, NULL, TRUE))
+            if (!strexpr(fname, ZE_DEFAULT_EXT, NULL, NULL, TRUE))
               continue;
             break;
           case XFILES_CLSID:

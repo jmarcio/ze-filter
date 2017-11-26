@@ -64,7 +64,7 @@ main(argc, argv)
 
   extern int          log_level;
 
-  configure("j-policy-test", conf_file, FALSE);
+  configure("ze-policy-test", conf_file, FALSE);
 
   memset(answer, 0, sizeof (answer));
 

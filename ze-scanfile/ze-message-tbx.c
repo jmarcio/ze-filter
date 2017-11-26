@@ -196,7 +196,7 @@ main(int argc, char **argv)
   if (cf_opt.arg_c != NULL)
     conf_file = cf_opt.arg_c;
 
-  configure("j-message-toolbox", conf_file, FALSE);
+  configure("ze-message-toolbox", conf_file, FALSE);
 
   log_level = level + verbose;
 
@@ -260,7 +260,7 @@ main(int argc, char **argv)
   if (GET_BIT(docheck, 3))
   {
     char                path[1024];
-    char               *dbname = J_CDBDIR "/j-bayes.db";
+    char               *dbname = ZE_CDBDIR "/ze-bayes.db";
     char               *cfdir;
 
     size_t              msgSize, partSize;
@@ -271,7 +271,7 @@ main(int argc, char **argv)
     MESSAGE_INFO(1, " Will open bayes database %s", dbname);
     memset(path, 0, sizeof (path));
     cfdir = cf_get_str(CF_CDBDIR);
-    ADJUST_FILENAME(path, dbname, cfdir, "j-bayes.db");
+    ADJUST_FILENAME(path, dbname, cfdir, "ze-bayes.db");
     MESSAGE_INFO(1, "           database path  %s", path);
 
     if (strlen(path) > 0 && !bfilter_init(path))
@@ -878,7 +878,7 @@ cli_toolbox(mstat)
 void
 usage()
 {
-  printf("Usage : j-message-tbx options\n"
+  printf("Usage : ze-message-tbx options\n"
          " -h \n"
          " -c file\n"
          "    configuration file (default : %s)\n"
@@ -899,7 +899,7 @@ usage()
          "       maildir - each argument is a directory with files inside\n"
          "       dir     - the same as maildir\n"
          "       list    - each argument is a file with a list of file names\n"
-         "                 each file contains a single message\n", J_CONF_FILE);
+         "                 each file contains a single message\n", ZE_CONF_FILE);
 
   printf("\n%s - Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz - (C) 2001-2007\n",
          PACKAGE);

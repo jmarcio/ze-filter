@@ -848,7 +848,7 @@ cpuload_start()
   pthread_t           tid;
   int                 r;
 
-  MESSAGE_INFO(10, "*** Starting %s ...", J_FUNCTION);
+  MESSAGE_INFO(10, "*** Starting %s ...", ZE_FUNCTION);
 
 #if OS_LINUX
   if ((r = pthread_create(&tid, NULL, cpuload_thread, (void *) NULL)) != 0)

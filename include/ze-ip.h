@@ -22,10 +22,10 @@
  */
 
 
-#ifndef J_IP_H
+#ifndef ZE_IP_H
 
 
 
-# define J_IP_H    1
+# define ZE_IP_H    1
 #endif /* J_IP_H */
 

@@ -22,7 +22,7 @@
  */
 
 
-#ifndef J_MODULES_H
+#ifndef ZE_MODULES_H
 
 #define MOD_API_MAJOR           0x00
 #define MOD_API_MINOR           0x02
@@ -92,5 +92,5 @@ bool                module_call(int callback, int step, mod_ctx_T * arg);
 
 bool                module_service(int why);
 
-# define J_MODULES_H    1
+# define ZE_MODULES_H    1
 #endif             /* J_MODULES_H */

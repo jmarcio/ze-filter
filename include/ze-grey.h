@@ -22,7 +22,7 @@
  */
 
 
-#ifndef J_GREY_H
+#ifndef ZE_GREY_H
 
 
 #define             GREY_OK       200
@@ -108,5 +108,5 @@ bool                grey_remove_entry(char *where, char *key);
 
 bool                grey_remove_entries_from_file(char *where, char *fname);
 
-# define J_GREY_H    1
+# define ZE_GREY_H    1
 #endif             /* J_GREY_H */

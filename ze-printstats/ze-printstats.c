@@ -215,7 +215,7 @@ main(int argc, char **argv)
   if (cf_opt.arg_c != NULL)
     conf_file = cf_opt.arg_c;
 
-  configure("j-printstats", conf_file, FALSE);
+  configure("ze-printstats", conf_file, FALSE);
 
   if (jp > 0 || jg > 0)
   {
@@ -238,7 +238,7 @@ main(int argc, char **argv)
       if (dir != NULL && strlen(dir) > 0)
         snprintf(dbdir, sizeof (dbdir), "%s/%s", dir, "db");
 
-      if (!open_work_db_env(dbdir, J_WDBDIR, TRUE))
+      if (!open_work_db_env(dbdir, ZE_WDBDIR, TRUE))
       {
       }
     }
@@ -297,13 +297,13 @@ main(int argc, char **argv)
 void
 usage()
 {
-  printf("Usage : j-printstats options\n"
-         "    j-printstats -c conf_file\n"
-         "    j-printstats -a | -p | -g\n"
+  printf("Usage : ze-printstats options\n"
+         "    ze-printstats -c conf_file\n"
+         "    ze-printstats -a | -p | -g\n"
          "        -p   : print running process ze-filter counters\n"
          "        -g   : print ze-filter counters from last reset\n"
          "        -a   : print both counters\n"
-         "    j-printstats -t[td]\n"
+         "    ze-printstats -t[td]\n"
          "        -t   : throttle data (summary)\n"
          "        -tt  : throttle data (detail)\n"
          "        -d   : resolve IP addresses\n"
@@ -312,7 +312,7 @@ usage()
          "        -l   : period of interest - default value : 10m\n"
          "               period shall be smaller than 20m - default unit : s\n"
          "        -n N : max number of records to print\n"         
-         "    j-printstats -q [-l dt [s|m|h|d]] [[-v | ip | hostname] | [-m x]]\n"
+         "    ze-printstats -q [-l dt [s|m|h|d]] [[-v | ip | hostname] | [-m x]]\n"
          "        -q   : query gateway activity\n"
          "        -l   : period of interest - default unit : secs\n"
          "        -v   : verbose - meaninful only if gateway not specified\n"

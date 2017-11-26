@@ -30,7 +30,7 @@
  *   SCORE STATS                                                              *
  **************************************************************************** */
 #define MAX_SCORE  32
-#define STATE_FILE        "j-state"
+#define STATE_FILE        "ze-state"
 
 static struct
 {
@@ -365,7 +365,7 @@ log_counters(fd, dump)
   {
     wkdir = cf_get_str(CF_WORKDIR);
     if (wkdir == NULL || strlen(wkdir) == 0)
-      wkdir = J_WORKDIR;
+      wkdir = ZE_WORKDIR;
 
     fname = cf_get_str(CF_STATS_FILE);
 
@@ -455,7 +455,7 @@ save_state()
 
   wkdir = cf_get_str(CF_WORKDIR);
   if (wkdir == NULL || strlen(wkdir) == 0)
-    wkdir = J_WORKDIR;
+    wkdir = ZE_WORKDIR;
 
   ADJUST_FILENAME(path, fname, wkdir, STATE_FILE);
 
@@ -494,7 +494,7 @@ read_state()
 
   wkdir = cf_get_str(CF_WORKDIR);
   if (wkdir == NULL || strlen(wkdir) == 0)
-    wkdir = J_WORKDIR;
+    wkdir = ZE_WORKDIR;
 
   ADJUST_FILENAME(path, fname, wkdir, STATE_FILE);
 
@@ -577,7 +577,7 @@ print_state(ofd)
 
   wkdir = cf_get_str(CF_WORKDIR);
   if (wkdir == NULL || strlen(wkdir) == 0)
-    wkdir = J_WORKDIR;
+    wkdir = ZE_WORKDIR;
 
   ADJUST_FILENAME(path, fname, wkdir, STATE_FILE);
 
@@ -1117,7 +1117,7 @@ dump_state(ofd, jp, jg, all, nf)
 
   wkdir = cf_get_str(CF_WORKDIR);
   if (wkdir == NULL || strlen(wkdir) == 0)
-    wkdir = J_WORKDIR;
+    wkdir = ZE_WORKDIR;
 
   ADJUST_FILENAME(path, fname, wkdir, STATE_FILE);
 

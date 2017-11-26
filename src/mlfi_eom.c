@@ -256,14 +256,14 @@ mlfi_eom(ctx)
     /*
      * add a header to the message announcing our presence 
      */
-    switch (cf_get_int(CF_J_HOSTNAME)) {
+    switch (cf_get_int(CF_ZE_HOSTNAME)) {
       case OPT_SYSTEM:
         break;
       case OPT_SENDMAIL:
         p = smfi_getsymval(ctx, "j");
         break;
       default:
-        p = cf_get_str(CF_J_HOSTNAME);
+        p = cf_get_str(CF_ZE_HOSTNAME);
         break;
     }
 

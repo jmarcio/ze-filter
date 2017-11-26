@@ -240,7 +240,7 @@ main(argc, argv)
   if (cf_opt.arg_c != NULL)
     conf_file = cf_opt.arg_c;
 
-  configure("j-mfilter", conf_file, FALSE);
+  configure("ze-mfilter", conf_file, FALSE);
 
   set_mime_debug(FALSE);
 
@@ -345,7 +345,7 @@ db_open_token_database()
 
   jdb_lock(&hdb);
   if (!jdb_ok(&hdb))
-    res = jdb_open(&hdb, NULL, "/tmp/j-token.db", 0644, FALSE, FALSE, 0);
+    res = jdb_open(&hdb, NULL, "/tmp/ze-token.db", 0644, FALSE, FALSE, 0);
   jdb_unlock(&hdb);
 
   return res;

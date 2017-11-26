@@ -22,13 +22,13 @@
  */
 
 
-#ifndef J_LOG_REGEX_H
+#ifndef ZE_LOG_REGEX_H
 
 extern bool           mailregexlog2file;
 
 bool    log_found_regex(char *, char *, char *, int, int, char *);
 bool            log_regex_reopen();
 
-# define J_LOG_REGEX_H    1
+# define ZE_LOG_REGEX_H    1
 #endif /* J_LOG_REGEX_H */
 

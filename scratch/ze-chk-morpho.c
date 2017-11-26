@@ -52,7 +52,7 @@ main(argc, argv)
   if (cf_opt.arg_c != NULL)
     conf_file = cf_opt.arg_c;
 
-  configure("j-chk-morpho", conf_file, FALSE);
+  configure("ze-chk-morpho", conf_file, FALSE);
 
   set_mime_debug(FALSE);
 

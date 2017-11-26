@@ -22,7 +22,7 @@
  */
 
 
-#ifndef J_PROC_WITNESS_H
+#ifndef ZE_PROC_WITNESS_H
 
 bool                create_pid_file(char *fname);
 void                remove_pid_file(void);
@@ -32,5 +32,5 @@ char               *define_milter_sock(char *cf, char *p, char *u, char *i);
 
 extern char        *milter_sock_file;
 
-# define J_PROC_WITNESS_H    1
+# define ZE_PROC_WITNESS_H    1
 #endif             /* J_PROC_WITNESS_H */

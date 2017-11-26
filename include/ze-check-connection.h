@@ -22,7 +22,7 @@
  */
 
 
-#ifndef J_CHECK_CONNECTION_H
+#ifndef ZE_CHECK_CONNECTION_H
 
 
 sfsistat            check_dns_resolve(SMFICTX *);
@@ -44,5 +44,5 @@ sfsistat            check_single_message(SMFICTX *);
 
 sfsistat            validate_connection(SMFICTX *);
 
-# define J_CHECK_CONNECTION_H    1
+# define ZE_CHECK_CONNECTION_H    1
 #endif             /* J_CHECK_CONNECTION_H */

@@ -22,7 +22,7 @@
  */
 
 
-#ifndef J_LIBMILTER_H
+#ifndef ZE_LIBMILTER_H
 
 #ifndef      SMFIS_UNDEF
 # define      SMFIS_UNDEF     -1
@@ -34,5 +34,5 @@ int                 jsmfi_vsetreply(SMFICTX * ctx, char *ca, char *cb,
 
 int                 Smfi_ChgFrom(SMFICTX * ctx, char *mail, char *args);
 
-# define J_LIBMILTER_H    1
+# define ZE_LIBMILTER_H    1
 #endif             /* J_LIBMILTER_H */

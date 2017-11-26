@@ -22,9 +22,9 @@
  */
 
 
-#ifndef J_LOGREG_H
+#ifndef ZE_LOGREG_H
 
 double              logreg_check(bool learn, double grad, char *file);
 
-# define J_LOGREG_H    1
+# define ZE_LOGREG_H    1
 #endif             /* J_LOGREG_H */

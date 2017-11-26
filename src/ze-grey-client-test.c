@@ -124,7 +124,7 @@ main(argc, argv)
     }
   }
 
-  configure("j-grey-client-test", conf_file, FALSE);
+  configure("ze-grey-client-test", conf_file, FALSE);
 
   do_test(&cargs);
 

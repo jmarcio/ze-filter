@@ -49,21 +49,21 @@ static ndc_help_T   helps[] = {
    "version",
    NULL,
    "  VERSION\r\n"
-   "    * Show filter version\r\n" "    * Syntax :\r\n" "      j-ndc VERSION\r\n"},
+   "    * Show filter version\r\n" "    * Syntax :\r\n" "      ze-ndc VERSION\r\n"},
 
   {
    "setcf",
    NULL,
    "  SETCF\r\n"
    "    * Modify running configuration (overrides ze-filter values)\r\n"
-   "    * Syntax :\r\n" "      j-ndc SETCF option value\r\n"},
+   "    * Syntax :\r\n" "      ze-ndc SETCF option value\r\n"},
 
   {
    "dumpcf",
    NULL,
    "  DUMPCF\r\n"
    "    * Dumps running configuration\r\n"
-   "    * Syntax :\r\n" "      j-ndc DUMPCF option\r\n"
+   "    * Syntax :\r\n" "      ze-ndc DUMPCF option\r\n"
    "          option is one of :\r\n"
    "            default\r\n"
    "            running\r\n"
@@ -76,7 +76,7 @@ static ndc_help_T   helps[] = {
    "  SETORACLE\r\n"
    "    * Set heuristic filter (oracle) checks scores\r\n"
    "    * Syntax :\r\n"
-   "      j-ndc SETORACLE Tnn value\r\n"
+   "      ze-ndc SETORACLE Tnn value\r\n"
    "        Where T is one of :\r\n"
    "           R : RBL Check\r\n"
    "           C : Connection check\r\n"
@@ -90,7 +90,7 @@ static ndc_help_T   helps[] = {
    "  SET\r\n"
    "    * Set the value of some internal variables\r\n"
    "    * Syntax :\r\n"
-   "      j-ndc SET variable value\r\n"
+   "      ze-ndc SET variable value\r\n"
    "        Where variable can be one of :\r\n"
    "          LOGLEVEL\r\n"
    "          LOG_SM_MACROS\r\n" "          MXCHECKLEVEL\r\n"
@@ -111,14 +111,14 @@ static ndc_help_T   helps[] = {
    "  BAYES\r\n"
    "    * Reopen bayes filter database\r\n"
    "    * Syntax :\r\n"
-   "      j-ndc BAYES command parameter\r\n"
+   "      ze-ndc BAYES command parameter\r\n"
    "        Where command can be one of :\r\n" "          REOPEN\r\n"},
 
 #if 0
   {
    "greydelete",
    NULL,
-   "    *" "    * Syntax :\r\n" "      j-ndc \r\n"},
+   "    *" "    * Syntax :\r\n" "      ze-ndc \r\n"},
 #endif
 
   {
@@ -127,7 +127,7 @@ static ndc_help_T   helps[] = {
    "  SHOW\r\n"
    "    * Show internals\r\n"
    "    * Syntax :\r\n"
-   "      j-ndc SHOW select\r\n"
+   "      ze-ndc SHOW select\r\n"
    "        Where select can be one of :\r\n"
    "          RUN        : Running configuration\r\n"},
 
@@ -137,7 +137,7 @@ static ndc_help_T   helps[] = {
    "  STATS\r\n"
    "    * Show internal statistics for this filter instance\r\n"
    "    * Syntax :\r\n"
-   "      j-ndc STATS select\r\n"
+   "      ze-ndc STATS select\r\n"
    "        Where select can be one of :\r\n"
    "          ORACLE         : heuristic filter counters for this process\r\n"
    "          THROTTLE       : show global server rates\r\n"
@@ -156,7 +156,7 @@ static ndc_help_T   helps[] = {
    NULL,
    "  RECONFIG\r\n"
    "    * Reload configuration files (ze-filter.cf)\r\n"
-   "    * Syntax :\r\n" "      j-ndc RECONFIG\r\n"},
+   "    * Syntax :\r\n" "      ze-ndc RECONFIG\r\n"},
 
   {
    "reload",
@@ -164,24 +164,24 @@ static ndc_help_T   helps[] = {
    "  RELOAD\r\n"
    "    * Reload / Reopen tables databases or logfiles\r\n"
    "    * Syntax :\r\n"
-   "      j-ndc RELOAD select\r\n"
+   "      ze-ndc RELOAD select\r\n"
    "        Where select can be one of :\r\n"
    "          TABLES     : \r\n"
-   "                       j-regex\r\n"
-   "                       j-oracle\r\n"
-   "                       j-tables\r\n"
-   "                       j-xfiles\r\n"
+   "                       ze-regex\r\n"
+   "                       ze-oracle\r\n"
+   "                       ze-tables\r\n"
+   "                       ze-xfiles\r\n"
    "          DATABASES  : \r\n"
-   "                       j-rcpt.db\r\n"
-   "                       j-policy.db\r\n"
-   "                       j-urlbl.db\r\n"
-   "                       j-bayes.db\r\n"
+   "                       ze-rcpt.db\r\n"
+   "                       ze-policy.db\r\n"
+   "                       ze-urlbl.db\r\n"
+   "                       ze-bayes.db\r\n"
    "          LOGFILES   : \r\n"
-   "                       j-regex\r\n"
-   "                       j-files\r\n"
-   "                       j-virus\r\n"
-   "                       j-quarantine\r\n"
-   "                       j-stats\r\n"},
+   "                       ze-regex\r\n"
+   "                       ze-files\r\n"
+   "                       ze-virus\r\n"
+   "                       ze-quarantine\r\n"
+   "                       ze-stats\r\n"},
 
   {
    "reopen",
@@ -189,24 +189,24 @@ static ndc_help_T   helps[] = {
    "  REOPEN\r\n"
    "    * Reload / Reopen tables databases or logfiles\r\n"
    "    * Syntax :\r\n"
-   "      j-ndc REOPEN select\r\n"
+   "      ze-ndc REOPEN select\r\n"
    "        Where select can be one of :\r\n"
    "          TABLES     : \r\n"
-   "                       j-regex\r\n"
-   "                       j-oracle\r\n"
-   "                       j-tables\r\n"
-   "                       j-xfiles\r\n"
+   "                       ze-regex\r\n"
+   "                       ze-oracle\r\n"
+   "                       ze-tables\r\n"
+   "                       ze-xfiles\r\n"
    "          DATABASES  : \r\n"
-   "                       j-rcpt.db\r\n"
-   "                       j-policy.db\r\n"
-   "                       j-urlbl.db\r\n"
-   "                       j-bayes.db\r\n"
+   "                       ze-rcpt.db\r\n"
+   "                       ze-policy.db\r\n"
+   "                       ze-urlbl.db\r\n"
+   "                       ze-bayes.db\r\n"
    "          LOGFILES   : \r\n"
-   "                       j-regex_r\n"
-   "                       j-files\r\n"
-   "                       j-virus\r\n"
-   "                       j-quarantine\r\n"
-   "                       j-stats\r\n"},
+   "                       ze-regex_r\n"
+   "                       ze-files\r\n"
+   "                       ze-virus\r\n"
+   "                       ze-quarantine\r\n"
+   "                       ze-stats\r\n"},
 
   {
    "reset",
@@ -214,7 +214,7 @@ static ndc_help_T   helps[] = {
    "  RESET\r\n"
    "    * Reinitialize internal values\r\n"
    "    * Syntax :\r\n"
-   "      j-ndc RESET select\r\n"
+   "      ze-ndc RESET select\r\n"
    "        Where select can be one of :\r\n"
    "          STATS\r\n" "          GREYERRORS\r\n"},
 
@@ -223,7 +223,7 @@ static ndc_help_T   helps[] = {
    NULL,
    "  RESTART\r\n"
    "    * Restart the filter (soft restart)\r\n"
-   "    * Syntax :\r\n" "      j-ndc RESTART\r\n"},
+   "    * Syntax :\r\n" "      ze-ndc RESTART\r\n"},
 
   {
    NULL, NULL, NULL}

@@ -52,28 +52,28 @@ typedef struct {
 } RATE_DEF_T;
 
 static RATE_DEF_T   rateDef[] = {
-  {RATE_CONN, "j-conn.data", "Connection Rate", 10 MINUTE, NULL, 1.0, NULL},
-  {RATE_RCPT, "j-rcpt.data", "Recipient Rate", 10 MINUTE, NULL, 1.0, NULL},
-  {RATE_BOUNCE, "j-bounce.data", "Bounce Rate", 10 MINUTE, NULL, 1.0, NULL},
-  {RATE_MSGS, "j-msgs.data", "Message Rate", 10 MINUTE, NULL, 1.0, NULL},
-  {RATE_HAM, "j-ham.data", "Ham Rate", 10 MINUTE, NULL, 1.0, NULL},
-  {RATE_SPAM, "j-spam.data", "Spam Rate", 10 MINUTE, NULL, 1.0, NULL},
-  {RATE_SCORE, "j-score.data", "Spam Score Rate", 10 MINUTE, NULL, 1.0, NULL},
-  {RATE_XFILES, "j-xfiles.data", "XFiles Rate", 10 MINUTE, NULL, 1.0, NULL},
-  {RATE_VOLUME, "j-bytes.data", "Volume Rate", 10 MINUTE, NULL, 1.0, NULL},
-  {RATE_SVCTIME, "j-svctime.data", "Service Time Rate", 10 MINUTE, NULL, 1.0,
+  {RATE_CONN, "ze-conn.data", "Connection Rate", 10 MINUTE, NULL, 1.0, NULL},
+  {RATE_RCPT, "ze-rcpt.data", "Recipient Rate", 10 MINUTE, NULL, 1.0, NULL},
+  {RATE_BOUNCE, "ze-bounce.data", "Bounce Rate", 10 MINUTE, NULL, 1.0, NULL},
+  {RATE_MSGS, "ze-msgs.data", "Message Rate", 10 MINUTE, NULL, 1.0, NULL},
+  {RATE_HAM, "ze-ham.data", "Ham Rate", 10 MINUTE, NULL, 1.0, NULL},
+  {RATE_SPAM, "ze-spam.data", "Spam Rate", 10 MINUTE, NULL, 1.0, NULL},
+  {RATE_SCORE, "ze-score.data", "Spam Score Rate", 10 MINUTE, NULL, 1.0, NULL},
+  {RATE_XFILES, "ze-xfiles.data", "XFiles Rate", 10 MINUTE, NULL, 1.0, NULL},
+  {RATE_VOLUME, "ze-bytes.data", "Volume Rate", 10 MINUTE, NULL, 1.0, NULL},
+  {RATE_SVCTIME, "ze-svctime.data", "Service Time Rate", 10 MINUTE, NULL, 1.0,
    NULL},
-  {RATE_FROM_CONN, "j-fromconn.data", "Connection Rate by sender address",
+  {RATE_FROM_CONN, "ze-fromconn.data", "Connection Rate by sender address",
    20 MINUTE, NULL, 1.0, NULL},
-  {RATE_FROM_MSGS, "j-frommsgs.data", "Message Rate by sender address",
+  {RATE_FROM_MSGS, "ze-frommsgs.data", "Message Rate by sender address",
    20 MINUTE, NULL, 1.0, NULL},
-  {RATE_FROM_RCPT, "j-fromrcpt.data", "Recipient Rate by sender address",
+  {RATE_FROM_RCPT, "ze-fromrcpt.data", "Recipient Rate by sender address",
    20 MINUTE, NULL, 1.0, NULL},
-  {RATE_AUTH_CONN, "j-authconn.data", "Connection Rate AUTH login",
+  {RATE_AUTH_CONN, "ze-authconn.data", "Connection Rate AUTH login",
    20 MINUTE, NULL, 1.0, NULL},
-  {RATE_AUTH_MSGS, "j-authmsgs.data", "Message Rate by AUTH login",
+  {RATE_AUTH_MSGS, "ze-authmsgs.data", "Message Rate by AUTH login",
    20 MINUTE, NULL, 1.0, NULL},
-  {RATE_AUTH_RCPT, "j-authrcpt.data", "Recipient Rate by AUTH login",
+  {RATE_AUTH_RCPT, "ze-authrcpt.data", "Recipient Rate by AUTH login",
    20 MINUTE, NULL, 1.0, NULL},
 
   {-1, NULL, NULL, 0, NULL, 1., NULL}
@@ -750,7 +750,7 @@ smtprate_save_table(filename)
 
   DATA_LOCK();
   if (work_dir == NULL)
-    work_dir = J_WORKDIR;
+    work_dir = ZE_WORKDIR;
 
   for (which = 0; which < RATE_DIM; which++) {
     if (rateDef[which].which < 0)
@@ -793,7 +793,7 @@ smtprate_read_table(filename)
   int                 which;
 
   if (work_dir == NULL)
-    work_dir = J_WORKDIR;
+    work_dir = ZE_WORKDIR;
 
   LOG_MSG_INFO(DEBUG_LEVEL, "Entering ...");
 

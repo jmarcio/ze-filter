@@ -22,7 +22,7 @@
  */
 
 
-#ifndef J_RFC2822_H
+#ifndef ZE_RFC2822_H
 
 typedef struct rfc2822_hdr_T rfc2822_hdr_T, *rfc2822_hdr_P;
 
@@ -52,6 +52,6 @@ char            *rfc2822_get_attr(rfc2822_hdr_T *header, char *attr);
       (head) = x;				\
     }
 
-# define J_RFC2822_H    1
+# define ZE_RFC2822_H    1
 #endif /* J_RFC2822_H */
 

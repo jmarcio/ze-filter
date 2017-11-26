@@ -22,11 +22,11 @@
  */
 
 
-#ifndef J_LOG_QUARANTINE_H
+#ifndef ZE_LOG_QUARANTINE_H
 
 void                log_quarantine(SMFICTX *, attachment_T *);
 bool                log_quarantine_reopen();
 
-# define J_LOG_QUARANTINE_H    1
+# define ZE_LOG_QUARANTINE_H    1
 #endif /* J_LOG_QUARANTINE_H */
 

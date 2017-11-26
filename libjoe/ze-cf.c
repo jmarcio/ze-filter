@@ -33,7 +33,7 @@
 
 #define TOKEN_TAG     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_0123456789@"
 
-char               *conf_file = J_CONF_FILE;
+char               *conf_file = ZE_CONF_FILE;
 
 unsigned int        statistics_interval = 300;
 
@@ -41,10 +41,10 @@ unsigned int        statistics_interval = 300;
 
 #define      CF_NONE    0
 
-#define      J_STR      1
-#define      J_ENUM     2
-#define      J_INT      3
-#define      J_DOUBLE   4
+#define      ZE_STR      1
+#define      ZE_ENUM     2
+#define      ZE_INT      3
+#define      ZE_DOUBLE   4
 
 #define      DIM_CF     256
 
@@ -171,16 +171,16 @@ fill_conf_data()
 
   while (p->id >= 0) {
     switch (p->type) {
-      case J_INT:
+      case ZE_INT:
         cf_add_id_int(p->id, p->cftag, p->cfnull);
         break;
-      case J_STR:
+      case ZE_STR:
         cf_add_id_str(p->id, p->cftag, p->str_length, p->cfnull);
         break;
-      case J_DOUBLE:
+      case ZE_DOUBLE:
         cf_add_id_double(p->id, p->cftag, p->cfnull);
         break;
-      case J_ENUM:
+      case ZE_ENUM:
         cf_add_id_enum(p->id, p->cftag, p->enum_ptr, p->cfnull);
         break;
       default:
@@ -228,7 +228,7 @@ cf_dump(fd, full)
   for (i = 0; i < DIM_CF; i++) {
     if (cf[i].id != 0) {
       switch (cf[i].kind) {
-        case J_INT:
+        case ZE_INT:
           if (full) {
             char               *p = cf[i].strval;
 
@@ -252,7 +252,7 @@ cf_dump(fd, full)
                         cf[i].iv);
           }
           break;
-        case J_DOUBLE:
+        case ZE_DOUBLE:
           if (full) {
             char               *p = cf[i].strval;
 
@@ -276,7 +276,7 @@ cf_dump(fd, full)
                         cf[i].dv);
           }
           break;
-        case J_ENUM:
+        case ZE_ENUM:
           p = cf[i].sv;
           if (p == NULL || strlen(p) == 0) {
             for (j = 0; cf[i].opt[j] != NULL; j++) {
@@ -296,7 +296,7 @@ cf_dump(fd, full)
                       cf[i].id, cf[i].name, cf[i].iv, p != NULL ? p : "(null)");
           }
           break;
-        case J_STR:
+        case ZE_STR:
           if (cf[i].sv != NULL) {
             int                 n = 0;
 
@@ -421,7 +421,7 @@ mk_cf_file(fd, inuse, verbose)
       if (p->syntax != NULL && strlen(p->syntax) > 0)
         FD_PRINTF(fd, "#  Syntax : %s\n", STRNULL(p->syntax, ""));
 
-      if (p->type == J_ENUM) {
+      if (p->type == ZE_ENUM) {
         char              **v;
 
         FD_PRINTF(fd, "#     VALUES : ");
@@ -488,15 +488,15 @@ cf_clear_values()
 
   for (i = 0; i < DIM_CF; i++) {
     switch (cf[i].kind) {
-      case J_STR:
+      case ZE_STR:
         if (cf[i].sv)
           *cf[i].sv = '\0';
         cf[i].iv = 0;
         break;
-      case J_INT:
+      case ZE_INT:
         cf[i].iv = 0;
         break;
-      case J_ENUM:
+      case ZE_ENUM:
         cf[i].iv = 0;
         if (cf[i].sv)
           *cf[i].sv = '\0';
@@ -539,7 +539,7 @@ cf_add_id_enum(id, name, opt, val)
   memset(cf[i].sv, 0, len + 1);
   cf[i].iv = 0;
   cf[i].id = id;
-  cf[i].kind = J_ENUM;
+  cf[i].kind = ZE_ENUM;
   cf[i].slen = len;
   cf[i].opt = opt;
 
@@ -578,7 +578,7 @@ cf_add_id_str(id, name, len, val)
   memset(cf[i].sv, 0, len + 1);
   cf[i].iv = 0;
   cf[i].id = id;
-  cf[i].kind = J_STR;
+  cf[i].kind = ZE_STR;
   cf[i].slen = len;
 
   cf_set_val(id, val);
@@ -610,7 +610,7 @@ cf_add_id_int(id, name, val)
   cf[i].sv = NULL;
   cf[i].iv = 0;
   cf[i].id = id;
-  cf[i].kind = J_INT;
+  cf[i].kind = ZE_INT;
   cf[i].slen = 0;
 
   cf_set_val(id, val);
@@ -642,7 +642,7 @@ cf_add_id_double(id, name, val)
   cf[i].sv = NULL;
   cf[i].iv = 0;
   cf[i].id = id;
-  cf[i].kind = J_DOUBLE;
+  cf[i].kind = ZE_DOUBLE;
   cf[i].slen = 0;
 
   cf_set_val(id, val);
@@ -709,18 +709,18 @@ cf_set_val(id, value)
 
   strlcpy(cf[i].strval, value, sizeof (cf[i].strval));
   switch (cf[i].kind) {
-    case J_STR:
+    case ZE_STR:
       strlcpy(cf[i].sv, value, cf[i].slen);
       break;
-    case J_INT:
+    case ZE_INT:
       val = str2long(value, NULL, 0);
       cf[i].iv = val;
       break;
-    case J_DOUBLE:
+    case ZE_DOUBLE:
       val = str2double(value, NULL, 0.0);
       cf[i].dv = val;
       break;
-    case J_ENUM:
+    case ZE_ENUM:
       val = get_enum_index(value, cf[i].opt);
       if (val < 0)
         return CF_NONE;
@@ -757,7 +757,7 @@ cf_set_str_val(id, value)
   if (i == DIM_CF)
     return CF_NONE;
 
-  if (cf[i].kind == J_STR) {
+  if (cf[i].kind == ZE_STR) {
     strlcpy(cf[i].sv, value, cf[i].slen);
   }
   return id;
@@ -784,7 +784,7 @@ cf_append_str_val(id, value)
   if (i == DIM_CF)
     return CF_NONE;
 
-  if (cf[i].kind == J_STR) {
+  if (cf[i].kind == ZE_STR) {
     if (strlen(cf[i].sv) > 0) {
       if ((strlen(cf[i].sv) + strlen(value) + strlen("\n")) < cf[i].slen) {
         strlcat(cf[i].sv, "\n", cf[i].slen);
@@ -866,13 +866,13 @@ cf_get_str(id)
   for (i = 0; i < DIM_CF; i++) {
     if (id == cf[i].id) {
       switch (cf[i].kind) {
-        case J_STR:
+        case ZE_STR:
           res = cf[i].sv;
           break;
-        case J_INT:
+        case ZE_INT:
           res = cf[i].strval;
           break;
-        case J_ENUM:
+        case ZE_ENUM:
           if (cf[i].opt != NULL) {
             for (j = 0; cf[i].opt[j] != NULL; j++) {
               if (j == cf[i].iv) {
@@ -1072,7 +1072,7 @@ reload_cf_tables()
 
   cfdir = cf_get_str(CF_CONFDIR);
   if (cfdir == NULL || strlen(cfdir) == 0)
-    cfdir = J_CONFDIR;
+    cfdir = ZE_CONFDIR;
 
   MESSAGE_INFO(10, "Reloading configuration tables...");
 
@@ -1143,7 +1143,7 @@ configure_after(app)
   {
     int                 opt = CF_LOG_FACILITY;
 
-    if (STRCASEEQUAL(app, "j-greyd"))
+    if (STRCASEEQUAL(app, "ze-greyd"))
       opt = CF_GREYD_LOG_FACILITY;
 
     if ((p = cf_get_str(opt)) != NULL) {

@@ -11,14 +11,14 @@ BINDIR=@prefix@/bin
 
 cd $CDBDIR
 
-FILES2GET="j-toolbox/j-bayes-md5.txt"
+FILES2GET="ze-toolbox/ze-bayes-md5.txt"
 for file in $FILES2GET
 do
   $RSYNC -avz rsync://$RSERVER/$file .
   [ "$?" = "0" ] && $MAKE -f Makefile
 done
 
-LR2GET="j-toolbox/j-lr.txt"
+LR2GET="ze-toolbox/ze-lr.txt"
 $RSYNC -avz rsync://$RSERVER/$LR2GET .
-[ "$?" = "0" ] && j-ndc reload lrdata
+[ "$?" = "0" ] && ze-ndc reload lrdata
 

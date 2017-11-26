@@ -70,7 +70,7 @@ spool_file_create(priv)
   FREE(priv->fname);
 
   if ((p = cf_get_str(CF_SPOOLDIR)) == NULL)
-    p = J_SPOOLDIR;
+    p = ZE_SPOOLDIR;
 
   if (cf_get_int(CF_CLUSTER) == OPT_YES)
   {

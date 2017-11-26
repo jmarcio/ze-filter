@@ -27,8 +27,8 @@ The contents of this directory will be installed as
 ***************
 
 To use this tools, you need to compile and install ze-filter. Mainly,
-you'll need two programs from ze-filter distribution : j-makemap (to
-handle BerkeleyDB databases) and j-bayes-tbx (to extract tokens from
+you'll need two programs from ze-filter distribution : ze-makemap (to
+handle BerkeleyDB databases) and ze-bayes-tbx (to extract tokens from
 messages and check messages).
 
 
@@ -82,9 +82,9 @@ learn.sh is a contribution from Thomas Spahni.
 5. Checking filter efficiency
 *****************************
 
-Use the j-bayes-tbx executable :
+Use the ze-bayes-tbx executable :
 
-	j-bayes-tbx -c [ -p -x -v ] mailbox
+	ze-bayes-tbx -c [ -p -x -v ] mailbox
 
 REM : play with p, x and v options to see what they do
 

@@ -244,8 +244,8 @@ raw_history_open(ronly)
                (long) history_entries);
 
   if (work_dir == NULL)
-    work_dir = J_WORKDIR;
-  snprintf(fname, sizeof (fname), "%s/%s", work_dir, "j-history");
+    work_dir = ZE_WORKDIR;
+  snprintf(fname, sizeof (fname), "%s/%s", work_dir, "ze-history");
 
   HISTORY_LOCK();
   if (hfile.fd < 0)

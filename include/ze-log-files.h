@@ -22,11 +22,11 @@
  */
 
 
-#ifndef J_LOG_FILES_H
+#ifndef ZE_LOG_FILES_H
 
 bool                log_attached_files(char *, char *, attachment_T *);
 bool                log_attached_files_ropen();
 
-# define J_LOG_FILES_H    1
+# define ZE_LOG_FILES_H    1
 #endif /* J_LOG_FILES_H */
 

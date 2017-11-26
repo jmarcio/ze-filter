@@ -18,10 +18,10 @@ my $PORT = 2010;
 my $help = 0;
 my $quit = 0;
 
-my @CFFILES = qw(/etc/ze-filter/j-ndc.cf
-		 /etc/j-ndc.cf
-		 /usr/local/etc/ze-filter/j-ndc.cf
-		 /usr/local/etc/j-ndc.cf);
+my @CFFILES = qw(/etc/ze-filter/ze-ndc.cf
+		 /etc/ze-ndc.cf
+		 /usr/local/etc/ze-filter/ze-ndc.cf
+		 /usr/local/etc/ze-ndc.cf);
 
 my %CF = ();
 
@@ -160,9 +160,9 @@ sub usage
 
   print << "EOF";
 Usage:
-   j-ndc [-h] [-s server] [-p port] command
+   ze-ndc [-h] [-s server] [-p port] command
 
-   Use the j-ndc script to send a command to the filter.
+   Use the ze-ndc script to send a command to the filter.
 
    Options :
 
@@ -177,7 +177,7 @@ Usage:
      ...
 
      To know the list of all available commandes type :
-            j-ndc help
+            ze-ndc help
 
 EOF
 

@@ -71,7 +71,7 @@ lr_initialize(arg)
      void               *arg;
 {
   char                path[1024];
-  char               *lrname = "j-lr.txt";
+  char               *lrname = "ze-lr.txt";
   char               *cdb_dir = NULL;
 
   {
@@ -87,10 +87,10 @@ lr_initialize(arg)
   }
 
   cdb_dir = cf_get_str(CF_CDBDIR);
-  cdb_dir = STREMPTY(cdb_dir, J_CDBDIR);
+  cdb_dir = STREMPTY(cdb_dir, ZE_CDBDIR);
   memset(path, 0, sizeof (path));
 
-  ADJUST_FILENAME(path, lrname, cdb_dir, "j-lr.txt");
+  ADJUST_FILENAME(path, lrname, cdb_dir, "ze-lr.txt");
 
   lr_filter_ok = FALSE;
   MESSAGE_INFO(9, "Opening perceptron data file : %s", path);

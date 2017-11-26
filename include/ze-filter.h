@@ -100,7 +100,7 @@ struct CONNID_T
 #define MAX_LINE_LEN     2048
 
 
-int                 j_chkmail();
+int                 zeFilter();
 
 int                 count_connections(int);
 

@@ -22,7 +22,7 @@
  */
 
 
-#ifndef J_GREY_CLIENT_H
+#ifndef ZE_GREY_CLIENT_H
 
 int                 remote_grey_check(char *ip, char *from,
                                       char *to, char *hostname);
@@ -34,5 +34,5 @@ void                remote_grey_quit();
 
 void                grey_channel_error_clear();
 
-# define J_GREY_CLIENT_H    1
+# define ZE_GREY_CLIENT_H    1
 #endif             /* J_GREY_CLIENT_H */

@@ -66,11 +66,11 @@ wdb_save()
   N=$?
   [ "x$N" = "x0" ] && return
   rm -f $TMP/*
-  for f in `ls $DBDIR/j-*db`
+  for f in `ls $DBDIR/ze-*db`
   do 
     base=`basename $f .db`
     echo "   * Saving $base"
-    j-makemap -d -b $DBDIR/$base.db > $TMP/$base.txt
+    ze-makemap -d -b $DBDIR/$base.db > $TMP/$base.txt
   done
   echo ""
 }
@@ -80,12 +80,12 @@ wdb_restore()
   count_files $TMP .txt
   N=$?
   [ "x$N" = "x0" ] && return
-  for f in `ls $TMP/j-*.txt`
+  for f in `ls $TMP/ze-*.txt`
   do 
     base=`basename $f .txt`
     echo "   * Restoring $base"
     mv -f $DBDIR/$base.db $DBDIR/$base.db.old
-    j-makemap -b $DBDIR/$base.db < $TMP/$base.txt > /dev/null
+    ze-makemap -b $DBDIR/$base.db < $TMP/$base.txt > /dev/null
     rm -f $DBDIR/$base.db.old
   done
   rm -f $DBDIR/__*

@@ -560,7 +560,7 @@ locked_log_write(log, str)
 
     case JC_LOG_SYSLOG:
       if (log->debug)
-        MESSAGE_INFO(10, "func=%s : JC_LOG_SYSLOG : %s", J_FUNCTION, str);
+        MESSAGE_INFO(10, "func=%s : JC_LOG_SYSLOG : %s", ZE_FUNCTION, str);
       prefix = LOG_SPEC_PREFIX(log);
       if (prefix != NULL && strlen(prefix) > 0)
         j_syslog(log->log.syslog.priority, "%s : %s", prefix, str);
@@ -571,7 +571,7 @@ locked_log_write(log, str)
     case JC_LOG_FILE:
       ASSERT(log->log.file.fd >= 0);
       if (log->debug)
-        MESSAGE_INFO(10, "func=%s : JC_LOG_FILE : %s", J_FUNCTION, str);
+        MESSAGE_INFO(10, "func=%s : JC_LOG_FILE : %s", ZE_FUNCTION, str);
       if (write(log->log.file.fd, str, strlen(str)) < 0)
       {
         LOG_SYS_ERROR("Error writing to file %s", LOG_SPEC_FNAME(log));
@@ -598,7 +598,7 @@ locked_log_write(log, str)
     case JC_LOG_UDP:
       ASSERT(log->log.udp.fd >= 0);
       if (log->debug)
-        MESSAGE_INFO(10, "func=%s : JC_LOG_UDP : %s", J_FUNCTION, str);
+        MESSAGE_INFO(10, "func=%s : JC_LOG_UDP : %s", ZE_FUNCTION, str);
 
       if (!log->log.udp.connect)
       {

@@ -501,7 +501,7 @@ struct smfiDesc     smfilter = {
  ******************************************************************************/
 
 int
-j_chkmail()
+zeFilter()
 {
   int                 r;
   char               *work_dir, *wdb_dir, *cf_dir, *cdb_dir, *root_dir;
@@ -509,26 +509,26 @@ j_chkmail()
   root_dir = work_dir = wdb_dir = cf_dir = cdb_dir = NULL;
 
   root_dir = cf_get_str(CF_WORKROOT);
-  root_dir = STREMPTY(root_dir, J_WORKROOT);
+  root_dir = STREMPTY(root_dir, ZE_WORKROOT);
   work_dir = cf_get_str(CF_WORKDIR);
-  work_dir = STREMPTY(work_dir, J_WORKDIR);
+  work_dir = STREMPTY(work_dir, ZE_WORKDIR);
   wdb_dir = cf_get_str(CF_WDBDIR);
-  wdb_dir = STREMPTY(wdb_dir, J_WDBDIR);
+  wdb_dir = STREMPTY(wdb_dir, ZE_WDBDIR);
   cdb_dir = cf_get_str(CF_CDBDIR);
-  cdb_dir = STREMPTY(cdb_dir, J_CDBDIR);
+  cdb_dir = STREMPTY(cdb_dir, ZE_CDBDIR);
   cf_dir = cf_get_str(CF_CONFDIR);
-  cf_dir = STREMPTY(cf_dir, J_CONFDIR);
+  cf_dir = STREMPTY(cf_dir, ZE_CONFDIR);
 
   root_dir = cf_get_str(CF_WORKROOT);
   work_dir = cf_get_str(CF_WORKDIR);
   if (work_dir == NULL || strlen(work_dir) == 0)
-    work_dir = J_WORKDIR;
+    work_dir = ZE_WORKDIR;
   wdb_dir = cf_get_str(CF_WDBDIR);
   if (wdb_dir == NULL || strlen(wdb_dir) == 0)
     wdb_dir = work_dir;
   cf_dir = cf_get_str(CF_CONFDIR);
   if (cf_dir == NULL || strlen(cf_dir) == 0)
-    cf_dir = J_CONFDIR;
+    cf_dir = ZE_CONFDIR;
   if (strlen(root_dir) > 0)
   {
     if (*work_dir != '/')
@@ -544,7 +544,7 @@ j_chkmail()
     memset(dbdir, 0, sizeof (dbdir));
     if (wdb_dir != NULL && strlen(wdb_dir) > 0)
       snprintf(dbdir, sizeof (dbdir), "%s", wdb_dir);
-    if (!open_work_db_env(dbdir, J_WDBDIR, FALSE))
+    if (!open_work_db_env(dbdir, ZE_WDBDIR, FALSE))
     {
     }
   }
@@ -604,7 +604,7 @@ j_chkmail()
 
   {
     char                path[1024];
-    char               *dbname = J_CDBDIR "/j-bayes.db";
+    char               *dbname = ZE_CDBDIR "/ze-bayes.db";
     char               *cfdir;
     bool                crypt = FALSE;
     size_t              msgSize, partSize;
@@ -613,7 +613,7 @@ j_chkmail()
     memset(path, 0, sizeof (path));
     cfdir = cf_get_str(CF_CDBDIR);
     dbname = cf_get_str(CF_DB_BAYES);
-    ADJUST_FILENAME(path, dbname, cfdir, "j-bayes.db");
+    ADJUST_FILENAME(path, dbname, cfdir, "ze-bayes.db");
     if (strlen(path) > 0 && !bfilter_init(path))
     {
       LOG_MSG_ERROR("Error while opening %s database\n", path);

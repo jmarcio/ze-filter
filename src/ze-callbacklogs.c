@@ -121,9 +121,9 @@ do_notify(ctx, ahead, answer, why, tag)
                  CONNID_STR(priv->id), buf);
 #endif
 
-    if (cf_get_int(CF_J_SENDER) != OPT_SENDER)
+    if (cf_get_int(CF_ZE_SENDER) != OPT_SENDER)
     {
-      char               *sender = cf_get_str(CF_J_SENDER);
+      char               *sender = cf_get_str(CF_ZE_SENDER);
 
       if ((sender != NULL) && (strlen(sender) > 0))
         smfi_chgheader(ctx, "From", 1, sender);
@@ -131,9 +131,9 @@ do_notify(ctx, ahead, answer, why, tag)
 
     Smfi_ChgFrom(ctx, "<>", NULL);
 
-    if (cf_get_int(CF_J_SUBJECT) != OPT_SUBJECT)
+    if (cf_get_int(CF_ZE_SUBJECT) != OPT_SUBJECT)
     {
-      char               *subject = cf_get_str(CF_J_SUBJECT);
+      char               *subject = cf_get_str(CF_ZE_SUBJECT);
 
       if ((subject != NULL) && (strlen(subject) > 0))
         smfi_chgheader(ctx, "Subject", 1, subject);
@@ -179,10 +179,10 @@ read_error_msg(buf, sz, ahead, answer, from, why, tag, priv)
 
   cfdir = cf_get_str(CF_CONFDIR);
   if (cfdir == NULL || strlen(cfdir) == 0)
-    cfdir = J_CONFDIR;
+    cfdir = ZE_CONFDIR;
 
   fname = cf_get_str(CF_ERROR_MSG_FILE);
-  ADJUST_FILENAME(path, fname, cfdir, J_ERROR_MSG_FILE);
+  ADJUST_FILENAME(path, fname, cfdir, ZE_ERROR_MSG_FILE);
 
   MUTEX_LOCK(&mutex);
 
@@ -750,13 +750,13 @@ static pthread_mutex_t scf_mutex = PTHREAD_MUTEX_INITIALIZER;
 static int          scf_fd = -1;
 static int          scf_nerr = 0;
 
-#define  J_SERIES_FNAME    J_WORKDIR "/j-series.txt"
+#define  ZE_SERIES_FNAME    ZE_WORKDIR "/ze-series.txt"
 
 bool
 open_scores4stats_file()
 {
   bool                ret = TRUE;
-  char               *fname = J_SERIES_FNAME;
+  char               *fname = ZE_SERIES_FNAME;
 
   if (scf_fd < 0)
   {
@@ -776,7 +776,7 @@ bool
 reopen_scores4stats_file()
 {
   bool                ret = TRUE;
-  char               *fname = J_SERIES_FNAME;
+  char               *fname = ZE_SERIES_FNAME;
 
   MUTEX_LOCK(&scf_mutex);
   if (scf_fd >= 0)
@@ -816,7 +816,7 @@ dump_msg_scores4stats(ctx)
 {
   CTXPRIV_T          *priv = MLFIPRIV(ctx);
 
-  char               *fname = J_SERIES_FNAME;
+  char               *fname = ZE_SERIES_FNAME;
   int                 gScore;
   char                buf[1024];
   char                from[256];

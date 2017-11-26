@@ -17,11 +17,11 @@ while (<>) {
   }
 
   if ($VERSION ge "v2.0") {
-    if ($key eq "ORACLE_SCORES_FILE" && $val =~ /j-tables/) {
-      $val = "j-oracle:ORACLE-SCORES";
+    if ($key eq "ORACLE_SCORES_FILE" && $val =~ /ze-tables/) {
+      $val = "ze-oracle:ORACLE-SCORES";
     }
-    if ($key eq "ORACLE_DATA_FILE" && $val =~ /j-oradata/) {
-      $val = "j-oracle:ORACLE-DATA";
+    if ($key eq "ORACLE_DATA_FILE" && $val =~ /ze-oradata/) {
+      $val = "ze-oracle:ORACLE-DATA";
     }
   }
 

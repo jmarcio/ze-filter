@@ -280,7 +280,7 @@ grey_server_disconnect()
 {
   if (gChan.sd >= 0)
   {
-    if (jfd_ready(gChan.sd, J_SOCK_WRITE, 0))
+    if (jfd_ready(gChan.sd, ZE_SOCK_WRITE, 0))
       (void) sd_printf(gChan.sd, "QUIT\r\n");
 #if 0
     sleep(1);
@@ -473,7 +473,7 @@ grey_channel_check()
 
     if (gChan.sd >= 0)
     {
-      while (jfd_ready(gChan.sd, J_SOCK_READ, to) == J_SOCK_READY)
+      while (jfd_ready(gChan.sd, ZE_SOCK_READ, to) == ZE_SOCK_READY)
       {
         size_t              sz;
         char                buf[256];
@@ -482,7 +482,7 @@ grey_channel_check()
         sz = recvfrom(gChan.sd, buf, sizeof (buf), 0, NULL, NULL);
         buf[sz] = '\0';
         if (sz > 0)
-          MESSAGE_INFO(DEBUG_LEVEL, "Connected to j-greyd : %5d %s", sz, buf);
+          MESSAGE_INFO(DEBUG_LEVEL, "Connected to ze-greyd : %5d %s", sz, buf);
         else
           break;
       }
@@ -532,7 +532,7 @@ remote_grey_check(ip, from, to, hostname)
   if (!GREY_CONN_CHECK())
   {
     MESSAGE_WARNING(9,
-                    "Not checking j-greyd server - too many open connections (%d/%d)",
+                    "Not checking ze-greyd server - too many open connections (%d/%d)",
                     grey_connections, MAX_OPEN_CONN);
     return GREY_DUNNO;
   }
@@ -583,11 +583,11 @@ remote_grey_check(ip, from, to, hostname)
         break;
 
       /* check if socket is ready */
-      rfd = jfd_ready(gChan.sd, J_SOCK_READ, dt);
-      if (rfd == J_SOCK_TIMEOUT)
+      rfd = jfd_ready(gChan.sd, ZE_SOCK_READ, dt);
+      if (rfd == ZE_SOCK_TIMEOUT)
         continue;
 
-      if (rfd == J_SOCK_ERROR)
+      if (rfd == ZE_SOCK_ERROR)
       {
         /* an error occured */
         LOG_MSG_ERROR("greyd server sent no data or time out exceeded");
@@ -596,7 +596,7 @@ remote_grey_check(ip, from, to, hostname)
       }
 
       /* read buf */
-      if (rfd == J_SOCK_READY)
+      if (rfd == ZE_SOCK_READY)
       {
         size_t              n;
         size_t              szok;
@@ -735,7 +735,7 @@ remote_grey_validate(ip, from, to, hostname)
   if (!GREY_CONN_CHECK())
   {
     MESSAGE_WARNING(9,
-                    "Not checking j-greyd server - too many open connections (%d/%d)",
+                    "Not checking ze-greyd server - too many open connections (%d/%d)",
                     grey_connections, MAX_OPEN_CONN);
     return GREY_DUNNO;
   }
@@ -784,11 +784,11 @@ remote_grey_validate(ip, from, to, hostname)
         break;
 
       /* check if socket is ready */
-      rfd = jfd_ready(gChan.sd, J_SOCK_READ, dt);
-      if (rfd == J_SOCK_TIMEOUT)
+      rfd = jfd_ready(gChan.sd, ZE_SOCK_READ, dt);
+      if (rfd == ZE_SOCK_TIMEOUT)
         continue;
 
-      if (rfd == J_SOCK_ERROR)
+      if (rfd == ZE_SOCK_ERROR)
       {
         /* an error occured */
         LOG_MSG_ERROR("greyd server sent no data or time out exceeded");
@@ -797,7 +797,7 @@ remote_grey_validate(ip, from, to, hostname)
       }
 
       /* read buf */
-      if (rfd == J_SOCK_READY)
+      if (rfd == ZE_SOCK_READY)
       {
         size_t              n;
         size_t              szok;
@@ -943,7 +943,7 @@ grey_socket_flush_read()
   char                buf[1024];
 
   /* empty input buffer before asking something */
-  while (jfd_ready(gChan.sd, J_SOCK_READ, 1) == J_SOCK_READY)
+  while (jfd_ready(gChan.sd, ZE_SOCK_READ, 1) == ZE_SOCK_READY)
   {
     size_t              n;
 

@@ -49,12 +49,12 @@ int             Ip_strcmp (char *, char *);
 
 
 
-#define   J_SOCK_READ        1
-#define   J_SOCK_WRITE       0
+#define   ZE_SOCK_READ        1
+#define   ZE_SOCK_WRITE       0
 
-#define   J_SOCK_ERROR      -1
-#define   J_SOCK_READY       0
-#define   J_SOCK_TIMEOUT     1
+#define   ZE_SOCK_ERROR      -1
+#define   ZE_SOCK_READY       0
+#define   ZE_SOCK_TIMEOUT     1
 
 int             jfd_ready (int, bool, long);
 

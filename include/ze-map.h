@@ -22,7 +22,7 @@
  */
 
 
-#ifndef J_MAP_H
+#ifndef ZE_MAP_H
 
 typedef struct MAP_T
 {
@@ -63,5 +63,5 @@ bool           map_unlock(MAP_T * map);
 
 bool           map_flush(MAP_T * map);
 
-# define J_MAP_H    1
+# define ZE_MAP_H    1
 #endif             /* J_MAP_H */

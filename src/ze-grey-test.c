@@ -44,7 +44,7 @@ struct conf_T
 
 typedef struct conf_T conf_T;
 
-#define CONF_INITIALIZER   {"/tmp/j-greyd", 10000, DEF_TIMES, DEF_TUPLE}
+#define CONF_INITIALIZER   {"/tmp/ze-greyd", 10000, DEF_TIMES, DEF_TUPLE}
 
 static char        *workdir = "/tmp/jgreyd";
 

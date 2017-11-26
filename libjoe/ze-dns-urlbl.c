@@ -381,7 +381,7 @@ load_urlbl_table(cfdir, fname)
   memset(urlblCf.urlbl, 0, sizeof (urlblCf.urlbl));
   urlblCf.nb = 0;
 
-  result = read_conf_data_file(cfdir, fname, "j-tables:dns-urlbl", read_it);
+  result = read_conf_data_file(cfdir, fname, "ze-tables:dns-urlbl", read_it);
 
   urlblCf.ok = result;
 

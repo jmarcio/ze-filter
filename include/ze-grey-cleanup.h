@@ -22,12 +22,12 @@
  */
 
 
-#ifndef J_GREY_CLEANUP_H
+#ifndef ZE_GREY_CLEANUP_H
 
 void       set_grey_dewhitelist_threshold(double val);
 
 bool       grey_check_bad_smtp_client(char *ip, uint32_t flags);
 
-# define J_GREY_CLEANUP_H    1
+# define ZE_GREY_CLEANUP_H    1
 #endif /* J_GREY_CLEANUP_H */
 

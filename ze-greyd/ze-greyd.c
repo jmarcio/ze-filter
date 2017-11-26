@@ -95,7 +95,7 @@ static confargs_T   cargs = {
 static char        *user = "smmsp";
 static char        *group = "smmsp";
 
-static char        *workdir = J_GREYDDIR;
+static char        *workdir = ZE_GREYDDIR;
 
 #define        DEFTUPLE        "NET,HOST,FULL"
 static char        *ntuple = NULL;
@@ -205,7 +205,7 @@ main(argc, argv)
     }
   }
 
-  configure("j-greyd", conf_file, TRUE);
+  configure("ze-greyd", conf_file, TRUE);
 
   /*
    ** 2. Launch daemon
@@ -215,10 +215,10 @@ main(argc, argv)
     switch (fork())
     {
       case 0:
-        printf(" j-greyd daemonized !\n");
+        printf(" ze-greyd daemonized !\n");
         break;
       case -1:
-        perror(" Error daemonizing j-greyd ");
+        perror(" Error daemonizing ze-greyd ");
         exit(1);
         break;
       default:
@@ -233,7 +233,7 @@ main(argc, argv)
       case 0:
         break;
       case -1:
-        perror(" Error daemonizing j-greyd ");
+        perror(" Error daemonizing ze-greyd ");
         exit(1);
         break;
       default:
@@ -393,7 +393,7 @@ greyd_father(arg)
   static time_t       last_reload = 0;
   server_T            server;
 
-  MESSAGE_INFO(9, "*** Starting %s ...", J_FUNCTION);
+  MESSAGE_INFO(9, "*** Starting %s ...", ZE_FUNCTION);
 
   last_reload = time(NULL);
 
@@ -608,9 +608,9 @@ greyd_server(arg)
       nloop = 0;
     }
 
-    r = jfd_ready(fd, J_SOCK_READ, CTRL_TO);
+    r = jfd_ready(fd, ZE_SOCK_READ, CTRL_TO);
 
-    if (r == J_SOCK_ERROR)
+    if (r == ZE_SOCK_ERROR)
     {
       MESSAGE_WARNING(9,
                       "PEER=(%s) Error : connection broken ! Closing connection !",
@@ -618,7 +618,7 @@ greyd_server(arg)
       goto fin;
     }
 
-    if (r == J_SOCK_TIMEOUT)
+    if (r == ZE_SOCK_TIMEOUT)
     {
       long                dt_max = 0, dt = 0;
 
@@ -643,7 +643,7 @@ greyd_server(arg)
 
     ntout = 0;
 
-    if (r == J_SOCK_READY)
+    if (r == ZE_SOCK_READY)
     {
       char                buf[1024];
       size_t              sz;
@@ -979,7 +979,7 @@ handle_command(sd, addr, argc, argv)
   {
     if (!sd_printf(sd, "200-OK for %s !\r\n", argv[0]))
       goto ioerror;
-    configure("j-greyd", conf_file, TRUE);
+    configure("ze-greyd", conf_file, TRUE);
     if (!sd_printf(sd, "200 %s done !\r\n", argv[0]))
       goto ioerror;
 
@@ -1195,8 +1195,8 @@ usage(arg)
          "  %s\n"
          "  Compiled on %s\n"
          "        -h  : this message\n"
-         "        -u  : run j-greyd as USER - default = smmsp\n"
-         "        -g  : run j-greyd as GROUP - default = smmsp\n"
+         "        -u  : run ze-greyd as USER - default = smmsp\n"
+         "        -g  : run ze-greyd as GROUP - default = smmsp\n"
          "        -s  : socket\n"
          "              inet:2012@localhost\n"
          "              local:/var/sock\n"
@@ -1223,7 +1223,7 @@ usage(arg)
          "  Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz - (C) 2002,2003,2004,...\n"
          "  Written by Jose Marcio Martins da Cruz\n"
          "  Send bugs and gifts to jose.marcio.mc@gmail.org\n\n",
-         arg, PACKAGE, __DATE__ " " __TIME__, J_GREYDDIR);
+         arg, PACKAGE, __DATE__ " " __TIME__, ZE_GREYDDIR);
 }
 
 /* ****************************************************************************
@@ -1271,11 +1271,11 @@ greyd_signal_handler(sig)
     case SIGINT:
     case SIGTERM:
     case SIGQUIT:
-      MESSAGE_INFO(9, "*** Exiting j-greyd ...");
+      MESSAGE_INFO(9, "*** Exiting ze-greyd ...");
       exit(0);
       break;
     case SIGHUP:
-      MESSAGE_INFO(9, "*** Reloading j-greyd ...");
+      MESSAGE_INFO(9, "*** Reloading ze-greyd ...");
       break;
     case SIGALRM:
       MESSAGE_INFO(9, "*** SIGALRM signal ...");

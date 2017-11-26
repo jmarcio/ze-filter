@@ -22,13 +22,13 @@
  */
 
 
-#ifndef J_TIME_H
+#ifndef ZE_TIME_H
 
 typedef uint64_t timems_T;
 
 uint64_t            time_ms();
 time_t              sleep_ms(time_t);
 
-# define J_TIME_H    1
+# define ZE_TIME_H    1
 #endif /* J_TIME_H */
 

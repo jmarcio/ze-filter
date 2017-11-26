@@ -132,7 +132,7 @@ sending warning messages. SENDER preserves sender address.
 .br
 Syntax :
 .br
-J_SENDER       SENDER |  j-master@myserver.mydomain.com
+J_SENDER       SENDER |  ze-master@myserver.mydomain.com
 .br
 Default : SENDER
 .IP \(bu 4
@@ -192,7 +192,7 @@ This file contains warning messages.
 .br
 Syntax (and default file) :
 .br
-ERROR_MSG_FILE   /etc/mail/j-error-msg
+ERROR_MSG_FILE   /etc/mail/ze-error-msg
 .TP 
 .B CW_FILE
 This is the file used by sendmail to define Class W
@@ -210,14 +210,14 @@ addresses.
 .br
 Syntax (and default file) :
 .br
-USERS_FILE     /etc/mail/j-local-users
+USERS_FILE     /etc/mail/ze-local-users
 .TP 
 .B NETS_FILE
 
 .br
 Syntax (and default file) :
 .br
-NETS_FILE      /etc/mail/j-nets
+NETS_FILE      /etc/mail/ze-nets
 
 .IP \(bu 4
 Work files and directories
@@ -249,21 +249,21 @@ PID_FILE       /var/ze-filter/ze-filter.pid
 .br 
 Syntax (and default file) :
 .br 
-STATS_FILE     /var/ze-filter/j-stats
+STATS_FILE     /var/ze-filter/ze-stats
 .TP 
 .B STATE_FILE
 
 .br
 Syntax (and default file) :
 .br
-STATE_FILE     /var/ze-filter/j-state
+STATE_FILE     /var/ze-filter/ze-state
 .TP 
 .B XFILES_LOG
 
 .br
 Syntax (and default file) :
 .br
-XFILES_LOG     /var/ze-filter/j-files
+XFILES_LOG     /var/ze-filter/ze-files
 
 .IP \(bu 4
 Using internal scanner to filter unsafe X-files
@@ -290,7 +290,7 @@ XFILE.
 .B WARN
 tells ze-filter to replace original message by the
 message configured at error configuration file
-(/etc/mail/j-error-msg)
+(/etc/mail/ze-error-msg)
 .TP
 .B REJECT
 tells ze-filter to reject message. Sender receives
@@ -353,7 +353,7 @@ disables anti-virus scanner calls.
 .B WARN
 tells ze-filter to replace original message by the
 message configured at error configuration file
-(/etc/mail/j-error-msg)
+(/etc/mail/ze-error-msg)
 .TP
 .B REJECT
 tells ze-filter to reject message. Sender receives
@@ -421,8 +421,8 @@ Filtering messages sent to Intranet users
 .TP 
 .B CHECK_LOCAL_USERS
 this option enables checking of local users
-recipient addresses (as defined at /etc/mail/j-local-users file)
-against known IP networks (as defined at /etc/mail/j-nets file).
+recipient addresses (as defined at /etc/mail/ze-local-users file)
+against known IP networks (as defined at /etc/mail/ze-nets file).
 
 .br
 Syntax :
@@ -438,7 +438,7 @@ Filtering messages by the number of recipients
 .B CHECK_NB_RCPT
 this option enables checking of number of message
 recipients and the IP address SMTP connection is coming from,
-against known IP networks (as defined at /etc/mail/j-nets file).
+against known IP networks (as defined at /etc/mail/ze-nets file).
 
 .br
 Syntax :
@@ -519,7 +519,7 @@ Trying to detect forget domain address
 this option enables checking of sender
 address. If sender e-mail address is an address from your domain
 and the IP network the SMTP connection is coming from isn't
-defined at j-nets file, the message may be rejected. There are
+defined at ze-nets file, the message may be rejected. There are
 some unsolved problems with this option as there may be some
 legitimate messages of this kind : e.g. messages sent to external
 list servers. So it isn't recommended to use this option.
@@ -539,7 +539,7 @@ Global ze-filter configuration file
 
 
 .SH "SEE ALSO"
-ze-filter(8), j-printstats(1), j-scanfile(5)
+ze-filter(8), ze-printstats(1), ze-scanfile(5)
 
 .SH BUGS
 .I Bugs ???

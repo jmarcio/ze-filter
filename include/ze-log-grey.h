@@ -22,13 +22,13 @@
  */
 
 
-#ifndef J_LOG_GREY_H
+#ifndef ZE_LOG_GREY_H
 
 
 void                log_grey_expire(char *);
 bool                log_grey_expire_reopen();
 
 
-# define J_LOG_GREY_H    1
+# define ZE_LOG_GREY_H    1
 #endif /* J_LOG_GREY_H */
 

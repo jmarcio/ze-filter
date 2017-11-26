@@ -22,11 +22,11 @@
  */
 
 
-#ifndef J_LR_INIT_H
+#ifndef ZE_LR_INIT_H
 
 extern bool         lr_filter_ok;
 
 bool                lr_data_load(bool background);
 
-# define J_LR_INIT_H    1
+# define ZE_LR_INIT_H    1
 #endif             /* J_LR_INIT_H */

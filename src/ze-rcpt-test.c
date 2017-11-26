@@ -42,7 +42,7 @@ main(argc, argv)
   int                 res = 0;
   extern int          log_level;
 
-  configure("j-rcpt-test", conf_file, FALSE);
+  configure("ze-rcpt-test", conf_file, FALSE);
 
   set_log_output(FALSE, TRUE);
   log_level = 10;

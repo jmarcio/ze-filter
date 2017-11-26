@@ -60,7 +60,7 @@ Show version, runtime parameters values and quit
 Global ze-filter configuration file. Look at ze-filter.cf man page
 for a complete description of this file.
 .TP 
-.I /etc/mail/j-nets
+.I /etc/mail/ze-nets
 IP networks to be known by ze-filter. IP networks are described
 one each line, in the format :
  NETCLASS NETWORK NETMASK
@@ -73,13 +73,13 @@ one each line, in the format :
 .I FRIEND
  
 .TP 
-.I /etc/mail/j-local-users
+.I /etc/mail/ze-local-users
 e-mail adresses which can receive mail only from known IP networks.
 Local addresses are declared one at a line without the machine and
 domain right side.
 
 .TP
-.I /etc/mail/j-error-msg
+.I /etc/mail/ze-error-msg
 Definition of e-mail replacement messages. Messages are enclosed by
 tags defining when to use it. Nowadays, only two tags are used :
 .B XFILE  
@@ -95,13 +95,13 @@ and
 .I /var/tmp/ze-filter.pid
 Where ze-filter stores parent pid file
 .TP
-.I /var/tmp/j-state
+.I /var/tmp/ze-state
 Binary file where ze-filter stores internal counter contents
 .TP
-.I /var/tmp/j-stats
+.I /var/tmp/ze-stats
 Text file where ze-filter periodicaly dumps internal counters
 .TP
-.I /var/tmp/j-files
+.I /var/tmp/ze-files
 Text file where ze-filter saves attached filenames of rejected messages
 .TP
 .I /var/spool/ze-filter/
@@ -109,7 +109,7 @@ Directory where ze-filter creates temporary files
 
 
 .SH "SEE ALSO"
-j-scanfile(1), j-printstats(1), ze-filter.cf(5)
+ze-scanfile(1), ze-printstats(1), ze-filter.cf(5)
 
 .SH BUGS
 .I Bugs ???

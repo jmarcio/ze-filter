@@ -278,16 +278,16 @@ client_send(client, buf, size)
   {
     int                 r;
 
-    r = jfd_ready(client->sd, J_SOCK_WRITE, tout);
+    r = jfd_ready(client->sd, ZE_SOCK_WRITE, tout);
 
-    if (r == J_SOCK_ERROR)
+    if (r == ZE_SOCK_ERROR)
     {
       LOG_SYS_ERROR("send error");
       result = FALSE;
       break;
     }
 
-    if (r == J_SOCK_TIMEOUT)
+    if (r == ZE_SOCK_TIMEOUT)
     {
       if (nto++ > MAX_TOUT) {
 	LOG_SYS_ERROR("send error");
@@ -297,7 +297,7 @@ client_send(client, buf, size)
     }
     nto = 0;
 
-    if (r == J_SOCK_READY)
+    if (r == ZE_SOCK_READY)
     {
       size_t              n;
 
@@ -376,22 +376,22 @@ client_recv(client, buf, size)
     int                 r;
 
     errno = 0;
-    r = jfd_ready(client->sd, J_SOCK_READ, tout);
+    r = jfd_ready(client->sd, ZE_SOCK_READ, tout);
 
-    if (r == J_SOCK_ERROR)
+    if (r == ZE_SOCK_ERROR)
     {
       result = FALSE;
       LOG_SYS_ERROR("recvfrom error 1");
       break;
     }
 
-    if (r == J_SOCK_TIMEOUT)
+    if (r == ZE_SOCK_TIMEOUT)
     {
       result = (strlen(buf) > 0);
       break;
     }
 
-    if (r == J_SOCK_READY)
+    if (r == ZE_SOCK_READY)
     {
       size_t              n;
 
@@ -468,22 +468,22 @@ client_readln(client, buf, size)
     int                 r;
 
     errno = 0;
-    r = jfd_ready(client->sd, J_SOCK_READ, tout);
+    r = jfd_ready(client->sd, ZE_SOCK_READ, tout);
 
-    if (r == J_SOCK_ERROR)
+    if (r == ZE_SOCK_ERROR)
     {
       result = FALSE;
       LOG_SYS_ERROR("recvfrom error 1");
       break;
     }
 
-    if (r == J_SOCK_TIMEOUT)
+    if (r == ZE_SOCK_TIMEOUT)
     {
       result = (strlen(buf) > 0);
       break;
     }
 
-    if (r == J_SOCK_READY)
+    if (r == ZE_SOCK_READY)
     {
       size_t              n;
 
@@ -563,9 +563,9 @@ client_flush_read(client)
     int                 r;
     size_t              sz;
 
-    r = jfd_ready(sd, J_SOCK_READ, 5);
+    r = jfd_ready(sd, ZE_SOCK_READ, 5);
 
-    if (r == J_SOCK_ERROR)
+    if (r == ZE_SOCK_ERROR)
     {
       LOG_SYS_ERROR("error");
       client_disconnect(client, TRUE);
@@ -573,7 +573,7 @@ client_flush_read(client)
       goto fin;
     }
 
-    if (r != J_SOCK_READY)
+    if (r != ZE_SOCK_READY)
       break;
 
     sz = recvfrom(sd, buf, sizeof (buf), 0, NULL, NULL);

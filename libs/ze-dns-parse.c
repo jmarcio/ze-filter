@@ -365,7 +365,7 @@ dns_get_mx(domain, mx)
   if (domain == NULL || mx == NULL)
     return DNS_LOC_ERR;
 
-  MESSAGE_INFO(11, "Entering %s : %s", J_FUNCTION, domain);
+  MESSAGE_INFO(11, "Entering %s : %s", ZE_FUNCTION, domain);
   memset(mx, 0, sizeof (*mx));
   mx->domain = strdup(domain);
 

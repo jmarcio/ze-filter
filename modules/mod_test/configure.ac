@@ -1,12 +1,12 @@
 
-AC_INIT(j-chkmail, 1.12.0, Jose-Marcio.Martins@ensmp.fr)
+AC_INIT(ze-filter, 1.12.0, Jose-Marcio.Martins@ensmp.fr)
 
 AC_COPYRIGHT([Copyright (c) 2002-2007 Ecole des Mines de Paris])
 dnl AC_REVISION([$Id: configure.ac,v 1.129 2004/10/14 16:50:22 Exp $])
 AC_CONFIG_SRCDIR([./mod_test.c])
 dnl AC_CONFIG_AUX_DIR(build)
 
-PACKAGE="j-chkmail"
+PACKAGE="ze-filter"
 VERSION="1.11.1-$DATE"
 
 AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
@@ -98,7 +98,7 @@ dnl
 dnl WORKROOT=/var/jchkmail
 AC_ARG_WITH(work-dir,
   AC_HELP_STRING([--with-work-dir=PATH],
-                 [set j-chkmail work dir   (default /var/jchkmail)]),
+                 [set ze-filter work dir   (default /var/jchkmail)]),
   [WORKROOT="$withval"])
 AC_SUBST(WORKROOT)
 
@@ -107,7 +107,7 @@ dnl
 dnl SPOOLDIR=/var/spool/jchkmail
 AC_ARG_WITH(spool-dir,
   AC_HELP_STRING([--with-spool-dir=PATH],
-                 [set j-chkmail spool dir (default /var/spool/jchkmail)]),
+                 [set ze-filter spool dir (default /var/spool/jchkmail)]),
   [SPOOLDIR="$withval"])
 AC_SUBST(SPOOLDIR)
 
@@ -130,7 +130,7 @@ dnl
 dnl CONFDIR=$sysconfdir
 AC_ARG_WITH(conf-dir,
   AC_HELP_STRING([--with-conf-dir=PATH],
-                 [set j-chkmail config dir (default /etc/mail/jchkmail)]),
+                 [set ze-filter config dir (default /etc/mail/jchkmail)]),
   [CONFDIR="$withval"])
 AC_SUBST(CONFDIR)
 sysconfdir=$CONFDIR
@@ -200,13 +200,13 @@ in
 esac
 
 dnl
-dnl Add code here to enable j-chkmail building without libmilter
-dnl Surely, when doing this, j-chkmail build will be done without
+dnl Add code here to enable ze-filter building without libmilter
+dnl Surely, when doing this, ze-filter build will be done without
 dnl online filter
 dnl
 SAVELIBS=$LIBS
 AC_CHECK_LIB(milter, main,,\
-	AC_MSG_ERROR(Can't compile j-chkmail without libmilter...))
+	AC_MSG_ERROR(Can't compile ze-filter without libmilter...))
 
 
 AC_CHECK_LIB(milter,mi_stop,AC_DEFINE([HAVE_MI_STOP], 1, [MI_STOP]))

@@ -22,10 +22,10 @@
  */
 
 
-#ifndef J_DBLINKED_LIST_H
+#ifndef ZE_DBLINKED_LIST_H
 
 
 
-# define J_DBLINKED_LIST_H    1
-#endif /* J_DBLINKED_LIST_H */
+# define ZE_DBLINKED_LIST_H    1
+#endif /* ZE_DBLINKED_LIST_H */
 

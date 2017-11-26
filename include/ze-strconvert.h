@@ -22,7 +22,7 @@
  */
 
 
-#ifndef J_STRCONVERT_H
+#ifndef ZE_STRCONVERT_H
 
 long                str2long(char *s, int *error, long dval);
 unsigned long       str2ulong(char *s, int *error, unsigned long dval);
@@ -34,5 +34,5 @@ double              str2double(char *s, int *error, double dval);
 time_t              str2time(char *s, int *error, time_t dval);
 size_t              str2size(char *s, int *error, size_t dval);
 
-# define J_STRCONVERT_H    1
+# define ZE_STRCONVERT_H    1
 #endif             /* J_STRCONVERT_H */

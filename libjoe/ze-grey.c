@@ -1567,7 +1567,7 @@ db_grey_open(workdir, rd)
   jdb_lock(&gdata.gdbp);
   if (!jdb_ok(&gdata.gdbp))
   {
-    snprintf(path, sizeof (path), "%s/%s", workdir, "j-greypend.db");
+    snprintf(path, sizeof (path), "%s/%s", workdir, "ze-greypend.db");
 
     res = jdb_open(&gdata.gdbp, work_db_env, path, mode, rdonly, TRUE, 0);
     MESSAGE_INFO(DBG_LEVEL, "PATH = %-32s, %s", path, STRBOOL(res, "OK", "KO"));
@@ -1577,7 +1577,7 @@ db_grey_open(workdir, rd)
   jdb_lock(&gdata.gdbv);
   if (!jdb_ok(&gdata.gdbv))
   {
-    snprintf(path, sizeof (path), "%s/%s", workdir, "j-greyvalid.db");
+    snprintf(path, sizeof (path), "%s/%s", workdir, "ze-greyvalid.db");
 
     res = jdb_open(&gdata.gdbv, work_db_env, path, mode, rdonly, TRUE, 0);
     MESSAGE_INFO(DBG_LEVEL, "PATH = %-32s, %s", path, STRBOOL(res, "OK", "KO"));
@@ -1587,7 +1587,7 @@ db_grey_open(workdir, rd)
   jdb_lock(&gdata.gdbw);
   if (!jdb_ok(&gdata.gdbw))
   {
-    snprintf(path, sizeof (path), "%s/%s", workdir, "j-greywhitelist.db");
+    snprintf(path, sizeof (path), "%s/%s", workdir, "ze-greywhitelist.db");
 
     res = jdb_open(&gdata.gdbw, work_db_env, path, mode, rdonly, TRUE, 0);
     MESSAGE_INFO(DBG_LEVEL, "PATH = %-32s, %s", path, STRBOOL(res, "OK", "KO"));
@@ -1597,7 +1597,7 @@ db_grey_open(workdir, rd)
   jdb_lock(&gdata.gdbb);
   if (!jdb_ok(&gdata.gdbb))
   {
-    snprintf(path, sizeof (path), "%s/%s", workdir, "j-greyblacklist.db");
+    snprintf(path, sizeof (path), "%s/%s", workdir, "ze-greyblacklist.db");
 
     res = jdb_open(&gdata.gdbb, work_db_env, path, mode, rdonly, TRUE, 0);
     MESSAGE_INFO(DBG_LEVEL, "PATH = %-32s, %s", path, STRBOOL(res, "OK", "KO"));
@@ -1896,7 +1896,7 @@ grey_database_expire(h, st, tmax_norm, tmax_null, gdb)
       break;
   }
 
-  MESSAGE_INFO(10, "Entering %s (%s)", J_FUNCTION, label);
+  MESSAGE_INFO(10, "Entering %s (%s)", ZE_FUNCTION, label);
 
   {
     char               *env = NULL;
@@ -2302,7 +2302,7 @@ grey_database_whitelist(dba, dbb, st)
 {
   bool                ok = FALSE;
 
-  MESSAGE_INFO(10, "Entering %s", J_FUNCTION);
+  MESSAGE_INFO(10, "Entering %s", ZE_FUNCTION);
 
   GREY_CRIT_LOCK();
 
@@ -2515,7 +2515,7 @@ grey_task(data)
   {
     tlast = now;
 
-    MESSAGE_INFO(12, "%s running : %ld", J_FUNCTION, time(NULL));
+    MESSAGE_INFO(12, "%s running : %ld", ZE_FUNCTION, time(NULL));
 
     sleep(DT_GREY_SLEEP);
 

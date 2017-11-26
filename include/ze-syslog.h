@@ -61,9 +61,9 @@ void                log_sys_error(char *, int, char *, ...);
  **************************************************************************** */
 #if USE_LOG_MACROS
 
-#define    MESSAGE_INFO(...)       message_info(J_FUNCTION,__VA_ARGS)
-#define    MESSAGE_WARNING(...)    message_warning(J_FUNCTION,__VA_ARGS)
-#define    MESSAGE_ERROR(...)      message_error(J_FUNCTION,__VA_ARGS)
+#define    MESSAGE_INFO(...)       message_info(ZE_FUNCTION,__VA_ARGS)
+#define    MESSAGE_WARNING(...)    message_warning(ZE_FUNCTION,__VA_ARGS)
+#define    MESSAGE_ERROR(...)      message_error(ZE_FUNCTION,__VA_ARGS)
 
 #else
 
@@ -124,7 +124,7 @@ do { \
   if (log_level > level) { \
     char h_log_str[256]; \
     (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__); \
-    j_syslog(LOG_DEBUG, "%s : %s", J_FUNCTION, h_log_str); \
+    j_syslog(LOG_DEBUG, "%s : %s", ZE_FUNCTION, h_log_str); \
   } \
 } while (0)
 
@@ -133,7 +133,7 @@ do { \
   if (log_level >= level) {\
     char h_log_str[256]; \
     (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__); \
-    j_syslog(LOG_INFO, "%s : %s", J_FUNCTION, h_log_str); \
+    j_syslog(LOG_INFO, "%s : %s", ZE_FUNCTION, h_log_str); \
   } \
 } while (0)
 
@@ -141,28 +141,28 @@ do { \
 do { \
   char h_log_str[256]; \
   (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__); \
-  j_syslog(LOG_NOTICE, "%s : %s", J_FUNCTION, h_log_str); \
+  j_syslog(LOG_NOTICE, "%s : %s", ZE_FUNCTION, h_log_str); \
 } while (0)
 
 #define  LOG_MSG_WARNING(...) \
 do { \
   char    h_log_str[256]; \
   (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__); \
-  j_syslog(LOG_WARNING, "%s : %s", J_FUNCTION, h_log_str); \
+  j_syslog(LOG_WARNING, "%s : %s", ZE_FUNCTION, h_log_str); \
 } while (0)
 
 #define  LOG_MSG_ERROR(...) \
 do { \
   char    h_log_str[256]; \
   (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__); \
-  j_syslog(LOG_ERR, "%s : %s", J_FUNCTION, h_log_str); \
+  j_syslog(LOG_ERR, "%s : %s", ZE_FUNCTION, h_log_str); \
 } while (0)
 
 #define  LOG_MSG_CRIT(...) \
 do { \
   char    h_log_str[256]; \
   (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__); \
-  j_syslog(LOG_CRIT, "%s : %s", J_FUNCTION, h_log_str); \
+  j_syslog(LOG_CRIT, "%s : %s", ZE_FUNCTION, h_log_str); \
 } while (0)
 
 #endif
@@ -184,7 +184,7 @@ do { \
   char    h_log_str[256]; \
   char    *t = (errno != 0 ? strerror(errno) : ""); \
   (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__); \
-  j_syslog(LOG_WARNING, "%s : %s : %s", J_FUNCTION, h_log_str, t); \
+  j_syslog(LOG_WARNING, "%s : %s : %s", ZE_FUNCTION, h_log_str, t); \
 } while (0)
 
 
@@ -194,7 +194,7 @@ do { \
     int     serrno = errno;						\
     char    *t = (serrno != 0 ? strerror(serrno) : "");			\
     (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__);	\
-    j_syslog(LOG_ERR, "%s : %s : %s", J_FUNCTION, h_log_str, t);	\
+    j_syslog(LOG_ERR, "%s : %s : %s", ZE_FUNCTION, h_log_str, t);	\
     switch (serrno)							\
     {									\
       case ENOMEM :							\
@@ -209,7 +209,7 @@ do { \
     int     serrno = errno;						\
     char    *t = (serrno != 0 ? strerror(serrno) : "");			\
     (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__);	\
-    j_syslog(LOG_CRIT, "%s : %s : %s", J_FUNCTION, h_log_str, t);	\
+    j_syslog(LOG_CRIT, "%s : %s : %s", ZE_FUNCTION, h_log_str, t);	\
     switch (serrno)							\
     {									\
       case ENOMEM :							\
@@ -223,7 +223,7 @@ do { \
     char    h_log_str[256];						\
     char    *t = (errno != 0 ? strerror(errno) : "");			\
     (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__);	\
-    j_syslog(LOG_ERR, "%s : %s : %s", J_FUNCTION, h_log_str, t);	\
+    j_syslog(LOG_ERR, "%s : %s : %s", ZE_FUNCTION, h_log_str, t);	\
     exit(EX_SOFTWARE);							\
   } while (0)
 

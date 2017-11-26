@@ -53,7 +53,7 @@ control_handler(name)
   tid = pthread_self();
   (void) pthread_detach(tid);
 
-  MESSAGE_INFO(9, "*** Starting %s ...", J_FUNCTION);
+  MESSAGE_INFO(9, "*** Starting %s ...", ZE_FUNCTION);
 
   p = cf_get_str(CF_CTRL_SOCKET);
 
@@ -138,7 +138,7 @@ control_handler(name)
 
     FD_PRINTF(connfd, "200 OK - Waiting for commands !\n");
 
-    if (jfd_ready(connfd, J_SOCK_READ, CTRL_TO) == J_SOCK_READY)
+    if (jfd_ready(connfd, ZE_SOCK_READ, CTRL_TO) == ZE_SOCK_READY)
     {
       char                buf[1024];
       size_t              sz;
@@ -192,7 +192,7 @@ setup_control_handler()
   pthread_t           tid;
   int                 r;
 
-  MESSAGE_INFO(10, "*** Starting %s ...", J_FUNCTION);
+  MESSAGE_INFO(10, "*** Starting %s ...", ZE_FUNCTION);
 
   if (cf_get_int(CF_CTRL_CHANNEL_ENABLE) == OPT_NO)
     return TRUE;

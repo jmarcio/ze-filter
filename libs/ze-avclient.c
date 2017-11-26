@@ -288,15 +288,15 @@ read_scanner_answer(sd, buf, sz, to)
   ptr = buf;
 
   nb = 0;
-  switch (jfd_ready(sd, J_SOCK_READ, to))
+  switch (jfd_ready(sd, ZE_SOCK_READ, to))
   {
-    case J_SOCK_READY:
+    case ZE_SOCK_READY:
       nb = recv(sd, ptr, nbr, 0);
       ptr += nb;
       nbr -= nb;
       ntr += nb;
       break;
-    case J_SOCK_TIMEOUT:
+    case ZE_SOCK_TIMEOUT:
       break;
     default:
       LOG_MSG_WARNING("Error waiting for antivirus answer...");
@@ -373,12 +373,12 @@ av_client(answer, sz_answer, msg, sz_msg, question)
     }
 
     LOG_MSG_DEBUG(DEBUG_LEVEL, "Let's check if ready...");
-    if ((r = jfd_ready(sd, J_SOCK_WRITE, 10000)) == J_SOCK_READY)
+    if ((r = jfd_ready(sd, ZE_SOCK_WRITE, 10000)) == ZE_SOCK_READY)
     {
       LOG_MSG_DEBUG(DEBUG_LEVEL, "READY...! Let's go !");
       if ((nb = sendto(sd, buf, strlen(buf), 0, NULL, 0)) < 0)
       {
-        LOG_SYS_ERROR("j-avclient : sendto error");
+        LOG_SYS_ERROR("ze-avclient : sendto error");
 	res = AV_ERROR;
 
 	goto fin;
@@ -387,7 +387,7 @@ av_client(answer, sz_answer, msg, sz_msg, question)
     } else
       LOG_SYS_WARNING("jfd_ready returned NOT READY %d ", r);
 
-    LOG_MSG_DEBUG(DEBUG_LEVEL, "j-avclient - SEND : %s", buf);
+    LOG_MSG_DEBUG(DEBUG_LEVEL, "ze-avclient - SEND : %s", buf);
   }
 
   if (sd >= 0)
@@ -410,9 +410,9 @@ av_client(answer, sz_answer, msg, sz_msg, question)
     nbr = sizeof (buf);
     do
     {
-      switch (jfd_ready(sd, J_SOCK_READ, av_to))
+      switch (jfd_ready(sd, ZE_SOCK_READ, av_to))
       {
-        case J_SOCK_READY:
+        case ZE_SOCK_READY:
           nerr = 0;
           if ((nb = recv(sd, ptr, nbr, 0)) >= 0)
           {
@@ -431,7 +431,7 @@ av_client(answer, sz_answer, msg, sz_msg, question)
                             (long) nb);
           }
           break;
-        case J_SOCK_TIMEOUT:
+        case ZE_SOCK_TIMEOUT:
           LOG_MSG_WARNING("Timeout waiting for antivirus answer...");
 	  res = AV_ERROR;
 	  goto fin;

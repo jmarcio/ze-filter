@@ -22,10 +22,10 @@
  */
 
 
-#ifndef J_IPV4_H
+#ifndef ZE_IPV4_H
 
 
 
-# define J_IPV4_H    1
+# define ZE_IPV4_H    1
 #endif /* J_IPV4_H */
 

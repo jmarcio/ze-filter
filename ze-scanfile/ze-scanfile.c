@@ -60,7 +60,7 @@ main(int argc, char **argv)
   int                 io;
   int                 main_result = RES_OK;
 
-  openlog("j-scanfile", LOG_PID | LOG_NOWAIT | LOG_NDELAY, LOG_LOCAL5);
+  openlog("ze-scanfile", LOG_PID | LOG_NOWAIT | LOG_NDELAY, LOG_LOCAL5);
   if (argc > 1)
     fname = argv[1];
 
@@ -109,7 +109,7 @@ main(int argc, char **argv)
   while (io < argc && *argv[io] == '-')
     io++;
 
-  configure("j-scanfile", conf_file, FALSE);
+  configure("ze-scanfile", conf_file, FALSE);
 
   {
     int                 nbf = 0;
@@ -263,7 +263,7 @@ fin:
 void
 usage()
 {
-  printf("Usage : j-scanfile [-h] [-c] [-v] file file file...\n"
+  printf("Usage : ze-scanfile [-h] [-c] [-v] file file file...\n"
          "  %s\n"
          "  Compiled on %s %s\n"
          "        -h : help\n"

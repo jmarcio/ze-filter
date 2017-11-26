@@ -10,7 +10,7 @@ VPATH = /etc/ze-filter
 #
 # Databases to create
 #
-OBJ     = j-urlbl.db j-policy.db j-rcpt.db j-bayes.db
+OBJ     = ze-urlbl.db ze-policy.db ze-rcpt.db ze-bayes.db
 JBINDIR = /usr/bin
 
 #
@@ -19,36 +19,36 @@ JBINDIR = /usr/bin
 #
 # Depending on your Operating System, you can use one of this options :
 # - GNU make
-POLICYSRC = $(wildcard j-policy.*.txt)
+POLICYSRC = $(wildcard ze-policy.*.txt)
 # - SunOS make
-#POLICYSRC:sh =ls j-policy.*.txt
+#POLICYSRC:sh =ls ze-policy.*.txt
 # - List text files by hand
-#POLICYSRC = j-policy.grey.txt j-policy.badmx.txt j-policy.base.txt
+#POLICYSRC = ze-policy.grey.txt ze-policy.badmx.txt ze-policy.base.txt
 
 .txt.db :
 	@echo "** Building $@ ..."
 	@if [ -f $@ ] ; then \
 		mv $@ $@.old ; \
 	fi
-	$(JBINDIR)/j-makemap -b $@ -m e -m s < $<
+	$(JBINDIR)/ze-makemap -b $@ -m e -m s < $<
 
 all : $(OBJ) done
 
-j-policy.txt : $(POLICYSRC)
+ze-policy.txt : $(POLICYSRC)
 	cat  $(POLICYSRC) > $@
 
-j-rcpt.db : j-rcpt.txt
-	@if [ -f j-rcpt.db ] ; then \
-		mv j-rcpt.db j-rcpt.db.old ; \
+ze-rcpt.db : ze-rcpt.txt
+	@if [ -f ze-rcpt.db ] ; then \
+		mv ze-rcpt.db ze-rcpt.db.old ; \
 	fi
-	$(JBINDIR)/j-makemap -b $@ -m e -m u < $<
+	$(JBINDIR)/ze-makemap -b $@ -m e -m u < $<
 
 clean	:
 	rm -f *.db 
 
 done :
 	@echo "*** Telling ze-filter to reload databases..."
-	$(JBINDIR)/j-ndc reload databases
-	$(JBINDIR)/j-ndc reload lrdata
+	$(JBINDIR)/ze-ndc reload databases
+	$(JBINDIR)/ze-ndc reload lrdata
 	@rm -f *.db.old
 

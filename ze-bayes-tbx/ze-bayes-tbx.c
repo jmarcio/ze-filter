@@ -153,12 +153,12 @@ main(argc, argv)
   data.verbose = FALSE;
   data.histogram = FALSE;
   data.progress = TRUE;
-  data.dbname = J_CDBDIR "/j-bayes.db";
+  data.dbname = ZE_CDBDIR "/ze-bayes.db";
   data.nbt = 21;
   data.uprob = 0.5;
 
-  if (access("j-bayes.db", R_OK) == 0)
-    data.dbname = "j-bayes.db";
+  if (access("ze-bayes.db", R_OK) == 0)
+    data.dbname = "ze-bayes.db";
 
   set_log_output(FALSE, TRUE);
 

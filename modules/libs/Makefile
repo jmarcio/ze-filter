@@ -14,9 +14,9 @@
 
 
 
-pkgdatadir = $(datadir)/j-chkmail
-pkglibdir = $(libdir)/j-chkmail
-pkgincludedir = $(includedir)/j-chkmail
+pkgdatadir = $(datadir)/ze-filter
+pkglibdir = $(libdir)/ze-filter
+pkgincludedir = $(includedir)/ze-filter
 am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd
 install_sh_DATA = $(install_sh) -c -m 644
 install_sh_PROGRAM = $(install_sh) -c
@@ -51,19 +51,19 @@ am__installdirs = "$(DESTDIR)$(pkglibdir)"
 pkglibLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(pkglib_LTLIBRARIES)
 libchkvirus_la_LIBADD =
-am_libchkvirus_la_OBJECTS = j-avclient.lo
+am_libchkvirus_la_OBJECTS = ze-avclient.lo
 libchkvirus_la_OBJECTS = $(am_libchkvirus_la_OBJECTS)
 libcommon_la_LIBADD =
-am_libcommon_la_OBJECTS = j-base64.lo j-btree.lo j-buffer.lo \
-	j-linkedlist.lo j-db.lo j-map.lo j-decode.lo j-rfc2822.lo \
-	j-demime.lo j-convert-8to7.lo j-mbox.lo j-divers.lo \
-	j-dns-parse.lo j-dns.lo j-html.lo j-inet.lo j-ipc.lo \
-	j-syslog.lo j-txtlog.lo j-morpho.lo j-name2id.lo \
-	j-parse-dns.lo j-qp.lo j-regex.lo j-server.lo j-shmem.lo \
-	j-smtp-divers.lo j-strings.lo j-strconvert.lo j-time.lo \
-	j-rdfile.lo j-table.lo j-uudecode.lo j-unattach.lo j-load.lo \
-	j-cyclic.lo kstats.lo j-bfilter.lo j-bcheck.lo md5.lo sha1.lo \
-	j-msg-hash.lo
+am_libcommon_la_OBJECTS = ze-base64.lo ze-btree.lo ze-buffer.lo \
+	ze-linkedlist.lo ze-db.lo ze-map.lo ze-decode.lo ze-rfc2822.lo \
+	ze-demime.lo ze-convert-8to7.lo ze-mbox.lo ze-divers.lo \
+	ze-dns-parse.lo ze-dns.lo ze-html.lo ze-inet.lo ze-ipc.lo \
+	ze-syslog.lo ze-txtlog.lo ze-morpho.lo ze-name2id.lo \
+	ze-parse-dns.lo ze-qp.lo ze-regex.lo ze-server.lo ze-shmem.lo \
+	ze-smtp-divers.lo ze-strings.lo ze-strconvert.lo ze-time.lo \
+	ze-rdfile.lo ze-table.lo ze-uudecode.lo ze-unattach.lo ze-load.lo \
+	ze-cyclic.lo kstats.lo ze-bfilter.lo ze-bcheck.lo md5.lo sha1.lo \
+	ze-msg-hash.lo
 libcommon_la_OBJECTS = $(am_libcommon_la_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(top_builddir)/include
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -139,11 +139,11 @@ MODDIRS =  modules/mod_sympa modules/mod_scores
 MODULES =  mod_sympa mod_scores
 NMEDIT = 
 OBJEXT = o
-PACKAGE = j-chkmail
+PACKAGE = ze-filter
 PACKAGE_BUGREPORT = Jose-Marcio.Martins@ensmp.fr
-PACKAGE_NAME = j-chkmail
-PACKAGE_STRING = j-chkmail 2.1.0
-PACKAGE_TARNAME = j-chkmail
+PACKAGE_NAME = ze-filter
+PACKAGE_STRING = ze-filter 2.1.0
+PACKAGE_TARNAME = ze-filter
 PACKAGE_VERSION = 2.1.0
 PATH_SEPARATOR = :
 PCREDIR = pcre.dir
@@ -157,7 +157,7 @@ RANLIB = ranlib
 RCDIR = /etc/init.d
 RCSCRIPT = jchkmail
 RCSUFFIX = 
-RSYNC_SERVER = rsync.j-chkmail.org:1873
+RSYNC_SERVER = rsync.ze-filter.org:1873
 SED = /bin/sed
 SET_MAKE = 
 SHELL = /bin/sh
@@ -225,50 +225,50 @@ top_builddir = ../..
 top_srcdir = ../..
 AM_CPPFLAGS = -I../../pcre-7.0 -I../../berkdb -I../include
 pkglib_LTLIBRARIES = libcommon.la libchkvirus.la 
-libcommon_la_SOURCES = j-base64.c \
-				j-btree.c \
-				j-buffer.c \
-				j-linkedlist.c \
-				j-db.c \
-				j-map.c \
-				j-decode.c \
-				j-rfc2822.c \
-				j-demime.c \
-				j-convert-8to7.c \
-				j-mbox.c \
-				j-divers.c \
-				j-dns-parse.c \
-				j-dns.c \
-				j-html.c \
-				j-inet.c \
-				j-ipc.c \
-				j-syslog.c \
-				j-txtlog.c \
-				j-morpho.c \
-				j-name2id.c \
-				j-parse-dns.c \
-				j-qp.c \
-				j-regex.c \
-				j-server.c \
-				j-shmem.c \
-				j-smtp-divers.c \
-				j-strings.c \
-				j-strconvert.c \
-				j-time.c \
-				j-rdfile.c \
-				j-table.c \
-				j-uudecode.c \
-				j-unattach.c \
-				j-load.c \
-				j-cyclic.c \
+libcommon_la_SOURCES = ze-base64.c \
+				ze-btree.c \
+				ze-buffer.c \
+				ze-linkedlist.c \
+				ze-db.c \
+				ze-map.c \
+				ze-decode.c \
+				ze-rfc2822.c \
+				ze-demime.c \
+				ze-convert-8to7.c \
+				ze-mbox.c \
+				ze-divers.c \
+				ze-dns-parse.c \
+				ze-dns.c \
+				ze-html.c \
+				ze-inet.c \
+				ze-ipc.c \
+				ze-syslog.c \
+				ze-txtlog.c \
+				ze-morpho.c \
+				ze-name2id.c \
+				ze-parse-dns.c \
+				ze-qp.c \
+				ze-regex.c \
+				ze-server.c \
+				ze-shmem.c \
+				ze-smtp-divers.c \
+				ze-strings.c \
+				ze-strconvert.c \
+				ze-time.c \
+				ze-rdfile.c \
+				ze-table.c \
+				ze-uudecode.c \
+				ze-unattach.c \
+				ze-load.c \
+				ze-cyclic.c \
 				kstats.c \
-				j-bfilter.c \
-				j-bcheck.c \
+				ze-bfilter.c \
+				ze-bcheck.c \
 				md5.c \
 				sha1.c \
-				j-msg-hash.c
+				ze-msg-hash.c
 
-libchkvirus_la_SOURCES = j-avclient.c
+libchkvirus_la_SOURCES = ze-avclient.c
 all: all-am
 
 .SUFFIXES:
@@ -340,46 +340,46 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-include ./$(DEPDIR)/j-avclient.Plo
-include ./$(DEPDIR)/j-base64.Plo
-include ./$(DEPDIR)/j-bcheck.Plo
-include ./$(DEPDIR)/j-bfilter.Plo
-include ./$(DEPDIR)/j-btree.Plo
-include ./$(DEPDIR)/j-buffer.Plo
-include ./$(DEPDIR)/j-convert-8to7.Plo
-include ./$(DEPDIR)/j-cyclic.Plo
-include ./$(DEPDIR)/j-db.Plo
-include ./$(DEPDIR)/j-decode.Plo
-include ./$(DEPDIR)/j-demime.Plo
-include ./$(DEPDIR)/j-divers.Plo
-include ./$(DEPDIR)/j-dns-parse.Plo
-include ./$(DEPDIR)/j-dns.Plo
-include ./$(DEPDIR)/j-html.Plo
-include ./$(DEPDIR)/j-inet.Plo
-include ./$(DEPDIR)/j-ipc.Plo
-include ./$(DEPDIR)/j-linkedlist.Plo
-include ./$(DEPDIR)/j-load.Plo
-include ./$(DEPDIR)/j-map.Plo
-include ./$(DEPDIR)/j-mbox.Plo
-include ./$(DEPDIR)/j-morpho.Plo
-include ./$(DEPDIR)/j-msg-hash.Plo
-include ./$(DEPDIR)/j-name2id.Plo
-include ./$(DEPDIR)/j-parse-dns.Plo
-include ./$(DEPDIR)/j-qp.Plo
-include ./$(DEPDIR)/j-rdfile.Plo
-include ./$(DEPDIR)/j-regex.Plo
-include ./$(DEPDIR)/j-rfc2822.Plo
-include ./$(DEPDIR)/j-server.Plo
-include ./$(DEPDIR)/j-shmem.Plo
-include ./$(DEPDIR)/j-smtp-divers.Plo
-include ./$(DEPDIR)/j-strconvert.Plo
-include ./$(DEPDIR)/j-strings.Plo
-include ./$(DEPDIR)/j-syslog.Plo
-include ./$(DEPDIR)/j-table.Plo
-include ./$(DEPDIR)/j-time.Plo
-include ./$(DEPDIR)/j-txtlog.Plo
-include ./$(DEPDIR)/j-unattach.Plo
-include ./$(DEPDIR)/j-uudecode.Plo
+include ./$(DEPDIR)/ze-avclient.Plo
+include ./$(DEPDIR)/ze-base64.Plo
+include ./$(DEPDIR)/ze-bcheck.Plo
+include ./$(DEPDIR)/ze-bfilter.Plo
+include ./$(DEPDIR)/ze-btree.Plo
+include ./$(DEPDIR)/ze-buffer.Plo
+include ./$(DEPDIR)/ze-convert-8to7.Plo
+include ./$(DEPDIR)/ze-cyclic.Plo
+include ./$(DEPDIR)/ze-db.Plo
+include ./$(DEPDIR)/ze-decode.Plo
+include ./$(DEPDIR)/ze-demime.Plo
+include ./$(DEPDIR)/ze-divers.Plo
+include ./$(DEPDIR)/ze-dns-parse.Plo
+include ./$(DEPDIR)/ze-dns.Plo
+include ./$(DEPDIR)/ze-html.Plo
+include ./$(DEPDIR)/ze-inet.Plo
+include ./$(DEPDIR)/ze-ipc.Plo
+include ./$(DEPDIR)/ze-linkedlist.Plo
+include ./$(DEPDIR)/ze-load.Plo
+include ./$(DEPDIR)/ze-map.Plo
+include ./$(DEPDIR)/ze-mbox.Plo
+include ./$(DEPDIR)/ze-morpho.Plo
+include ./$(DEPDIR)/ze-msg-hash.Plo
+include ./$(DEPDIR)/ze-name2id.Plo
+include ./$(DEPDIR)/ze-parse-dns.Plo
+include ./$(DEPDIR)/ze-qp.Plo
+include ./$(DEPDIR)/ze-rdfile.Plo
+include ./$(DEPDIR)/ze-regex.Plo
+include ./$(DEPDIR)/ze-rfc2822.Plo
+include ./$(DEPDIR)/ze-server.Plo
+include ./$(DEPDIR)/ze-shmem.Plo
+include ./$(DEPDIR)/ze-smtp-divers.Plo
+include ./$(DEPDIR)/ze-strconvert.Plo
+include ./$(DEPDIR)/ze-strings.Plo
+include ./$(DEPDIR)/ze-syslog.Plo
+include ./$(DEPDIR)/ze-table.Plo
+include ./$(DEPDIR)/ze-time.Plo
+include ./$(DEPDIR)/ze-txtlog.Plo
+include ./$(DEPDIR)/ze-unattach.Plo
+include ./$(DEPDIR)/ze-uudecode.Plo
 include ./$(DEPDIR)/kstats.Plo
 include ./$(DEPDIR)/md5.Plo
 include ./$(DEPDIR)/sha1.Plo

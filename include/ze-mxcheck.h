@@ -22,11 +22,11 @@
  */
 
 
-#ifndef J_MXCHECK_H
+#ifndef ZE_MXCHECK_H
 
 int          check_sender_mx(SMFICTX *, char *);
 
 
-# define J_MXCHECK_H    1
+# define ZE_MXCHECK_H    1
 #endif /* J_MXCHECK_H */
 

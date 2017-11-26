@@ -56,10 +56,10 @@ db_rcpt_open(rd)
 
   cfdir = cf_get_str(CF_CDBDIR);
   if (cfdir == NULL || strlen(cfdir) == 0)
-    cfdir = J_CDBDIR;
+    cfdir = ZE_CDBDIR;
 
   dbname = cf_get_str(CF_DB_RCPT);
-  ADJUST_FILENAME(dbpath, dbname, cfdir, "j-rcpt.db");
+  ADJUST_FILENAME(dbpath, dbname, cfdir, "ze-rcpt.db");
 
   MESSAGE_INFO(15, "Opening Rcpt Database : %s", dbpath);
   if (jdb_ok(&hdb))
@@ -85,7 +85,7 @@ db_rcpt_reopen()
   jdb_lock(&hdb);
   if (jdb_ok(&hdb))
     res = jdb_close(&hdb);
-  snprintf(path, sizeof (path), "%s/%s", cf_get_str(CF_CDBDIR), "j-rcpt.db");
+  snprintf(path, sizeof (path), "%s/%s", cf_get_str(CF_CDBDIR), "ze-rcpt.db");
   res = jdb_open(&hdb, NULL, path, (rdonly ? 0444 : 0644), rdonly, TRUE, 0);
   jdb_unlock(&hdb);
   return res;
@@ -216,7 +216,7 @@ db_rcpt_check_email(prefix, key, bufout, size)
    ** Entire key doesn't match - lets check domain part
    **
    **  Do I really need this ?????
-   ** Now done at j-rcpt.c
+   ** Now done at ze-rcpt.c
    */
   if (FALSE && !found)
   {

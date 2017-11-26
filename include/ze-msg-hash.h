@@ -22,7 +22,7 @@
  */
 
 
-#ifndef J_MSG_HASH_H
+#ifndef ZE_MSG_HASH_H
 
 #define    HASH_PLAIN     0
 #define    HASH_MD5       1
@@ -41,5 +41,5 @@ bool                str2hash2b64(int code, char *sout, char *sin, size_t szout);
 int                 hash_label2code(char *label);
 char               *hash_code2label(int code);
 
-# define J_MSG_HASH_H    1
+# define ZE_MSG_HASH_H    1
 #endif             /* J_MSG_HASH_H */

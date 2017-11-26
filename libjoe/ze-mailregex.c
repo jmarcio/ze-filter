@@ -35,9 +35,9 @@
 #define REGCOMP_FLAGS         (REG_ICASE | REG_NEWLINE | REG_EXTENDED)
 
 #if USE_PCRE
-# define J_PCRE_FLAGS          (PCRE_CASELESS | PCRE_DOTALL)
+# define ZE_PCRE_FLAGS          (PCRE_CASELESS | PCRE_DOTALL)
 #else
-# define J_PCRE_FLAGS          (PCRE_CASELESS | PCRE_DOTALL)
+# define ZE_PCRE_FLAGS          (PCRE_CASELESS | PCRE_DOTALL)
 #endif             /* USE_PCRE */
 
 #if USE_PCRE
@@ -201,7 +201,7 @@ add_regex_rec(vk, vv)
     int                 erroffset = 0;
 
     r.pcre_rebase =
-      pcre_compile(r.regex, J_PCRE_FLAGS, &errptr, &erroffset, NULL);
+      pcre_compile(r.regex, ZE_PCRE_FLAGS, &errptr, &erroffset, NULL);
     if (r.pcre_rebase == NULL)
       LOG_MSG_ERROR("pcre_compile error : /%s/ : %s", r.regex,
                     errptr != NULL ? errptr : "(NULL)");
@@ -294,7 +294,7 @@ load_regex_table(cfdir, fname)
   }
 
   if (res == 0)
-    result = read_conf_data_file(cfdir, fname, "j-regex", read_it);
+    result = read_conf_data_file(cfdir, fname, "ze-regex", read_it);
 
   DATA_UNLOCK();
 
@@ -347,7 +347,7 @@ check_regex(id, ip, msg, where)
             const char         *errptr = NULL;
             int                 erroffset = 0;
 
-            q->pcre_rebase = pcre_compile(q->regex, J_PCRE_FLAGS, &errptr,
+            q->pcre_rebase = pcre_compile(q->regex, ZE_PCRE_FLAGS, &errptr,
                                           &erroffset, NULL);
             if (q->pcre_rebase == NULL)
               LOG_MSG_ERROR("pcre_compile error : /%s/ : %s", q->regex,
@@ -596,7 +596,7 @@ check_rurlbl(id, ip, msg)
         REGEX_REC          *q;
 
         /*
-         ** URLs defined at j-regex
+         ** URLs defined at ze-regex
          */
         if ((q = (REGEX_REC *) j_table_get_first_ptr(&htbl)) != NULL)
         {
@@ -835,10 +835,10 @@ db_open_rurbl_database()
   /* JOE XXX */
   cfdir = cf_get_str(CF_CDBDIR);
   if (cfdir == NULL || strlen(cfdir) == 0)
-    cfdir = J_CDBDIR;
+    cfdir = ZE_CDBDIR;
 
   dbname = cf_get_str(CF_DB_URLBL);
-  ADJUST_FILENAME(dbpath, dbname, cfdir, "j-urlbl.db");
+  ADJUST_FILENAME(dbpath, dbname, cfdir, "ze-urlbl.db");
 
   if (jdb_ok(&hdb))
     return TRUE;
@@ -880,10 +880,10 @@ db_reopen_rurbl_database()
   /* JOE XXX */
   cfdir = cf_get_str(CF_CDBDIR);
   if (cfdir == NULL || strlen(cfdir) == 0)
-    cfdir = J_CDBDIR;
+    cfdir = ZE_CDBDIR;
 
   dbname = cf_get_str(CF_DB_URLBL);
-  ADJUST_FILENAME(dbpath, dbname, cfdir, "j-urlbl.db");
+  ADJUST_FILENAME(dbpath, dbname, cfdir, "ze-urlbl.db");
 
   jdb_lock(&hdb);
   if (jdb_ok(&hdb))

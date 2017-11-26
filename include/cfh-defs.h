@@ -12,6 +12,11 @@
  *
  * This program is free software, but with restricted license :
  *
+ * - ze-filter is distributed only to registered users
+ * - ze-filter license is available only non-commercial applications,
+ *   this means, you can use ze-filter if you make no profit with it.
+ * - redistribution of ze-filter in any way : binary, source in any
+ *   media, is forbidden
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -23,7 +28,7 @@
 
 #define    CF_VERSION                                   101
 #define    CF_MYSELF                                    102
-#define    CF_J_HOSTNAME                                103
+#define    CF_ZE_HOSTNAME                               103
 #define    CF_PRESENCE                                  104
 #define    CF_FOOTER                                    105
 #define    CF_FILTER_URL                                106
@@ -82,8 +87,8 @@
 #define    CF_RESOLVE_CACHE_EXPIRE                     1204
 #define    CF_NOTIFY_SENDER                            1301
 #define    CF_NOTIFY_RCPT                              1302
-#define    CF_J_SENDER                                 1303
-#define    CF_J_SUBJECT                                1304
+#define    CF_ZE_SENDER                                1303
+#define    CF_ZE_SUBJECT                               1304
 #define    CF_XFILES                                   1401
 #define    CF_XFILES_FILE                              1402
 #define    CF_XFILE_SAVE_MSG                           1403

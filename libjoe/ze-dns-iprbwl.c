@@ -387,7 +387,7 @@ load_iprbwl_table(cfdir, fname)
 
   memset(ipRbwl.rbwl, 0, sizeof (ipRbwl.rbwl));
   ipRbwl.nb = 0;
-  result = read_conf_data_file(cfdir, fname, "j-tables:dns-ip-rbwl", read_it);
+  result = read_conf_data_file(cfdir, fname, "ze-tables:dns-ip-rbwl", read_it);
   ipRbwl.ok = result;
 
   RBWL_UNLOCK();

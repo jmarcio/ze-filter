@@ -109,7 +109,7 @@ if ($Actions[0] =~ /upgrade|update|install|compile/) {
 
 * You may want to clean-up working directories with :
 
-      j-easy-install clean build
+      ze-easy-install clean build
 
 EOT
   exit 0;
@@ -154,10 +154,10 @@ sub get_param {
       $PARAM{snapshot} = $b;
     }
 
-    if (/^\s*j-easy-install\s+/i) {
+    if (/^\s*ze-easy-install\s+/i) {
       my (undef, $a, $b) = split " ", $_;
-      $VERSION{"j-easy-install"} = $a;
-      $PARAM{"j-easy-install"} = $b;
+      $VERSION{"ze-easy-install"} = $a;
+      $PARAM{"ze-easy-install"} = $b;
     }
   }
   close FIN;
@@ -182,7 +182,7 @@ sub get_distribution {
 #
 #
 sub get_saved_options {
-  my $cf = "/etc/j-easy-install.conf";
+  my $cf = "/etc/ze-easy-install.conf";
   if (-f $cf) {
     open FIN, "<$cf" || return 0;
     while (my $line = <FIN>) {
@@ -553,7 +553,7 @@ EOT
     if (-d $cdbdir) {
       die "$@" unless chdir $cdbdir;
 
-      my @TXT = qw(j-bayes.txt j-bayes-md5.txt j-urlbl.txt);
+      my @TXT = qw(ze-bayes.txt ze-bayes-md5.txt ze-urlbl.txt);
       foreach my $f (@TXT) {
 	system("touch $f") unless -f $f;
       }
@@ -665,13 +665,13 @@ sub do_autoupdate
 
   printf "* Autoupdating myself\n";
 
-  my $me = `which j-easy-install`;
+  my $me = `which ze-easy-install`;
   chomp $me;
 
   printf "* Geting files\n";
   my $base = $PARAM{url};
-  my $file = $PARAM{"j-easy-install"};
-  my $vers = $VERSION{"j-easy-install"};
+  my $file = $PARAM{"ze-easy-install"};
+  my $vers = $VERSION{"ze-easy-install"};
 
   die "$@" unless chdir "src";
   my $n = get_distribution($base, $file);

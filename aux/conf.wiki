@@ -5,7 +5,7 @@
     * **Default** : ''ze-Filter''
   * **MYSELF** (String) - My own names, IPs and aliases
     * **Default** : ''127.0.0.1 HOSTNAME''
-  * **J_HOSTNAME** (Option) - How to get mailserver hostname ?
+  * **ZE_HOSTNAME** (Option) - How to get mailserver hostname ?
     * **Values** : ''SYSTEM/SENDMAIL/OTHER''
     * **Default** : ''SYSTEM''
   * **PRESENCE** (Option) - Show/Hide presence (presence header)
@@ -138,7 +138,7 @@ This Section defines how ze-ndc command line tool communicates with ze-filter.
   * **PID_FILE** (String) - ze-filter pid file
     * **Default** : ''/var/run/ze-filter/ze-filter.pid''
   * **STATS_FILE** (String) - STATS_FILE
-    * **Default** : ''file:j-stats''
+    * **Default** : ''file:ze-stats''
 
 ==== Quarantine and Archive management ====
 
@@ -152,7 +152,7 @@ This Section defines how ze-ndc command line tool communicates with ze-filter.
     * **Values** : ''NO/YES''
     * **Default** : ''YES''
   * **QUARANTINE_LOG_FILE** (String) - Quarantine log file
-    * **Default** : ''file:j-quarantine''
+    * **Default** : ''file:ze-quarantine''
   * **ARCHIVE** (Option) - Archiving messages
     * When this option is enabled, ze-filter will be able to save a copy of each message matching Archive policy.
     * **Values** : ''NO/YES''
@@ -215,11 +215,11 @@ This Section defines how ze-ndc command line tool communicates with ze-filter.
     * When this option is enabled, notifications after virus or X-Files are sent to recipients
     * **Values** : ''NO/YES''
     * **Default** : ''YES''
-  * **J_SENDER** (Option) - Sender address used for notification message
+  * **ZE_SENDER** (Option) - Sender address used for notification message
     * This option defines the sender of notifications appearing in headers and, for some versions of the MTA, the enveloppe. If the special value **SENDER** is used, the sender will be preserved.
     * **Values** : ''SENDER/OTHER''
     * **Default** : ''SENDER''
-  * **J_SUBJECT** (Option) - Subject of replacement notification message
+  * **ZE_SUBJECT** (Option) - Subject of replacement notification message
     * This option defines which will be the subject of the notification. If the special value **SUBJECT** is used then the message subject is preserved.
     * **Values** : ''SUBJECT/OTHER''
     * **Default** : ''SUBJECT''
@@ -237,7 +237,7 @@ This Section defines how ze-ndc command line tool communicates with ze-filter.
   * **XFILE_SUBJECT_TAG** (String) - Tag to be inserted on Subject
     * **Default** : ''''
   * **XFILES_LOG_FILE** (String) - Detected X-Files log file
-    * **Default** : ''file:j-files''
+    * **Default** : ''file:ze-files''
 
 ==== External virus scanner ====
 
@@ -272,7 +272,7 @@ This section contains the options to connect ze-filter to an external virus scan
   * **VIRUS_LOG_FILE** (String) - Detected Virus log file
     * Virus found will be logged in this file.
     * **Syntax** : ''file:filename or udp:port@hostname''
-    * **Default** : ''file:j-virus''
+    * **Default** : ''file:ze-virus''
 
 ==== Antispam checks (bayesian filter) ====
 
@@ -320,7 +320,7 @@ This section contains the options to connect ze-filter to an external virus scan
     * **Values** : ''NO/YES''
     * **Default** : ''YES''
   * **REGEX_LOG_FILE** (String) - Matched pattern log file
-    * **Default** : ''file:j-regex''
+    * **Default** : ''file:ze-regex''
 
 ==== Antispam content check - Heuristic filtering (ORACLE) ====
 
@@ -607,7 +607,7 @@ This section contains the options to connect ze-filter to an external virus scan
   * **GREY_LOG_FILE** (String) - The expired entries log file
     * This is the file where expired entries can be logged. **Don't enable this feature on busy servers**
     * **Syntax** : ''''
-    * **Default** : ''file:j-grey-expire''
+    * **Default** : ''file:ze-grey-expire''
 
 ==== Greylisting - ze-greyd specific ====
 
@@ -622,9 +622,9 @@ This section presents parameters which are exclusive to **ze-greyd** greylisting
     * **Default** : ''10''
   * **GREYDDIR** (String) - ze-greyd working directory
     * The directory where ze-greyd will save its databases.
-    * **Default** : ''/var/ze-filter/jgreydb''
+    * **Default** : ''/var/ze-filter/ze-greydb''
   * **GREYD_PID_FILE** (String) - ze-greyd pid file
-    * **Default** : ''/var/run/ze-filter/j-greyd.pid''
+    * **Default** : ''/var/run/ze-filter/ze-greyd.pid''
   * **GREYD_CLIENT_IDLE_MAX** (Integer) - Maximum inactivity time (after this connection will be closed)
     * ze-greyd server will disconnect clients inactive longer than this delay.
     * **Default** : ''300''

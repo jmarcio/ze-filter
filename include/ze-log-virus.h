@@ -22,11 +22,11 @@
  */
 
 
-#ifndef J_LOG_VIRUS_H
+#ifndef ZE_LOG_VIRUS_H
 
 void                log_virus(char *, char *, char *);
 bool                log_virus_reopen();
 
-# define J_LOG_VIRUS_H    1
+# define ZE_LOG_VIRUS_H    1
 #endif /* J_LOG_VIRUS_H */
 

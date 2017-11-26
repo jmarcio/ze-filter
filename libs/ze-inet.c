@@ -539,7 +539,7 @@ jfd_ready(sd, fdmode, to)
 
   int                 flags;
 
-  flags = (fdmode == J_SOCK_READ ? J_POLL_RD_FLAGS : J_POLL_WR_FLAGS);
+  flags = (fdmode == ZE_SOCK_READ ? J_POLL_RD_FLAGS : J_POLL_WR_FLAGS);
 
   for (;;)
   {
@@ -548,7 +548,7 @@ jfd_ready(sd, fdmode, to)
     pfd.revents = 0;
     r = poll(&pfd, 1, to);
     if (r == 0)
-      return J_SOCK_TIMEOUT;
+      return ZE_SOCK_TIMEOUT;
 
 #if 0
     if ((pfd.revents & (POLLERR | POLLHUP | POLLNVAL)) != 0)
@@ -564,27 +564,27 @@ jfd_ready(sd, fdmode, to)
       if (errno == EINTR)
       {
         if (++nerr > 100)
-          return J_SOCK_ERROR;
+          return ZE_SOCK_ERROR;
         continue;
       }
       LOG_SYS_ERROR("poll(%ld)", (long) pfd.fd);
-      return J_SOCK_ERROR;
+      return ZE_SOCK_ERROR;
     }
     nerr = 0;
     if ((pfd.revents & flags) != 0)
-      return J_SOCK_READY;
+      return ZE_SOCK_READY;
 
     if ((pfd.revents & (POLLERR | POLLHUP | POLLNVAL)) != 0)
-      return J_SOCK_ERROR;
+      return ZE_SOCK_ERROR;
 
     if (time(NULL) > (now + to / 1000))
-      return J_SOCK_TIMEOUT;
+      return ZE_SOCK_TIMEOUT;
   }
 #if 0
   LOG_MSG_ERR
     ("ERROR=poll:mi_rd_socket_ready, socket=%d, r=%d, errno=%d revents=%d", sd,
      r, errno, pfd.revents);
-  return J_SOCK_ERROR;
+  return ZE_SOCK_ERROR;
 #endif
 #else              /* HAVE_POLL */
   fd_set              rdfs, excfs;
@@ -599,25 +599,25 @@ jfd_ready(sd, fdmode, to)
     FD_SET((unsigned int) sd, &rdfs);
     FD_ZERO(&excfs);
     FD_SET((unsigned int) sd, &excfs);
-    if (fdmode == J_SOCK_READ)
+    if (fdmode == ZE_SOCK_READ)
       r = select(sd + 1, &rdfs, NULL, &excfs, timeout);
     else
       r = select(sd + 1, NULL, &rdfs, &excfs, timeout);
     if (r == 0)
-      return J_SOCK_TIMEOUT;
+      return ZE_SOCK_TIMEOUT;
     if (r < 0)
     {
       if (errno == EINTR)
         continue;
-      return J_SOCK_ERROR;
+      return ZE_SOCK_ERROR;
     }
     if (FD_ISSET(sd, &excfs))
-      return J_SOCK_ERROR;
+      return ZE_SOCK_ERROR;
     if (FD_ISSET(sd, &rdfs))
-      return J_SOCK_READY;
+      return ZE_SOCK_READY;
   }
 #endif             /* HAVE_POLL */
-  return J_SOCK_ERROR;
+  return ZE_SOCK_ERROR;
 }
 
 /* ****************************************************************************

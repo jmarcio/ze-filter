@@ -184,7 +184,7 @@ close FOUT;
 # ------------------------------------------------------------------------------
 
 foreach (keys %CONFIG) {
-  if (($CONFIG{$_}{"type"} eq "STR") && !($CONFIG{$_}{"default"} =~ /^J_/)) {
+  if (($CONFIG{$_}{"type"} eq "STR") && !($CONFIG{$_}{"default"} =~ /^ZE_/)) {
     $CONFIG{$_}{"default"} = "\"" . $CONFIG{$_}{"default"} . "\"";
   }
 }
@@ -193,7 +193,7 @@ foreach (keys %CONFIG) {
   if (!exists $CONFIG{$_}{"simple"} || !defined ($CONFIG{$_}{"simple"})) {
     $CONFIG{$_}{"simple"} = $CONFIG{$_}{"default"};
   } else {
-    if (($CONFIG{$_}{"type"} eq "STR") && !($CONFIG{$_}{"simple"} =~ /^J_/)) {
+    if (($CONFIG{$_}{"type"} eq "STR") && !($CONFIG{$_}{"simple"} =~ /^ZE_/)) {
       $CONFIG{$_}{"simple"} = "\"" . $CONFIG{$_}{"simple"} . "\"";
     }
   }
@@ -297,7 +297,7 @@ foreach (sort { $a <=> $b } keys %LABEL) {
   my ($id, $type, $attrenum, $attrstr, $cftag, $cfdefault, $cfdesc, $cfsection, $cfsyntax, $cfsimple);
 
   $id = $_;
-  $type = "J_" . $CONFIG{$_}{"type"};
+  $type = "ZE_" . $CONFIG{$_}{"type"};
 
   $attrstr = 0;
   $attrstr = $CONFIG{$_}{"attr"} if $CONFIG{$_}{"type"} eq "STR";

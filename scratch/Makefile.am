@@ -1,5 +1,5 @@
 
-# ze-dettach  j-uufile
+# ze-dettach  ze-uufile
 noinst_PROGRAMS =  \
 		ze-msg-entropy \
 		ze-extract-url \

@@ -22,7 +22,7 @@
  */
 
 
-#ifndef J_CYCLIC_H
+#ifndef ZE_CYCLIC_H
 
 typedef int    (*CYCLIC_F) (void *);
 
@@ -32,5 +32,5 @@ bool           cyclic_tasks_register(CYCLIC_F task, void *arg, time_t period);
 
 void           cyclic_tasks_time_stats();
 
-# define J_CYCLIC_H    1
+# define ZE_CYCLIC_H    1
 #endif             /* J_CYCLIC_H */

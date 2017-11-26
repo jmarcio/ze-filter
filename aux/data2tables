@@ -4,15 +4,15 @@ use strict;
 
 my $cfdir = "/etc/ze-filter";
 
-my @FILES = qw(j-regex j-oradata j-access);
+my @FILES = qw(ze-regex ze-oradata ze-access);
 
-my %TAGS = ('j-regex' => 'REGEX',
-	    'j-oradata' => 'ORACLE-DATA',
-	    'j-access' => 'ACCESS');
+my %TAGS = ('ze-regex' => 'REGEX',
+	    'ze-oradata' => 'ORACLE-DATA',
+	    'ze-access' => 'ACCESS');
 
-my %LABEL = ('j-regex' => 'Pattern matching',
-	     'j-oradata' => 'Oracle definitions',
-	     'j-access' => 'Access table');
+my %LABEL = ('ze-regex' => 'Pattern matching',
+	     'ze-oradata' => 'Oracle definitions',
+	     'ze-access' => 'Access table');
 
 foreach my $file (@FILES) {
   my $fin = "$cfdir/$file";

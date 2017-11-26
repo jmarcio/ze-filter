@@ -1007,7 +1007,7 @@ load_oracle_defs(cfdir, fname)
 
   ASSERT(fname != NULL);
 
-  result = read_conf_data_file(cfdir, fname, "j-oracle:oracle-scores", read_it);
+  result = read_conf_data_file(cfdir, fname, "ze-oracle:oracle-scores", read_it);
 
   return result;
 }

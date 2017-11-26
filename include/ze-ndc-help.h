@@ -22,7 +22,7 @@
  */
 
 
-#ifndef J_NDC_HELP_H
+#ifndef ZE_NDC_HELP_H
 
 /* ****************************************************************************
  *                                                                            *
@@ -32,5 +32,5 @@
 bool                ndc_help(int fd,
                              char *helpstr, bool help, int argc, char **argv);
 
-# define J_NDC_HELP_H    1
+# define ZE_NDC_HELP_H    1
 #endif             /* J_NDC_HELP_H */

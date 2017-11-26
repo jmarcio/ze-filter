@@ -22,7 +22,7 @@
  */
 
 
-#ifndef J_RCPT_LIST_H
+#ifndef ZE_RCPT_LIST_H
 
 typedef struct rcpt_addr_T rcpt_addr_T;
 
@@ -50,5 +50,5 @@ int            rcpt_list_del(rcpt_addr_T **, char *rcpt);
 int            count_rcpt(rcpt_addr_T *);
 
 
-# define J_RCPT_LIST_H    1
+# define ZE_RCPT_LIST_H    1
 #endif             /* J_RCPT_LIST_H */

@@ -22,7 +22,7 @@
  */
 
 
-#ifndef J_BESTOF_N_H
+#ifndef ZE_BESTOF_N_H
 
 
 typedef int (*bestcomp_F) (const void *, const void *);
@@ -46,5 +46,5 @@ double              bestof_average(bestof_T *b);
 int                 bestof_count(bestof_T *b);
 
 
-# define J_BESTOF_N_H    1
+# define ZE_BESTOF_N_H    1
 #endif             /* J_BESTOF_N_H */

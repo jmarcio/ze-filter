@@ -1,4 +1,4 @@
-#  j-regex
+#  ze-regex
 #
 # WHERE     WEIGHT    REGEX
 #

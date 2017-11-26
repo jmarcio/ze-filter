@@ -5,6 +5,6 @@ IP=`getent hosts $HOST | awk '{print $1}'`
 
 echo "IP = $IP"
 
-j-greyd/j-greyd -s inet:2012@$HOST -a $IP
+ze-greyd/ze-greyd -s inet:2012@$HOST -a $IP
 
 

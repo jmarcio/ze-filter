@@ -22,7 +22,7 @@
  */
 
 
-#ifndef J_DNS_PARSE_H
+#ifndef ZE_DNS_PARSE_H
 
 
 #define MAX_HOST    128
@@ -52,5 +52,5 @@ int                 dns_get_mx(char *domain, DNS_HOSTARR_T *mx);
 
 void                print_dns_reply(DNS_REPLY_T * r, int level);
 
-# define J_DNS_PARSE_H    1
+# define ZE_DNS_PARSE_H    1
 #endif             /* J_DNS_PARSE_H */

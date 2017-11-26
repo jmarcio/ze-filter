@@ -22,7 +22,7 @@
  */
 
 
-#ifndef J_BFILTER_H
+#ifndef ZE_BFILTER_H
 
 #define BFLAG_TRFTOK     2
 
@@ -185,5 +185,5 @@ bool                bfilter_handle_message(char *id, char *fname,
 #define UT_PROB    0.5
 
 
-# define J_BFILTER_H    1
+# define ZE_BFILTER_H    1
 #endif             /* J_BFILTER_H */

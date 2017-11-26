@@ -230,7 +230,7 @@ load_oradata_table(cfdir, fname)
     fname = cf_get_str(CF_ORACLE_DATA_FILE);
 
   if ((fname == NULL) || (strlen(fname) == 0))
-    fname = J_ORADATA_FILE;
+    fname = ZE_ORADATA_FILE;
 
   ORA_LOCK();
 
@@ -245,7 +245,7 @@ load_oradata_table(cfdir, fname)
     res = j_table_clear(&htbl);
 
   if (res == 0)
-    result = read_conf_data_file(cfdir, fname, "j-oracle:oracle-data", read_it);
+    result = read_conf_data_file(cfdir, fname, "ze-oracle:oracle-data", read_it);
 
   ORA_UNLOCK();
 

@@ -22,7 +22,7 @@
  */
 
 
-#ifndef J_CLIENT_H
+#ifndef ZE_CLIENT_H
 
 #define CLIENT_SPEC_LEN     512
 
@@ -60,5 +60,5 @@ bool                client_readln(client_T * client, char *buf, size_t size);
 
 int                 connect_timed(int, struct sockaddr *, socklen_t, int);
 
-# define J_CLIENT_H    1
+# define ZE_CLIENT_H    1
 #endif             /* J_CLIENT_H */

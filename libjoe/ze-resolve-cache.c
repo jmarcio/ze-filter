@@ -31,7 +31,7 @@ static void        *resolve_cache_clean(void *);
 
 static MAP_T        map = MAP_INITIALIZER;
 
-static char        *mapname = J_WDBDIR "/j-res-cache.db";
+static char        *mapname = ZE_WDBDIR "/ze-res-cache.db";
 static size_t       mapcachesize = 2 * 1024 * 1024;
 
 #define  VALUE_LEN_MAX        256
@@ -225,8 +225,8 @@ resolve_cache_init(dbdir, rwmode)
     char                name[512];
 
     if (dbdir == NULL || strlen(dbdir) == 0)
-      dbdir = J_WDBDIR;
-    snprintf(name, sizeof (name), "%s/%s", dbdir, "j-res-cache.db");
+      dbdir = ZE_WDBDIR;
+    snprintf(name, sizeof (name), "%s/%s", dbdir, "ze-res-cache.db");
 
     rdonly = rwmode == RESOLVE_CACHE_RD;
 

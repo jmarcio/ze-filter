@@ -65,7 +65,7 @@ filter_signal_handler(name)
 
   bool                done = FALSE;
 
-  MESSAGE_INFO(10, "*** Starting %s ...", J_FUNCTION);
+  MESSAGE_INFO(10, "*** Starting %s ...", ZE_FUNCTION);
 
   memset(&set, 0, sizeof (set));
   sigemptyset(&set);
@@ -167,7 +167,7 @@ setup_filter_signal_handler()
   int                 r;
   sigset_t            set;
 
-  MESSAGE_INFO(10, "*** Starting %s ...", J_FUNCTION);
+  MESSAGE_INFO(10, "*** Starting %s ...", ZE_FUNCTION);
 
   sigemptyset(&set);
 
@@ -273,37 +273,37 @@ reopen_all_log_files()
 
   if (!log_attached_files_reopen())
   {
-    LOG_MSG_WARNING("Can't reopen j-files log file");
+    LOG_MSG_WARNING("Can't reopen ze-files log file");
     res = FALSE;
   }
 
   if (!log_quarantine_reopen())
   {
-    LOG_MSG_WARNING("Can't reopen j-quarantine log file");
+    LOG_MSG_WARNING("Can't reopen ze-quarantine log file");
     res = FALSE;
   }
 
   if (!log_virus_reopen())
   {
-    LOG_MSG_WARNING("Can't reopen j-virus log file");
+    LOG_MSG_WARNING("Can't reopen ze-virus log file");
     res = FALSE;
   }
 
   if (!log_counters_reopen())
   {
-    LOG_MSG_WARNING("Can't reopen j-stats log file");
+    LOG_MSG_WARNING("Can't reopen ze-stats log file");
     res = FALSE;
   }
 
   if (!log_regex_reopen())
   {
-    LOG_MSG_WARNING("Can't reopen j-regex log file");
+    LOG_MSG_WARNING("Can't reopen ze-regex log file");
     res = FALSE;
   }
 
   if (!log_grey_expire_reopen())
   {
-    LOG_MSG_WARNING("Can't reopen j-grey-expire log file");
+    LOG_MSG_WARNING("Can't reopen ze-grey-expire log file");
     res = FALSE;
   }
 
@@ -314,7 +314,7 @@ reopen_all_log_files()
     {
       if (!reopen_scores4stats_file())
       {
-        LOG_MSG_WARNING("Can't reopen j-series log file");
+        LOG_MSG_WARNING("Can't reopen ze-series log file");
         res = FALSE;
       }
     }
@@ -396,7 +396,7 @@ periodic_tasks_loop(data)
 #endif
 #endif
 
-  MESSAGE_INFO(9, "*** Starting %s", J_FUNCTION);
+  MESSAGE_INFO(9, "*** Starting %s", ZE_FUNCTION);
 
   /* init server_idle data */
   {
@@ -734,7 +734,7 @@ launch_periodic_tasks_thread()
   pthread_t           tid;
   int                 r;
 
-  MESSAGE_INFO(9, "*** Starting %s ...", J_FUNCTION);
+  MESSAGE_INFO(9, "*** Starting %s ...", ZE_FUNCTION);
   MESSAGE_INFO(9, "    Tables will be updated by thread");
 
   if ((r = pthread_create(&tid, NULL, periodic_tasks_loop, (void *) NULL)) != 0)

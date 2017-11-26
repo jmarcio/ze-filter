@@ -36,14 +36,14 @@ main(argc, argv)
 
   bool                r;
 
-  configure("j-module-test", conf_file, FALSE);
+  configure("ze-module-test", conf_file, FALSE);
 
   set_log_output(FALSE, TRUE);
   log_level = 10;
 
   printf("Hello, world\n");
 
-  load_all_modules("/etc/ze-filter", "j-modules", "/usr/lib/ze-filter");
+  load_all_modules("/etc/ze-filter", "ze-modules", "/usr/lib/ze-filter");
 
   module_info();
 

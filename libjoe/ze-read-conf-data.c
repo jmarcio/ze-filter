@@ -46,7 +46,7 @@ read_conf_data_file(cfdir, fname, dfile, func)
   ASSERT(func != NULL);
 
   if (cfdir == NULL || strlen(cfdir) == 0)
-    cfdir = J_CONFDIR;
+    cfdir = ZE_CONFDIR;
   memset(fbuf, 0, sizeof (fbuf));
   if (fname != NULL)
     strlcpy(fbuf, fname, sizeof (fbuf));

@@ -22,13 +22,13 @@
  */
 
 
-#ifndef J_DEFINES_H
+#ifndef ZE_DEFINES_H
 
 #define  SPAM_ACTION_SCORE      0
 #define  SPAM_ACTION_REJECT     1
 #define  SPAM_ACTION_DISCARD    2
 #define  SPAM_ACTION_TEMPFAIL   3
 
-# define J_DEFINES_H    1
+# define ZE_DEFINES_H    1
 #endif /* J_DEFINES_H */
 

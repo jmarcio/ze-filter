@@ -42,7 +42,7 @@ SYNTAX       102   -----
 DEFAULT      102   127.0.0.1 HOSTNAME
 LABEL        102   My own names, IPs and aliases
 
-DEFINE       103   J_HOSTNAME                     ENUM    HOSTNAME
+DEFINE       103   ZE_HOSTNAME                     ENUM    HOSTNAME
 DESCR        103   
 SYNTAX       103   -----
 DEFAULT      103   SYSTEM
@@ -176,7 +176,7 @@ DEFINE       301   SOCKET                         STR        256
 DESCR        301   
 DESCR        301   
 SYNTAX       301   inet:PORT@HOSTNAME | local:SOCKET_PATH
-DEFAULT      301   J_SMSOCKFILE
+DEFAULT      301   ZE_SMSOCKFILE
 LABEL        301   Communication socket between sendmail and ze-filter
 
 DEFINE       302   SM_TIMEOUT                     INT
@@ -353,35 +353,35 @@ DEFINE       701   WORKROOT                       STR      256
 DESCR        701   
 DESCR        701   
 SYNTAX       701   -----
-DEFAULT      701   J_WORKROOT
+DEFAULT      701   ZE_WORKROOT
 LABEL        701   ze-filter root directory 
 
 DEFINE       702   WORKDIR                        STR      256
 DESCR        702   
 DESCR        702   
 SYNTAX       702   -----
-DEFAULT      702   J_WORKDIR
+DEFAULT      702   ZE_WORKDIR
 LABEL        702   ze-filter work directory (state and specific logs)
 
 DEFINE       703   SPOOLDIR                       STR      256
 DESCR        703   
 DESCR        703   
 SYNTAX       703   -----
-DEFAULT      703   J_SPOOLDIR
+DEFAULT      703   ZE_SPOOLDIR
 LABEL        703   ze-filter message spool directory
 
 DEFINE       704   PID_FILE                       STR      256
 DESCR        704   
 DESCR        704   
 SYNTAX       704   -----
-DEFAULT      704   J_PID_FILE
+DEFAULT      704   ZE_PID_FILE
 LABEL        704   ze-filter pid file
 
 DEFINE       705   STATS_FILE                     STR      256
 DESCR        705   
 DESCR        705   
 SYNTAX       705   -----
-DEFAULT      705   J_STATS_FILE
+DEFAULT      705   ZE_STATS_FILE
 LABEL        705   STATS_FILE
 
 
@@ -414,7 +414,7 @@ LABEL        803   Add From line to quarantine file ?
 DEFINE       804   QUARANTINE_LOG_FILE            STR      256
 DESCR        804   
 SYNTAX       804   -----
-DEFAULT      804   J_QUARANTINE_LOG
+DEFAULT      804   ZE_QUARANTINE_LOG
 LABEL        804   Quarantine log file
 
 DEFINE       805   ARCHIVE                         ENUM   NO_YES
@@ -445,7 +445,7 @@ DEFINE      1001   WDBDIR                        STR      256
 DESCR       1001   
 DESCR       1001   
 SYNTAX      1001   -----
-DEFAULT     1001   J_WDBDIR
+DEFAULT     1001   ZE_WDBDIR
 LABEL       1001   ze-filter working databases directory
 
 
@@ -459,7 +459,7 @@ DEFINE      1101   CDBDIR                        STR      256
 DESCR       1101   Path of the directory where constant databases are
 DESCR       1101   installed
 SYNTAX      1101   -----
-DEFAULT     1101   J_CDBDIR
+DEFAULT     1101   ZE_CDBDIR
 LABEL       1101   ze-filter constant databases directory
 
 DEFINE      1102   DB_CACHE_SIZE                 INT
@@ -549,7 +549,7 @@ SYNTAX      1302   -----
 DEFAULT     1302   YES
 LABEL       1302   Enable recipient notification
 
-DEFINE      1303   J_SENDER                       ENUM    SENDER
+DEFINE      1303   ZE_SENDER                       ENUM    SENDER
 DESCR       1303   This option defines the sender of notifications appearing
 DESCR       1303   in headers and, for some versions of the MTA, the enveloppe.
 DESCR       1303   If the special value **SENDER** is used, the sender
@@ -558,7 +558,7 @@ SYNTAX      1303   -----
 DEFAULT     1303   SENDER
 LABEL       1303   Sender address used for notification message
 
-DEFINE      1304   J_SUBJECT                      ENUM    SUBJECT
+DEFINE      1304   ZE_SUBJECT                      ENUM    SUBJECT
 DESCR       1304   This option defines which will be the subject of the
 DESCR       1304   notification. If the special value **SUBJECT** is used
 DESCR       1304   then the message subject is preserved.
@@ -606,7 +606,7 @@ DEFINE      1405   XFILES_LOG_FILE                STR      256
 DESCR       1405   
 DESCR       1405   
 SYNTAX      1405   -----
-DEFAULT     1405   J_XFILES_LOG
+DEFAULT     1405   ZE_XFILES_LOG
 LABEL       1405   Detected X-Files log file
 
 
@@ -675,7 +675,7 @@ LABEL       1507   Shall messages be quarantined ???
 DEFINE      1508   VIRUS_LOG_FILE                 STR      256
 DESCR       1508   Virus found will be logged in this file.
 SYNTAX      1508   file:filename or udp:port@hostname
-DEFAULT     1508   J_VIRUS_LOG
+DEFAULT     1508   ZE_VIRUS_LOG
 LABEL       1508   Detected Virus log file
 
 
@@ -821,7 +821,7 @@ DEFINE      1807   REGEX_LOG_FILE                 STR      256
 DESCR       1807   
 DESCR       1807   
 SYNTAX      1807   -----
-DEFAULT     1807   J_REGEX_LOG
+DEFAULT     1807   ZE_REGEX_LOG
 LABEL       1807   Matched pattern log file
 
 
@@ -1627,7 +1627,7 @@ DEFINE      2721   GREY_LOG_FILE                  STR      256
 DESCR       2721   This is the file where expired entries can be logged.
 DESCR       2721   **Don't enable this feature on busy servers**
 SYNTAX      2721   
-DEFAULT     2721   J_GREY_LOG
+DEFAULT     2721   ZE_GREY_LOG
 LABEL       2721   The expired entries log file
 
 
@@ -1664,14 +1664,14 @@ DEFINE      2804   GREYDDIR                             STR      256
 DESCR       2804   
 DESCR       2804   The directory where ze-greyd will save its databases.
 SYNTAX      2804   -----
-DEFAULT     2804   J_GREYDDIR
+DEFAULT     2804   ZE_GREYDDIR
 LABEL       2804   ze-greyd working directory
 
 DEFINE      2805   GREYD_PID_FILE                       STR      256
 DESCR       2805   
 DESCR       2805   
 SYNTAX      2805   -----
-DEFAULT     2805   J_GREYD_PID_FILE
+DEFAULT     2805   ZE_GREYD_PID_FILE
 LABEL       2805   ze-greyd pid file
 
 

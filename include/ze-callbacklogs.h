@@ -22,7 +22,7 @@
  */
 
 
-#ifndef J_CALLBACKLOGS_H
+#ifndef ZE_CALLBACKLOGS_H
 
 #define             WARN_MSG_SIZE      0x4000
 
@@ -64,5 +64,5 @@ bool                reopen_scores4stats_file();
 bool                dump_msg_scores4stats(SMFICTX *ctx);
 
 
-# define J_CALLBACKLOGS_H    1
+# define ZE_CALLBACKLOGS_H    1
 #endif             /* J_CALLBACKLOGS_H */

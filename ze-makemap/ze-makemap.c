@@ -420,7 +420,7 @@ add_db_rec(vk, vv)
 static void
 usage()
 {
-  printf("Usage : j-makemap options\n"
+  printf("Usage : ze-makemap options\n"
          "  %s\n"
          "  Compiled on %s %s\n" "        -b table : specifies table name\n"
          "        -d       : dump instead of update\n"

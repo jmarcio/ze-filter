@@ -173,7 +173,7 @@ main(argc, argv)
         {
           uint32_t            i;
 
-          printf("%s\n", J_CFARGS);
+          printf("%s\n", ZE_CFARGS);
 #if 1
           i = PCRE_MAJOR << 16 | PCRE_MINOR << 8;
           printf("%X\n", i);
@@ -629,7 +629,7 @@ daemon_init()
     char               *workdir = cf_get_str(CF_WORKDIR);
 
     if (workdir == NULL || strlen(workdir) == 0)
-      workdir = J_WORKDIR;
+      workdir = ZE_WORKDIR;
 
     if (chdir(workdir) < 0)
     {
@@ -662,7 +662,7 @@ cleanup_after_configure()
 
     memset(&sh_obj, 0, sizeof (SHMOBJ_T));
 
-    sh_buf = open_shared_file(&sh_obj, "/var/ze-filter/files/j-shared", 0x10000);
+    sh_buf = open_shared_file(&sh_obj, "/var/ze-filter/files/ze-shared", 0x10000);
 
     close_shared_file(&sh_obj);
 
@@ -860,7 +860,7 @@ j_survey()
            */
           SET_SIG_HANDLER(SIG_DFL);
 
-          return j_chkmail();
+          return zeFilter();
         }
 
         LOG_MSG_DEBUG(20, "pid_filter : %ld", (long) pid_filter);
@@ -907,7 +907,7 @@ j_survey()
 
       if (pid_filter > 0)
         send_msg_channel(pipe_filter, msg, CHAN_FATHER);
-      MESSAGE_INFO(12, "%s : MSG SEND : %d", J_FUNCTION, msg);
+      MESSAGE_INFO(12, "%s : MSG SEND : %d", ZE_FUNCTION, msg);
     }
 
     /* Well ! My boss want to reconfigure */
@@ -931,7 +931,7 @@ j_survey()
 
       res_filter = WAIT_NOHANG(-1, &status);
 
-      MESSAGE_DEBUG(20, "%s : PID FILTER : %5d - RES %5d\n", J_FUNCTION,
+      MESSAGE_DEBUG(20, "%s : PID FILTER : %5d - RES %5d\n", ZE_FUNCTION,
                     pid_filter, res_filter);
 
       if (res_filter == -1)

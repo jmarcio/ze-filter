@@ -53,10 +53,10 @@ db_policy_open(rd)
 
   cfdir = cf_get_str(CF_CDBDIR);
   if (cfdir == NULL || strlen(cfdir) == 0)
-    cfdir = J_CDBDIR;
+    cfdir = ZE_CDBDIR;
 
   dbname = cf_get_str(CF_DB_POLICY);
-  ADJUST_FILENAME(dbpath, dbname, cfdir, "j-policy.db");
+  ADJUST_FILENAME(dbpath, dbname, cfdir, "ze-policy.db");
 
   MESSAGE_INFO(15, "Opening Policy Database : %s", dbpath);
 
@@ -87,7 +87,7 @@ db_policy_reopen()
   if (jdb_ok(&hdb))
     res = jdb_close(&hdb);
 
-  snprintf(path, sizeof (path), "%s/%s", cf_get_str(CF_CDBDIR), "j-policy.db");
+  snprintf(path, sizeof (path), "%s/%s", cf_get_str(CF_CDBDIR), "ze-policy.db");
 
   res = jdb_open(&hdb, NULL, path, (rdonly ? 0444 : 0644), rdonly, TRUE, 0);
   jdb_unlock(&hdb);

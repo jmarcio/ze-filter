@@ -22,10 +22,10 @@
  */
 
 
-#ifndef J_SHORT_MESSAGES_H
+#ifndef ZE_SHORT_MESSAGES_H
 
 
 
-# define J_SHORT_MESSAGES_H    1
+# define ZE_SHORT_MESSAGES_H    1
 #endif /* J_SHORT_MESSAGES_H */
 
