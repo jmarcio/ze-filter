@@ -33,16 +33,12 @@
  *                                                                            * 
  *                                                                            *
  **************************************************************************** */
-#define        ze_debug(...)    zeSyslog(LOG_DEBUG, __VA_ARGS__)
+#define        zeLog_Debug(...)    zeSyslog(LOG_DEBUG, __VA_ARGS__)
 
-/*
-**
-**
-*/
 extern int          ze_output;
-extern int          ze_log_level;
-extern int          ze_log_facility;
-extern bool         ze_log_severity;
+extern int          ze_logLevel;
+extern int          ze_logFacility;
+extern bool         ze_logSeverity;
 
 void                zeLog_SetOutput(bool, bool);
 
@@ -53,11 +49,8 @@ void                zeSyslog(int, char *, ...);
 void                zeOpenlog(const char *ident, int option, int facility);
 void                zeCloselog();
 
-
-void                log_sock_addr(struct sockaddr_in *);
-
-int                 ze_facility_value(char *);
-char               *ze_facility_name(int);
+int                 zeLog_FacilityValue(char *);
+char               *zeLog_FacilityName(int);
 
 
 /* ****************************************************************************
@@ -65,18 +58,18 @@ char               *ze_facility_name(int);
  *                                                                            *
  **************************************************************************** */
 
-void                ze_message_info(int, char *, ...);
-void                ze_message_warning(int, char *, ...);
-void                ze_message_error(int, char *, ...);
+void                zeLog_MessageInfo(int, char *, ...);
+void                zeLog_MessageWarning(int, char *, ...);
+void                zeLog_MessageError(int, char *, ...);
 
-void                ze_log_msg_debug(char *, int, char *, ...);
-void                ze_log_msg_info(char *, int, char *, ...);
-void                ze_log_msg_notice(char *, int, char *, ...);
-void                ze_log_msg_warning(char *, int, char *, ...);
-void                ze_log_msg_error(char *, int, char *, ...);
+void                zeLog_MsgDebug(char *, int, char *, ...);
+void                zeLog_MsgInfo(char *, int, char *, ...);
+void                zeLog_MsgNotice(char *, int, char *, ...);
+void                zeLog_MsgWarning(char *, int, char *, ...);
+void                zeLog_MsgError(char *, int, char *, ...);
 
-void                ze_log_sys_warning(char *, int, char *, ...);
-void                ze_log_sys_error(char *, int, char *, ...);
+void                zeLog_SysWarning(char *, int, char *, ...);
+void                zeLog_SysError(char *, int, char *, ...);
 
 
 /* ****************************************************************************
@@ -86,7 +79,7 @@ void                ze_log_sys_error(char *, int, char *, ...);
 
 #define  ZE_Message(level, sysloglevel, ...) \
 do { \
-  if (ze_log_level >= level) {\
+  if (ze_logLevel >= level) {\
     zeSyslog(sysloglevel, __VA_ARGS__); \
   } \
 } while (0)
@@ -97,42 +90,6 @@ do { \
 #define ZE_MessageWarning(level, ...) ZE_Message(level, LOG_WARNING, __VA_ARGS__)
 #define ZE_MessageError(level, ...)   ZE_Message(level, LOG_ERR, __VA_ARGS__)
 
-#if 0
-#define  ZE_MESSAGE_DEBUG(level, ...) \
-do { \
-  if (ze_log_level >= level) {\
-    zeSyslog(LOG_DEBUG, __VA_ARGS__); \
-  } \
-} while (0)
-
-#define  ZE_MessageInfo(level, ...) \
-do { \
-  if (ze_log_level >= level) {\
-    zeSyslog(LOG_INFO, __VA_ARGS__); \
-  } \
-} while (0)
-
-#define  ZE_MessageNotice(level, ...) \
-do { \
-  if (ze_log_level >= level) {\
-    zeSyslog(LOG_NOTICE, __VA_ARGS__); \
-  } \
-} while (0)
-
-#define  ZE_MessageWarning(level, ...) \
-do { \
-  if (ze_log_level >= level) {\
-    zeSyslog(LOG_WARNING, __VA_ARGS__); \
-  } \
-} while (0)
-
-#define  ZE_MessageError(level, ...) \
-do { \
-  if (ze_log_level >= level) {\
-    zeSyslog(LOG_ERR, __VA_ARGS__); \
-  } \
-} while (0)
-#endif
 
 /* ****************************************************************************
  *                                                                            * 
@@ -140,7 +97,7 @@ do { \
  **************************************************************************** */
 #define  ZE_LogMsg(level, sysloglevel, ...) \
 do { \
-  if (ze_log_level > level) { \
+  if (ze_logLevel > level) { \
     char h_log_str[256]; \
     (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__); \
     zeSyslog(sysloglevel, "%s : %s", ZE_FUNCTION, h_log_str); \
@@ -153,10 +110,71 @@ do { \
 #define ZE_LogMsgWarning(level, ...) ZE_LogMsg(level, LOG_WARNING, __VA_ARGS__)
 #define ZE_LogMsgError(level, ...)   ZE_LogMsg(level, LOG_ERR, __VA_ARGS__)
 
+/* ****************************************************************************
+ *                                                                            * 
+ *                                                                            *
+ **************************************************************************** */
+#define ZE_LogSys(sysloglevel, ...) \
+do { \
+  char    h_log_str[256]; \
+  char    *t = (errno != 0 ? strerror(errno) : ""); \
+  (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__); \
+  zeSyslog(sysloglevel, "%s : %s : %s", ZE_FUNCTION, h_log_str, t); \
+  if (sysloglevel == LOG_ERR || sysloglevel == LOG_CRIT) \
+    exit(EX_SOFTWARE); \
+} while (0)
+
+#define ZE_LogSysWarning(...) ZE_LogSys(LOG_WARNING, __VA_ARGS__)
+#define ZE_LogSysError(...)   ZE_LogSys(LOG_ERR, __VA_ARGS__)
+#define ZE_LogSysCrit(...)    ZE_LogSys(LOG_CRIT, __VA_ARGS__)
+
+/* ****************************************************************************
+ *                                                                            * 
+ *                                                                            *
+ **************************************************************************** */
+
+#if 0
+#define  ZE_MESSAGE_DEBUG(level, ...) \
+do { \
+  if (ze_logLevel >= level) {\
+    zeSyslog(LOG_DEBUG, __VA_ARGS__); \
+  } \
+} while (0)
+
+#define  ZE_MessageInfo(level, ...) \
+do { \
+  if (ze_logLevel >= level) {\
+    zeSyslog(LOG_INFO, __VA_ARGS__); \
+  } \
+} while (0)
+
+#define  ZE_MessageNotice(level, ...) \
+do { \
+  if (ze_logLevel >= level) {\
+    zeSyslog(LOG_NOTICE, __VA_ARGS__); \
+  } \
+} while (0)
+
+#define  ZE_MessageWarning(level, ...) \
+do { \
+  if (ze_logLevel >= level) {\
+    zeSyslog(LOG_WARNING, __VA_ARGS__); \
+  } \
+} while (0)
+
+#define  ZE_MessageError(level, ...) \
+do { \
+  if (ze_logLevel >= level) {\
+    zeSyslog(LOG_ERR, __VA_ARGS__); \
+  } \
+} while (0)
+#endif
+
+
 #if 0
 #define  ZE_LogMsgDebug(level, ...) \
 do { \
-  if (ze_log_level > level) { \
+  if (ze_logLevel > level) { \
     char h_log_str[256]; \
     (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__); \
     zeSyslog(LOG_DEBUG, "%s : %s", ZE_FUNCTION, h_log_str); \
@@ -165,7 +183,7 @@ do { \
 
 #define  ZE_LogMsgInfo(level, ...) \
 do { \
-  if (ze_log_level >= level) {\
+  if (ze_logLevel >= level) {\
     char h_log_str[256]; \
     (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__); \
     zeSyslog(LOG_INFO, "%s : %s", ZE_FUNCTION, h_log_str); \
@@ -201,23 +219,7 @@ do { \
 } while (0)
 #endif
 
-/* ****************************************************************************
- *                                                                            * 
- *                                                                            *
- **************************************************************************** */
-#define ZE_LogSys(sysloglevel, ...) \
-do { \
-  char    h_log_str[256]; \
-  char    *t = (errno != 0 ? strerror(errno) : ""); \
-  (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__); \
-  zeSyslog(sysloglevel, "%s : %s : %s", ZE_FUNCTION, h_log_str, t); \
-  if (sysloglevel == LOG_ERR || sysloglevel == LOG_CRIT) \
-    exit(EX_SOFTWARE); \
-} while (0)
 
-#define ZE_LogSysWarning(...) ZE_LogSys(LOG_WARNING, __VA_ARGS__)
-#define ZE_LogSysError(...)   ZE_LogSys(LOG_ERR, __VA_ARGS__)
-#define ZE_LogSysCrit(...)    ZE_LogSys(LOG_CRIT, __VA_ARGS__)
 
 #if 0
 #define  ZE_LogSysWarning(...) \

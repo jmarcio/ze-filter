@@ -1,11 +1,11 @@
 
-Configuration results : Sun Nov 26 22:58:35 CET 2017
+Configuration results : Mon Nov 27 21:54:19 CET 2017
 -----------------------
   configure arguments      : 
 
   Source directory         : /data/FOSS/dev-ze-filter/ze-filter
   Package                  : ze-filter
-  Version                  : ze-filter
+  Version                  : develop-171127
   Host type                : x86_64-pc-linux-gnu
   Host OS                  : linux-gnu
   Host CPU                 : x86_64

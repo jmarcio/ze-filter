@@ -6,5 +6,8 @@ echo $DATE > aux/timestamp
 HERE=`pwd`
 VERSION=`basename $HERE`
 VERSION=`echo $VERSION | sed s/zefilter-// | sed s/ze-filter-//`
-echo $VERSION > aux/version
+
+BRANCH=$(git branch -l | grep '*' | awk '{print $2}')
+
+echo $BRANCH-$DATE > aux/version
 
