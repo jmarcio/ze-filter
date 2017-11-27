@@ -318,7 +318,7 @@ stPolicyLookupDomain(prefix, key, buf, bufSize, recurse, chkDefault)
       char               *lKey = NULL;
 
       argv[i] = "*";
-      lKey = zmStrJoin(".", argc - i, &argv[i]);
+      lKey = zeStrJoin(".", argc - i, &argv[i]);
       ok = db_policy_lookup(prefix, lKey, buf, bufSize);
       FREE(lKey);
     }
@@ -371,7 +371,7 @@ stPolicyLookupIPv4Addr(prefix, key, buf, bufSize, recurse, chkDefault)
     for (i = argc - 1; i > 0 && !ok; i--) {
       char               *lKey = NULL;
 
-      lKey = zmStrJoin(".", i, argv);
+      lKey = zeStrJoin(".", i, argv);
       ok = db_policy_lookup(prefix, lKey, buf, bufSize);
       FREE(lKey);
     }
@@ -423,7 +423,7 @@ stPolicyLookupIPv6Addr(prefix, key, buf, bufSize, recurse, chkDefault)
     for (i = argc; i > 0 && !ok; i--) {
       char               *lKey = NULL;
 
-      lKey = zmStrJoin(".", argc, argv);
+      lKey = zeStrJoin(".", argc, argv);
       ok = db_policy_lookup(prefix, lKey, buf, bufSize);
       FREE(lKey);
     }
@@ -477,7 +477,7 @@ stPolicyLookupNetClass(addr, name, class, buf, bufSize, recurse)
     for (i = argc - 1; i > 0 && !ok; i--) {
       char               *lKey = NULL;
 
-      lKey = zmStrJoin(".", i, argv);
+      lKey = zeStrJoin(".", i, argv);
       ok = db_policy_lookup("NetClass", lKey, buf, bufSize);
       FREE(lKey);
     }
@@ -508,7 +508,7 @@ stPolicyLookupNetClass(addr, name, class, buf, bufSize, recurse)
       char               *lKey = NULL;
 
       argv[i] = "*";
-      lKey = zmStrJoin(".", argc - i, &argv[i]);
+      lKey = zeStrJoin(".", argc - i, &argv[i]);
       ok = db_policy_lookup("NetClass", lKey, buf, bufSize);
       FREE(lKey);
     }
@@ -608,7 +608,7 @@ stPolicyLookupEmailAddr(prefix, key, buf, bufSize, recurse, chkDefault)
       char               *lKey = NULL;
 
       argvT[i] = "*";
-      lKey = zmStrJoin(".", argc - i, &argvT[i]);
+      lKey = zeStrJoin(".", argc - i, &argvT[i]);
 
       snprintf(kBuf, sizeof (kBuf), "%s@%s", userKey, lKey);
       ok = db_policy_lookup(prefix, kBuf, buf, bufSize);

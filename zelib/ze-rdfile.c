@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -56,37 +57,31 @@ j_rd_text_file(fname, rdtype, rdreverse, tag, func)
 
   beg_tag = end_tag = NULL;
 
-  if (fname != NULL && strlen(fname) > 0)
-  {
+  if (fname != NULL && strlen(fname) > 0) {
     static int          nberr = 0;
     static time_t       tlast = (time_t) 0;
 
-    if ((fin = fopen(fname, "r")) == NULL)
-    {
+    if ((fin = fopen(fname, "r")) == NULL) {
       LOG_SYS_ERROR("fopen(%s)", STRNULL(fname, "NULL"));
 
-      if (tlast > 3600)
-      {
+      if (tlast > 3600) {
         tlast = time(NULL);
         nberr = 0;
       }
 
-      if (++nberr > 16)
-      {
+      if (++nberr > 16) {
         if (errno != EINTR)
           exit(EX_SOFTWARE);
       }
 
       return 0;
-    } else
-    {
+    } else {
       nberr = 0;
       tlast = (time_t) 0;
     }
   }
 
-  if (tag != NULL && strlen(tag) > 0)
-  {
+  if (tag != NULL && strlen(tag) > 0) {
     size_t              sz = strlen(tag) + 8;
 
     rdstate = FALSE;
@@ -102,8 +97,7 @@ j_rd_text_file(fname, rdtype, rdreverse, tag, func)
   }
 
   memset(s, 0, sizeof (s));
-  while (fgets(s, BSIZE, fin) == s)
-  {
+  while (fgets(s, BSIZE, fin) == s) {
     char               *pk = NULL, *pv = NULL;
     char               *q;
 
@@ -111,17 +105,13 @@ j_rd_text_file(fname, rdtype, rdreverse, tag, func)
     if ((pk = strchr(s, '\n')) != NULL)
       *pk = '\0';
 
-    if (chktag)
-    {
-      if (!rdstate)
-      {
+    if (chktag) {
+      if (!rdstate) {
         if (strncasecmp(beg_tag, s, strlen(beg_tag)) == 0)
           rdstate = TRUE;
         continue;
-      } else
-      {
-        if (strncasecmp(end_tag, s, strlen(end_tag)) == 0)
-        {
+      } else {
+        if (strncasecmp(end_tag, s, strlen(end_tag)) == 0) {
           rdstate = FALSE;
           continue;
         }
@@ -136,17 +126,14 @@ j_rd_text_file(fname, rdtype, rdreverse, tag, func)
     while ((q != pk) && (*q == ' ' || *q == '\t'))
       *q-- = '\0';
 
-    if (rdtype == RD_TWO_COLUMN)
-    {
+    if (rdtype == RD_TWO_COLUMN) {
       pv = pk + strcspn(pk, " \t");
-      if (*pv != '\0')
-      {
+      if (*pv != '\0') {
         q = pv;
         pv += strspn(pv, " \t");
         *q = '\0';
       }
-      if (rdreverse == RD_REVERSE)
-      {
+      if (rdreverse == RD_REVERSE) {
         q = pv;
         pv = pk;
         pk = q;
@@ -155,20 +142,24 @@ j_rd_text_file(fname, rdtype, rdreverse, tag, func)
     str_clear_blanks(pk);
     str_clear_blanks(pv);
 
-    if (strlen(pk) > 0)
-    {
+    if (strlen(pk) > 0) {
       int                 res;
 
-      if ((res = func(pk, pv)) != 0)
-      {
-        /* what do we do if ther's an error ??? */
-        /* separate negative and positive errors ??? */
-        if (res < 0)
-        {
-          /* fatal errors ... */
-        } else
-        {
-          /* non fatal errors ... */
+      if ((res = func(pk, pv)) != 0) {
+        /*
+         * what do we do if ther's an error ??? 
+         */
+        /*
+         * separate negative and positive errors ??? 
+         */
+        if (res < 0) {
+          /*
+           * fatal errors ... 
+           */
+        } else {
+          /*
+           * non fatal errors ... 
+           */
         }
       } else
         nb++;
@@ -207,37 +198,31 @@ j_rd_file(fname, tag, func, arg)
 
   beg_tag = end_tag = NULL;
 
-  if (fname != NULL && strlen(fname) > 0)
-  {
+  if (fname != NULL && strlen(fname) > 0) {
     static int          nberr = 0;
     static time_t       tlast = (time_t) 0;
 
-    if ((fin = fopen(fname, "r")) == NULL)
-    {
+    if ((fin = fopen(fname, "r")) == NULL) {
       LOG_SYS_ERROR("fopen(%s)", STRNULL(fname, "NULL"));
 
-      if (tlast > 3600)
-      {
+      if (tlast > 3600) {
         tlast = time(NULL);
         nberr = 0;
       }
 
-      if (++nberr > 16)
-      {
+      if (++nberr > 16) {
         if (errno != EINTR)
           exit(EX_SOFTWARE);
       }
 
       return 0;
-    } else
-    {
+    } else {
       nberr = 0;
       tlast = (time_t) 0;
     }
   }
 
-  if (tag != NULL && strlen(tag) > 0)
-  {
+  if (tag != NULL && strlen(tag) > 0) {
     size_t              sz = strlen(tag) + 8;
 
     rdstate = FALSE;
@@ -253,8 +238,7 @@ j_rd_file(fname, tag, func, arg)
   }
 
   memset(s, 0, sizeof (s));
-  while (fgets(s, BSIZE, fin) == s)
-  {
+  while (fgets(s, BSIZE, fin) == s) {
     char               *q = NULL;
     int                 res;
 
@@ -270,33 +254,34 @@ j_rd_file(fname, tag, func, arg)
     if (strexpr(s, "^[ \t]*#", NULL, NULL, FALSE))
       continue;
 
-    if (chktag)
-    {
-      if (!rdstate)
-      {
+    if (chktag) {
+      if (!rdstate) {
         if (strexpr(s, beg_tag, NULL, NULL, TRUE))
           rdstate = TRUE;
         continue;
-      } else
-      {
-        if (strexpr(s, end_tag, NULL, NULL, TRUE))
-        {
+      } else {
+        if (strexpr(s, end_tag, NULL, NULL, TRUE)) {
           rdstate = FALSE;
           continue;
         }
       }
     }
 
-    if ((res = func(s, arg)) != 0)
-    {
-      /* what do we do if ther's an error ??? */
-      /* separate negative and positive errors ??? */
-      if (res < 0)
-      {
-        /* fatal errors ... */
-      } else
-      {
-        /* non fatal errors ... */
+    if ((res = func(s, arg)) != 0) {
+      /*
+       * what do we do if ther's an error ??? 
+       */
+      /*
+       * separate negative and positive errors ??? 
+       */
+      if (res < 0) {
+        /*
+         * fatal errors ... 
+         */
+      } else {
+        /*
+         * non fatal errors ... 
+         */
       }
     } else
       nb++;

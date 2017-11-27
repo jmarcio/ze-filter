@@ -24,7 +24,7 @@
 
 
 #include <ze-sys.h>
-#include <zelibs.h>
+#include <zeLibs.h>
 
 
 /******************************************************************************
@@ -32,7 +32,7 @@
  *                                                                            *
  ******************************************************************************/
 long
-str2long(s, eno, dval)
+zeStr2long(s, eno, dval)
      char               *s;
      int                *eno;
      long                dval;
@@ -97,7 +97,7 @@ str2long(s, eno, dval)
  *                                                                            *
  ******************************************************************************/
 unsigned long
-str2ulong(s, eno, dval)
+zeStr2ulong(s, eno, dval)
      char               *s;
      int                *eno;
      unsigned long       dval;
@@ -131,7 +131,7 @@ str2ulong(s, eno, dval)
  *                                                                            *
  ******************************************************************************/
 unsigned long long
-str2ulonglong(s, eno, dval)
+zeStr2ulonglong(s, eno, dval)
      char               *s;
      int                *eno;
      unsigned long long  dval;
@@ -165,7 +165,7 @@ str2ulonglong(s, eno, dval)
  *                                                                            *
  ******************************************************************************/
 long long
-str2longlong(s, eno, dval)
+zeStr2longlong(s, eno, dval)
      char               *s;
      int                *eno;
      long long           dval;
@@ -199,7 +199,7 @@ str2longlong(s, eno, dval)
  *                                                                            *
  ******************************************************************************/
 double
-str2double(s, eno, dval)
+zeStr2double(s, eno, dval)
      char               *s;
      int                *eno;
      double              dval;
@@ -234,7 +234,7 @@ str2double(s, eno, dval)
  *                                                                            *
  ******************************************************************************/
 size_t
-str2size(s, eno, dval)
+zeStr2size(s, eno, dval)
      char               *s;
      int                *eno;
      size_t              dval;
@@ -288,7 +288,7 @@ str2size(s, eno, dval)
  *                                                                            *
  ******************************************************************************/
 time_t
-str2time(s, eno, dval)
+zeStr2time(s, eno, dval)
      char               *s;
      int                *eno;
      time_t              dval;

@@ -1462,7 +1462,7 @@ Optional Packages:
   --with-group=GROUP      set ze-filter group name (default ze-filter)
   --with-work-dir=PATH    set ze-filter work dir (default /var/ze-filter)
   --with-ze-greyd-dir=PATH
-                          set j-greyd work dir (default
+                          set ze-greyd work dir (default
                           /var/ze-filter/ze-greydb)
   --with-spool-dir=PATH   set ze-filter spool dir (default
                           /var/spool/ze-filter)

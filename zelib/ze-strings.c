@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -41,8 +42,7 @@ strrev(s)
     return s;
 
   len = strlen(s) - 1;
-  for (i = 0; i <= len / 2; i++)
-  {
+  for (i = 0; i <= len / 2; i++) {
     char                t = s[i];
 
     s[i] = s[len - i];
@@ -65,8 +65,7 @@ strduprev(s)
   if (s == NULL)
     return s;
 
-  if ((p = strdup(s)) == NULL)
-  {
+  if ((p = strdup(s)) == NULL) {
     LOG_SYS_ERROR("strdup(%s)", s);
     return p;
   }
@@ -119,16 +118,14 @@ strchomp(s)
   {
     char               *p;
 
-    for (p = s + n; (n >= 0) && (*p != '\0'); p--, n--)
-    {
+    for (p = s + n; (n >= 0) && (*p != '\0'); p--, n--) {
       if ((*p != '\n') && (*p != '\r'))
         break;
       *p = '\0';
     }
   }
 #else
-  while ((n = strlen(s)) > 0)
-  {
+  while ((n = strlen(s)) > 0) {
     if ((s[n - 1] != '\n') && (s[n - 1] != '\r'))
       break;
     s[n - 1] = '\0';
@@ -210,7 +207,7 @@ strndup(sin, n)
 
   return p;
 }
-#endif /* HAVE_STRNDUP */
+#endif             /* HAVE_STRNDUP */
 
 /******************************************************************************
  *                                                                            *
@@ -273,6 +270,7 @@ strcountchar(s, c)
  *                                                                            *
  ******************************************************************************/
 #if NEED_SM_SNPRINTF
+
 /* Inserted and modified by Jose Marcio Martins da Cruz to
    replace need to include libsm or libsmutil from sendmail 
    versions older than 8.12.2 */
@@ -298,6 +296,7 @@ strcountchar(s, c)
 
 /* Write formatted output into S, according to the format
    string FORMAT, writing no more than MAXLEN characters.  */
+
 /* VARARGS3 */
 
 int

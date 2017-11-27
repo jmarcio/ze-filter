@@ -61,9 +61,9 @@ void                log_sys_error(char *, int, char *, ...);
  **************************************************************************** */
 #if USE_LOG_MACROS
 
-#define    MESSAGE_INFO(...)       message_info(ZE_FUNCTION,__VA_ARGS)
-#define    MESSAGE_WARNING(...)    message_warning(ZE_FUNCTION,__VA_ARGS)
-#define    MESSAGE_ERROR(...)      message_error(ZE_FUNCTION,__VA_ARGS)
+#define    MESSAGE_INFO(...)       message_info(ZE_FUNCTION,__VA_ARGS__)
+#define    MESSAGE_WARNING(...)    message_warning(ZE_FUNCTION,__VA_ARGS__)
+#define    MESSAGE_ERROR(...)      message_error(ZE_FUNCTION,__VA_ARGS__)
 
 #else
 
@@ -259,6 +259,8 @@ int                 syslog_facility_value(char *);
 char               *syslog_facility_name(int);
 int                 syslog_priority_value(char *);
 char               *syslog_priority_name(int);
+
+#undef     USE_LOG_MACROS
 
 #define __JSYSLOG_H__
 #endif

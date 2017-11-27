@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -31,11 +32,11 @@
 */
 
 #if 0
-# define     MAP_LOCK(map)          map_lock(map)
-# define     MAP_UNLOCK(map)        map_unlock(map)
+#define     MAP_LOCK(map)          map_lock(map)
+#define     MAP_UNLOCK(map)        map_unlock(map)
 #else
-# define     MAP_LOCK(map)          zmdb_lock(&map->db)
-# define     MAP_UNLOCK(map)        zmdb_unlock(&map->db)
+#define     MAP_LOCK(map)          zmdb_lock(&map->db)
+#define     MAP_UNLOCK(map)        zmdb_unlock(&map->db)
 #endif
 
 /******************************************************************************
@@ -101,36 +102,28 @@ map_open(map, env, name, rdonly, cache_size)
     LOG_SYS_ERROR("strdup(%s)", name);
 
   s = "ldap:";
-  if (strncasecmp(map->name, s, strlen(s)) == 0)
-    ;
+  if (strncasecmp(map->name, s, strlen(s)) == 0);
   s = "db:";
-  if (strncasecmp(map->name, s, strlen(s)) == 0)
-    ;
+  if (strncasecmp(map->name, s, strlen(s)) == 0);
   s = "btree:";
-  if (strncasecmp(map->name, s, strlen(s)) == 0)
-    ;
+  if (strncasecmp(map->name, s, strlen(s)) == 0);
   s = "hash:";
-  if (strncasecmp(map->name, s, strlen(s)) == 0)
-    ;
+  if (strncasecmp(map->name, s, strlen(s)) == 0);
   s = "inet:";
-  if (strncasecmp(map->name, s, strlen(s)) == 0)
-    ;
+  if (strncasecmp(map->name, s, strlen(s)) == 0);
   s = "unix:";
-  if (strncasecmp(map->name, s, strlen(s)) == 0)
-    ;
+  if (strncasecmp(map->name, s, strlen(s)) == 0);
   s = "local:";
-  if (strncasecmp(map->name, s, strlen(s)) == 0)
-    ;
+  if (strncasecmp(map->name, s, strlen(s)) == 0);
 
-  if (strexpr(map->name, "^/.*", NULL, &pf, TRUE))
-    ;
+  if (strexpr(map->name, "^/.*", NULL, &pf, TRUE));
 
   map->cache_size = cache_size;
   map->env = env;
 
   if (!zmdb_ok(&map->db))
     res = zmdb_open(&map->db, env, name, (map->rdonly ? 0444 : 0644),
-                   map->rdonly, TRUE, map->cache_size);
+                    map->rdonly, TRUE, map->cache_size);
 
   return res;
 }
@@ -176,7 +169,7 @@ map_reopen(map)
     res = zmdb_close(&map->db);
 
   res = zmdb_open(&map->db, map->env, map->name, (map->rdonly ? 0444 : 0644),
-                 map->rdonly, FALSE, map->cache_size);
+                  map->rdonly, FALSE, map->cache_size);
 
   return res;
 }
@@ -200,8 +193,7 @@ map_lookup(map, key, value, size)
   ASSERT(map->signature == SIGNATURE);
   ASSERT(key != NULL);
 
-  if (!zmdb_ok(&map->db))
-  {
+  if (!zmdb_ok(&map->db)) {
     LOG_MSG_ERROR("Lookup on a closed map...");
     return res;
   }
@@ -210,8 +202,7 @@ map_lookup(map, key, value, size)
   (void) strtolower(k);
   memset(v, 0, sizeof (v));
 
-  if (zmdb_get_rec(&map->db, k, v, sizeof (v)))
-  {
+  if (zmdb_get_rec(&map->db, k, v, sizeof (v))) {
     if (value != NULL && size > 0)
       strlcpy(value, v, size);
 
@@ -285,7 +276,7 @@ map_browse(map, func, arg, skey, ksz, tmax)
   bool                res = FALSE;
   bool                ok;
   char                kbuf[BSZ], vbuf[BSZ];
-  time_t            ti;
+  time_t              ti;
   int                 nb = 0;
 
   ASSERT(map != NULL);
@@ -303,30 +294,25 @@ map_browse(map, func, arg, skey, ksz, tmax)
   DB_BTREE_SEQ_START();
 
   for (ok = zmdb_cursor_get_first(&map->db, kbuf, BSZ, vbuf, BSZ);
-       ok; ok = zmdb_cursor_get_next(&map->db, kbuf, BSZ, vbuf, BSZ))
-  {
+       ok; ok = zmdb_cursor_get_next(&map->db, kbuf, BSZ, vbuf, BSZ)) {
     nb++;
-    MESSAGE_INFO(19, "MAP : %-20s %s", kbuf, vbuf);
+    ZE_MessageInfo(19, "MAP : %-20s %s", kbuf, vbuf);
 
     DB_BTREE_SEQ_CHECK(kbuf, map->db.database);
 
-    if (func != NULL)
-    {
+    if (func != NULL) {
       int                 r = MAP_BROWSE_CONTINUE;
 
       r = func(kbuf, vbuf, arg);
 
-      if ((r & MAP_BROWSE_DELETE) != 0)
-      {
-        if (!zmdb_cursor_del(&map->db))
-          ;
+      if ((r & MAP_BROWSE_DELETE) != 0) {
+        if (!zmdb_cursor_del(&map->db));
       }
       if ((r & MAP_BROWSE_STOP) != 0)
         break;
     }
-    if (nb % 1000 == 0 && tmax > 0)
-    {
-      time_t            tf;
+    if (nb % 1000 == 0 && tmax > 0) {
+      time_t              tf;
 
       tf = time(NULL);
       if (tf - ti > tmax)
@@ -334,12 +320,10 @@ map_browse(map, func, arg, skey, ksz, tmax)
     }
   }
   DB_BTREE_SEQ_END();
-  if (!ok)
-  {
+  if (!ok) {
     if (skey != NULL && ksz > 0)
       *skey = '\0';
-  } else
-  {
+  } else {
     if (skey != NULL && ksz > 0)
       strlcpy(skey, kbuf, ksz);
   }

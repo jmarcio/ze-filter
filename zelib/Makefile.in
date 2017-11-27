@@ -109,8 +109,9 @@ am__v_AR_0 = @echo "  AR      " $@;
 am__v_AR_1 = 
 libze_a_AR = $(AR) $(ARFLAGS)
 libze_a_LIBADD =
-am_libze_a_OBJECTS = zeStrings.$(OBJEXT) zeFileSystem.$(OBJEXT) \
-	zeDb.$(OBJEXT) zeMap.$(OBJEXT)
+am_libze_a_OBJECTS = zeStrings.$(OBJEXT) zeStrConvert.$(OBJEXT) \
+	zeFileSystem.$(OBJEXT) zeDb.$(OBJEXT) zeMap.$(OBJEXT) \
+	zeSyslog.$(OBJEXT)
 libze_a_OBJECTS = $(am_libze_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -327,9 +328,11 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 noinst_LIBRARIES = libze.a 
 libze_a_SOURCES = zeStrings.c \
+				zeStrConvert.c \
 				zeFileSystem.c \
 				zeDb.c \
-				zeMap.c
+				zeMap.c \
+				zeSyslog.c
 
 #				ze-linkedlist.c \
 #				ze-map.c \
@@ -393,7 +396,9 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeDb.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeFileSystem.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeMap.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeStrConvert.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeStrings.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeSyslog.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

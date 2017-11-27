@@ -1,3 +1,4 @@
+
 /*
  * Copyright (c) 1999-2002, 2004, 2005 Sendmail, Inc. and its suppliers.
  *	All rights reserved.
@@ -14,6 +15,7 @@
 #include <ze-sys.h>
 
 #if !HAVE_STRLCAT
+
 /*
 **  STRLCAT -- size bounded string concatenation
 **
@@ -44,18 +46,18 @@
 size_t
 strlcat(char *dst, const char *src, size_t size)
 {
-	size_t i, j, o;
+  size_t              i, j, o;
 
-	o = strlen(dst);
-	if (size < o + 1)
-		return o + strlen(src);
-	size -= o + 1;
-	for (i = 0, j = o; i < size && (dst[j] = src[i]) != 0; i++, j++)
-		continue;
-	dst[j] = '\0';
-	if (src[i] == '\0')
-		return j;
-	else
-		return j + strlen(src + i);
+  o = strlen(dst);
+  if (size < o + 1)
+    return o + strlen(src);
+  size -= o + 1;
+  for (i = 0, j = o; i < size && (dst[j] = src[i]) != 0; i++, j++)
+    continue;
+  dst[j] = '\0';
+  if (src[i] == '\0')
+    return j;
+  else
+    return j + strlen(src + i);
 }
-#endif /* !HAVE_STRLCAT */
+#endif             /* !HAVE_STRLCAT */

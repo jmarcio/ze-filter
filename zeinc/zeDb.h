@@ -21,7 +21,7 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#ifndef __ZMDB_H_
+#ifndef __ZEDB_H_
 
 #if USE_BerkeleyDB
 #define DB_VERSION         ((DB_VERSION_MAJOR << 16) | \
@@ -37,9 +37,9 @@
 typedef uint32_t    u_int32_t;
 #endif             /* HAVE_U_INT32_T */
 
-typedef struct ZMDB_T ZMDB_T;
+typedef struct ZEDB_T ZEDB_T;
 
-struct ZMDB_T
+struct ZEDB_T
 {
   unsigned long       signature;
   char               *database;
@@ -64,7 +64,7 @@ struct ZMDB_T
 
 #if USE_BerkeleyDB
 
-typedef DB_ENV      ZMDBENV_T;
+typedef DB_ENV      ZEDBENV_T;
 
 typedef struct
 {
@@ -77,7 +77,7 @@ typedef struct
 } JXX_ENV_T;
 
 #else
-typedef void        ZMDBENV_T;
+typedef void        ZEDBENV_T;
 #endif
 
 #if USE_BerkeleyDB
@@ -89,28 +89,28 @@ typedef struct
     DB_BTREE_STAT       btree_st;
     DB_HASH_STAT        hash_st;
   } st;
-} ZMDB_STAT_T;
+} ZEDB_STAT_T;
 
 #else
-typedef void        ZMDB_STAT_T;
+typedef void        ZEDB_STAT_T;
 #endif
 
-#define ZMDBSIGNATURE       0xdb195702
+#define ZEDBSIGNATURE       0xdb195702
 
 #if USE_BerkeleyDB
-#  define ZMDB_INITIALIZER         {ZMDBSIGNATURE, NULL, PTHREAD_MUTEX_INITIALIZER, \
+#  define ZEDB_INITIALIZER         {ZEDBSIGNATURE, NULL, PTHREAD_MUTEX_INITIALIZER, \
       NULL, NULL, NULL,	NULL,						       \
       FALSE, (time_t ) 0L, -1, FALSE, TRUE, 0,                                 \
       FALSE, 0}
 #else              /* USE_BerkeleyDB */
-# define ZMDB_INITIALIZER         {ZMDBSIGNATURE, NULL, PTHREAD_MUTEX_INITIALIZER,  \
+# define ZEDB_INITIALIZER         {ZEDBSIGNATURE, NULL, PTHREAD_MUTEX_INITIALIZER,  \
       FALSE, 0}
 #endif             /* USE_BerkeleyDB */
 
 #if USE_BerkeleyDB
-#define             zmDb_installed()      TRUE
+#define             zeDb_installed()      TRUE
 #else
-#define             zmDb_installed()      FALSE
+#define             zeDb_installed()      FALSE
 #endif
 
 #define DB_DB_CACHE_SIZE       1
@@ -120,41 +120,41 @@ typedef void        ZMDB_STAT_T;
 #define DB_LK_MAX_LOCKERS     13
 #define DB_LK_MAX_OBJECTS     14
 
-size_t              zmDb_SetDefaults(int which, size_t value);
-size_t              zmDb_SetDefaultCacheSize(size_t size);
+size_t              zeDb_SetDefaults(int which, size_t value);
+size_t              zeDb_SetDefaultCacheSize(size_t size);
 
-bool                zmDb_CheckVersion();
+bool                zeDb_CheckVersion();
 
-ZMDBENV_T          *zmDb_EnvOpen(char *home, bool rdonly, int dt_chkpoint);
-bool                zmDb_EnvClose(ZMDBENV_T * dbenv);
+ZEDBENV_T          *zeDb_EnvOpen(char *home, bool rdonly, int dt_chkpoint);
+bool                zeDb_EnvClose(ZEDBENV_T * dbenv);
 
-bool                zmDb_Open(ZMDB_T *, ZMDBENV_T *, char *, int, bool, bool,
+bool                zeDb_Open(ZEDB_T *, ZEDBENV_T *, char *, int, bool, bool,
                              size_t);
-bool                zmDb_OK(ZMDB_T *);
-bool                zmDb_Close(ZMDB_T *);
-bool                zmDb_Reopen(ZMDB_T *);
+bool                zeDb_OK(ZEDB_T *);
+bool                zeDb_Close(ZEDB_T *);
+bool                zeDb_Reopen(ZEDB_T *);
 
-bool                zmDb_Empty(ZMDB_T *);
-bool                zmDb_Flush(ZMDB_T *);
+bool                zeDb_Empty(ZEDB_T *);
+bool                zeDb_Flush(ZEDB_T *);
 
-bool                zmDb_AddRec(ZMDB_T *, char *, void *, size_t);
-bool                zmDb_GetRec(ZMDB_T *, char *, void *, size_t);
-bool                zmDb_DelRec(ZMDB_T *, char *);
+bool                zeDb_AddRec(ZEDB_T *, char *, void *, size_t);
+bool                zeDb_GetRec(ZEDB_T *, char *, void *, size_t);
+bool                zeDb_DelRec(ZEDB_T *, char *);
 
-bool                zmDb_CursorOpen(ZMDB_T *, bool);
-bool                zmDb_CursorGetFirst(ZMDB_T *, char *, size_t, void *,
+bool                zeDb_CursorOpen(ZEDB_T *, bool);
+bool                zeDb_CursorGetFirst(ZEDB_T *, char *, size_t, void *,
                                          size_t);
-bool                zmDb_CursorGetNext(ZMDB_T *, char *, size_t, void *,
+bool                zeDb_CursorGetNext(ZEDB_T *, char *, size_t, void *,
                                         size_t);
-bool                zmDb_Cursor_Del(ZMDB_T *);
-bool                zmDb_Cursor_Close(ZMDB_T *);
+bool                zeDb_CursorDel(ZEDB_T *);
+bool                zeDb_CursorClose(ZEDB_T *);
 
-bool                zmDb_Lock(ZMDB_T *);
-bool                zmDb_Unlock(ZMDB_T *);
+bool                zeDb_Lock(ZEDB_T *);
+bool                zeDb_Unlock(ZEDB_T *);
 
-int                 zmDb_errno(ZMDB_T *);
+int                 zeDb_errno(ZEDB_T *);
 
-bool                zmDb_Stats(ZMDB_T *, ZMDB_STAT_T *);
+bool                zeDb_Stats(ZEDB_T *, ZEDB_STAT_T *);
 
 #if 1
 
@@ -189,5 +189,5 @@ bool                zmDb_Stats(ZMDB_T *, ZMDB_STAT_T *);
 
 #endif
 
-#define __ZMDB_H_
+#define __ZEDB_H_
 #endif

@@ -19,10 +19,16 @@
  */
 
 
-#ifndef ZMFILESYSTEM_H
+#ifndef ZEFILESYSTEM_H
 
+char               *zeBasename(char *);
+size_t              zeGetFileSize(char *);
+size_t              zeGetFdSize(int );
+int                 zeReadLn(int, char *, size_t);
+bool                zeRemoveDir(char *);
+bool                zeShowDirInfo(char *);
+int                 zeFdPrintf(int , char *, ...);
 
-
-# define ZMFILESYSTEM_H    1
-#endif /* ZMFILESYSTEM_H */
+# define ZEFILESYSTEM_H    1
+#endif /* ZEFILESYSTEM_H */
 

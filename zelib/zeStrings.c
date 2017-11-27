@@ -24,7 +24,7 @@
 #include <zeLibs.h>
 #include <zeStrings.h>
 
-#include <ze-filter.h>
+/* #include <ze-filter.h> */
 
 /******************************************************************************
  *                                                                            *
@@ -38,7 +38,7 @@
  *                                                                            *
  ******************************************************************************/
 char               *
-zmStrJoin(sep, argc, argv)
+zeStrJoin(sep, argc, argv)
      char               *sep;
      int                 argc;
      char              **argv;
@@ -161,7 +161,7 @@ jstrdup(s)
   if (p != NULL)
     strlcpy(p, s, sz);
   else
-    LOG_SYS_ERROR("malloc(s)");
+    ZE_LogSysError("malloc(s)");
 
   return p;
 }
@@ -179,7 +179,7 @@ jmalloc(sz)
 
   p = malloc(sz + xtra);
   if (p == NULL) {
-    LOG_SYS_ERROR("malloc(%lu)", (unsigned long) (sz + xtra));
+    ZE_LogSysError("malloc(%lu)", (unsigned long) (sz + xtra));
   }
 
   return p;
@@ -191,7 +191,7 @@ jmalloc(sz)
  *                                                                            *
  ******************************************************************************/
 char               *
-zmStr2Lower(char *s)
+zeStr2Lower(char *s)
 {
   char               *p;
 
@@ -207,7 +207,7 @@ zmStr2Lower(char *s)
  *                                                                            *
  ******************************************************************************/
 char               *
-zmStr2upper(char *s)
+zeStr2upper(char *s)
 {
   char               *p;
 
@@ -224,7 +224,7 @@ zmStr2upper(char *s)
  *                                                                            *
  ******************************************************************************/
 char               *
-zmStrSet(dst, c, len)
+zeStrSet(dst, c, len)
      char               *dst;
      int                 c;
      int                 len;
@@ -265,7 +265,7 @@ strchknull(s, len)
  * replace strclean                                                           *
  ******************************************************************************/
 size_t
-zmStrRmNulls(s, sz)
+zeStrRmNulls(s, sz)
      char               *s;
      size_t              sz;
 {
@@ -297,7 +297,7 @@ zmStrRmNulls(s, sz)
  *                                                                            *
  ******************************************************************************/
 char               *
-zmStrRmBlanks(s, size)
+zeStrRmBlanks(s, size)
      char               *s;
      size_t              size;
 {
@@ -325,7 +325,7 @@ zmStrRmBlanks(s, size)
  *                                                                            *
  ******************************************************************************/
 char               *
-zmStrClearTrailingBlanks(s)
+zeStrClearTrailingBlanks(s)
      char               *s;
 {
   char               *p, *last;
@@ -354,7 +354,7 @@ zmStrClearTrailingBlanks(s)
 #define REGCOMP_FLAGS         (REG_ICASE | REG_EXTENDED)
 
 bool
-zmStrRegex(s, expr, pi, pf, icase)
+zeStrRegex(s, expr, pi, pf, icase)
      char               *s;
      char               *expr;
      long               *pi;
@@ -385,7 +385,7 @@ zmStrRegex(s, expr, pi, pf, icase)
     char                s[256];
 
     if (regerror(rerror, &re, s, sizeof (s)) > 0)
-      LOG_MSG_ERROR("regcomp(%s) error : %s", expr, s);
+      ZE_LogMsgError(0, "regcomp(%s) error : %s", expr, s);
   }
 
   return found;
@@ -396,7 +396,7 @@ zmStrRegex(s, expr, pi, pf, icase)
  *                                                                            *
  ******************************************************************************/
 void
-zmStrCenter(dst, org, ldst)
+zeStrCenter(dst, org, ldst)
      char               *dst;
      char               *org;
      int                 ldst;
@@ -445,7 +445,7 @@ nb_valid_pointer(a, b, c)
  *                                                                            *
  ******************************************************************************/
 int
-zmStr2Tokens(s, sz, argv, sep)
+zeStr2Tokens(s, sz, argv, sep)
      char               *s;
      int                 sz;
      char              **argv;

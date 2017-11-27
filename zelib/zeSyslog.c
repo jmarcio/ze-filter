@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -30,21 +31,18 @@
  *                                                                            *
  *                                                                            *
  ******************************************************************************/
-int                 log_level = 10;
-int                 log_facility = LOG_LOCAL5;
-bool                log_severity = FALSE;
+int                 ze_log_level = 10;
+int                 ze_log_facility = LOG_LOCAL5;
+bool                ze_log_severity = FALSE;
 
-static bool         j_out_syslog = TRUE;
-static bool         j_out_stdout = FALSE;
+static int          syslog_facility_value(char *);
+static char        *syslog_facility_name(int);
+static int          syslog_priority_value(char *);
+static char        *syslog_priority_name(int);
 
-void
-set_log_output(out_syslog, out_stdout)
-     bool                out_syslog;
-     bool                out_stdout;
-{
-  j_out_syslog = out_syslog;
-  j_out_stdout = out_stdout;
-}
+
+static bool         zeOut_syslog = TRUE;
+static bool         zeOut_stdout = FALSE;
 
 /******************************************************************************
  *                                                                            *
@@ -53,7 +51,7 @@ set_log_output(out_syslog, out_stdout)
 #define   LOGLINELEN   1024
 
 void
-zmSyslog(int priority, char *format, ...)
+zeSyslog(int priority, char *format, ...)
 {
   va_list             arg;
 
@@ -68,10 +66,8 @@ zmSyslog(int priority, char *format, ...)
   {
     unsigned char      *p;
 
-    for (p = (unsigned char *) line; *p != '\0'; p++)
-    {
-      switch (*p)
-      {
+    for (p = (unsigned char *) line; *p != '\0'; p++) {
+      switch (*p) {
         case '"':
           *p = '\'';
           break;
@@ -93,30 +89,27 @@ zmSyslog(int priority, char *format, ...)
 
   env = getenv("LOG_SEVERITY");
   if (env != NULL && strcasecmp(env, "yes") == 0)
-    log_severity = TRUE;
+    ze_log_severity = TRUE;
 
-  if (log_severity)
-  {
+  if (ze_log_severity) {
     memset(severity, 0, sizeof (severity));
     snprintf(severity, sizeof (severity), "[ID 000000 %s.%s]",
-             syslog_facility_name(log_facility),
+             syslog_facility_name(ze_log_facility),
              syslog_priority_name(priority));
-    if (j_out_syslog)
+    if (zeOut_syslog)
       syslog(priority, "%s %s", severity, line);
-  } else
-  {
-    if (j_out_syslog)
+  } else {
+    if (zeOut_syslog)
       syslog(priority, line);
   }
 
-  if (j_out_stdout)
-  {
+  if (zeOut_stdout) {
 #if 1
-# if 1
+#if 1
     (void) fprintf(stdout, "%s\n", line);
-# else
+#else
     (void) fprintf(stderr, "%s\n", line);
-# endif
+#endif
 #else
     FD_PRINTF(STDOUT_FILENO, "%s\n", s);
 #endif
@@ -129,7 +122,7 @@ zmSyslog(int priority, char *format, ...)
  *                                                                            *
  ******************************************************************************/
 void
-zmOpenlog(ident, option, facility)
+zeOpenlog(ident, option, facility)
      const char         *ident;
      int                 option;
      int                 facility;
@@ -142,7 +135,7 @@ zmOpenlog(ident, option, facility)
  *                                                                            *
  ******************************************************************************/
 void
-zmCloselog()
+zeCloselog()
 {
   closelog();
 }
@@ -152,10 +145,9 @@ zmCloselog()
  *                                                                            *
  ******************************************************************************/
 void
-message_info(int level, char *format, ...)
+ze_message_info(int level, char *format, ...)
 {
-  if (log_level >= level)
-  {
+  if (ze_log_level >= level) {
     va_list             arg;
     char                s[LOGLINELEN];
 
@@ -163,7 +155,7 @@ message_info(int level, char *format, ...)
     vsnprintf(s, sizeof (s), format, arg);
     va_end(arg);
 
-    zmSyslog(LOG_INFO, s);
+    zeSyslog(LOG_INFO, s);
   }
 }
 
@@ -172,10 +164,9 @@ message_info(int level, char *format, ...)
  *                                                                            *
  ******************************************************************************/
 void
-message_warning(int level, char *format, ...)
+ze_message_warning(int level, char *format, ...)
 {
-  if (log_level >= level)
-  {
+  if (ze_log_level >= level) {
     va_list             arg;
     char                s[LOGLINELEN];
 
@@ -183,7 +174,7 @@ message_warning(int level, char *format, ...)
     vsnprintf(s, sizeof (s), format, arg);
     va_end(arg);
 
-    zmSyslog(LOG_WARNING, s);
+    zeSyslog(LOG_WARNING, s);
   }
 }
 
@@ -192,10 +183,9 @@ message_warning(int level, char *format, ...)
  *                                                                            *
  ******************************************************************************/
 void
-message_error(int level, char *format, ...)
+ze_message_error(int level, char *format, ...)
 {
-  if (log_level >= level)
-  {
+  if (ze_log_level >= level) {
     va_list             arg;
     char                s[LOGLINELEN];
 
@@ -203,7 +193,7 @@ message_error(int level, char *format, ...)
     vsnprintf(s, sizeof (s), format, arg);
     va_end(arg);
 
-    zmSyslog(LOG_ERR, s);
+    zeSyslog(LOG_ERR, s);
   }
 }
 
@@ -212,31 +202,9 @@ message_error(int level, char *format, ...)
  *                                                                            *
  ******************************************************************************/
 void
-log_msg_debug(char *funct, int level, char *format, ...)
+ze_log_msg_debug(char *funct, int level, char *format, ...)
 {
-  if (log_level >= level)
-  {
-    va_list             arg;
-    char                s[LOGLINELEN];
-
-    va_start(arg, format);
-    vsnprintf(s, sizeof (s), format, arg);
-    va_end(arg);
-
-    funct = STRNULL(funct, "");
-    zmSyslog(LOG_DEBUG, "%s : %s", funct, s);
-  }
-}
-
-/******************************************************************************
- *                                                                            *
- *                                                                            *
- ******************************************************************************/
-void
-log_msg_info(char *funct, int level, char *format, ...)
-{
-  if (log_level >= level)
-  {
+  if (ze_log_level >= level) {
     va_list             arg;
     char                s[LOGLINELEN];
 
@@ -245,7 +213,7 @@ log_msg_info(char *funct, int level, char *format, ...)
     va_end(arg);
 
     funct = STRNULL(funct, "");
-    zmSyslog(LOG_INFO, "%s : %s", funct, s);
+    zeSyslog(LOG_DEBUG, "%s : %s", funct, s);
   }
 }
 
@@ -254,10 +222,9 @@ log_msg_info(char *funct, int level, char *format, ...)
  *                                                                            *
  ******************************************************************************/
 void
-log_msg_notice(char *funct, int level, char *format, ...)
+ze_log_msg_info(char *funct, int level, char *format, ...)
 {
-  if (log_level >= level)
-  {
+  if (ze_log_level >= level) {
     va_list             arg;
     char                s[LOGLINELEN];
 
@@ -266,7 +233,7 @@ log_msg_notice(char *funct, int level, char *format, ...)
     va_end(arg);
 
     funct = STRNULL(funct, "");
-    zmSyslog(LOG_NOTICE, "%s : %s", funct, s);
+    zeSyslog(LOG_INFO, "%s : %s", funct, s);
   }
 }
 
@@ -275,10 +242,9 @@ log_msg_notice(char *funct, int level, char *format, ...)
  *                                                                            *
  ******************************************************************************/
 void
-log_msg_warning(char *funct, int level, char *format, ...)
+ze_log_msg_notice(char *funct, int level, char *format, ...)
 {
-  if (log_level >= level)
-  {
+  if (ze_log_level >= level) {
     va_list             arg;
     char                s[LOGLINELEN];
 
@@ -287,7 +253,7 @@ log_msg_warning(char *funct, int level, char *format, ...)
     va_end(arg);
 
     funct = STRNULL(funct, "");
-    zmSyslog(LOG_WARNING, "%s : %s", funct, s);
+    zeSyslog(LOG_NOTICE, "%s : %s", funct, s);
   }
 }
 
@@ -296,10 +262,9 @@ log_msg_warning(char *funct, int level, char *format, ...)
  *                                                                            *
  ******************************************************************************/
 void
-log_msg_error(char *funct, int level, char *format, ...)
+ze_log_msg_warning(char *funct, int level, char *format, ...)
 {
-  if (log_level >= level)
-  {
+  if (ze_log_level >= level) {
     va_list             arg;
     char                s[LOGLINELEN];
 
@@ -308,7 +273,7 @@ log_msg_error(char *funct, int level, char *format, ...)
     va_end(arg);
 
     funct = STRNULL(funct, "");
-    zmSyslog(LOG_ERR, "%s : %s", funct, s);
+    zeSyslog(LOG_WARNING, "%s : %s", funct, s);
   }
 }
 
@@ -317,10 +282,29 @@ log_msg_error(char *funct, int level, char *format, ...)
  *                                                                            *
  ******************************************************************************/
 void
-log_sys_warning(char *funct, int level, char *format, ...)
+ze_log_msg_error(char *funct, int level, char *format, ...)
 {
-  if (log_level >= level)
-  {
+  if (ze_log_level >= level) {
+    va_list             arg;
+    char                s[LOGLINELEN];
+
+    va_start(arg, format);
+    vsnprintf(s, sizeof (s), format, arg);
+    va_end(arg);
+
+    funct = STRNULL(funct, "");
+    zeSyslog(LOG_ERR, "%s : %s", funct, s);
+  }
+}
+
+/******************************************************************************
+ *                                                                            *
+ *                                                                            *
+ ******************************************************************************/
+void
+ze_log_sys_warning(char *funct, int level, char *format, ...)
+{
+  if (ze_log_level >= level) {
     va_list             arg;
     char                s[LOGLINELEN];
     char               *serr;
@@ -331,7 +315,7 @@ log_sys_warning(char *funct, int level, char *format, ...)
 
     funct = STRNULL(funct, "");
     serr = (errno != 0 ? strerror(errno) : "");
-    zmSyslog(LOG_WARNING, "%s : %s : %s", funct, s, serr);
+    zeSyslog(LOG_WARNING, "%s : %s : %s", funct, s, serr);
   }
 }
 
@@ -340,10 +324,9 @@ log_sys_warning(char *funct, int level, char *format, ...)
  *                                                                            *
  ******************************************************************************/
 void
-log_sys_error(char *funct, int level, char *format, ...)
+ze_log_sys_error(char *funct, int level, char *format, ...)
 {
-  if (log_level >= level)
-  {
+  if (ze_log_level >= level) {
     va_list             arg;
     char                s[LOGLINELEN];
     char               *serr;
@@ -354,7 +337,7 @@ log_sys_error(char *funct, int level, char *format, ...)
 
     funct = STRNULL(funct, "");
     serr = (errno != 0 ? strerror(errno) : "");
-    zmSyslog(LOG_ERR, "%s : %s : %s", funct, s, serr);
+    zeSyslog(LOG_ERR, "%s : %s : %s", funct, s, serr);
   }
 }
 
@@ -363,8 +346,7 @@ log_sys_error(char *funct, int level, char *format, ...)
  *                                                                            *
  ******************************************************************************/
 
-typedef struct
-{
+typedef struct {
   char               *name;
   int                 code;
 } log_code_T;
@@ -445,22 +427,8 @@ syslog_name_by_code(log_code, code)
 }
 
 
-int
-set_log_facility(ps)
-     char               *ps;
-{
-  int                 facility;
-
-  if ((facility = syslog_facility_value(ps)) >= 0)
-  {
-    log_facility = facility;
-    return 0;
-  }
-  return 1;
-}
-
 char               *
-facility_name(facility)
+ze_facility_name(facility)
      int                 facility;
 {
   log_code_T         *p = facilitynames;
@@ -471,7 +439,7 @@ facility_name(facility)
 }
 
 int
-facility_value(ps)
+ze_facility_value(ps)
      char               *ps;
 {
   log_code_T         *p = facilitynames;
@@ -484,13 +452,42 @@ facility_value(ps)
  *                                                                            *
  ******************************************************************************/
 int
-log_priority(ps)
+zeLogSetFacility(ps)
+     char               *ps;
+{
+  int                 facility;
+
+  if ((facility = syslog_facility_value(ps)) >= 0) {
+    ze_log_facility = facility;
+    return 0;
+  }
+  return 1;
+}
+
+/******************************************************************************
+ *                                                                            * 
+ *                                                                            *
+ ******************************************************************************/
+void
+zeLog_SetOutput(out_syslog, out_stdout)
+     bool                out_syslog;
+     bool                out_stdout;
+{
+  zeOut_syslog = out_syslog;
+  zeOut_stdout = out_stdout;
+}
+
+/******************************************************************************
+ *                                                                            * 
+ *                                                                            *
+ ******************************************************************************/
+int
+ze_log_priority(ps)
      char               *ps;
 {
   log_code_T         *p = prioritynames;
 
-  while (p->name != NULL)
-  {
+  while (p->name != NULL) {
     if (strcmp(p->name, ps) == 0)
       return p->code;
     p++;
@@ -498,14 +495,14 @@ log_priority(ps)
   return LOG_DEBUG;
 }
 
-int
+static int
 syslog_priority_value(s)
      char               *s;
 {
   return syslog_code_by_name(prioritynames, s);
 }
 
-char               *
+static char        *
 syslog_priority_name(code)
      int                 code;
 {
@@ -516,14 +513,14 @@ syslog_priority_name(code)
   return STRNULL(s, "(null)");
 }
 
-int
+static int
 syslog_facility_value(s)
      char               *s;
 {
   return syslog_code_by_name(facilitynames, s);
 }
 
-char               *
+static char        *
 syslog_facility_name(code)
      int                 code;
 {

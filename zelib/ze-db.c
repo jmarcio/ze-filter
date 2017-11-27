@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -65,8 +66,7 @@ zmdb_set_defaults(which, value)
 {
   size_t              old = 0;
 
-  switch (which)
-  {
+  switch (which) {
     case DB_LK_MAX_LOCKS:
       old = db_lk_max_locks;
       db_lk_max_locks = value;
@@ -97,8 +97,7 @@ db_defaults_from_env()
   char               *env;
   int                 err = 0;
 
-  if ((env = getenv("DB_DB_CACHE_SIZE")) != NULL)
-  {
+  if ((env = getenv("DB_DB_CACHE_SIZE")) != NULL) {
     unsigned long       v;
 
     err = 0;
@@ -106,8 +105,7 @@ db_defaults_from_env()
     if (err == 0)
       db_db_cache_size = v;
   }
-  if ((env = getenv("DB_ENV_CACHE_SIZE")) != NULL)
-  {
+  if ((env = getenv("DB_ENV_CACHE_SIZE")) != NULL) {
     unsigned long       v;
 
     err = 0;
@@ -115,8 +113,7 @@ db_defaults_from_env()
     if (err == 0)
       db_env_cache_size = v;
   }
-  if ((env = getenv("DB_LK_MAX_LOCKS")) != NULL)
-  {
+  if ((env = getenv("DB_LK_MAX_LOCKS")) != NULL) {
     unsigned long       v;
 
     err = 0;
@@ -124,8 +121,7 @@ db_defaults_from_env()
     if (err == 0)
       db_lk_max_locks = v;
   }
-  if ((env = getenv("DB_LK_MAX_OBJECTS")) != NULL)
-  {
+  if ((env = getenv("DB_LK_MAX_OBJECTS")) != NULL) {
     unsigned long       v;
 
     err = 0;
@@ -133,8 +129,7 @@ db_defaults_from_env()
     if (err == 0)
       db_lk_max_objects = v;
   }
-  if ((env = getenv("DB_LK_MAX_LOCKERS")) != NULL)
-  {
+  if ((env = getenv("DB_LK_MAX_LOCKERS")) != NULL) {
     unsigned long       v;
 
     err = 0;
@@ -156,23 +151,21 @@ zmdb_check_version()
   char               *dbv = NULL;
 
   major = minor = patch = 0;
-  if ((dbv = db_version(&major, &minor, &patch)) == NULL)
-  {
+  if ((dbv = db_version(&major, &minor, &patch)) == NULL) {
     LOG_MSG_ERROR("Error reading Berkeley DB version");
     return FALSE;
   }
 
   if ((major != DB_VERSION_MAJOR) ||
-      (minor != DB_VERSION_MINOR) || (patch != DB_VERSION_PATCH))
-  {
-    MESSAGE_ERROR(8, "ze-filter compiled using Berkeley DB version %d.%d.%d "
-                  "but runtime version is %d.%d.%d",
-                  DB_VERSION_MAJOR, DB_VERSION_MINOR, DB_VERSION_PATCH,
-                  major, minor, patch);
+      (minor != DB_VERSION_MINOR) || (patch != DB_VERSION_PATCH)) {
+    ZE_MessageError(8, "ze-filter compiled using Berkeley DB version %d.%d.%d "
+                    "but runtime version is %d.%d.%d",
+                    DB_VERSION_MAJOR, DB_VERSION_MINOR, DB_VERSION_PATCH,
+                    major, minor, patch);
     return FALSE;
   }
 
-  MESSAGE_INFO(11, STRNULL(dbv, "No Berkeley DB version string"));
+  ZE_MessageInfo(11, STRNULL(dbv, "No Berkeley DB version string"));
 
   return TRUE;
 #else
@@ -185,7 +178,7 @@ zmdb_check_version()
  *                                                                            *
  ******************************************************************************/
 #define DIMDB   256
-static ZMDB_T        rwdb[DIMDB];
+static ZMDB_T       rwdb[DIMDB];
 
 static void        *
 zmdb_periodic_tasks(arg)
@@ -196,28 +189,27 @@ zmdb_periodic_tasks(arg)
 
   time_t              ti_check, ti_compress;
 
-  MESSAGE_INFO(9, "*** Starting Database Checkpoint thread");
+  ZE_MessageInfo(9, "*** Starting Database Checkpoint thread");
 
   ASSERT(arg != NULL);
 
   dbenv = (DB_ENV *) arg;
 
   ti_check = ti_compress = time(NULL);
-  /* Checkpoint once a minute. */
-  while (TRUE)
-  {
+  /*
+   * Checkpoint once a minute. 
+   */
+  while (TRUE) {
     int                 ret, i;
     time_t              now;
 
     sleep(1 MINUTES);
     now = time(NULL);
 
-    if (ti_check + DT_DB_CHECKPOINT <= now)
-    {
+    if (ti_check + DT_DB_CHECKPOINT <= now) {
       ti_check = now;
-      MESSAGE_INFO(9, "Berkeley DB Database Checkpoint ");
-      if ((ret = dbenv->txn_checkpoint(dbenv, 0, 0, 0)) != 0)
-      {
+      ZE_MessageInfo(9, "Berkeley DB Database Checkpoint ");
+      if ((ret = dbenv->txn_checkpoint(dbenv, 0, 0, 0)) != 0) {
         LOG_MSG_ERROR("Database checkpoint error : %s", db_strerror(ret));
         if (nerra++ > 10)
           break;
@@ -225,20 +217,16 @@ zmdb_periodic_tasks(arg)
         nerra = 0;
     }
 
-    if (ti_compress + DT_DB_COMPRESS <= now)
-    {
+    if (ti_compress + DT_DB_COMPRESS <= now) {
       ti_compress = now;
-      for (i = 0; i < DIMDB; i++)
-      {
-        if (rwdb[i].OK)
-        {
+      for (i = 0; i < DIMDB; i++) {
+        if (rwdb[i].OK) {
           DB_COMPACT          compact;
 
           memset(&compact, 0, sizeof (compact));
-          MESSAGE_INFO(9, "Compacting Database : %s", rwdb[i].database);
+          ZE_MessageInfo(9, "Compacting Database : %s", rwdb[i].database);
           if ((ret = rwdb[i].dbh->compact(rwdb[i].dbh, NULL, NULL, NULL, NULL,
-                                          DB_FREE_SPACE, NULL)) != 0)
-          {
+                                          DB_FREE_SPACE, NULL)) != 0) {
             LOG_MSG_ERROR(" Error compacting Database %s : %s",
                           rwdb[i].database, db_strerror(ret));
             if (nerrb++ > 10)
@@ -264,12 +252,11 @@ zmdb_env_open(home, rdonly, dt_chkpoint)
   DB_ENV             *dbenv = NULL;
 
   db_defaults_from_env();
-  /* 
+  /*
    ** Create an environment and initialize it for additional error 
    ** reporting.
    */
-  if ((ret = db_env_create(&dbenv, 0)) != 0)
-  {
+  if ((ret = db_env_create(&dbenv, 0)) != 0) {
     LOG_MSG_ERROR("Error creating environment : %s", db_strerror(ret));
     goto err;
   }
@@ -284,8 +271,7 @@ zmdb_env_open(home, rdonly, dt_chkpoint)
     bytes = db_env_cache_size % (1024 * 1024 * 1024);
     gbytes = (db_env_cache_size - bytes) / (1024 * 1024 * 1024);
 
-    if ((ret = dbenv->set_cachesize(dbenv, gbytes, bytes, 1)) != 0)
-    {
+    if ((ret = dbenv->set_cachesize(dbenv, gbytes, bytes, 1)) != 0) {
       LOG_MSG_ERROR("Error setting environment cache size : %s",
                     db_strerror(ret));
       goto err;
@@ -295,8 +281,7 @@ zmdb_env_open(home, rdonly, dt_chkpoint)
   /*
    ** FLAGS
    */
-  if (!rdonly)
-  {
+  if (!rdonly) {
 #if BDB_VERSION >= 0x40700
     if ((ret = dbenv->log_set_config(dbenv, DB_LOG_AUTO_REMOVE, TRUE)) != 0)
 #else
@@ -306,11 +291,9 @@ zmdb_env_open(home, rdonly, dt_chkpoint)
       LOG_MSG_ERROR("Error setting environment flags : %s", db_strerror(ret));
       goto err;
     }
-
 #if _FFR_LOG_IN_MEMORY
 #if BDB_VERSION >= 0x50000
-    if ((ret = dbenv->log_set_config(dbenv, DB_LOG_IN_MEMORY, TRUE)) != 0)
-    {
+    if ((ret = dbenv->log_set_config(dbenv, DB_LOG_IN_MEMORY, TRUE)) != 0) {
       LOG_MSG_ERROR("Error setting environment flags : %s", db_strerror(ret));
       goto err;
     }
@@ -322,7 +305,11 @@ zmdb_env_open(home, rdonly, dt_chkpoint)
       DB_INIT_TXN |             /* Initialize transactions */
       DB_INIT_LOCK |            /* Initialize locking. */
       DB_INIT_LOG |             /* Initialize logging */
-   /* DB_INIT_REP |  */           /* Initialize logging */
+      /*
+       * DB_INIT_REP |  
+       *//*
+       * Initialize logging 
+       */
       DB_INIT_MPOOL;            /* Initialize the in-memory cache. */
 
 #if USE_DB_THREAD
@@ -335,10 +322,13 @@ zmdb_env_open(home, rdonly, dt_chkpoint)
 #endif
   }
 
-  /* Open the environment with full transactional support. */
-  if (rdonly)
-  {
-    /*flags = DB_INIT_MPOOL */ ;
+  /*
+   * Open the environment with full transactional support. 
+   */
+  if (rdonly) {
+    /*
+     * flags = DB_INIT_MPOOL 
+     */ ;
   }
 
   ret = dbenv->set_lk_max_locks(dbenv, db_lk_max_locks);
@@ -351,8 +341,7 @@ zmdb_env_open(home, rdonly, dt_chkpoint)
     LOG_MSG_ERROR("Error setting max lock objects environment : %s %s",
                   home, db_strerror(ret));
 
-  if ((ret = dbenv->open(dbenv, home, flags, 0)) != 0)
-  {
+  if ((ret = dbenv->open(dbenv, home, flags, 0)) != 0) {
     LOG_MSG_ERROR("Error opening environment : %s %s", home, db_strerror(ret));
     goto err;
   }
@@ -365,16 +354,17 @@ zmdb_env_open(home, rdonly, dt_chkpoint)
     (void) dbenv->get_lk_max_locks(dbenv, &locks);
     (void) dbenv->get_lk_max_lockers(dbenv, &lockers);
     (void) dbenv->get_lk_max_objects(dbenv, &objs);
-    MESSAGE_INFO(10, "DB Environment : max locks=%d objs=%d lockers=%d",
-                 locks, objs, lockers);
+    ZE_MessageInfo(10, "DB Environment : max locks=%d objs=%d lockers=%d",
+                   locks, objs, lockers);
     (void) dbenv->get_cachesize(dbenv, &gbytes, &bytes, &partitions);
-    MESSAGE_INFO(10, "DB Environment : cache size=%ld partitions=%ld",
-                 gbytes GBYTES + bytes, partitions);
+    ZE_MessageInfo(10, "DB Environment : cache size=%ld partitions=%ld",
+                   gbytes GBYTES + bytes, partitions);
   }
 
-  /* Start a checkpoint thread. */
-  if (dt_chkpoint > 0 || TRUE)
-  {
+  /*
+   * Start a checkpoint thread. 
+   */
+  if (dt_chkpoint > 0 || TRUE) {
     pthread_t           ptid;
     int                 res;
 
@@ -388,17 +378,14 @@ zmdb_env_open(home, rdonly, dt_chkpoint)
     }
   }
 
-  if (getenv("LOG_DB_ERRORS") != NULL)
-  {
+  if (getenv("LOG_DB_ERRORS") != NULL) {
     static FILE        *ferr;
     char               *fname = "db_errors.txt";
     char               *env = NULL;
 
     env = getenv("LOG_DB_ERRORS");
-    if (STRCASEEQUAL(env, "yes"))
-    {
-      if ((ferr = fopen(fname, "a")) != NULL)
-      {
+    if (STRCASEEQUAL(env, "yes")) {
+      if ((ferr = fopen(fname, "a")) != NULL) {
         char               *home = NULL;
         static char         pfx[256];
 
@@ -431,8 +418,7 @@ zmdb_env_close(dbenv)
   int                 ret;
 
   ASSERT(dbenv != NULL);
-  if ((ret = dbenv->close(dbenv, 0)) != 0)
-  {
+  if ((ret = dbenv->close(dbenv, 0)) != 0) {
     LOG_MSG_ERROR("Error closing environment : %s", db_strerror(ret));
     return FALSE;
   }
@@ -472,7 +458,7 @@ bt_compare_fcn(h, a, b)
 
 bool
 zmdb_open(h, dbenv, database, mode, rdonly, dbtype, dbcache)
-     ZMDB_T              *h;
+     ZMDB_T             *h;
      ZMDBENV_T          *dbenv;
      char               *database;
      int                 mode;
@@ -492,30 +478,28 @@ zmdb_open(h, dbenv, database, mode, rdonly, dbtype, dbcache)
   /*
    ** CHECK IF ALREADY OPEN...
    */
-  if (h->OK)
-  {
+  if (h->OK) {
     LOG_MSG_ERROR("database already open : %s", STRNULL(h->database, ""));
     return TRUE;
   }
 
-  if (h->signature == 0)
-  {
+  if (h->signature == 0) {
     FREE(h->database);
     h->OK = FALSE;
     h->signature = SIGNATURE;
   }
 
   ret = h->err = db_create(&dbp, dbenv, 0);
-  if (ret != 0)
-  {
+  if (ret != 0) {
     LOG_MSG_ERROR("db_create: %s", db_strerror(ret));
     return FALSE;
   }
   h->dbenv = dbenv;
 
-  /* setting cache size */
-  if (dbenv == NULL)
-  {
+  /*
+   * setting cache size 
+   */
+  if (dbenv == NULL) {
     int                 res;
     u_int32_t           gbytes, bytes;
     int                 ncache;
@@ -524,13 +508,12 @@ zmdb_open(h, dbenv, database, mode, rdonly, dbtype, dbcache)
     gbytes = bytes = ncache = 0;
 #if (BDB_VERSION >= 0x40200)
     h->err = res = dbp->get_cachesize(dbp, &gbytes, &bytes, &ncache);
-    if (res != 0)
-    {
+    if (res != 0) {
       LOG_MSG_ERROR("Error getting %s database cache : %s", database,
                     db_strerror(ret));
       return FALSE;
     }
-    MESSAGE_INFO(12, "CACHE OLD : %ld %ld %ld", gbytes, bytes, ncache);
+    ZE_MessageInfo(12, "CACHE OLD : %ld %ld %ld", gbytes, bytes, ncache);
 #endif
 
     sz_cache = db_db_cache_size;
@@ -538,14 +521,12 @@ zmdb_open(h, dbenv, database, mode, rdonly, dbtype, dbcache)
     if (dbcache > sz_cache)
       sz_cache = dbcache;
 
-    if (sz_cache > bytes)
-    {
+    if (sz_cache > bytes) {
       bytes = sz_cache;
-      MESSAGE_INFO(10, "DB Database %-12s : cache size=%ld partitions=%ld",
-                   path2filename(database), gbytes GBYTES + bytes, ncache);
+      ZE_MessageInfo(10, "DB Database %-12s : cache size=%ld partitions=%ld",
+                     path2filename(database), gbytes GBYTES + bytes, ncache);
       h->err = res = dbp->set_cachesize(dbp, gbytes, bytes, ncache);
-      if (res != 0)
-      {
+      if (res != 0) {
         LOG_MSG_ERROR("Error setting %s database cache : %s", database,
                       db_strerror(ret));
         return FALSE;
@@ -558,15 +539,15 @@ zmdb_open(h, dbenv, database, mode, rdonly, dbtype, dbcache)
 #if 0
 
 #ifndef DB_HASH_NELEM
-# define DB_HASH_NELEM     (64*1024)
+#define DB_HASH_NELEM     (64*1024)
 #endif
 
-  /* HASH */
-  if (!dbtype)
-  {
+  /*
+   * HASH 
+   */
+  if (!dbtype) {
     ret = dbp->set_h_nelem(dbp, DB_HASH_NELEM);
-    if (ret != 0)
-    {
+    if (ret != 0) {
       LOG_MSG_ERROR("Error setting hash nelem estimate on database %s : %d %s",
                     database, ret, db_strerror(ret));
     }
@@ -578,23 +559,22 @@ zmdb_open(h, dbenv, database, mode, rdonly, dbtype, dbcache)
   else
     flags = DB_CREATE;
 
-  if (dbenv != NULL)
-  {
+  if (dbenv != NULL) {
     flags |= DB_AUTO_COMMIT;
 #if USE_DB_THREAD
     flags |= DB_THREAD;
 #endif
   }
 
-  /* flags = (rdonly ? DB_RDONLY : DB_CREATE | DB_AUTO_COMMIT); */
+  /*
+   * flags = (rdonly ? DB_RDONLY : DB_CREATE | DB_AUTO_COMMIT); 
+   */
 
-  if (dbenv != NULL)
-  {
+  if (dbenv != NULL) {
     char               *home = NULL;
 
     lname = strdup(database);
-    if (lname != NULL)
-    {
+    if (lname != NULL) {
       char               *p = NULL;
 
       p = strrchr(lname, '/');
@@ -604,9 +584,9 @@ zmdb_open(h, dbenv, database, mode, rdonly, dbtype, dbcache)
 #if 0
     dbenv->get_home(dbenv, (const char **) &home);
 
-    MESSAGE_INFO(9,
-                 "Opening database %s inside environment %s - flags = %08x",
-                 database, STRNULL(home, "(NULL)"), flags);
+    ZE_MessageInfo(9,
+                   "Opening database %s inside environment %s - flags = %08x",
+                   database, STRNULL(home, "(NULL)"), flags);
 #endif
   }
 #if (DB_VERSION >= 0x040100)
@@ -618,8 +598,7 @@ zmdb_open(h, dbenv, database, mode, rdonly, dbtype, dbcache)
                            flags, mode);
 #endif             /* DB_VERSION */
 
-  if (ret != 0)
-  {
+  if (ret != 0) {
     LOG_MSG_ERROR("Error opening database %s : %d %s", database, ret,
                   db_strerror(ret));
     return FALSE;
@@ -634,14 +613,11 @@ zmdb_open(h, dbenv, database, mode, rdonly, dbtype, dbcache)
   h->rdonly = rdonly;
   h->mode = mode;
 
-  if (!h->rdonly)
-  {
+  if (!h->rdonly) {
     int                 i;
 
-    for (i = 0; i < DIMDB; i++)
-    {
-      if (!rwdb[i].OK)
-      {
+    for (i = 0; i < DIMDB; i++) {
+      if (!rwdb[i].OK) {
         rwdb[i] = *h;
         break;
       }
@@ -668,7 +644,7 @@ fin:
  ******************************************************************************/
 bool
 zmdb_ok(h)
-     ZMDB_T              *h;
+     ZMDB_T             *h;
 {
 #if USE_BerkeleyDB
   if (h == NULL)
@@ -686,7 +662,7 @@ zmdb_ok(h)
  ******************************************************************************/
 bool
 zmdb_close(h)
-     ZMDB_T              *h;
+     ZMDB_T             *h;
 {
 #if USE_BerkeleyDB
   if (h == NULL)
@@ -715,7 +691,7 @@ zmdb_close(h)
  ******************************************************************************/
 bool
 zmdb_empty(h)
-     ZMDB_T              *h;
+     ZMDB_T             *h;
 {
 #if USE_BerkeleyDB
   u_int32_t           count = 0;
@@ -724,11 +700,9 @@ zmdb_empty(h)
   if (h == NULL)
     return FALSE;
 
-  if ((h->err = ret = h->dbh->truncate(h->dbh, NULL, &count, 0)) == 0)
-  {
-    MESSAGE_INFO(13, "db emptied ");
-  } else
-  {
+  if ((h->err = ret = h->dbh->truncate(h->dbh, NULL, &count, 0)) == 0) {
+    ZE_MessageInfo(13, "db emptied ");
+  } else {
     LOG_MSG_ERROR("Error emptyng %s DB : %s",
                   STRNULL(h->database, "???"), db_strerror(ret));
     return FALSE;
@@ -746,16 +720,14 @@ zmdb_empty(h)
  ******************************************************************************/
 bool
 zmdb_flush(h)
-     ZMDB_T              *h;
+     ZMDB_T             *h;
 {
 #if USE_BerkeleyDB
   int                 ret = 0;
 
-  if ((h->err = ret = h->dbh->sync(h->dbh, 0)) == 0)
-  {
-    MESSAGE_INFO(13, "db: %s synced", STRNULL(h->database, "???"));
-  } else
-  {
+  if ((h->err = ret = h->dbh->sync(h->dbh, 0)) == 0) {
+    ZE_MessageInfo(13, "db: %s synced", STRNULL(h->database, "???"));
+  } else {
     LOG_MSG_ERROR("Error syncing %s DB : %s",
                   STRNULL(h->database, "???"), db_strerror(ret));
     return FALSE;
@@ -773,7 +745,7 @@ zmdb_flush(h)
  ******************************************************************************/
 bool
 zmdb_add_rec(h, k, d, sz)
-     ZMDB_T              *h;
+     ZMDB_T             *h;
      char               *k;
      void               *d;
      size_t              sz;
@@ -794,11 +766,9 @@ zmdb_add_rec(h, k, d, sz)
   data.ulen = sz;
   data.flags = DB_DBT_USERMEM;
 
-  if ((h->err = ret = h->dbh->put(h->dbh, NULL, &key, &data, 0)) == 0)
-  {
-    MESSAGE_INFO(13, "db: %s: key stored", (char *) key.data);
-  } else
-  {
+  if ((h->err = ret = h->dbh->put(h->dbh, NULL, &key, &data, 0)) == 0) {
+    ZE_MessageInfo(13, "db: %s: key stored", (char *) key.data);
+  } else {
     LOG_MSG_ERROR("Error adding record to %s DB : %s",
                   STRNULL(h->database, "???"), db_strerror(ret));
     return FALSE;
@@ -816,7 +786,7 @@ zmdb_add_rec(h, k, d, sz)
  ******************************************************************************/
 bool
 zmdb_get_rec(h, k, d, szd)
-     ZMDB_T              *h;
+     ZMDB_T             *h;
      char               *k;
      void               *d;
      size_t              szd;
@@ -827,23 +797,20 @@ zmdb_get_rec(h, k, d, szd)
   bool                result = TRUE;
   char               *buf = NULL;
 
-  if (h == NULL)
-  {
-    MESSAGE_ERROR(9, "Database handle NULL");
+  if (h == NULL) {
+    ZE_MessageError(9, "Database handle NULL");
     return FALSE;
   }
-  if (!h->OK)
-  {
-    MESSAGE_ERROR(9, "Database not opened (%s)",
-                  STRNULL(h->database, "(NULL)"));
+  if (!h->OK) {
+    ZE_MessageError(9, "Database not opened (%s)",
+                    STRNULL(h->database, "(NULL)"));
     return FALSE;
   }
 
   memset(&key, 0, sizeof (key));
   memset(&data, 0, sizeof (data));
   memset(d, 0, szd);
-  if ((buf = malloc(szd)) == NULL)
-  {
+  if ((buf = malloc(szd)) == NULL) {
     LOG_SYS_ERROR("malloc buffer");
     result = FALSE;
     goto fin;
@@ -858,9 +825,8 @@ zmdb_get_rec(h, k, d, szd)
   data.ulen = szd;
   data.flags = DB_DBT_USERMEM;
 
-  if ((h->err = ret = h->dbh->get(h->dbh, NULL, &key, &data, 0)) == 0)
-  {
-    MESSAGE_INFO(13, "db: %s: get key", (char *) key.data);
+  if ((h->err = ret = h->dbh->get(h->dbh, NULL, &key, &data, 0)) == 0) {
+    ZE_MessageInfo(13, "db: %s: get key", (char *) key.data);
 
     memset(d, 0, szd);
 #if 1
@@ -870,8 +836,7 @@ zmdb_get_rec(h, k, d, szd)
       szd = data.size;
     memcpy(d, data.data, szd);
 #endif
-  } else
-  {
+  } else {
     if (ret != DB_NOTFOUND)
       LOG_MSG_ERROR("Error getting record from DB %s : (%s) %s",
                     STRNULL(h->database, "???"), k, db_strerror(ret));
@@ -893,7 +858,7 @@ fin:
  ******************************************************************************/
 bool
 zmdb_del_rec(h, k)
-     ZMDB_T              *h;
+     ZMDB_T             *h;
      char               *k;
 {
 #if USE_BerkeleyDB
@@ -905,11 +870,9 @@ zmdb_del_rec(h, k)
   key.data = k;
   key.size = strlen(k) + 1;
 
-  if ((h->err = ret = h->dbh->del(h->dbh, NULL, &key, 0)) == 0)
-  {
-    MESSAGE_INFO(13, "db: %s: key stored", (char *) key.data);
-  } else
-  {
+  if ((h->err = ret = h->dbh->del(h->dbh, NULL, &key, 0)) == 0) {
+    ZE_MessageInfo(13, "db: %s: key stored", (char *) key.data);
+  } else {
     LOG_MSG_ERROR("Error deleting record from %s DB : %s",
                   STRNULL(h->database, "???"), db_strerror(ret));
     return FALSE;
@@ -928,7 +891,7 @@ zmdb_del_rec(h, k)
 
 bool
 zmdb_lock(h)
-     ZMDB_T              *h;
+     ZMDB_T             *h;
 {
 #if USE_BerkeleyDB
   return (pthread_mutex_lock(&h->dbmutex) == 0);
@@ -939,7 +902,7 @@ zmdb_lock(h)
 
 bool
 zmdb_unlock(h)
-     ZMDB_T              *h;
+     ZMDB_T             *h;
 {
 #if USE_BerkeleyDB
   return (pthread_mutex_unlock(&h->dbmutex) == 0);
@@ -954,7 +917,7 @@ zmdb_unlock(h)
  ******************************************************************************/
 int
 zmdb_errno(h)
-     ZMDB_T              *h;
+     ZMDB_T             *h;
 {
   if (h == NULL)
     return 0;
@@ -968,7 +931,7 @@ zmdb_errno(h)
  ******************************************************************************/
 bool
 zmdb_cursor_open(h, rdonly)
-     ZMDB_T              *h;
+     ZMDB_T             *h;
      bool                rdonly;
 {
 #if USE_BerkeleyDB
@@ -978,30 +941,30 @@ zmdb_cursor_open(h, rdonly)
 
   dbenv = h->dbenv;
 
-  if (h->dbc == NULL)
-  {
+  if (h->dbc == NULL) {
     DBC                *dbcp;
     int                 ret;
 
     MUTEX_LOCK(&h->dbmutex);
 
     h->dbtxn = NULL;
-    if (!h->rdonly && !rdonly && dbenv != NULL)
-    {
+    if (!h->rdonly && !rdonly && dbenv != NULL) {
       h->dbtxn = NULL;
-      /* Get the txn handle */
+      /*
+       * Get the txn handle 
+       */
       ret = dbenv->txn_begin(dbenv, NULL, &h->dbtxn, 0);
-      if (ret != 0)
-      {
+      if (ret != 0) {
         LOG_MSG_ERROR("Transaction begin failed on %s database : %s",
                       STRNULL(h->database, "???"), db_strerror(ret));
         h->dbtxn = NULL;
       }
     }
 
-    /* Acquire a cursor for the database. */
-    if ((h->err = ret = h->dbh->cursor(h->dbh, h->dbtxn, &dbcp, 0)) != 0)
-    {
+    /*
+     * Acquire a cursor for the database. 
+     */
+    if ((h->err = ret = h->dbh->cursor(h->dbh, h->dbtxn, &dbcp, 0)) != 0) {
       LOG_MSG_ERROR("Error creating cursor on %s database : %s",
                     STRNULL(h->database, "???"), db_strerror(ret));
     }
@@ -1023,7 +986,7 @@ zmdb_cursor_open(h, rdonly)
  ******************************************************************************/
 bool
 zmdb_cursor_close(h)
-     ZMDB_T              *h;
+     ZMDB_T             *h;
 {
 #if USE_BerkeleyDB
   int                 ret = 0;
@@ -1034,22 +997,17 @@ zmdb_cursor_close(h)
 
   MUTEX_LOCK(&h->dbmutex);
 
-  if (h->dbc != NULL)
-  {
+  if (h->dbc != NULL) {
     ret = h->dbc->c_close(h->dbc);
-    if (ret != 0)
-    {
+    if (ret != 0) {
       LOG_MSG_ERROR("Error closing cursor on %s database : %s",
                     STRNULL(h->database, "???"), db_strerror(ret));
     }
 
-    if (h->dbtxn != NULL && h->dbenv != NULL)
-    {
-      if (ret == 0)
-      {
+    if (h->dbtxn != NULL && h->dbenv != NULL) {
+      if (ret == 0) {
         ret = h->dbtxn->commit(h->dbtxn, 0);
-        if (ret != 0)
-        {
+        if (ret != 0) {
           LOG_MSG_ERROR("Error commiting transaction on %s database : %s",
                         STRNULL(h->database, "???"), db_strerror(ret));
         }
@@ -1078,7 +1036,7 @@ zmdb_cursor_close(h)
  ******************************************************************************/
 bool
 zmdb_cursor_get_first(h, k, szk, d, szd)
-     ZMDB_T              *h;
+     ZMDB_T             *h;
      char               *k;
      size_t              szk;
      void               *d;
@@ -1097,8 +1055,7 @@ zmdb_cursor_get_first(h, k, szk, d, szd)
   memset(&key, 0, sizeof (key));
   memset(&data, 0, sizeof (data));
 
-  if ((buf = malloc(szd)) == NULL)
-  {
+  if ((buf = malloc(szd)) == NULL) {
     LOG_SYS_ERROR("malloc buffer");
     result = FALSE;
     goto fin;
@@ -1114,9 +1071,8 @@ zmdb_cursor_get_first(h, k, szk, d, szd)
 
   flags = (key.size > 0 ? DB_SET_RANGE : DB_FIRST);
 
-  if ((h->err = ret = h->dbc->c_get(h->dbc, &key, &data, flags)) == 0)
-  {
-    MESSAGE_INFO(13, "db: got first rec : %s", key.data);
+  if ((h->err = ret = h->dbc->c_get(h->dbc, &key, &data, flags)) == 0) {
+    ZE_MessageInfo(13, "db: got first rec : %s", key.data);
 
 #if !USE_DB_THREAD
     memset(k, 0, szk);
@@ -1133,8 +1089,7 @@ zmdb_cursor_get_first(h, k, szk, d, szd)
       szd = data.size;
     memcpy(d, data.data, szd);
 #endif
-  } else
-  {
+  } else {
     if (ret != DB_NOTFOUND)
       LOG_MSG_ERROR("Error getting record from %s DB : %s",
                     STRNULL(h->database, "???"), db_strerror(ret));
@@ -1156,7 +1111,7 @@ fin:
  ******************************************************************************/
 bool
 zmdb_cursor_get_next(h, k, szk, d, szd)
-     ZMDB_T              *h;
+     ZMDB_T             *h;
      char               *k;
      size_t              szk;
      void               *d;
@@ -1174,8 +1129,7 @@ zmdb_cursor_get_next(h, k, szk, d, szd)
 
   memset(&key, 0, sizeof (key));
   memset(&data, 0, sizeof (data));
-  if ((buf = malloc(szd)) == NULL)
-  {
+  if ((buf = malloc(szd)) == NULL) {
     LOG_SYS_ERROR("malloc buffer");
     result = FALSE;
     goto fin;
@@ -1192,9 +1146,8 @@ zmdb_cursor_get_next(h, k, szk, d, szd)
 
   flags = DB_NEXT;
 
-  if ((h->err = ret = h->dbc->c_get(h->dbc, &key, &data, flags)) == 0)
-  {
-    MESSAGE_INFO(13, "db: got next rec : %s", key.data);
+  if ((h->err = ret = h->dbc->c_get(h->dbc, &key, &data, flags)) == 0) {
+    ZE_MessageInfo(13, "db: got next rec : %s", key.data);
 #if !USE_DB_THREAD
     memset(k, 0, szk);
     if (szk >= key.size)
@@ -1209,8 +1162,7 @@ zmdb_cursor_get_next(h, k, szk, d, szd)
       szd = data.size;
     memcpy(d, data.data, szd);
 #endif
-  } else
-  {
+  } else {
     if (ret != DB_NOTFOUND)
       LOG_MSG_ERROR("Error getting next record (%s) from %s DB : %s",
                     k, STRNULL(h->database, "???"), db_strerror(ret));
@@ -1232,7 +1184,7 @@ fin:
  ******************************************************************************/
 bool
 zmdb_cursor_del(h)
-     ZMDB_T              *h;
+     ZMDB_T             *h;
 {
 #if USE_BerkeleyDB
   int                 ret;
@@ -1240,8 +1192,7 @@ zmdb_cursor_del(h)
   if (h->dbc == NULL)
     return FALSE;
 
-  if ((h->err = ret = h->dbc->c_del(h->dbc, 0)) != 0)
-  {
+  if ((h->err = ret = h->dbc->c_del(h->dbc, 0)) != 0) {
     if (ret != DB_NOTFOUND)
       LOG_MSG_ERROR("Error deleting record from %s DB : %s",
                     STRNULL(h->database, "???"), db_strerror(ret));
@@ -1260,7 +1211,7 @@ zmdb_cursor_del(h)
  ******************************************************************************/
 bool
 zmdb_cursor_set_range(h, k, d, sz, where)
-     ZMDB_T              *h;
+     ZMDB_T             *h;
      char               *k;
      void               *d;
      size_t              sz;
@@ -1279,7 +1230,7 @@ zmdb_cursor_set_range(h, k, d, sz, where)
  ******************************************************************************/
 bool
 zmdb_cursor_get(h, k, d, sz, where)
-     ZMDB_T              *h;
+     ZMDB_T             *h;
      char               *k;
      void               *d;
      size_t              sz;
@@ -1307,8 +1258,8 @@ zmdb_cursor_get(h, k, d, sz, where)
  ******************************************************************************/
 bool
 zmdb_stat(h, st)
-     ZMDB_T              *h;
-     ZMDB_STAT_T         **st;
+     ZMDB_T             *h;
+     ZMDB_STAT_T       **st;
 {
 #if USE_BerkeleyDB
   if (h == FALSE || st == FALSE)
@@ -1322,9 +1273,9 @@ zmdb_stat(h, st)
       return TRUE;
   }
   /*
-  if (h->dbh->stat(h->dbh, NULL, (void *) st, DB_FAST_STAT) == 0)
-    return TRUE;
-  */
+   * if (h->dbh->stat(h->dbh, NULL, (void *) st, DB_FAST_STAT) == 0)
+   * return TRUE;
+   */
 
   return FALSE;
 #else              /* USE_BerkeleyDB */
@@ -1338,7 +1289,7 @@ zmdb_stat(h, st)
  ******************************************************************************/
 bool
 zmdb_check_last_mtime(h)
-     ZMDB_T              *h;
+     ZMDB_T             *h;
 {
 #if USE_BerkeleyDB
   if (h == NULL)
@@ -1354,16 +1305,17 @@ zmdb_check_last_mtime(h)
 
     now = time(NULL);
 
-    if (fstat(h->dbfd, &st) == 0)
-    {
-      if (h->mtime != 0)
-      {
-        /* if database has changed */
-        if (st.st_mtime > h->mtime)
-        {
+    if (fstat(h->dbfd, &st) == 0) {
+      if (h->mtime != 0) {
+        /*
+         * if database has changed 
+         */
+        if (st.st_mtime > h->mtime) {
           DB                 *dbp = h->dbh;
 
-          /* close */
+          /*
+           * close 
+           */
           if ((dbp != NULL) && (dbp->close != NULL))
             dbp->close(dbp, 0);
           if ((h->dbc != NULL) && (h->dbc->c_close != NULL))
@@ -1393,8 +1345,7 @@ zmdb_check_last_mtime(h)
         }
       } else
         h->mtime = st.st_mtime;
-    } else
-    {
+    } else {
       LOG_SYS_ERROR("lstat error");
       return FALSE;
     }

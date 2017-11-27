@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -27,9 +28,9 @@
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
-
+#if 0
 char               *
-zmBasename(out, in, size)
+zeBasename(out, in, size)
      char               *out;
      char               *in;
      size_t              size;
@@ -54,8 +55,32 @@ zmBasename(out, in, size)
   FREE(t);
   return out;
 }
+#endif
+
+/******************************************************************************
+ *                                                                            * 
+ *                                                                            *
+ ******************************************************************************/
+
+char               *
+zeBasename(path)
+     char               *path;
+{
+  while (path != NULL && strlen(path) > 0) {
+    char               *p;
+
+    p = strchr(path, '/');
+    if (p == NULL)
+      return path;
+    path = ++p;
+  }
+
+  return path;
+}
+
 
 #if 0
+
 /******************************************************************************
  *                                                                            *
  *                                                                            *
@@ -82,7 +107,7 @@ file_lock(fd)
      int                 fd;
 {
   if (ssp_flock(fd, F_SETLKW, F_WRLCK) < 0) {
-    LOG_SYS_ERROR("lock error");
+    ZE_LogSysError("lock error");
     /*
      * exit (EX_SOFTWARE); 
      */
@@ -96,7 +121,7 @@ file_unlock(fd)
      int                 fd;
 {
   if (ssp_flock(fd, F_SETLK, F_UNLCK) < 0) {
-    LOG_SYS_ERROR("lock error");
+    ZE_LogSysError("lock error");
     /*
      * exit (EX_SOFTWARE); 
      */
@@ -112,7 +137,7 @@ file_unlock(fd)
  *                                                                            *
  ******************************************************************************/
 size_t
-zmGetFileSize(fname)
+zeGetFileSize(fname)
      char               *fname;
 {
   struct stat         fstat;
@@ -124,7 +149,7 @@ zmGetFileSize(fname)
     return fstat.st_size;
 
 #if 0
-  LOG_SYS_ERROR("stat(%s) error", fname);
+  ZE_LogSysError("stat(%s) error", fname);
 #endif
 
   return 0;
@@ -135,7 +160,7 @@ zmGetFileSize(fname)
  *                                                                            *
  ******************************************************************************/
 size_t
-zmGetFdSize(fd)
+zeGetFdSize(fd)
      int                 fd;
 {
   struct stat         st;
@@ -146,7 +171,7 @@ zmGetFdSize(fd)
   if (fstat(fd, &st) == 0)
     return st.st_size;
 
-  LOG_SYS_ERROR("fstat error");
+  ZE_LogSysError("fstat error");
 
   return 0;
 }
@@ -156,7 +181,7 @@ zmGetFdSize(fd)
  *                                                                            *
  ******************************************************************************/
 int
-zmReadLn(fd, buf, size)
+zeReadLn(fd, buf, size)
      int                 fd;
      char               *buf;
      size_t              size;
@@ -176,7 +201,7 @@ zmReadLn(fd, buf, size)
     if (n < 0) {
       if (errno == EINTR)
         continue;
-      LOG_SYS_ERROR("read error");
+      ZE_LogSysError("read error");
       break;
     }
 
@@ -196,7 +221,7 @@ zmReadLn(fd, buf, size)
  *                                                                            *
  ******************************************************************************/
 bool
-zmRemoveDir(dirname)
+zeRemoveDir(dirname)
      char               *dirname;
 {
   DIR                *dir;
@@ -210,25 +235,25 @@ zmRemoveDir(dirname)
       if ((strcmp(p->d_name, ".") == 0) || (strcmp(p->d_name, "..") == 0))
         continue;
       snprintf(fname, sizeof (fname), "%s/%s", dirname, p->d_name);
-      LOG_MSG_INFO(9, "ENTRY : %s", fname);
+      ZE_LogMsgInfo(9, "ENTRY : %s", fname);
       if (stat(fname, &st) == 0) {
         if (S_ISDIR(st.st_mode))
-          r = remove_dir(fname);
+          r = zeRemoveDir(fname);
         else
           unlink(fname);
       } else {
-        LOG_SYS_ERROR("lstat(%s) ", fname);
+        ZE_LogSysError("lstat(%s) ", fname);
         r = FALSE;
       }
     }
     closedir(dir);
   } else {
-    LOG_SYS_ERROR("opendir(%s) :", dirname);
+    ZE_LogSysError("opendir(%s) :", dirname);
     r = FALSE;
   }
 
   if (r && rmdir(dirname) != 0) {
-    LOG_SYS_ERROR("rmdir(%s) :", dirname);
+    ZE_LogSysError("rmdir(%s) :", dirname);
     r = FALSE;
   }
 
@@ -240,40 +265,40 @@ zmRemoveDir(dirname)
  *                                                                            *
  ******************************************************************************/
 bool
-zmGetDirInfo(dir)
+zeShowDirInfo(dir)
      char               *dir;
 {
   int                 r = 0;
   struct stat         buf;
 
   if ((r = stat(dir, &buf)) != 0) {
-    LOG_SYS_ERROR("stat(%s) error", dir);
+    ZE_LogSysError("stat(%s) error", dir);
     return FALSE;
   }
 
   if (S_ISFIFO(buf.st_mode))
-    MESSAGE_INFO(0, "%s : FIFO", dir);
+    ZE_MessageInfo(0, "%s : FIFO", dir);
 
   if (S_ISCHR(buf.st_mode))
-    MESSAGE_INFO(0, "%s : CHR", dir);
+    ZE_MessageInfo(0, "%s : CHR", dir);
 
   if (S_ISDIR(buf.st_mode))
-    MESSAGE_INFO(0, "%s : DIR", dir);
+    ZE_MessageInfo(0, "%s : DIR", dir);
 
   if (S_ISBLK(buf.st_mode))
-    MESSAGE_INFO(0, "%s : BLK", dir);
+    ZE_MessageInfo(0, "%s : BLK", dir);
 
 #if 0
   if (S_ISSOCK(buf.st_mode))
-    MESSAGE_INFO(0, "%s : SOCK", dir);
+    ZE_MessageInfo(0, "%s : SOCK", dir);
 #endif
 
   if (S_ISREG(buf.st_mode))
-    MESSAGE_INFO(0, "%s : REG", dir);
+    ZE_MessageInfo(0, "%s : REG", dir);
 
-  MESSAGE_INFO(0, " mode : %4o", buf.st_mode);
-  MESSAGE_INFO(0, " uid  : %4d", buf.st_uid);
-  MESSAGE_INFO(0, " gid  : %4d", buf.st_gid);
+  ZE_MessageInfo(0, " mode : %4o", buf.st_mode);
+  ZE_MessageInfo(0, " uid  : %4d", buf.st_uid);
+  ZE_MessageInfo(0, " gid  : %4d", buf.st_gid);
 
   return TRUE;
 }
@@ -282,29 +307,8 @@ zmGetDirInfo(dir)
  *                                                                            * 
  *                                                                            *
  ******************************************************************************/
-
-char               *
-zmPath2Filename(path)
-     char               *path;
-{
-  while (path != NULL && strlen(path) > 0) {
-    char               *p;
-
-    p = strchr(path, '/');
-    if (p == NULL)
-      return path;
-    path = ++p;
-  }
-
-  return path;
-}
-
-/******************************************************************************
- *                                                                            * 
- *                                                                            *
- ******************************************************************************/
 int
-zmFdPrintf(int fd, char *format, ...)
+zeFdPrintf(int fd, char *format, ...)
 {
   va_list             arg;
   char                s[4096];
@@ -315,7 +319,6 @@ zmFdPrintf(int fd, char *format, ...)
   va_end(arg);
 
   if ((ret = write(fd, s, strlen(s))) != strlen(s))
-    LOG_SYS_ERROR("error on FD_PRINTF");
+    ZE_LogSysError("error on FD_PRINTF");
   return ret;
 }
-

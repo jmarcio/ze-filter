@@ -21,8 +21,8 @@
 
 #ifndef ZMSTRINGS_H
 
-char               *zmStrJoin(char *, int, char **);
-bool                zmStrRegex(char *, char *, long *, long *, bool);
+char               *zeStrJoin(char *, int, char **);
+bool                zeStrRegex(char *, char *, long *, long *, bool);
 
 #if 0
 #define STRCASEEQUAL(a,b)                                               \

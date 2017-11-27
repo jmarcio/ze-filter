@@ -2,9 +2,11 @@
 noinst_LIBRARIES      = 	libze.a 
 
 libze_a_SOURCES       = 	zeStrings.c \
+				zeStrConvert.c \
 				zeFileSystem.c \
 				zeDb.c \
-				zeMap.c
+				zeMap.c \
+				zeSyslog.c
 #				ze-linkedlist.c \
 #				ze-map.c \
 #				ze-syslog.c \

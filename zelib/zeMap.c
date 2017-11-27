@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -28,15 +29,15 @@
 
 
 /* TODO ...
-**   Verify locks : use map_lock instead of zmdb_lock
+**   Verify locks : use map_lock instead of zeDb_lock
 */
 
 #if 0
-# define     MAP_LOCK(map)          map_lock(map)
-# define     MAP_UNLOCK(map)        map_unlock(map)
+#define     MAP_LOCK(map)          map_lock(map)
+#define     MAP_UNLOCK(map)        map_unlock(map)
 #else
-# define     MAP_LOCK(map)          zmdb_lock(&map->db)
-# define     MAP_UNLOCK(map)        zmdb_unlock(&map->db)
+#define     MAP_LOCK(map)          zeDb_lock(&map->db)
+#define     MAP_UNLOCK(map)        zeDb_unlock(&map->db)
 #endif
 
 /******************************************************************************
@@ -44,8 +45,8 @@
  *                                                                            *
  ******************************************************************************/
 bool
-zmMapInit(map)
-     MAP_T              *map;
+zeMap_Init(map)
+     ZEMAP_T            *map;
 {
   ASSERT(map != NULL);
   ASSERT(map->signature == SIGNATURE);
@@ -58,15 +59,15 @@ zmMapInit(map)
  *                                                                            *
  ******************************************************************************/
 bool
-zmMapOK(map)
-     MAP_T              *map;
+zeMap_OK(map)
+     ZEMAP_T            *map;
 {
   bool                res = FALSE;
 
   ASSERT(map != NULL);
   ASSERT(map->signature == SIGNATURE);
 
-  res = zmdb_ok(&map->db);
+  res = zeDb_OK(&map->db);
 
   return res;
 }
@@ -76,9 +77,9 @@ zmMapOK(map)
  *                                                                            *
  ******************************************************************************/
 bool
-zmMapOpen(map, env, name, rdonly, cache_size)
-     MAP_T              *map;
-     ZMDBENV_T          *env;
+zeMap_Open(map, env, name, rdonly, cache_size)
+     ZEMAP_T            *map;
+     ZEDBENV_T          *env;
      char               *name;
      int                 rdonly;
      size_t              cache_size;
@@ -92,46 +93,38 @@ zmMapOpen(map, env, name, rdonly, cache_size)
   ASSERT(name != NULL);
   ASSERT(strlen(name) > 0);
 
-  if (zmdb_ok(&map->db))
+  if (zeDb_OK(&map->db))
     return TRUE;
 
   map->rdonly = rdonly;
   FREE(map->name);
   map->name = strdup(name);
   if (map->name == NULL)
-    LOG_SYS_ERROR("strdup(%s)", name);
+    ZE_LogSysError("strdup(%s)", name);
 
   s = "ldap:";
-  if (strncasecmp(map->name, s, strlen(s)) == 0)
-    ;
+  if (strncasecmp(map->name, s, strlen(s)) == 0);
   s = "db:";
-  if (strncasecmp(map->name, s, strlen(s)) == 0)
-    ;
+  if (strncasecmp(map->name, s, strlen(s)) == 0);
   s = "btree:";
-  if (strncasecmp(map->name, s, strlen(s)) == 0)
-    ;
+  if (strncasecmp(map->name, s, strlen(s)) == 0);
   s = "hash:";
-  if (strncasecmp(map->name, s, strlen(s)) == 0)
-    ;
+  if (strncasecmp(map->name, s, strlen(s)) == 0);
   s = "inet:";
-  if (strncasecmp(map->name, s, strlen(s)) == 0)
-    ;
+  if (strncasecmp(map->name, s, strlen(s)) == 0);
   s = "unix:";
-  if (strncasecmp(map->name, s, strlen(s)) == 0)
-    ;
+  if (strncasecmp(map->name, s, strlen(s)) == 0);
   s = "local:";
-  if (strncasecmp(map->name, s, strlen(s)) == 0)
-    ;
+  if (strncasecmp(map->name, s, strlen(s)) == 0);
 
-  if (strexpr(map->name, "^/.*", NULL, &pf, TRUE))
-    ;
+  if (strexpr(map->name, "^/.*", NULL, &pf, TRUE));
 
   map->cache_size = cache_size;
   map->env = env;
 
-  if (!zmdb_ok(&map->db))
-    res = zmdb_open(&map->db, env, name, (map->rdonly ? 0444 : 0644),
-                   map->rdonly, TRUE, map->cache_size);
+  if (!zeDb_OK(&map->db))
+    res = zeDb_Open(&map->db, env, name, (map->rdonly ? 0444 : 0644),
+                    map->rdonly, TRUE, map->cache_size);
 
   return res;
 }
@@ -141,19 +134,19 @@ zmMapOpen(map, env, name, rdonly, cache_size)
  *                                                                            *
  ******************************************************************************/
 bool
-zmMapClose(map)
-     MAP_T              *map;
+zeMap_Close(map)
+     ZEMAP_T            *map;
 {
   bool                res = TRUE;
 
   ASSERT(map != NULL);
   ASSERT(map->signature == SIGNATURE);
 
-  if (!zmdb_ok(&map->db))
+  if (!zeDb_OK(&map->db))
     return res;
 
-  if (zmdb_ok(&map->db))
-    res = zmdb_close(&map->db);
+  if (zeDb_OK(&map->db))
+    res = zeDb_Close(&map->db);
 
   FREE(map->name);
 
@@ -165,19 +158,19 @@ zmMapClose(map)
  *                                                                            *
  ******************************************************************************/
 bool
-zmMapReopen(map)
-     MAP_T              *map;
+zeMap_Reopen(map)
+     ZEMAP_T            *map;
 {
   bool                res = FALSE;
 
   ASSERT(map != NULL);
   ASSERT(map->signature == SIGNATURE);
 
-  if (zmdb_ok(&map->db))
-    res = zmdb_close(&map->db);
+  if (zeDb_OK(&map->db))
+    res = zeDb_Close(&map->db);
 
-  res = zmdb_open(&map->db, map->env, map->name, (map->rdonly ? 0444 : 0644),
-                 map->rdonly, FALSE, map->cache_size);
+  res = zeDb_Open(&map->db, map->env, map->name, (map->rdonly ? 0444 : 0644),
+                  map->rdonly, FALSE, map->cache_size);
 
   return res;
 }
@@ -187,8 +180,8 @@ zmMapReopen(map)
  *                                                                            *
  ******************************************************************************/
 bool
-zmMapLookup(map, key, value, size)
-     MAP_T              *map;
+zeMap_Lookup(map, key, value, size)
+     ZEMAP_T            *map;
      char               *key;
      char               *value;
      size_t              size;
@@ -201,9 +194,8 @@ zmMapLookup(map, key, value, size)
   ASSERT(map->signature == SIGNATURE);
   ASSERT(key != NULL);
 
-  if (!zmdb_ok(&map->db))
-  {
-    LOG_MSG_ERROR("Lookup on a closed map...");
+  if (!zeDb_OK(&map->db)) {
+    ZE_LogMsgError(0, "Lookup on a closed map...");
     return res;
   }
 
@@ -211,8 +203,7 @@ zmMapLookup(map, key, value, size)
   (void) strtolower(k);
   memset(v, 0, sizeof (v));
 
-  if (zmdb_get_rec(&map->db, k, v, sizeof (v)))
-  {
+  if (zeDb_GetRec(&map->db, k, v, sizeof (v))) {
     if (value != NULL && size > 0)
       strlcpy(value, v, size);
 
@@ -227,8 +218,8 @@ zmMapLookup(map, key, value, size)
  *                                                                            *
  ******************************************************************************/
 bool
-zmMapAdd(map, key, value, size)
-     MAP_T              *map;
+zeMap_Add(map, key, value, size)
+     ZEMAP_T            *map;
      char               *key;
      char               *value;
      size_t              size;
@@ -243,7 +234,7 @@ zmMapAdd(map, key, value, size)
 
   (void) strlcpy(k, key, sizeof (k));
   (void) strtolower(k);
-  res = zmdb_add_rec(&map->db, k, value, size);
+  res = zeDb_AddRec(&map->db, k, value, size);
 
   return res;
 }
@@ -253,8 +244,8 @@ zmMapAdd(map, key, value, size)
  *                                                                            *
  ******************************************************************************/
 bool
-zmMapDelete(map, key)
-     MAP_T              *map;
+zeMap_Delete(map, key)
+     ZEMAP_T            *map;
      char               *key;
 {
   bool                res = FALSE;
@@ -263,7 +254,7 @@ zmMapDelete(map, key)
   ASSERT(map->signature == SIGNATURE);
   ASSERT(key != NULL);
 
-  res = zmdb_del_rec(&map->db, key);
+  res = zeDb_DelRec(&map->db, key);
 
   return res;
 }
@@ -275,8 +266,8 @@ zmMapDelete(map, key)
 #define BSZ     256
 
 bool
-zmMapBrowse(map, func, arg, skey, ksz, tmax)
-     MAP_T              *map;
+zeMap_Browse(map, func, arg, skey, ksz, tmax)
+     ZEMAP_T            *map;
      MAP_BROWSE_F        func;
      void               *arg;
      char               *skey;
@@ -286,13 +277,13 @@ zmMapBrowse(map, func, arg, skey, ksz, tmax)
   bool                res = FALSE;
   bool                ok;
   char                kbuf[BSZ], vbuf[BSZ];
-  time_t            ti;
+  time_t              ti;
   int                 nb = 0;
 
   ASSERT(map != NULL);
   ASSERT(map->signature == SIGNATURE);
 
-  res = zmdb_cursor_open(&map->db, map->rdonly);
+  res = zeDb_CursorOpen(&map->db, map->rdonly);
 
   memset(kbuf, 0, sizeof (kbuf));
   memset(vbuf, 0, sizeof (vbuf));
@@ -303,31 +294,26 @@ zmMapBrowse(map, func, arg, skey, ksz, tmax)
 
   DB_BTREE_SEQ_START();
 
-  for (ok = zmdb_cursor_get_first(&map->db, kbuf, BSZ, vbuf, BSZ);
-       ok; ok = zmdb_cursor_get_next(&map->db, kbuf, BSZ, vbuf, BSZ))
-  {
+  for (ok = zeDb_CursorGetFirst(&map->db, kbuf, BSZ, vbuf, BSZ);
+       ok; ok = zeDb_CursorGetNext(&map->db, kbuf, BSZ, vbuf, BSZ)) {
     nb++;
-    MESSAGE_INFO(19, "MAP : %-20s %s", kbuf, vbuf);
+    ZE_MessageInfo(19, "MAP : %-20s %s", kbuf, vbuf);
 
     DB_BTREE_SEQ_CHECK(kbuf, map->db.database);
 
-    if (func != NULL)
-    {
+    if (func != NULL) {
       int                 r = MAP_BROWSE_CONTINUE;
 
       r = func(kbuf, vbuf, arg);
 
-      if ((r & MAP_BROWSE_DELETE) != 0)
-      {
-        if (!zmdb_cursor_del(&map->db))
-          ;
+      if ((r & MAP_BROWSE_DELETE) != 0) {
+        if (!zeDb_CursorDel(&map->db));
       }
       if ((r & MAP_BROWSE_STOP) != 0)
         break;
     }
-    if (nb % 1000 == 0 && tmax > 0)
-    {
-      time_t            tf;
+    if (nb % 1000 == 0 && tmax > 0) {
+      time_t              tf;
 
       tf = time(NULL);
       if (tf - ti > tmax)
@@ -335,17 +321,15 @@ zmMapBrowse(map, func, arg, skey, ksz, tmax)
     }
   }
   DB_BTREE_SEQ_END();
-  if (!ok)
-  {
+  if (!ok) {
     if (skey != NULL && ksz > 0)
       *skey = '\0';
-  } else
-  {
+  } else {
     if (skey != NULL && ksz > 0)
       strlcpy(skey, kbuf, ksz);
   }
 
-  res = zmdb_cursor_close(&map->db);
+  res = zeDb_CursorClose(&map->db);
 
   return TRUE;
 }
@@ -355,8 +339,8 @@ zmMapBrowse(map, func, arg, skey, ksz, tmax)
  *                                                                            *
  ******************************************************************************/
 bool
-zmMapLock(map)
-     MAP_T              *map;
+zeMap_Lock(map)
+     ZEMAP_T            *map;
 {
   bool                res = TRUE;
 
@@ -373,8 +357,8 @@ zmMapLock(map)
  *                                                                            *
  ******************************************************************************/
 bool
-zmMapUnlock(map)
-     MAP_T              *map;
+zeMap_Unlock(map)
+     ZEMAP_T            *map;
 {
   bool                res = TRUE;
 
@@ -391,17 +375,15 @@ zmMapUnlock(map)
  *                                                                            *
  ******************************************************************************/
 bool
-zmMapFlush(map)
-     MAP_T              *map;
+zeMap_Flush(map)
+     ZEMAP_T            *map;
 {
   bool                res = FALSE;
 
   ASSERT(map != NULL);
   ASSERT(map->signature == SIGNATURE);
 
-  res = zmdb_flush(&map->db);
+  res = zeDb_Flush(&map->db);
 
   return res;
 }
-
-

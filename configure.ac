@@ -356,7 +356,7 @@ dnl
 dnl JGREYDDIR=/var/ze-filter/ze-greydb
 AC_ARG_WITH(ze-greyd-dir,
   AC_HELP_STRING([--with-ze-greyd-dir=PATH],
-                 [set j-greyd work dir   (default /var/ze-filter/ze-greydb)]),
+                 [set ze-greyd work dir   (default /var/ze-filter/ze-greydb)]),
   [JGREYDDIR="$withval"])
 AC_SUBST(JGREYDDIR)
 
@@ -520,7 +520,7 @@ in
     ;;
   *darwin*)
     AC_DEFINE(_POSIX_PTHREAD_SEMANTICS,1,[for normal OSs])
-    AC_DEFINE(BIND_8_COMPAT,1,[needed by j-dns])
+    AC_DEFINE(BIND_8_COMPAT,1,[needed by ze-dns])
     dnl dnl AC_DEFINE(_BSD_SOURCE,1,[BSD_SOURCE])
     dnl AC_DEFINE(_POSIX_SOURCE,,[POSIX_SOURCE])
     dnl AC_DEFINE(_POSIX_C_SOURCE,199506L,[POSIX_SOURCE])

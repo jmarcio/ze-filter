@@ -222,7 +222,7 @@ EmailMatch(email, target)
       char               *lKey = NULL;
 
       argvT[i] = "*";
-      lKey = zmStrJoin(".", argcT - i, &argvT[i]);
+      lKey = zeStrJoin(".", argcT - i, &argvT[i]);
 
       snprintf(buf, sizeof (buf), "%s@%s", userKey, lKey);
       if (STRCASEEQUAL(buf, target)) {

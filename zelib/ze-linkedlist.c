@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -42,42 +43,38 @@ zmLinkedListAdd(head, s, nb, data, size)
   if ((s == NULL) || (strlen(s) == 0))
     return NULL;
 
-  for (p = head; p != NULL; p = p->next)
-  {
+  for (p = head; p != NULL; p = p->next) {
     if (strcasecmp(p->key, s) == 0)
       break;
   }
 
-  if (p != NULL)
-  {
+  if (p != NULL) {
     p->count += nb;
     return head;
   }
 
   p = (LISTR_T *) malloc(sizeof (LISTR_T));
-  if (p == NULL)
-  {
+  if (p == NULL) {
     LOG_SYS_ERROR("malloc(LISTR_T)");
     return NULL;
   }
   memset(p, 0, sizeof (LISTR_T));
 
-  /* add as the first element */
+  /*
+   * add as the first element 
+   */
   p->next = head;
   p->prev = NULL;
   if (head != NULL)
     head->prev = p;
 
-  if ((p->key = strdup(s)) == NULL)
-  {
+  if ((p->key = strdup(s)) == NULL) {
     LOG_SYS_ERROR("strdup(LISTR_T)");
     FREE(p);
     return NULL;
   }
-  if (data != NULL && size > 0)
-  {
-    if ((p->data = malloc(size)) != NULL)
-    {
+  if (data != NULL && size > 0) {
+    if ((p->data = malloc(size)) != NULL) {
       memcpy(p->data, data, size);
       p->size = size;
     } else
@@ -106,23 +103,18 @@ zmLinkedListSet(head, s, nb, data, size)
   if ((s == NULL) || (strlen(s) == 0))
     return NULL;
 
-  for (p = head; p != NULL; p = p->next)
-  {
+  for (p = head; p != NULL; p = p->next) {
     if (strcasecmp(p->key, s) == 0)
       break;
   }
 
-  if (p != NULL)
-  {
+  if (p != NULL) {
     p->count = nb;
-    if (p->data != NULL)
-    {
+    if (p->data != NULL) {
       FREE(p->data);
       p->size = 0;
-      if (data != NULL && size > 0)
-      {
-        if ((p->data = malloc(size)) != NULL)
-        {
+      if (data != NULL && size > 0) {
+        if ((p->data = malloc(size)) != NULL) {
           memcpy(p->data, data, size);
           p->size = size;
         } else
@@ -151,10 +143,8 @@ zmLinkedListRemove(head, key, func)
   if ((key == NULL) || (strlen(key) == 0))
     return FALSE;
 
-  for (p = head; p != NULL; p = p->next)
-  {
-    if (strcasecmp(p->key, key) == 0)
-    {
+  for (p = head; p != NULL; p = p->next) {
+    if (strcasecmp(p->key, key) == 0) {
 
       if (p->prev != NULL)
         p->prev->next = p->next;
@@ -188,8 +178,7 @@ zmLinkedListFind(head, s)
   if ((s == NULL) || (strlen(s) == 0))
     return NULL;
 
-  for (p = head; p != NULL; p = p->next)
-  {
+  for (p = head; p != NULL; p = p->next) {
     if (strcasecmp(p->key, s) == 0)
       return p;
   }
@@ -209,8 +198,7 @@ zmLinkedListClear(head, func)
 {
   LISTR_T            *p;
 
-  while (head != NULL)
-  {
+  while (head != NULL) {
     p = head;
     head = p->next;
     FREE(p->key);
@@ -236,8 +224,7 @@ zmLinkedListCountSet(head, key, nb)
   LISTR_T            *p;
 
   p = zmLinkedListFind(head, key);
-  if (p != NULL)
-  {
+  if (p != NULL) {
     p->count = nb;
     return p->count;
   }
@@ -273,8 +260,7 @@ zmLinkedListCountInc(head, key)
   LISTR_T            *p;
 
   p = zmLinkedListFind(head, key);
-  if (p != NULL)
-  {
+  if (p != NULL) {
     p->count++;
     return p->count;
   }

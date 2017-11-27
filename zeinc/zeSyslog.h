@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -21,222 +22,252 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#ifndef __ZMSYSLOG_H__
+#ifndef __ZESYSLOG_H__
 
-#define         J_STDOUT   1
-#define         J_SYSLOG   0
-#define         J_OUT_ALL  2
+#define         ZE_STDOUT   1
+#define         ZE_SYSLOG   0
+#define         ZE_OUT_ALL  2
 
-#if 0
-void                set_log_level(int);
-void                set_log_facility(char *);
-#endif
 
 /* ****************************************************************************
  *                                                                            * 
  *                                                                            *
  **************************************************************************** */
-
-void                message_info(int, char *, ...);
-void                message_warning(int, char *, ...);
-void                message_error(int, char *, ...);
-
-void                log_msg_debug(char *, int, char *, ...);
-void                log_msg_info(char *, int, char *, ...);
-void                log_msg_notice(char *, int, char *, ...);
-void                log_msg_warning(char *, int, char *, ...);
-void                log_msg_error(char *, int, char *, ...);
-
-void                log_sys_warning(char *, int, char *, ...);
-void                log_sys_error(char *, int, char *, ...);
-
-#define    USE_LOG_MACROS     1
-#if 1
-#undef     USE_LOG_MACROS
-#endif
-
-/* ****************************************************************************
- *                                                                            * 
- *                                                                            *
- **************************************************************************** */
-#if USE_LOG_MACROS
-
-#define    MESSAGE_INFO(...)       message_info(J_FUNCTION,__VA_ARGS)
-#define    MESSAGE_WARNING(...)    message_warning(J_FUNCTION,__VA_ARGS)
-#define    MESSAGE_ERROR(...)      message_error(J_FUNCTION,__VA_ARGS)
-
-#else
-
-#define  MESSAGE_DEBUG(level, ...) \
-do { \
-  if (log_level >= level) {\
-    zmSyslog(LOG_DEBUG, __VA_ARGS__); \
-  } \
-} while (0)
-
-#define  MESSAGE_INFO(level, ...) \
-do { \
-  if (log_level >= level) {\
-    zmSyslog(LOG_INFO, __VA_ARGS__); \
-  } \
-} while (0)
-
-#define  MESSAGE_NOTICE(level, ...) \
-do { \
-  if (log_level >= level) {\
-    zmSyslog(LOG_NOTICE, __VA_ARGS__); \
-  } \
-} while (0)
-
-#define  MESSAGE_WARNING(level, ...) \
-do { \
-  if (log_level >= level) {\
-    zmSyslog(LOG_WARNING, __VA_ARGS__); \
-  } \
-} while (0)
-
-#define  MESSAGE_ERROR(level, ...) \
-do { \
-  if (log_level >= level) {\
-    zmSyslog(LOG_ERR, __VA_ARGS__); \
-  } \
-} while (0)
-
-#endif
-
-/* ****************************************************************************
- *                                                                            * 
- *                                                                            *
- **************************************************************************** */
-
-#if USE_LOG_MACROS
-
-#define  zmLogMsg_DEBUG          log_msg_debug
-#define  zmLogMsg_INFO           log_msg_info
-#define  zmLogMsg_NOTICE         log_msg_notice
-#define  zmLogMsg_WARNING        log_msg_warning
-#define  zmLogMsg_ERROR          log_msg_error
-
-#else
-
-
-#endif
-
-/* ****************************************************************************
- *                                                                            * 
- *                                                                            *
- **************************************************************************** */
-
-#if USE_LOG_MACROS
-
-#define  zmLogSys_WARNING        log_sys_warning
-#define  zmLogSys_ERROR          log_sys_error
-
-#else
-
-#define  zmLogSys_DEBUG(...)						\
-    do {								\
-      char    h_log_str[256];						\
-      char    *t = (errno != 0 ? strerror(errno) : "");			\
-      (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__);	\
-      zmSyslog(LOG_DEBUG, "%s : %s : %s", J_FUNCTION, h_log_str, t);	\
-    } while (0)
-
-#define  zmLogSys_INFO(...)						\
-    do {								\
-      char    h_log_str[256];						\
-      char    *t = (errno != 0 ? strerror(errno) : "");			\
-      (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__);	\
-      zmSyslog(LOG_INFO, "%s : %s : %s", J_FUNCTION, h_log_str, t);	\
-    } while (0)
-
-#define  zmLogSys_NOTICE(...)						\
-    do {								\
-      char    h_log_str[256];						\
-      char    *t = (errno != 0 ? strerror(errno) : "");			\
-      (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__);	\
-      zmSyslog(LOG_NOTICE, "%s : %s : %s", J_FUNCTION, h_log_str, t);	\
-    } while (0)
-
-#define  zmLogSys_WARNING(...)						\
-    do {								\
-      char    h_log_str[256];						\
-      char    *t = (errno != 0 ? strerror(errno) : "");			\
-      (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__);	\
-      zmSyslog(LOG_WARNING, "%s : %s : %s", J_FUNCTION, h_log_str, t);	\
-    } while (0)
-
-#define  zmLogSys_ERROR(...)						\
-    do {								\
-      char    h_log_str[256];						\
-      int     serrno = errno;						\
-      char    *t = (serrno != 0 ? strerror(serrno) : "");		\
-      (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__);	\
-      zmSyslog(LOG_ERR, "%s : %s : %s", J_FUNCTION, h_log_str, t);	\
-      switch (serrno) {							\
-      case ENOMEM :							\
-	exit(EX_OSERR); 						\
-	break;								\
-      }									\
-    } while (0)
-
-#define  zmLogSys_CRIT(...)						\
-    do {								\
-      char    h_log_str[256];						\
-      int     serrno = errno;						\
-      char    *t = (serrno != 0 ? strerror(serrno) : "");		\
-      (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__);	\
-      zmSyslog(LOG_CRIT, "%s : %s : %s", J_FUNCTION, h_log_str, t);	\
-      switch (serrno) {							\
-      case ENOMEM :							\
-	exit(EX_OSERR); 						\
-	break;								\
-      }									\
-    } while (0)
-
-#define  zmLogSys_FATAL(...)						\
-    do {								\
-      char    h_log_str[256];						\
-      char    *t = (errno != 0 ? strerror(errno) : "");			\
-      (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__);	\
-      zmSyslog(LOG_ERR, "%s : %s : %s", J_FUNCTION, h_log_str, t);	\
-      exit(EX_SOFTWARE);						\
-    } while (0)
-
-#endif
-
-/* ****************************************************************************
- *                                                                            * 
- *                                                                            *
- **************************************************************************** */
-#define        j_debug(...)    zmSyslog(LOG_DEBUG, __VA_ARGS__)
+#define        ze_debug(...)    zeSyslog(LOG_DEBUG, __VA_ARGS__)
 
 /*
 **
 **
 */
-extern int          j_output;
-extern int          log_level;
-extern int          log_facility;
-extern bool         log_severity;
+extern int          ze_output;
+extern int          ze_log_level;
+extern int          ze_log_facility;
+extern bool         ze_log_severity;
 
-void                set_log_output(bool, bool);
+void                zeLog_SetOutput(bool, bool);
 
-void                zmSyslog(int, char *, ...);
-void                zmOpenlog(const char *ident, int option, int facility);
-void                zmCloselog();
+void                zeLog_SetLevel(int);
+void                zeLog_SetFacility(char *);
+
+void                zeSyslog(int, char *, ...);
+void                zeOpenlog(const char *ident, int option, int facility);
+void                zeCloselog();
 
 
 void                log_sock_addr(struct sockaddr_in *);
 
-int                 facility_value(char *);
-char               *facility_name(int);
-int                 set_log_facility(char *);
+int                 ze_facility_value(char *);
+char               *ze_facility_name(int);
 
-int                 syslog_facility_value(char *);
-char               *syslog_facility_name(int);
-int                 syslog_priority_value(char *);
-char               *syslog_priority_name(int);
 
-#define __ZMSYSLOG_H__
+/* ****************************************************************************
+ *                                                                            * 
+ *                                                                            *
+ **************************************************************************** */
+
+void                ze_message_info(int, char *, ...);
+void                ze_message_warning(int, char *, ...);
+void                ze_message_error(int, char *, ...);
+
+void                ze_log_msg_debug(char *, int, char *, ...);
+void                ze_log_msg_info(char *, int, char *, ...);
+void                ze_log_msg_notice(char *, int, char *, ...);
+void                ze_log_msg_warning(char *, int, char *, ...);
+void                ze_log_msg_error(char *, int, char *, ...);
+
+void                ze_log_sys_warning(char *, int, char *, ...);
+void                ze_log_sys_error(char *, int, char *, ...);
+
+
+/* ****************************************************************************
+ *                                                                            * 
+ *                                                                            *
+ **************************************************************************** */
+
+#define  ZE_Message(level, sysloglevel, ...) \
+do { \
+  if (ze_log_level >= level) {\
+    zeSyslog(sysloglevel, __VA_ARGS__); \
+  } \
+} while (0)
+
+#define ZE_MessageDebug(level, ...)   ZE_Message(level, LOG_DEBUG, __VA_ARGS__)
+#define ZE_MessageInfo(level, ...)    ZE_Message(level, LOG_INFO, __VA_ARGS__)
+#define ZE_MessageNotice(level, ...)  ZE_Message(level, LOG_NOTICE, __VA_ARGS__)
+#define ZE_MessageWarning(level, ...) ZE_Message(level, LOG_WARNING, __VA_ARGS__)
+#define ZE_MessageError(level, ...)   ZE_Message(level, LOG_ERR, __VA_ARGS__)
+
+#if 0
+#define  ZE_MESSAGE_DEBUG(level, ...) \
+do { \
+  if (ze_log_level >= level) {\
+    zeSyslog(LOG_DEBUG, __VA_ARGS__); \
+  } \
+} while (0)
+
+#define  ZE_MessageInfo(level, ...) \
+do { \
+  if (ze_log_level >= level) {\
+    zeSyslog(LOG_INFO, __VA_ARGS__); \
+  } \
+} while (0)
+
+#define  ZE_MessageNotice(level, ...) \
+do { \
+  if (ze_log_level >= level) {\
+    zeSyslog(LOG_NOTICE, __VA_ARGS__); \
+  } \
+} while (0)
+
+#define  ZE_MessageWarning(level, ...) \
+do { \
+  if (ze_log_level >= level) {\
+    zeSyslog(LOG_WARNING, __VA_ARGS__); \
+  } \
+} while (0)
+
+#define  ZE_MessageError(level, ...) \
+do { \
+  if (ze_log_level >= level) {\
+    zeSyslog(LOG_ERR, __VA_ARGS__); \
+  } \
+} while (0)
+#endif
+
+/* ****************************************************************************
+ *                                                                            * 
+ *                                                                            *
+ **************************************************************************** */
+#define  ZE_LogMsg(level, sysloglevel, ...) \
+do { \
+  if (ze_log_level > level) { \
+    char h_log_str[256]; \
+    (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__); \
+    zeSyslog(sysloglevel, "%s : %s", ZE_FUNCTION, h_log_str); \
+  } \
+} while (0)
+
+#define ZE_LogMsgDebug(level, ...)   ZE_LogMsg(level, LOG_DEBUG, __VA_ARGS__)
+#define ZE_LogMsgInfo(level, ...)    ZE_LogMsg(level, LOG_INFO, __VA_ARGS__)
+#define ZE_LogMsgNotice(level, ...)  ZE_LogMsg(level, LOG_NOTICE, __VA_ARGS__)
+#define ZE_LogMsgWarning(level, ...) ZE_LogMsg(level, LOG_WARNING, __VA_ARGS__)
+#define ZE_LogMsgError(level, ...)   ZE_LogMsg(level, LOG_ERR, __VA_ARGS__)
+
+#if 0
+#define  ZE_LogMsgDebug(level, ...) \
+do { \
+  if (ze_log_level > level) { \
+    char h_log_str[256]; \
+    (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__); \
+    zeSyslog(LOG_DEBUG, "%s : %s", ZE_FUNCTION, h_log_str); \
+  } \
+} while (0)
+
+#define  ZE_LogMsgInfo(level, ...) \
+do { \
+  if (ze_log_level >= level) {\
+    char h_log_str[256]; \
+    (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__); \
+    zeSyslog(LOG_INFO, "%s : %s", ZE_FUNCTION, h_log_str); \
+  } \
+} while (0)
+
+#define  ZE_LogMsgNOTICE(...) \
+do { \
+  char h_log_str[256]; \
+  (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__); \
+  zeSyslog(LOG_NOTICE, "%s : %s", ZE_FUNCTION, h_log_str); \
+} while (0)
+
+#define  ZE_LogMsgWarning(...) \
+do { \
+  char    h_log_str[256]; \
+  (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__); \
+  zeSyslog(LOG_WARNING, "%s : %s", ZE_FUNCTION, h_log_str); \
+} while (0)
+
+#define  ZE_LogMsgError(...) \
+do { \
+  char    h_log_str[256]; \
+  (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__); \
+  zeSyslog(LOG_ERR, "%s : %s", ZE_FUNCTION, h_log_str); \
+} while (0)
+
+#define  ZE_LOG_MSG_CRIT(...) \
+do { \
+  char    h_log_str[256]; \
+  (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__); \
+  zeSyslog(LOG_CRIT, "%s : %s", ZE_FUNCTION, h_log_str); \
+} while (0)
+#endif
+
+/* ****************************************************************************
+ *                                                                            * 
+ *                                                                            *
+ **************************************************************************** */
+#define ZE_LogSys(sysloglevel, ...) \
+do { \
+  char    h_log_str[256]; \
+  char    *t = (errno != 0 ? strerror(errno) : ""); \
+  (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__); \
+  zeSyslog(sysloglevel, "%s : %s : %s", ZE_FUNCTION, h_log_str, t); \
+  if (sysloglevel == LOG_ERR || sysloglevel == LOG_CRIT) \
+    exit(EX_SOFTWARE); \
+} while (0)
+
+#define ZE_LogSysWarning(...) ZE_LogSys(LOG_WARNING, __VA_ARGS__)
+#define ZE_LogSysError(...)   ZE_LogSys(LOG_ERR, __VA_ARGS__)
+#define ZE_LogSysCrit(...)    ZE_LogSys(LOG_CRIT, __VA_ARGS__)
+
+#if 0
+#define  ZE_LogSysWarning(...) \
+do { \
+  char    h_log_str[256]; \
+  char    *t = (errno != 0 ? strerror(errno) : ""); \
+  (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__); \
+  zeSyslog(LOG_WARNING, "%s : %s : %s", ZE_FUNCTION, h_log_str, t); \
+} while (0)
+
+
+#define  ZE_LogSysError(...)						\
+  do {									\
+    char    h_log_str[256];						\
+    int     serrno = errno;						\
+    char    *t = (serrno != 0 ? strerror(serrno) : "");			\
+    (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__);	\
+    zeSyslog(LOG_ERR, "%s : %s : %s", ZE_FUNCTION, h_log_str, t);	\
+    switch (serrno)							\
+    {									\
+      case ENOMEM :							\
+        exit(EX_OSERR); 						\
+	      break;								\
+    }									\
+  } while (0)
+
+#define  ZE_LogSysCrit(...)						\
+  do {									\
+    char    h_log_str[256];						\
+    int     serrno = errno;						\
+    char    *t = (serrno != 0 ? strerror(serrno) : "");			\
+    (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__);	\
+    zeSyslog(LOG_CRIT, "%s : %s : %s", ZE_FUNCTION, h_log_str, t);	\
+    switch (serrno)							\
+    {									\
+      case ENOMEM :							\
+        exit(EX_OSERR); 						\
+        break;								\
+    }									\
+  } while (0)
+
+#define  ZE_LOG_SYS_FATAL(...)						\
+  do {									\
+    char    h_log_str[256];						\
+    char    *t = (errno != 0 ? strerror(errno) : "");			\
+    (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__);	\
+    zeSyslog(LOG_ERR, "%s : %s : %s", ZE_FUNCTION, h_log_str, t);	\
+    exit(EX_SOFTWARE);							\
+  } while (0)
+#endif
+
+#define __ZESYSLOG_H__
 #endif

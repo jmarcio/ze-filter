@@ -1,3 +1,4 @@
+
 /*
  * Copyright (c) 1999-2002, 2004, 2005 Sendmail, Inc. and its suppliers.
  *	All rights reserved.
@@ -14,6 +15,7 @@
 #include <ze-sys.h>
 
 #if !HAVE_STRLCPY
+
 /*
 **  STRLCPY -- size bounded string copy
 **
@@ -45,16 +47,16 @@
 size_t
 strlcpy(char *dst, const char *src, size_t size)
 {
-	size_t i;
+  size_t              i;
 
-	if (size-- <= 0)
-		return strlen(src);
-	for (i = 0; i < size && (dst[i] = src[i]) != 0; i++)
-		continue;
-	dst[i] = '\0';
-	if (src[i] == '\0')
-		return i;
-	else
-		return i + strlen(src + i);
+  if (size-- <= 0)
+    return strlen(src);
+  for (i = 0; i < size && (dst[i] = src[i]) != 0; i++)
+    continue;
+  dst[i] = '\0';
+  if (src[i] == '\0')
+    return i;
+  else
+    return i + strlen(src + i);
 }
-#endif /* !HAVE_STRLCPY */
+#endif             /* !HAVE_STRLCPY */
