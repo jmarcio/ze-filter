@@ -154,7 +154,7 @@ bool                zeDb_Unlock(ZEDB_T *);
 
 int                 zeDb_errno(ZEDB_T *);
 
-bool                zeDb_Stats(ZEDB_T *, ZEDB_STAT_T *);
+bool                zeDb_Stat(ZEDB_T *, ZEDB_STAT_T **);
 
 #if 1
 

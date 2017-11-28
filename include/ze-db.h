@@ -152,7 +152,7 @@ bool                jdb_unlock(JDB_T *);
 
 int                 jdb_errno(JDB_T *);
 
-bool                jdb_stats(JDB_T *, JDB_STAT_T *);
+bool                jdb_stat(JDB_T *, JDB_STAT_T **);
 
 #if 1
 
