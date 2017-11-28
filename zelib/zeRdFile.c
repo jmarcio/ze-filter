@@ -30,7 +30,7 @@
 int                 j_rd_text_file(char *, int, int, char *,
                                    int (*)(void *, void *));
 
-static void         str_clear_blanks(char *);
+static void         strClearBlanks(char *);
 
 #define BSIZE 1024
 
@@ -139,8 +139,8 @@ j_rd_text_file(fname, rdtype, rdreverse, tag, func)
         pk = q;
       }
     }
-    str_clear_blanks(pk);
-    str_clear_blanks(pv);
+    strClearBlanks(pk);
+    strClearBlanks(pv);
 
     if (strlen(pk) > 0) {
       int                 res;
@@ -304,7 +304,7 @@ fin:
  *                                                                            *
  ******************************************************************************/
 static void
-str_clear_blanks(s)
+strClearBlanks(s)
      char               *s;
 {
   char               *p;
