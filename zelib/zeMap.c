@@ -37,7 +37,7 @@
 #define     MAP_UNLOCK(map)        map_unlock(map)
 #else
 #define     MAP_LOCK(map)          zeDb_lock(&map->db)
-#define     MAP_UNLOCK(map)        zeDb_unlock(&map->db)
+#define     MAP_UNLOCK(map)        zeDb_Unlock(&map->db)
 #endif
 
 /******************************************************************************
@@ -79,7 +79,7 @@ zeMap_OK(map)
 bool
 zeMap_Open(map, env, name, rdonly, cache_size)
      ZEMAP_T            *map;
-     ZEDBENV_T          *env;
+     ZEDB_ENV_T          *env;
      char               *name;
      int                 rdonly;
      size_t              cache_size;
@@ -268,7 +268,7 @@ zeMap_Delete(map, key)
 bool
 zeMap_Browse(map, func, arg, skey, ksz, tmax)
      ZEMAP_T            *map;
-     MAP_BROWSE_F        func;
+     ZEMAP_BROWSE_F        func;
      void               *arg;
      char               *skey;
      size_t              ksz;
@@ -302,14 +302,14 @@ zeMap_Browse(map, func, arg, skey, ksz, tmax)
     DB_BTREE_SEQ_CHECK(kbuf, map->db.database);
 
     if (func != NULL) {
-      int                 r = MAP_BROWSE_CONTINUE;
+      int                 r = ZEMAP_BROWSE_CONTINUE;
 
       r = func(kbuf, vbuf, arg);
 
-      if ((r & MAP_BROWSE_DELETE) != 0) {
+      if ((r & ZEMAP_BROWSE_DELETE) != 0) {
         if (!zeDb_CursorDel(&map->db));
       }
-      if ((r & MAP_BROWSE_STOP) != 0)
+      if ((r & ZEMAP_BROWSE_STOP) != 0)
         break;
     }
     if (nb % 1000 == 0 && tmax > 0) {

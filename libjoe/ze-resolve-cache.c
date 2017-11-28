@@ -29,7 +29,7 @@
 static void         resolve_cache_close();
 static void        *resolve_cache_clean(void *);
 
-static MAP_T        map = MAP_INITIALIZER;
+static ZEMAP_T        map = ZEMAP_INITIALIZER;
 
 static char        *mapname = ZE_WDBDIR "/ze-res-cache.db";
 static size_t       mapcachesize = 2 * 1024 * 1024;
@@ -78,9 +78,9 @@ resolve_cache_check(prefix, key, value, size)
   ASSERT(value);
   ASSERT(size >= 0);
 
-  map_lock(&map);
+  zeMap_Lock(&map);
 
-  if (!map_ok(&map) && !resolve_cache_init(NULL, RESOLVE_CACHE_RD))
+  if (!zeMap_OK(&map) && !resolve_cache_init(NULL, RESOLVE_CACHE_RD))
     goto fin;
 
   sz = strlen(prefix) + strlen(key) + 4;
@@ -89,7 +89,7 @@ resolve_cache_check(prefix, key, value, size)
     /* XXX Add record creation and update time stamps */
 
     snprintf(s, sz, "%s:%s", prefix, key);
-    res = map_lookup(&map, s, buf, sizeof (buf));
+    res = zeMap_Lookup(&map, s, buf, sizeof (buf));
     if (res)
     {
       char               *argv[8];
@@ -108,7 +108,7 @@ resolve_cache_check(prefix, key, value, size)
   FREE(s);
 
 fin:
-  map_unlock(&map);
+  zeMap_Unlock(&map);
 
   return res;
 }
@@ -131,9 +131,9 @@ resolve_cache_add(prefix, key, value)
   ASSERT(key);
   ASSERT(value);
 
-  map_lock(&map);
+  zeMap_Lock(&map);
 
-  if (!map_ok(&map) && !resolve_cache_init(NULL, RESOLVE_CACHE_WR))
+  if (!zeMap_OK(&map) && !resolve_cache_init(NULL, RESOLVE_CACHE_WR))
     goto fin;
 
   sz = strlen(prefix) + strlen(key) + 4;
@@ -151,7 +151,7 @@ resolve_cache_add(prefix, key, value)
     memset(buf, 0, sizeof (buf));
     snprintf(s, sz, "%s:%s", prefix, key);
 
-    if (map_lookup(&map, s, buf, sizeof (buf)))
+    if (zeMap_Lookup(&map, s, buf, sizeof (buf)))
     {
       char               *argv[8];
       int                 argc;
@@ -173,7 +173,7 @@ resolve_cache_add(prefix, key, value)
       last = now;
       /* snprintf(s, sz, "%s:%s", prefix, key); */
       snprintf(buf, sizeof (buf), "%lu;%lu;%s", first, last, value);
-      res = map_add(&map, s, buf, strlen(buf) + 1);
+      res = zeMap_Add(&map, s, buf, strlen(buf) + 1);
     }
 
   } else
@@ -181,7 +181,7 @@ resolve_cache_add(prefix, key, value)
   FREE(s);
 
 fin:
-  map_unlock(&map);
+  zeMap_Unlock(&map);
 
   return res;
 }
@@ -219,7 +219,7 @@ resolve_cache_init(dbdir, rwmode)
 {
   bool                res = TRUE;
 
-  if (!map_ok(&map))
+  if (!zeMap_OK(&map))
   {
     bool                rdonly;
     char                name[512];
@@ -230,7 +230,7 @@ resolve_cache_init(dbdir, rwmode)
 
     rdonly = rwmode == RESOLVE_CACHE_RD;
 
-    res = map_open(&map, work_db_env, name, rdonly, mapcachesize);
+    res = zeMap_Open(&map, work_db_env, name, rdonly, mapcachesize);
 
     if (!rdonly)
     {
@@ -253,7 +253,7 @@ static void
 resolve_cache_close()
 {
 
-  (void) map_close(&map);
+  (void) zeMap_Close(&map);
 }
 
 /* ****************************************************************************
@@ -265,10 +265,10 @@ resolve_cache_sync()
 {
   bool                res = TRUE;
 
-  if (!map_ok(&map))
+  if (!zeMap_OK(&map))
     goto fin;
 
-  res = map_flush(&map);
+  res = zeMap_Flush(&map);
 
 fin:
   return res;
@@ -285,7 +285,7 @@ clean_up_cache(key, val, arg)
      char               *val;
      void               *arg;
 {
-  int                 r = MAP_BROWSE_CONTINUE;
+  int                 r = ZEMAP_BROWSE_CONTINUE;
   time_t             *now = (time_t *) arg;
 
   if (key == NULL || val == NULL)
@@ -311,7 +311,7 @@ clean_up_cache(key, val, arg)
     if (last + dt_expire < *now)
     {
       MESSAGE_INFO(11, "Resolve cache entry expired %s %lu %lu", key, last);
-      r |= MAP_BROWSE_DELETE;
+      r |= ZEMAP_BROWSE_DELETE;
     }
   }
 
@@ -340,7 +340,7 @@ resolve_cyclic_task(arg)
 
   MESSAGE_INFO(11, "Cleaning up and syncing map cyclic task...");
 
-  map_lock(&map);
+  zeMap_Lock(&map);
 
   if (last_check + dt_check <= now)
   {
@@ -348,7 +348,7 @@ resolve_cyclic_task(arg)
 
     ti = time_ms();
 
-    map_browse(&map, clean_up_cache, &now, browsekey, sizeof (browsekey), 1000);
+    zeMap_Browse(&map, clean_up_cache, &now, browsekey, sizeof (browsekey), 1000);
     last_check = now;
 
     if (resolve_cache_show_cyclic_task)
@@ -376,7 +376,7 @@ resolve_cyclic_task(arg)
   }
 #endif
 
-  map_unlock(&map);
+  zeMap_Unlock(&map);
 
   return 0;
 }

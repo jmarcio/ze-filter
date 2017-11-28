@@ -62,8 +62,6 @@
 #include "ze-dns.h"
 #include "ze-dns-parse.h"
 #include "ze-ipc.h"
-#include "ze-db.h"
-#include "ze-map.h"
 #include "md5.h"
 #include "sha1.h"
 #include "ze-msg-hash.h"

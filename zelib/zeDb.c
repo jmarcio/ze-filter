@@ -51,7 +51,7 @@ static int          db_lk_max_lockers = 1000;
 static int          db_lk_max_objects = 0x8000;
 
 size_t
-zeDb_SetDefaultCache_size(size)
+zeDb_SetDefaultCacheSize(size)
      size_t              size;
 {
   size_t              old = db_db_cache_size;
@@ -239,7 +239,7 @@ zeDb_PeriodicTasks(arg)
   return NULL;
 }
 
-ZEDBENV_T          *
+ZEDB_ENV_T          *
 zeDb_EnvOpen(home, rdonly, dt_chkpoint)
      char               *home;
      bool                rdonly;
@@ -414,7 +414,7 @@ err:
  ******************************************************************************/
 bool
 zeDb_EnvClose(dbenv)
-     ZEDBENV_T          *dbenv;
+     ZEDB_ENV_T          *dbenv;
 {
 #if USE_BerkeleyDB
   int                 ret;
@@ -461,7 +461,7 @@ bt_compare_fcn(h, a, b)
 bool
 zeDb_Open(h, dbenv, database, mode, rdonly, dbtype, dbcache)
      ZEDB_T             *h;
-     ZEDBENV_T          *dbenv;
+     ZEDB_ENV_T          *dbenv;
      char               *database;
      int                 mode;
      bool                rdonly;
@@ -904,7 +904,7 @@ zeDb_Lock(h)
 }
 
 bool
-zeDb_unlock(h)
+zeDb_Unlock(h)
      ZEDB_T             *h;
 {
 #if USE_BerkeleyDB

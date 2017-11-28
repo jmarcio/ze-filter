@@ -26,7 +26,7 @@
 #include <ze-filter.h>
 #include <ze-databases.h>
 
-JDB_ENV_T          *work_db_env = NULL;
+ZEDB_ENV_T          *work_db_env = NULL;
 char               *work_db_dir = NULL;
 
 void                close_work_db_env();
@@ -54,7 +54,7 @@ open_work_db_env(cfdir, defdir, rdonly)
   if (cfdir != NULL)
     home = cfdir;
 
-  work_db_env = jdb_env_open(home, rdonly, 60);
+  work_db_env = zeDb_EnvOpen(home, rdonly, 60);
 
   if (work_db_env != NULL)
   {
@@ -75,7 +75,7 @@ void
 close_work_db_env()
 {
   if (work_db_env != NULL)
-    jdb_env_close(work_db_env);
+    zeDb_EnvClose(work_db_env);
 
   work_db_env = NULL;
   FREE(work_db_dir);

@@ -821,7 +821,7 @@ check_rurlbl(id, ip, msg)
  *                                                                           *
  *                                                                           *
  *****************************************************************************/
-static JDB_T        hdb = JDB_INITIALIZER;
+static ZEDB_T        hdb = ZEDB_INITIALIZER;
 
 static              bool
 db_open_rurbl_database()
@@ -840,13 +840,13 @@ db_open_rurbl_database()
   dbname = cf_get_str(CF_DB_URLBL);
   ADJUST_FILENAME(dbpath, dbname, cfdir, "ze-urlbl.db");
 
-  if (jdb_ok(&hdb))
+  if (zeDb_OK(&hdb))
     return TRUE;
 
-  jdb_lock(&hdb);
-  if (!jdb_ok(&hdb))
-    res = jdb_open(&hdb, NULL, dbpath, 0444, TRUE, TRUE, 0);
-  jdb_unlock(&hdb);
+  zeDb_Lock(&hdb);
+  if (!zeDb_OK(&hdb))
+    res = zeDb_Open(&hdb, NULL, dbpath, 0444, TRUE, TRUE, 0);
+  zeDb_Unlock(&hdb);
 
   return res;
 }
@@ -856,13 +856,13 @@ db_close_rurbl_database()
 {
   bool                res = TRUE;
 
-  if (!jdb_ok(&hdb))
+  if (!zeDb_OK(&hdb))
     return TRUE;
 
-  jdb_lock(&hdb);
-  if (jdb_ok(&hdb))
-    res = jdb_close(&hdb);
-  jdb_unlock(&hdb);
+  zeDb_Lock(&hdb);
+  if (zeDb_OK(&hdb))
+    res = zeDb_Close(&hdb);
+  zeDb_Unlock(&hdb);
 
   return res;
 }
@@ -885,15 +885,15 @@ db_reopen_rurbl_database()
   dbname = cf_get_str(CF_DB_URLBL);
   ADJUST_FILENAME(dbpath, dbname, cfdir, "ze-urlbl.db");
 
-  jdb_lock(&hdb);
-  if (jdb_ok(&hdb))
-    (void) jdb_close(&hdb);
+  zeDb_Lock(&hdb);
+  if (zeDb_OK(&hdb))
+    (void) zeDb_Close(&hdb);
 
-  if (!jdb_ok(&hdb))
-    res = jdb_open(&hdb, NULL, dbpath, 0444, TRUE, TRUE, 0);
+  if (!zeDb_OK(&hdb))
+    res = zeDb_Open(&hdb, NULL, dbpath, 0444, TRUE, TRUE, 0);
 
 fin:
-  jdb_unlock(&hdb);
+  zeDb_Unlock(&hdb);
 
   return res;
 #else
@@ -925,7 +925,7 @@ db_rurlbl_check(id, url, dest, size, urlbl, szurlbl)
     return 0;
 
   id = STRNULL(id, "NOID");
-  if (!jdb_ok(&hdb))
+  if (!zeDb_OK(&hdb))
   {
     if (!db_open_rurbl_database())
     {
@@ -936,7 +936,7 @@ db_rurlbl_check(id, url, dest, size, urlbl, szurlbl)
 
   db_error = 0;
 
-  jdb_lock(&hdb);
+  zeDb_Lock(&hdb);
 
   {
     char               *p;
@@ -954,7 +954,7 @@ db_rurlbl_check(id, url, dest, size, urlbl, szurlbl)
         snprintf(key, sizeof (key), "URLBL:%s", q);
 
         MESSAGE_INFO(URLBL_LOG + 2, " Will look for %s", key);
-        if (jdb_get_rec(&hdb, key, value, sizeof (value)))
+        if (zeDb_GetRec(&hdb, key, value, sizeof (value)))
         {
           char               *r = strchr(key, ':');
 
@@ -1018,7 +1018,7 @@ db_rurlbl_check(id, url, dest, size, urlbl, szurlbl)
                    STRBOOL(res > 0, "BLACKLISTED", "OK"), STRNULL(urlbl, "--"));
   }
 
-  jdb_unlock(&hdb);
+  zeDb_Unlock(&hdb);
 
   return res;
 }

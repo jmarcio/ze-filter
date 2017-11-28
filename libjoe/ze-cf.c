@@ -1164,7 +1164,7 @@ configure_after(app)
 
   statistics_interval = cf_get_int(CF_STATS_INTERVAL);
 
-  jdb_set_default_cache_size(cf_get_int(CF_DB_CACHE_SIZE));
+  zeDb_SetDefaultCacheSize(cf_get_int(CF_DB_CACHE_SIZE));
 
   (void) grey_set_tuples(cf_get_str(CF_GREY_IP_COMPONENT),
                          cf_get_str(CF_GREY_FROM_COMPONENT),

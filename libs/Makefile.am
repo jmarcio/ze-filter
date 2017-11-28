@@ -6,8 +6,6 @@ libcommon_a_SOURCES   = 	ze-base64.c \
 				ze-btree.c \
 				ze-buffer.c \
 				ze-linkedlist.c \
-				ze-db.c \
-				ze-map.c \
 				ze-decode.c \
 				ze-rfc2822.c \
 				ze-demime.c \

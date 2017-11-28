@@ -33,7 +33,7 @@
 #define               DREF     32
 
 
-static JDB_T   hdb = JDB_INITIALIZER;
+static ZEDB_T   hdb = ZEDB_INITIALIZER;
 static bool    rdonly = TRUE;
 
 #define DBG_LEVEL    12
@@ -62,13 +62,13 @@ db_rcpt_open(rd)
   ADJUST_FILENAME(dbpath, dbname, cfdir, "ze-rcpt.db");
 
   MESSAGE_INFO(15, "Opening Rcpt Database : %s", dbpath);
-  if (jdb_ok(&hdb))
+  if (zeDb_OK(&hdb))
     return TRUE;
-  jdb_lock(&hdb);
+  zeDb_Lock(&hdb);
   rdonly = rd;
-  if (!jdb_ok(&hdb))
-    res = jdb_open(&hdb, NULL, dbpath, (rdonly ? 0444 : 0644), rdonly, TRUE, 0);
-  jdb_unlock(&hdb);
+  if (!zeDb_OK(&hdb))
+    res = zeDb_Open(&hdb, NULL, dbpath, (rdonly ? 0444 : 0644), rdonly, TRUE, 0);
+  zeDb_Unlock(&hdb);
   return res;
 }
 
@@ -82,12 +82,12 @@ db_rcpt_reopen()
   bool           res = TRUE;
   char           path[1024];
 
-  jdb_lock(&hdb);
-  if (jdb_ok(&hdb))
-    res = jdb_close(&hdb);
+  zeDb_Lock(&hdb);
+  if (zeDb_OK(&hdb))
+    res = zeDb_Close(&hdb);
   snprintf(path, sizeof (path), "%s/%s", cf_get_str(CF_CDBDIR), "ze-rcpt.db");
-  res = jdb_open(&hdb, NULL, path, (rdonly ? 0444 : 0644), rdonly, TRUE, 0);
-  jdb_unlock(&hdb);
+  res = zeDb_Open(&hdb, NULL, path, (rdonly ? 0444 : 0644), rdonly, TRUE, 0);
+  zeDb_Unlock(&hdb);
   return res;
 }
 
@@ -100,12 +100,12 @@ db_rcpt_close()
 {
   bool           res = TRUE;
 
-  if (!jdb_ok(&hdb))
+  if (!zeDb_OK(&hdb))
     return res;
-  jdb_lock(&hdb);
-  if (jdb_ok(&hdb))
-    res = jdb_close(&hdb);
-  jdb_unlock(&hdb);
+  zeDb_Lock(&hdb);
+  if (zeDb_OK(&hdb))
+    res = zeDb_Close(&hdb);
+  zeDb_Unlock(&hdb);
   return res;
 }
 
@@ -148,7 +148,7 @@ db_rcpt_check_email(prefix, key, bufout, size)
   bool           is_email = FALSE;
   char          *email = NULL;
 
-  if (!jdb_ok(&hdb) && !db_rcpt_open(TRUE))
+  if (!zeDb_OK(&hdb) && !db_rcpt_open(TRUE))
   {
     if (nerr++ < MAX_ERR)
       LOG_MSG_ERROR("Can't open rcpt database");
@@ -160,7 +160,7 @@ db_rcpt_check_email(prefix, key, bufout, size)
   if (strlen(key) == 0)
     key = "default";
   nerr = 0;
-  jdb_lock(&hdb);
+  zeDb_Lock(&hdb);
   /* let's get the domain part and check if this is an email
    ** address
    */
@@ -184,7 +184,7 @@ db_rcpt_check_email(prefix, key, bufout, size)
     snprintf(k, sizeof (k), "%s:%s", prefix, email);
     (void) strtolower(k);
     MESSAGE_INFO(DBG_LEVEL, "KEY FULL : Looking for %s ...", k);
-    if (jdb_get_rec(&hdb, k, v, sizeof (v)))
+    if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
     {
       if ((bufout != NULL) && (size > 0))
         strlcpy(bufout, v, size);
@@ -201,7 +201,7 @@ db_rcpt_check_email(prefix, key, bufout, size)
     snprintf(k, sizeof (k), "%s:%s", prefix, domain);
     (void) strtolower(k);
     MESSAGE_INFO(DBG_LEVEL, "KEY FULL : Looking for %s ...", k);
-    if (jdb_get_rec(&hdb, k, v, sizeof (v)))
+    if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
     {
       if ((bufout != NULL) && (size > 0))
         strlcpy(bufout, v, size);
@@ -228,7 +228,7 @@ db_rcpt_check_email(prefix, key, bufout, size)
       snprintf(k, sizeof (k), "%s:%s", prefix, p);
       (void) strtolower(k);
       MESSAGE_INFO(DBG_LEVEL, "NAME : Looking for %s", k);
-      if (jdb_get_rec(&hdb, k, v, sizeof (v)))
+      if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
       {
         if ((bufout != NULL) && (size > 0))
           strlcpy(bufout, v, size);
@@ -265,7 +265,7 @@ db_rcpt_check_email(prefix, key, bufout, size)
     if (domain != NULL)
       *(++domain) = '\0';
     MESSAGE_INFO(DBG_LEVEL, "k = %s", k);
-    if (jdb_get_rec(&hdb, k, v, sizeof (v)))
+    if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
     {
       if ((bufout != NULL) && (size > 0))
         strlcpy(bufout, v, size);
@@ -279,7 +279,7 @@ db_rcpt_check_email(prefix, key, bufout, size)
 
 fin:
   FREE(email);
-  jdb_unlock(&hdb);
+  zeDb_Unlock(&hdb);
   return found;
 }
 
@@ -303,7 +303,7 @@ db_rcpt_check_domain(prefix, key, bufout, size, flags)
   static int     nerr = 0;
   int            level = 0;
 
-  if (!jdb_ok(&hdb) && !db_rcpt_open(TRUE))
+  if (!zeDb_OK(&hdb) && !db_rcpt_open(TRUE))
   {
     if (nerr++ < MAX_ERR)
       LOG_MSG_ERROR("Can't open rcpt database");
@@ -315,7 +315,7 @@ db_rcpt_check_domain(prefix, key, bufout, size, flags)
   if (strlen(key) == 0)
     key = "default";
   nerr = 0;
-  jdb_lock(&hdb);
+  zeDb_Lock(&hdb);
   /* let's get the domain part and check if this is an email
    ** address
    */
@@ -332,7 +332,7 @@ db_rcpt_check_domain(prefix, key, bufout, size, flags)
     snprintf(k, sizeof (k), "%s:%s", prefix, p);
     (void) strtolower(k);
     MESSAGE_INFO(DBG_LEVEL, "NAME : Looking for %s", k);
-    if (jdb_get_rec(&hdb, k, v, sizeof (v)))
+    if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
     {
       MESSAGE_INFO(DBG_LEVEL, "         : Found %s %s...", k, v);
       if ((bufout != NULL) && (size > 0))
@@ -350,7 +350,7 @@ db_rcpt_check_domain(prefix, key, bufout, size, flags)
       snprintf(k, sizeof (k), "%s:*.%s", prefix, p);
       (void) strtolower(k);
       MESSAGE_INFO(DBG_LEVEL, "NAME : Looking for %s", k);
-      if (jdb_get_rec(&hdb, k, v, sizeof (v)))
+      if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
       {
 	MESSAGE_INFO(DBG_LEVEL, "         : Found %s %s...", k, v);
 	if ((bufout != NULL) && (size > 0))
@@ -370,7 +370,7 @@ db_rcpt_check_domain(prefix, key, bufout, size, flags)
     snprintf(k, sizeof (k), "%s:%s", prefix, "default");
     (void) strtolower(k);
     MESSAGE_INFO(DBG_LEVEL, "NAME : Looking for %s", k);
-    if (jdb_get_rec(&hdb, k, v, sizeof (v)))
+    if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
     {
       MESSAGE_INFO(DBG_LEVEL, "         : Found %s %s...", k, v);
       if ((bufout != NULL) && (size > 0))
@@ -380,6 +380,6 @@ db_rcpt_check_domain(prefix, key, bufout, size, flags)
   }
 
 fin:
-  jdb_unlock(&hdb);
+  zeDb_Unlock(&hdb);
   return found;
 }

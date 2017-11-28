@@ -49,7 +49,7 @@ typedef struct
 dbbl_T;
 
 
-static JDB_T        hdb = JDB_INITIALIZER;
+static ZEDB_T        hdb = ZEDB_INITIALIZER;
 
 /* ****************************************************************************
  *                                                                            *
@@ -63,13 +63,13 @@ db_open_blacklist()
 
   snprintf(path, sizeof (path), "%s/%s", cf_get_str(CF_WDBDIR), "ze-dbbl.db");
 
-  if (jdb_ok(&hdb))
+  if (zeDb_OK(&hdb))
     return TRUE;
 
-  jdb_lock(&hdb);
-  if (!jdb_ok(&hdb))
-    res = jdb_open(&hdb, work_db_env, path, 0644, FALSE, TRUE, 0);
-  jdb_unlock(&hdb);
+  zeDb_Lock(&hdb);
+  if (!zeDb_OK(&hdb))
+    res = zeDb_Open(&hdb, work_db_env, path, 0644, FALSE, TRUE, 0);
+  zeDb_Unlock(&hdb);
 
   /* atexit(db_close_blacklist); */
 
@@ -85,13 +85,13 @@ db_close_blacklist()
 {
   bool                res = TRUE;
 
-  if (!jdb_ok(&hdb))
+  if (!zeDb_OK(&hdb))
     return TRUE;
 
-  jdb_lock(&hdb);
-  if (jdb_ok(&hdb))
-    res = jdb_close(&hdb);
-  jdb_unlock(&hdb);
+  zeDb_Lock(&hdb);
+  if (zeDb_OK(&hdb))
+    res = zeDb_Close(&hdb);
+  zeDb_Unlock(&hdb);
 
   return res;
 }
@@ -112,13 +112,13 @@ db_check_blacklist(ip)
   if ((ip == NULL) || (strlen(ip) == 0))
     return FALSE;
 
-  if (!jdb_ok(&hdb))
+  if (!zeDb_OK(&hdb))
     db_open_blacklist();
 
-  jdb_lock(&hdb);
+  zeDb_Lock(&hdb);
 
   snprintf(key, sizeof (key), "DNS:Connect:%s", ip);
-  if (jdb_get_rec(&hdb, key, &value, sizeof (value)))
+  if (zeDb_GetRec(&hdb, key, &value, sizeof (value)))
   {
     int                 i;
 
@@ -134,7 +134,7 @@ db_check_blacklist(ip)
     /* global evaluation */
   }
 
-  jdb_unlock(&hdb);
+  zeDb_Unlock(&hdb);
 
   return res;
 }
@@ -157,12 +157,12 @@ db_update_blacklist(ip, what)
   if ((ip == NULL) || (strlen(ip) == 0))
     return FALSE;
 
-  if (!jdb_ok(&hdb))
+  if (!zeDb_OK(&hdb))
     db_open_blacklist();
 
-  jdb_lock(&hdb);
+  zeDb_Lock(&hdb);
 
-  if (jdb_get_rec(&hdb, key, &value, sizeof (value)))
+  if (zeDb_GetRec(&hdb, key, &value, sizeof (value)))
   {
     if (value.data[iref].tref != tref)
       memset(&value.data[iref], 0, sizeof (value.data[iref]));
@@ -173,9 +173,9 @@ db_update_blacklist(ip, what)
 
   /* JOE - update rec */
 
-  res = jdb_add_rec(&hdb, key, &value, sizeof (value));
+  res = zeDb_AddRec(&hdb, key, &value, sizeof (value));
 
-  jdb_unlock(&hdb);
+  zeDb_Unlock(&hdb);
 
   return FALSE;
 }
@@ -197,13 +197,13 @@ db_blackliste_check(why, key, r)
   char                v[1024];
   bool                found = FALSE;
 
-  if (!jdb_ok(&hdb))
+  if (!zeDb_OK(&hdb))
     db_open_blacklist();
 
-  jdb_lock(&hdb);
+  zeDb_Lock(&hdb);
 
   snprintf(k, sizeof (k), "%s:%s", why, key);
-  if (jdb_get_rec(&hdb, k, &v, sizeof (v)))
+  if (zeDb_GetRec(&hdb, k, &v, sizeof (v)))
   {
     char               *s, *ptr;
     char               *fields[DIM_BL];
@@ -243,7 +243,7 @@ db_blackliste_check(why, key, r)
       }
     }
   }
-  jdb_unlock(&hdb);
+  zeDb_Unlock(&hdb);
 
   return found;
 }
@@ -274,7 +274,7 @@ typedef struct blpool_T
   bool                ok;
   pthread_mutex_t     mutex;
   char               *bl[SZPOOL];
-  JDB_T               hdb[SZPOOL];
+  ZEDB_T               hdb[SZPOOL];
 } blpool_T;
 
 static blpool_T     blpool = { FALSE, PTHREAD_MUTEX_INITIALIZER };
@@ -356,7 +356,7 @@ db_map_open(bl)
     return FALSE;
   }
 
-  if ((blpool.bl[i] != NULL) || jdb_ok(&blpool.hdb[i]))
+  if ((blpool.bl[i] != NULL) || zeDb_OK(&blpool.hdb[i]))
   {
     MESSAGE_WARNING(8, "Blacklist %s already open", bl);
     DATA_UNLOCK();
@@ -372,10 +372,10 @@ db_map_open(bl)
 
   snprintf(path, sizeof (path), "%s/%s.db", cf_get_str(CF_WDBDIR), bl);
 
-  jdb_lock(&blpool.hdb[i]);
-  if (!jdb_ok(&blpool.hdb[i]))
-    res = jdb_open(&blpool.hdb[i], work_db_env, path, 0644, FALSE, TRUE, 0);
-  jdb_unlock(&blpool.hdb[i]);
+  zeDb_Lock(&blpool.hdb[i]);
+  if (!zeDb_OK(&blpool.hdb[i]))
+    res = zeDb_Open(&blpool.hdb[i], work_db_env, path, 0644, FALSE, TRUE, 0);
+  zeDb_Unlock(&blpool.hdb[i]);
 
   MESSAGE_INFO(9, "Database %s created/openned using handler no %d !", bl, i);
 
@@ -412,17 +412,17 @@ db_map_close(bl)
     return FALSE;
   }
 
-  if ((blpool.bl[i] == NULL) || !jdb_ok(&blpool.hdb[i]))
+  if ((blpool.bl[i] == NULL) || !zeDb_OK(&blpool.hdb[i]))
   {
     MESSAGE_WARNING(8, "Blacklist %s already closed", STRNULL(bl, "(null)"));
     DATA_UNLOCK();
     return TRUE;
   }
 
-  jdb_lock(&blpool.hdb[i]);
-  if (jdb_ok(&blpool.hdb[i]))
-    res = jdb_close(&blpool.hdb[i]);
-  jdb_unlock(&blpool.hdb[i]);
+  zeDb_Lock(&blpool.hdb[i]);
+  if (zeDb_OK(&blpool.hdb[i]))
+    res = zeDb_Close(&blpool.hdb[i]);
+  zeDb_Unlock(&blpool.hdb[i]);
   FREE(blpool.bl[i]);
 
   MESSAGE_INFO(9, "Database %s closed !", bl);
@@ -448,13 +448,13 @@ db_map_close_all()
   {
     FREE(blpool.bl[i]);
 
-    if (!jdb_ok(&blpool.hdb[i]))
+    if (!zeDb_OK(&blpool.hdb[i]))
       continue;
 
-    jdb_lock(&blpool.hdb[i]);
-    if (jdb_ok(&blpool.hdb[i]))
-      res = jdb_close(&blpool.hdb[i]);
-    jdb_unlock(&blpool.hdb[i]);
+    zeDb_Lock(&blpool.hdb[i]);
+    if (zeDb_OK(&blpool.hdb[i]))
+      res = zeDb_Close(&blpool.hdb[i]);
+    zeDb_Unlock(&blpool.hdb[i]);
   }
 
   DATA_UNLOCK();
@@ -514,15 +514,15 @@ db_map_check(bl, why, key, buf, sz)
 
   for (i = imin; i <= imax; i++)
   {
-    jdb_lock(&blpool.hdb[i]);
+    zeDb_Lock(&blpool.hdb[i]);
 
     snprintf(k, sizeof (k), "%s:%s", why, key);
-    if (jdb_get_rec(&blpool.hdb[i], k, &v, sizeof (v)))
+    if (zeDb_GetRec(&blpool.hdb[i], k, &v, sizeof (v)))
     {
       strlcpy(buf, v, sz);
       found = TRUE;
     }
-    jdb_unlock(&blpool.hdb[i]);
+    zeDb_Unlock(&blpool.hdb[i]);
 
     if (found)
       break;
@@ -568,13 +568,13 @@ db_map_add(bl, why, key, buf)
     return FALSE;
   }
 
-  jdb_lock(&blpool.hdb[i]);
+  zeDb_Lock(&blpool.hdb[i]);
 
   snprintf(k, sizeof (k), "%s:%s", why, key);
 
-  ok = jdb_add_rec(&blpool.hdb[i], k, &v, strlen(v) + 1);
+  ok = zeDb_AddRec(&blpool.hdb[i], k, &v, strlen(v) + 1);
 
-  jdb_unlock(&blpool.hdb[i]);
+  zeDb_Unlock(&blpool.hdb[i]);
 
   DATA_LOCK();
 

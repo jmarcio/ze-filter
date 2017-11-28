@@ -32,7 +32,7 @@ typedef struct ZEMAP_T
   int            rdonly;
   size_t         cache_size;
   ZEDB_T          db;
-  ZEDBENV_T     *env;
+  ZEDB_ENV_T     *env;
 } ZEMAP_T;
 
 #define ZEMAP_INITIALIZER  {SIGNATURE, PTHREAD_MUTEX_INITIALIZER, NULL, 0, 0, \
@@ -42,7 +42,7 @@ typedef struct ZEMAP_T
 bool           zeMap_Init(ZEMAP_T * map);
 bool           zeMap_OK(ZEMAP_T * map);
 
-bool           zeMap_Open(ZEMAP_T * map, ZEDBENV_T *env, char *name, int rdonly, size_t cache_size);
+bool           zeMap_Open(ZEMAP_T * map, ZEDB_ENV_T *env, char *name, int rdonly, size_t cache_size);
 bool           zeMap_Close(ZEMAP_T * map);
 bool           zeMap_Reopen(ZEMAP_T * map);
 

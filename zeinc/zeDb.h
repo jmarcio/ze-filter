@@ -64,7 +64,7 @@ struct ZEDB_T
 
 #if USE_BerkeleyDB
 
-typedef DB_ENV      ZEDBENV_T;
+typedef DB_ENV      ZEDB_ENV_T;
 
 typedef struct
 {
@@ -77,7 +77,7 @@ typedef struct
 } JXX_ENV_T;
 
 #else
-typedef void        ZEDBENV_T;
+typedef void        ZEDB_ENV_T;
 #endif
 
 #if USE_BerkeleyDB
@@ -125,10 +125,10 @@ size_t              zeDb_SetDefaultCacheSize(size_t size);
 
 bool                zeDb_CheckVersion();
 
-ZEDBENV_T          *zeDb_EnvOpen(char *home, bool rdonly, int dt_chkpoint);
-bool                zeDb_EnvClose(ZEDBENV_T * dbenv);
+ZEDB_ENV_T          *zeDb_EnvOpen(char *home, bool rdonly, int dt_chkpoint);
+bool                zeDb_EnvClose(ZEDB_ENV_T * dbenv);
 
-bool                zeDb_Open(ZEDB_T *, ZEDBENV_T *, char *, int, bool, bool,
+bool                zeDb_Open(ZEDB_T *, ZEDB_ENV_T *, char *, int, bool, bool,
                              size_t);
 bool                zeDb_OK(ZEDB_T *);
 bool                zeDb_Close(ZEDB_T *);

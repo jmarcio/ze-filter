@@ -107,13 +107,13 @@ struct grey_filter_T
 {
   bool                ok;
 
-  JDB_T               gdbp;
+  ZEDB_T               gdbp;
   int                 nbp;
-  JDB_T               gdbv;
+  ZEDB_T               gdbv;
   int                 nbv;
-  JDB_T               gdbw;
+  ZEDB_T               gdbw;
   int                 nbw;
-  JDB_T               gdbb;
+  ZEDB_T               gdbb;
   int                 nbb;
 
 #if 0
@@ -148,9 +148,9 @@ struct grey_filter_T
 static grey_filter_T gdata = {
   TRUE,
 
-  JDB_INITIALIZER, 0,
-  JDB_INITIALIZER, 0,
-  JDB_INITIALIZER, 0,
+  ZEDB_INITIALIZER, 0,
+  ZEDB_INITIALIZER, 0,
+  ZEDB_INITIALIZER, 0,
 
 #if 0
   /* grey_compat_domain_check */
@@ -217,20 +217,20 @@ static bool         db_grey_reopen();
 static bool         db_grey_close();
 static bool         db_grey_flush();
 
-static bool         grey_add_rec(JDB_T *, char *, void *, size_t);
-static bool         grey_get_rec(JDB_T *, char *, void *, size_t);
-static bool         grey_del_rec(JDB_T *, char *);
+static bool         grey_add_rec(ZEDB_T *, char *, void *, size_t);
+static bool         grey_get_rec(ZEDB_T *, char *, void *, size_t);
+static bool         grey_del_rec(ZEDB_T *, char *);
 
-static bool         grey_cursor_open(JDB_T *, bool);
-static bool         grey_cursor_get_first(JDB_T *, char *, size_t, void *,
+static bool         grey_cursor_open(ZEDB_T *, bool);
+static bool         grey_cursor_get_first(ZEDB_T *, char *, size_t, void *,
                                           size_t);
-static bool         grey_cursor_get_next(JDB_T *, char *, size_t, void *,
+static bool         grey_cursor_get_next(ZEDB_T *, char *, size_t, void *,
                                          size_t);
-static bool         grey_cursor_close(JDB_T *);
+static bool         grey_cursor_close(ZEDB_T *);
 
 typedef struct expire_st_T expire_st_T;
 
-static bool         grey_database_expire(JDB_T *, expire_st_T *, time_t, time_t,
+static bool         grey_database_expire(ZEDB_T *, expire_st_T *, time_t, time_t,
                                          int);
 
 void                grey_launch_thread();
@@ -1375,16 +1375,16 @@ grey_reload()
  **************************************************************************** */
 static              bool
 grey_add_rec(h, key, value, size)
-     JDB_T              *h;
+     ZEDB_T              *h;
      char               *key;
      void               *value;
      size_t              size;
 {
   bool                res;
 
-  jdb_lock(h);
-  res = jdb_add_rec(h, key, value, size);
-  jdb_unlock(h);
+  zeDb_Lock(h);
+  res = zeDb_AddRec(h, key, value, size);
+  zeDb_Unlock(h);
 
   return res;
 }
@@ -1395,16 +1395,16 @@ grey_add_rec(h, key, value, size)
  **************************************************************************** */
 static              bool
 grey_get_rec(h, key, value, size)
-     JDB_T              *h;
+     ZEDB_T              *h;
      char               *key;
      void               *value;
      size_t              size;
 {
   bool                res;
 
-  jdb_lock(h);
-  res = jdb_get_rec(h, key, value, size);
-  jdb_unlock(h);
+  zeDb_Lock(h);
+  res = zeDb_GetRec(h, key, value, size);
+  zeDb_Unlock(h);
 
   return res;
 }
@@ -1415,14 +1415,14 @@ grey_get_rec(h, key, value, size)
  **************************************************************************** */
 static              bool
 grey_del_rec(h, key)
-     JDB_T              *h;
+     ZEDB_T              *h;
      char               *key;
 {
   bool                res;
 
-  jdb_lock(h);
-  res = jdb_del_rec(h, key);
-  jdb_unlock(h);
+  zeDb_Lock(h);
+  res = zeDb_DelRec(h, key);
+  zeDb_Unlock(h);
 
   return res;
 }
@@ -1457,12 +1457,12 @@ grey_flush()
  **************************************************************************** */
 static              bool
 grey_cursor_open(h, rdonly)
-     JDB_T              *h;
+     ZEDB_T              *h;
      bool                rdonly;
 {
   bool                res = FALSE;
 
-  res = jdb_cursor_open(h, rdonly);
+  res = zeDb_CursorOpen(h, rdonly);
 
   return res;
 }
@@ -1473,11 +1473,11 @@ grey_cursor_open(h, rdonly)
  **************************************************************************** */
 static              bool
 grey_cursor_close(h)
-     JDB_T              *h;
+     ZEDB_T              *h;
 {
   bool                res;
 
-  res = jdb_cursor_close(h);
+  res = zeDb_CursorClose(h);
 
   return res;
 }
@@ -1488,7 +1488,7 @@ grey_cursor_close(h)
  **************************************************************************** */
 static              bool
 grey_cursor_get_first(h, k, ksz, v, vsz)
-     JDB_T              *h;
+     ZEDB_T              *h;
      char               *k;
      size_t              ksz;
      void               *v;
@@ -1496,7 +1496,7 @@ grey_cursor_get_first(h, k, ksz, v, vsz)
 {
   bool                res;
 
-  res = jdb_cursor_get_first(h, k, ksz, v, vsz);
+  res = zeDb_CursorGetFirst(h, k, ksz, v, vsz);
 
   return res;
 }
@@ -1507,7 +1507,7 @@ grey_cursor_get_first(h, k, ksz, v, vsz)
  **************************************************************************** */
 static              bool
 grey_cursor_get_next(h, k, ksz, v, vsz)
-     JDB_T              *h;
+     ZEDB_T              *h;
      char               *k;
      size_t              ksz;
      void               *v;
@@ -1515,7 +1515,7 @@ grey_cursor_get_next(h, k, ksz, v, vsz)
 {
   bool                res;
 
-  res = jdb_cursor_get_next(h, k, ksz, v, vsz);
+  res = zeDb_CursorGetNext(h, k, ksz, v, vsz);
 
   return res;
 }
@@ -1526,11 +1526,11 @@ grey_cursor_get_next(h, k, ksz, v, vsz)
  **************************************************************************** */
 static              bool
 grey_cursor_del(h)
-     JDB_T              *h;
+     ZEDB_T              *h;
 {
   bool                res;
 
-  res = jdb_cursor_del(h);
+  res = zeDb_CursorDel(h);
 
   return res;
 }
@@ -1556,53 +1556,53 @@ db_grey_open(workdir, rd)
   if (workdir == NULL || strlen(workdir) == 0)
     workdir = "/tmp";
 
-  if (jdb_ok(&gdata.gdbp) && jdb_ok(&gdata.gdbv) &&
-      jdb_ok(&gdata.gdbw) && jdb_ok(&gdata.gdbb))
+  if (zeDb_OK(&gdata.gdbp) && zeDb_OK(&gdata.gdbv) &&
+      zeDb_OK(&gdata.gdbw) && zeDb_OK(&gdata.gdbb))
     return TRUE;
 
   rdonly = rd;
 
   mode = (rdonly ? 0444 : 0644);
 
-  jdb_lock(&gdata.gdbp);
-  if (!jdb_ok(&gdata.gdbp))
+  zeDb_Lock(&gdata.gdbp);
+  if (!zeDb_OK(&gdata.gdbp))
   {
     snprintf(path, sizeof (path), "%s/%s", workdir, "ze-greypend.db");
 
-    res = jdb_open(&gdata.gdbp, work_db_env, path, mode, rdonly, TRUE, 0);
+    res = zeDb_Open(&gdata.gdbp, work_db_env, path, mode, rdonly, TRUE, 0);
     MESSAGE_INFO(DBG_LEVEL, "PATH = %-32s, %s", path, STRBOOL(res, "OK", "KO"));
   }
-  jdb_unlock(&gdata.gdbp);
+  zeDb_Unlock(&gdata.gdbp);
 
-  jdb_lock(&gdata.gdbv);
-  if (!jdb_ok(&gdata.gdbv))
+  zeDb_Lock(&gdata.gdbv);
+  if (!zeDb_OK(&gdata.gdbv))
   {
     snprintf(path, sizeof (path), "%s/%s", workdir, "ze-greyvalid.db");
 
-    res = jdb_open(&gdata.gdbv, work_db_env, path, mode, rdonly, TRUE, 0);
+    res = zeDb_Open(&gdata.gdbv, work_db_env, path, mode, rdonly, TRUE, 0);
     MESSAGE_INFO(DBG_LEVEL, "PATH = %-32s, %s", path, STRBOOL(res, "OK", "KO"));
   }
-  jdb_unlock(&gdata.gdbv);
+  zeDb_Unlock(&gdata.gdbv);
 
-  jdb_lock(&gdata.gdbw);
-  if (!jdb_ok(&gdata.gdbw))
+  zeDb_Lock(&gdata.gdbw);
+  if (!zeDb_OK(&gdata.gdbw))
   {
     snprintf(path, sizeof (path), "%s/%s", workdir, "ze-greywhitelist.db");
 
-    res = jdb_open(&gdata.gdbw, work_db_env, path, mode, rdonly, TRUE, 0);
+    res = zeDb_Open(&gdata.gdbw, work_db_env, path, mode, rdonly, TRUE, 0);
     MESSAGE_INFO(DBG_LEVEL, "PATH = %-32s, %s", path, STRBOOL(res, "OK", "KO"));
   }
-  jdb_unlock(&gdata.gdbw);
+  zeDb_Unlock(&gdata.gdbw);
 
-  jdb_lock(&gdata.gdbb);
-  if (!jdb_ok(&gdata.gdbb))
+  zeDb_Lock(&gdata.gdbb);
+  if (!zeDb_OK(&gdata.gdbb))
   {
     snprintf(path, sizeof (path), "%s/%s", workdir, "ze-greyblacklist.db");
 
-    res = jdb_open(&gdata.gdbb, work_db_env, path, mode, rdonly, TRUE, 0);
+    res = zeDb_Open(&gdata.gdbb, work_db_env, path, mode, rdonly, TRUE, 0);
     MESSAGE_INFO(DBG_LEVEL, "PATH = %-32s, %s", path, STRBOOL(res, "OK", "KO"));
   }
-  jdb_unlock(&gdata.gdbb);
+  zeDb_Unlock(&gdata.gdbb);
 
   return res;
 }
@@ -1616,25 +1616,25 @@ db_grey_close()
 {
   bool                res = TRUE;
 
-  jdb_lock(&gdata.gdbp);
-  if (jdb_ok(&gdata.gdbp))
-    res = jdb_close(&gdata.gdbp);
-  jdb_unlock(&gdata.gdbp);
+  zeDb_Lock(&gdata.gdbp);
+  if (zeDb_OK(&gdata.gdbp))
+    res = zeDb_Close(&gdata.gdbp);
+  zeDb_Unlock(&gdata.gdbp);
 
-  jdb_lock(&gdata.gdbv);
-  if (jdb_ok(&gdata.gdbv))
-    res = jdb_close(&gdata.gdbv);
-  jdb_unlock(&gdata.gdbv);
+  zeDb_Lock(&gdata.gdbv);
+  if (zeDb_OK(&gdata.gdbv))
+    res = zeDb_Close(&gdata.gdbv);
+  zeDb_Unlock(&gdata.gdbv);
 
-  jdb_lock(&gdata.gdbw);
-  if (jdb_ok(&gdata.gdbw))
-    res = jdb_close(&gdata.gdbw);
-  jdb_unlock(&gdata.gdbw);
+  zeDb_Lock(&gdata.gdbw);
+  if (zeDb_OK(&gdata.gdbw))
+    res = zeDb_Close(&gdata.gdbw);
+  zeDb_Unlock(&gdata.gdbw);
 
-  jdb_lock(&gdata.gdbb);
-  if (jdb_ok(&gdata.gdbb))
-    res = jdb_close(&gdata.gdbb);
-  jdb_unlock(&gdata.gdbb);
+  zeDb_Lock(&gdata.gdbb);
+  if (zeDb_OK(&gdata.gdbb))
+    res = zeDb_Close(&gdata.gdbb);
+  zeDb_Unlock(&gdata.gdbb);
 
   return res;
 }
@@ -1662,26 +1662,26 @@ db_grey_flush()
 {
   bool                res = TRUE;
 
-  jdb_lock(&gdata.gdbp);
-  res = res && jdb_flush(&gdata.gdbp);
-  jdb_unlock(&gdata.gdbp);
+  zeDb_Lock(&gdata.gdbp);
+  res = res && zeDb_Flush(&gdata.gdbp);
+  zeDb_Unlock(&gdata.gdbp);
 
-  jdb_lock(&gdata.gdbv);
-  res = res && jdb_flush(&gdata.gdbv);
-  jdb_unlock(&gdata.gdbv);
+  zeDb_Lock(&gdata.gdbv);
+  res = res && zeDb_Flush(&gdata.gdbv);
+  zeDb_Unlock(&gdata.gdbv);
 
-  jdb_lock(&gdata.gdbw);
-  res = res && jdb_flush(&gdata.gdbw);
-  jdb_unlock(&gdata.gdbw);
+  zeDb_Lock(&gdata.gdbw);
+  res = res && zeDb_Flush(&gdata.gdbw);
+  zeDb_Unlock(&gdata.gdbw);
 
-  jdb_lock(&gdata.gdbb);
-  res = res && jdb_flush(&gdata.gdbb);
-  jdb_unlock(&gdata.gdbb);
+  zeDb_Lock(&gdata.gdbb);
+  res = res && zeDb_Flush(&gdata.gdbb);
+  zeDb_Unlock(&gdata.gdbb);
 
-  if (jdb_errno(&gdata.gdbp) == DB_RUNRECOVERY ||
-      jdb_errno(&gdata.gdbv) == DB_RUNRECOVERY ||
-      jdb_errno(&gdata.gdbw) == DB_RUNRECOVERY ||
-      jdb_errno(&gdata.gdbb) == DB_RUNRECOVERY)
+  if (zeDb_errno(&gdata.gdbp) == DB_RUNRECOVERY ||
+      zeDb_errno(&gdata.gdbv) == DB_RUNRECOVERY ||
+      zeDb_errno(&gdata.gdbw) == DB_RUNRECOVERY ||
+      zeDb_errno(&gdata.gdbb) == DB_RUNRECOVERY)
   {
     MESSAGE_WARNING(8, "Reloading Greylisting databases after error (pending)");
     if (!(res = grey_reload()))
@@ -1859,7 +1859,7 @@ struct expire_st_T
 */
 static              bool
 grey_database_expire(h, st, tmax_norm, tmax_null, gdb)
-     JDB_T              *h;
+     ZEDB_T              *h;
      expire_st_T        *st;
      time_t              tmax_norm;
      time_t              tmax_null;
@@ -2192,7 +2192,7 @@ count_members(s, sep)
 
 static              bool
 grey_list2white(dbw, list)
-     JDB_T              *dbw;
+     ZEDB_T              *dbw;
      LISTR_T            *list;
 {
   LISTR_T            *lst;
@@ -2296,8 +2296,8 @@ grey_list2white(dbw, list)
  **************************************************************************** */
 static              bool
 grey_database_whitelist(dba, dbb, st)
-     JDB_T              *dba;
-     JDB_T              *dbb;
+     ZEDB_T              *dba;
+     ZEDB_T              *dbb;
      expire_st_T        *st;
 {
   bool                ok = FALSE;
@@ -2655,7 +2655,7 @@ grey_dump(fd, which, dt)
      time_t              dt;
 {
   int                 nb = 0;
-  JDB_T              *db = NULL;
+  ZEDB_T              *db = NULL;
 
   if (which == NULL)
     return 0;
@@ -2742,7 +2742,7 @@ grey_upload(fname, which)
      char               *which;
 {
   int                 nb = 0;
-  JDB_T              *db = NULL;
+  ZEDB_T              *db = NULL;
 
   if (which == NULL)
     return 0;

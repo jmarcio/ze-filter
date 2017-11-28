@@ -32,7 +32,7 @@
 #define               DREF     32
 
 
-static JDB_T        hdb = JDB_INITIALIZER;
+static ZEDB_T        hdb = ZEDB_INITIALIZER;
 static bool         rdonly = TRUE;
 
 /* ****************************************************************************
@@ -60,14 +60,14 @@ db_policy_open(rd)
 
   MESSAGE_INFO(15, "Opening Policy Database : %s", dbpath);
 
-  if (jdb_ok(&hdb))
+  if (zeDb_OK(&hdb))
     return TRUE;
 
-  jdb_lock(&hdb);
+  zeDb_Lock(&hdb);
   rdonly = rd;
-  if (!jdb_ok(&hdb))
-    res = jdb_open(&hdb, NULL, dbpath, (rdonly ? 0444 : 0644), rdonly, TRUE, 0);
-  jdb_unlock(&hdb);
+  if (!zeDb_OK(&hdb))
+    res = zeDb_Open(&hdb, NULL, dbpath, (rdonly ? 0444 : 0644), rdonly, TRUE, 0);
+  zeDb_Unlock(&hdb);
 
   return res;
 }
@@ -82,15 +82,15 @@ db_policy_reopen()
   bool                res = TRUE;
   char                path[1024];
 
-  jdb_lock(&hdb);
+  zeDb_Lock(&hdb);
 
-  if (jdb_ok(&hdb))
-    res = jdb_close(&hdb);
+  if (zeDb_OK(&hdb))
+    res = zeDb_Close(&hdb);
 
   snprintf(path, sizeof (path), "%s/%s", cf_get_str(CF_CDBDIR), "ze-policy.db");
 
-  res = jdb_open(&hdb, NULL, path, (rdonly ? 0444 : 0644), rdonly, TRUE, 0);
-  jdb_unlock(&hdb);
+  res = zeDb_Open(&hdb, NULL, path, (rdonly ? 0444 : 0644), rdonly, TRUE, 0);
+  zeDb_Unlock(&hdb);
 
   return res;
 }
@@ -104,13 +104,13 @@ db_policy_close()
 {
   bool                res = TRUE;
 
-  if (!jdb_ok(&hdb))
+  if (!zeDb_OK(&hdb))
     return res;
 
-  jdb_lock(&hdb);
-  if (jdb_ok(&hdb))
-    res = jdb_close(&hdb);
-  jdb_unlock(&hdb);
+  zeDb_Lock(&hdb);
+  if (zeDb_OK(&hdb))
+    res = zeDb_Close(&hdb);
+  zeDb_Unlock(&hdb);
 
   return res;
 }
@@ -151,7 +151,7 @@ db_policy_check(prefix, key, bufout, size)
   bool                is_email = FALSE;
   char               *email = NULL;
 
-  if (!jdb_ok(&hdb) && !db_policy_open(TRUE))
+  if (!zeDb_OK(&hdb) && !db_policy_open(TRUE))
   {
     if (nerr++ < MAX_ERR)
       LOG_MSG_ERROR("Can't open policy database");
@@ -165,7 +165,7 @@ db_policy_check(prefix, key, bufout, size)
     key = "default";
 
   nerr = 0;
-  jdb_lock(&hdb);
+  zeDb_Lock(&hdb);
 
   /* let's get the domain part and check if this is an email
    ** address
@@ -192,7 +192,7 @@ db_policy_check(prefix, key, bufout, size)
     snprintf(k, sizeof (k), "%s:%s", prefix, email);
     (void) strtolower(k);
     MESSAGE_INFO(DBG_LEVEL, "KEY FULL : Looking for %s ...", k);
-    if (jdb_get_rec(&hdb, k, v, sizeof (v)))
+    if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
     {
       if ((bufout != NULL) && (size > 0))
         strlcpy(bufout, v, size);
@@ -224,7 +224,7 @@ db_policy_check(prefix, key, bufout, size)
     while (strlen(k) > 0)
     {
       MESSAGE_INFO(DBG_LEVEL, "IP   : Looking for %s ...", k);
-      if (jdb_get_rec(&hdb, k, v, sizeof (v)))
+      if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
       {
         if ((bufout != NULL) && (size > 0))
           strlcpy(bufout, v, size);
@@ -247,7 +247,7 @@ db_policy_check(prefix, key, bufout, size)
 
     snprintf(k, sizeof (k), "%s:%s", prefix, domain);
     MESSAGE_INFO(DBG_LEVEL, "IP   : Looking for %s ...", k);
-    if (jdb_get_rec(&hdb, k, v, sizeof (v)))
+    if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
     {
       if ((bufout != NULL) && (size > 0))
         strlcpy(bufout, v, size);
@@ -267,7 +267,7 @@ db_policy_check(prefix, key, bufout, size)
       ipv6_rec2str(buf, &ipv6, sizeof (buf));
       snprintf(k, sizeof (k), "%s:%s", prefix, buf);
       MESSAGE_INFO(DBG_LEVEL, "IP   : Looking for %s ...", k);
-      if (jdb_get_rec(&hdb, k, v, sizeof (v)))
+      if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
       {
         if ((bufout != NULL) && (size > 0))
           strlcpy(bufout, v, size);
@@ -290,7 +290,7 @@ db_policy_check(prefix, key, bufout, size)
 #endif
         snprintf(k, sizeof (k), "%s:%s", prefix, buf);
         MESSAGE_INFO(DBG_LEVEL, "IP   : Looking for %s ...", k);
-        if (jdb_get_rec(&hdb, k, v, sizeof (v)))
+        if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
         {
           if ((bufout != NULL) && (size > 0))
             strlcpy(bufout, v, size);
@@ -313,7 +313,7 @@ db_policy_check(prefix, key, bufout, size)
       snprintf(k, sizeof (k), "%s:%s", prefix, p);
       (void) strtolower(k);
       MESSAGE_INFO(DBG_LEVEL, "NAME : Looking for %s", k);
-      if (jdb_get_rec(&hdb, k, v, sizeof (v)))
+      if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
       {
         if ((bufout != NULL) && (size > 0))
           strlcpy(bufout, v, size);
@@ -344,7 +344,7 @@ host_check_ok:
 
     MESSAGE_INFO(DBG_LEVEL, "k = %s", k);
 
-    if (jdb_get_rec(&hdb, k, v, sizeof (v)))
+    if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
     {
       if ((bufout != NULL) && (size > 0))
         strlcpy(bufout, v, size);
@@ -356,7 +356,7 @@ host_check_ok:
 
 fin:
   FREE(email);
-  jdb_unlock(&hdb);
+  zeDb_Unlock(&hdb);
 
   return found;
 }
@@ -378,7 +378,7 @@ db_policy_lookup(prefix, key, bufout, size)
   bool                found = FALSE;
   static int          nerr = 0;
 
-  if (!jdb_ok(&hdb) && !db_policy_open(TRUE))
+  if (!zeDb_OK(&hdb) && !db_policy_open(TRUE))
   {
     if (nerr++ < MAX_ERR)
       LOG_MSG_ERROR("Can't open policy database");
@@ -392,13 +392,13 @@ db_policy_lookup(prefix, key, bufout, size)
     key = "default";
 
   
-  jdb_lock(&hdb);
+  zeDb_Lock(&hdb);
   nerr = 0;
   /* First of all, let's check the entire key */
   snprintf(k, sizeof (k), "%s:%s", prefix, key);
   (void) strtolower(k);
   MESSAGE_INFO(DBG_LEVEL, "KEY FULL : Looking for %s ...", k);
-  if (jdb_get_rec(&hdb, k, v, sizeof (v)))
+  if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
   {
     if ((bufout != NULL) && (size > 0))
       strlcpy(bufout, v, size);
@@ -408,7 +408,7 @@ db_policy_lookup(prefix, key, bufout, size)
   }
 
 fin:
-  jdb_unlock(&hdb);
+  zeDb_Unlock(&hdb);
 
   if (getenv("SHOWLOOKUP") != NULL)
     MESSAGE_INFO(0, "%-40s %s", k, found ? bufout : ""); 

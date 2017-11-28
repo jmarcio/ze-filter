@@ -333,20 +333,20 @@ main(argc, argv)
  *                                                                           *
  *                                                                           *
  *****************************************************************************/
-static JDB_T        hdb = JDB_INITIALIZER;
+static ZEDB_T        hdb = ZEDB_INITIALIZER;
 
 bool
 db_open_token_database()
 {
   bool                res = TRUE;
 
-  if (jdb_ok(&hdb))
+  if (zeDb_OK(&hdb))
     return TRUE;
 
-  jdb_lock(&hdb);
-  if (!jdb_ok(&hdb))
-    res = jdb_open(&hdb, NULL, "/tmp/ze-token.db", 0644, FALSE, FALSE, 0);
-  jdb_unlock(&hdb);
+  zeDb_Lock(&hdb);
+  if (!zeDb_OK(&hdb))
+    res = zeDb_Open(&hdb, NULL, "/tmp/ze-token.db", 0644, FALSE, FALSE, 0);
+  zeDb_Unlock(&hdb);
 
   return res;
 }
@@ -360,13 +360,13 @@ db_close_token_database()
 {
   bool                res = FALSE;
 
-  if (!jdb_ok(&hdb))
+  if (!zeDb_OK(&hdb))
     return TRUE;
 
-  jdb_lock(&hdb);
-  if (jdb_ok(&hdb))
-    res = jdb_close(&hdb);
-  jdb_unlock(&hdb);
+  zeDb_Lock(&hdb);
+  if (zeDb_OK(&hdb))
+    res = zeDb_Close(&hdb);
+  zeDb_Unlock(&hdb);
 
   return res;
 }
@@ -386,13 +386,13 @@ db_check_token(token, spam)
   if ((token == NULL) || (strlen(token) == 0))
     return 0;
 
-  if (!jdb_ok(&hdb))
+  if (!zeDb_OK(&hdb))
   {
     if (!db_open_token_database())
       return 0;
   }
 
-  jdb_lock(&hdb);
+  zeDb_Lock(&hdb);
 
   /* Look for DEFAULT */
   {
@@ -401,11 +401,11 @@ db_check_token(token, spam)
 
     snprintf(key, sizeof (key), "%s %s", STRBOOL(spam, "S", "H"), token);
     memset(iv, 0, sizeof (iv));
-    if (jdb_get_rec(&hdb, key, iv, sizeof (iv)))
+    if (zeDb_GetRec(&hdb, key, iv, sizeof (iv)))
       res = iv[0];
   }
 
-  jdb_unlock(&hdb);
+  zeDb_Unlock(&hdb);
 
   return res;
 }
@@ -425,13 +425,13 @@ db_add_token(token, value, spam)
   if ((token == NULL) || (strlen(token) == 0))
     return FALSE;
 
-  if (!jdb_ok(&hdb))
+  if (!zeDb_OK(&hdb))
   {
     if (!db_open_token_database())
       return FALSE;
   }
 
-  jdb_lock(&hdb);
+  zeDb_Lock(&hdb);
 
   {
     int                 iv[2];
@@ -442,19 +442,19 @@ db_add_token(token, value, spam)
     memset(iv, 0, sizeof (iv));
     iv[0] = value;
 
-    if (jdb_get_rec(&hdb, key, iv, sizeof (iv)))
+    if (zeDb_GetRec(&hdb, key, iv, sizeof (iv)))
       iv[0] += value;
     else
       iv[0] = value;
 
-    res = jdb_add_rec(&hdb, key, iv, sizeof (iv));
+    res = zeDb_AddRec(&hdb, key, iv, sizeof (iv));
 
     MESSAGE_INFO(9, "     %s %5d %5d : %s", key, value, iv[0],
                  STRBOOL(res, "TRUE", "FALSE"));
 
   }
 
-  jdb_unlock(&hdb);
+  zeDb_Unlock(&hdb);
 
 
   return res;

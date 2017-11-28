@@ -81,7 +81,7 @@ bfilter_db2bf(bf)
 
   snprintf(k, sizeof (k), "%s:%s", "count", "msgs");
   MESSAGE_INFO(19, "Looking for %s", k);
-  if (jdb_get_rec(&bf->bdb, k, v, sizeof (v)))
+  if (zeDb_GetRec(&bf->bdb, k, v, sizeof (v)))
   {
     int                 ns, nh;
     int                 n;
@@ -110,7 +110,7 @@ bfilter_db2bf(bf)
 
   snprintf(k, sizeof (k), "%s:%s", "count", "tokens");
   MESSAGE_INFO(19, "Looking for %s", k);
-  if (jdb_get_rec(&bf->bdb, k, v, sizeof (v)))
+  if (zeDb_GetRec(&bf->bdb, k, v, sizeof (v)))
   {
     int                 ns, nh;
     int                 n;
@@ -138,7 +138,7 @@ bfilter_db2bf(bf)
 
   snprintf(k, sizeof (k), "%s:%s", "count", "features");
   MESSAGE_INFO(19, "Looking for %s", k);
-  if (jdb_get_rec(&bf->bdb, k, v, sizeof (v)))
+  if (zeDb_GetRec(&bf->bdb, k, v, sizeof (v)))
   {
     int                 ns, nh;
     int                 n;
@@ -168,7 +168,7 @@ bfilter_db2bf(bf)
   memset(v, 0, sizeof (v));
   snprintf(k, sizeof (k), "%s:%s", "crypt", "tokens");
   MESSAGE_INFO(19, "Looking for %s", k);
-  if (jdb_get_rec(&bf->bdb, k, v, sizeof (v)))
+  if (zeDb_GetRec(&bf->bdb, k, v, sizeof (v)))
   {
     int                 code;
 
@@ -213,7 +213,7 @@ bfilter_init(dbname)
       goto fin;
     }
 
-    res = jdb_open(&bf->bdb, NULL, dbname, 0444, TRUE, TRUE, 0);
+    res = zeDb_Open(&bf->bdb, NULL, dbname, 0444, TRUE, TRUE, 0);
     if (!res)
       goto fin;
 
@@ -622,9 +622,9 @@ bfilter_db_reopen()
 #endif
   if (bf->dbname != NULL)
   {
-    jdb_close(&bf->bdb);
+    zeDb_Close(&bf->bdb);
 
-    res = jdb_open(&bf->bdb, NULL, bf->dbname, 0444, TRUE, TRUE, 0);
+    res = zeDb_Open(&bf->bdb, NULL, bf->dbname, 0444, TRUE, TRUE, 0);
     if (!res)
       goto fin;
 
@@ -651,8 +651,8 @@ bfilter_close()
 
   if (bf->ok)
   {
-    if (jdb_ok(&bf->bdb))
-      res = jdb_close(&bf->bdb);
+    if (zeDb_OK(&bf->bdb))
+      res = zeDb_Close(&bf->bdb);
 
     FREE(bf->dbname);
 
@@ -733,7 +733,7 @@ smodel_db_check_token(key, token)
 #endif
 
   BFILTER_LOCK();
-  if (!jdb_ok(&(bf->bdb)))
+  if (!zeDb_OK(&(bf->bdb)))
   {
     LOG_MSG_ERROR("Bayes database not opened");
     goto fin;
@@ -761,7 +761,7 @@ smodel_db_check_token(key, token)
 
   strtolower(k);
   MESSAGE_INFO(19, "Looking for %s", k);
-  if (jdb_get_rec(&bf->bdb, k, v, sizeof (v)))
+  if (zeDb_GetRec(&bf->bdb, k, v, sizeof (v)))
   {
     int                 ns, nh;
     double              dns, dnh;
@@ -846,13 +846,13 @@ smodel_db_info(prefix, func, arg)
 
   ASSERT(bf->signature == SIGNATURE);
 
-  if (!jdb_ok(&(bf->bdb)))
+  if (!zeDb_OK(&(bf->bdb)))
   {
     LOG_MSG_ERROR("Bayes database not opened");
     return;
   }
 
-  if (jdb_cursor_open(&(bf->bdb), TRUE))
+  if (zeDb_CursorOpen(&(bf->bdb), TRUE))
   {
     char                k[256], d[256];
 
@@ -863,7 +863,7 @@ smodel_db_info(prefix, func, arg)
 
     snprintf(k, sizeof (k), "%s", skey);
 
-    if (jdb_cursor_get_first(&(bf->bdb), k, sizeof (k), d, sizeof (d)))
+    if (zeDb_CursorGetFirst(&(bf->bdb), k, sizeof (k), d, sizeof (d)))
     {
       DB_BTREE_SEQ_START();
       do
@@ -873,9 +873,9 @@ smodel_db_info(prefix, func, arg)
           break;
         if (func != NULL)
           func(k, d, arg);
-      } while (jdb_cursor_get_next(&(bf->bdb), k, sizeof (k), d, sizeof (d)));
+      } while (zeDb_CursorGetNext(&(bf->bdb), k, sizeof (k), d, sizeof (d)));
       DB_BTREE_SEQ_END();
     }
-    jdb_cursor_close(&(bf->bdb));
+    zeDb_CursorClose(&(bf->bdb));
   }
 }

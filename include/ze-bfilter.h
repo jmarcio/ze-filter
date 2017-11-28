@@ -36,7 +36,7 @@ typedef struct
   bool                ok;
 
   pthread_mutex_t     mutex;
-  JDB_T               bdb;
+  ZEDB_T              bdb;
   char               *dbname;
   size_t              cachesize;
 
@@ -97,7 +97,7 @@ typedef struct
     SIGNATURE,					\
       FALSE,					\
       PTHREAD_MUTEX_INITIALIZER,		\
-      JDB_INITIALIZER,				\
+      ZEDB_INITIALIZER,				\
       NULL, 0,					\
       0, 0, 0., 0.,				\
       0, 0, 0., 0.,				\

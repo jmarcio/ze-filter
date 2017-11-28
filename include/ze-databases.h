@@ -24,7 +24,7 @@
 
 #ifndef ZE_DATABASES_H
 
-extern JDB_ENV_T           *work_db_env;
+extern ZEDB_ENV_T           *work_db_env;
 extern char                *work_db_dir;
 
 bool   open_work_db_env(char *defdir, char *cfdir, bool rdonly);
