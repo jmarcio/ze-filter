@@ -8,6 +8,7 @@ libze_a_SOURCES       = 	zeStrings.c \
 				zeMap.c \
 				zeSyslog.c \
 				zeRdFile.c \
+				zeRegex.c
 				strlcat.c 
 #				ze-linkedlist.c \
 #				ze-map.c \
