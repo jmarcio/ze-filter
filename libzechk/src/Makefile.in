@@ -88,7 +88,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-subdir = zelib
+subdir = libzechk/src
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
 	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
@@ -107,13 +107,10 @@ AM_V_AR = $(am__v_AR_@AM_V@)
 am__v_AR_ = $(am__v_AR_@AM_DEFAULT_V@)
 am__v_AR_0 = @echo "  AR      " $@;
 am__v_AR_1 = 
-libze_a_AR = $(AR) $(ARFLAGS)
-libze_a_LIBADD =
-am_libze_a_OBJECTS = zeString.$(OBJEXT) zeStrings.$(OBJEXT) \
-	zeStrConvert.$(OBJEXT) zeFileSystem.$(OBJEXT) zeDb.$(OBJEXT) \
-	zeMap.$(OBJEXT) zeSyslog.$(OBJEXT) zeRdFile.$(OBJEXT) \
-	zeRegex.$(OBJEXT)
-libze_a_OBJECTS = $(am_libze_a_OBJECTS)
+libzechk_a_AR = $(AR) $(ARFLAGS)
+libzechk_a_LIBADD =
+am_libzechk_a_OBJECTS = zePolicy.$(OBJEXT) zeAccess.$(OBJEXT)
+libzechk_a_OBJECTS = $(am_libzechk_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -152,8 +149,8 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(libze_a_SOURCES)
-DIST_SOURCES = $(libze_a_SOURCES)
+SOURCES = $(libzechk_a_SOURCES)
+DIST_SOURCES = $(libzechk_a_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -274,6 +271,7 @@ USER = @USER@
 VERSION = @VERSION@
 WORKROOT = @WORKROOT@
 XFILES_DEF = @XFILES_DEF@
+ZEINCS = @ZEINCS@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
@@ -327,20 +325,12 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-noinst_LIBRARIES = libze.a 
-libze_a_SOURCES = zeString.c \
-				zeStrings.c \
-				zeStrConvert.c \
-				zeFileSystem.c \
-				zeDb.c \
-				zeMap.c \
-				zeSyslog.c \
-				zeRdFile.c \
-				zeRegex.c
+noinst_LIBRARIES = libzechk.a
+libzechk_a_SOURCES = zePolicy.c \
+			zeAccess.c
 
-
-#LDADD                 = @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@
-AM_CPPFLAGS = -I../zeinc -I../zechkinc @BDBINCS@ 
+LDADD = @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@
+AM_CPPFLAGS = -I../zeinc -I../zechkinc @BDBINCS@
 all: all-am
 
 .SUFFIXES:
@@ -354,9 +344,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu zelib/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu libzechk/src/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu zelib/Makefile
+	  $(AUTOMAKE) --gnu libzechk/src/Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \
@@ -378,10 +368,10 @@ $(am__aclocal_m4_deps):
 clean-noinstLIBRARIES:
 	-test -z "$(noinst_LIBRARIES)" || rm -f $(noinst_LIBRARIES)
 
-libze.a: $(libze_a_OBJECTS) $(libze_a_DEPENDENCIES) $(EXTRA_libze_a_DEPENDENCIES) 
-	$(AM_V_at)-rm -f libze.a
-	$(AM_V_AR)$(libze_a_AR) libze.a $(libze_a_OBJECTS) $(libze_a_LIBADD)
-	$(AM_V_at)$(RANLIB) libze.a
+libzechk.a: $(libzechk_a_OBJECTS) $(libzechk_a_DEPENDENCIES) $(EXTRA_libzechk_a_DEPENDENCIES) 
+	$(AM_V_at)-rm -f libzechk.a
+	$(AM_V_AR)$(libzechk_a_AR) libzechk.a $(libzechk_a_OBJECTS) $(libzechk_a_LIBADD)
+	$(AM_V_at)$(RANLIB) libzechk.a
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -389,15 +379,8 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeDb.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeFileSystem.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeMap.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeRdFile.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeRegex.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeStrConvert.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeString.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeStrings.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeSyslog.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeAccess.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zePolicy.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

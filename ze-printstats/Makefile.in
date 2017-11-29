@@ -298,6 +298,7 @@ USER = @USER@
 VERSION = @VERSION@
 WORKROOT = @WORKROOT@
 XFILES_DEF = @XFILES_DEF@
+ZEINCS = @ZEINCS@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@

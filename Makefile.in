@@ -304,6 +304,7 @@ USER = @USER@
 VERSION = @VERSION@
 WORKROOT = @WORKROOT@
 XFILES_DEF = @XFILES_DEF@
+ZEINCS = @ZEINCS@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
@@ -360,9 +361,8 @@ top_srcdir = @top_srcdir@
 
 #CLEANDIRS = etc
 SUBDIRS = $(subdirs) \
-	librepl \
-	zelib \
-	zechklib \
+	libze/src \
+	libzechk/src \
 	libs \
 	libjoe \
 	src \

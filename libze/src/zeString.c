@@ -65,7 +65,7 @@
 */
 
 size_t
-zeStrlcat(char *dst, const char *src, size_t size)
+zeStrlCat(char *dst, const char *src, size_t size)
 {
   size_t              i, j, o;
 
@@ -111,7 +111,7 @@ zeStrlcat(char *dst, const char *src, size_t size)
 */
 
 size_t
-zeStrlcpy(char *dst, const char *src, size_t size)
+zeStrlCpy(char *dst, const char *src, size_t size)
 {
   size_t              i;
 

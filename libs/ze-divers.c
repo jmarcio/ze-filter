@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -85,8 +86,7 @@ timestr2secs(s)
   if (strlen(s) == 0)
     return n;
 
-  switch (*s)
-  {
+  switch (*s) {
     case 's':
     case 'S':
       return n;
@@ -144,8 +144,7 @@ jmalloc(sz)
   size_t              xtra = (8 - sz % 8) % 8;
 
   p = malloc(sz + xtra);
-  if (p == NULL)
-  {
+  if (p == NULL) {
     ZE_LogSysError("malloc(%lu)", (unsigned long) (sz + xtra));
   }
 
@@ -194,8 +193,7 @@ strset(dst, c, len)
      int                 c;
      int                 len;
 {
-  if (dst != NULL)
-  {
+  if (dst != NULL) {
     memset(dst, (int) c, len);
     dst[len] = '\0';
   }
@@ -216,8 +214,7 @@ strchknull(s, len)
   if (s == NULL)
     return;
 
-  while (len-- > 0)
-  {
+  while (len-- > 0) {
     if (*p == '\0')
       *p = ' ';
     p++;
@@ -235,16 +232,13 @@ strclean(s, sz)
 {
   size_t              nsz = 0;
 
-  if (s != NULL)
-  {
+  if (s != NULL) {
     char               *p, *q;
     size_t              i;
 
     p = q = s;
-    for (i = 0; i < sz; i++, p++)
-    {
-      switch (*p)
-      {
+    for (i = 0; i < sz; i++, p++) {
+      switch (*p) {
         case '\0':
           break;
         default:
@@ -273,8 +267,7 @@ strnoblanks(s, size)
     return NULL;
 
   p = q = s;
-  while ((*p != '\0') && (size-- > 0))
-  {
+  while ((*p != '\0') && (size-- > 0)) {
     if ((*p != ' ') && (*p != '\t'))
       *q++ = *p;
     p++;
@@ -298,8 +291,7 @@ str_clear_trailing_blanks(s)
   if (s == NULL)
     return NULL;
 
-  for (n = strlen(s); n > 0; n--)
-  {
+  for (n = strlen(s); n > 0; n--) {
     p = s + n - 1;
     if (strchr(" \t\r\n", *p) == NULL)
       break;
@@ -336,12 +328,10 @@ strexpr(s, expr, pi, pf, icase)
     return FALSE;
 
   flags = REG_EXTENDED | (icase ? REG_ICASE : 0);
-  if ((rerror = regcomp(&re, expr, flags)) == 0)
-  {
+  if ((rerror = regcomp(&re, expr, flags)) == 0) {
     regmatch_t          pm;
 
-    if (regexec(&re, s, 1, &pm, 0) == 0)
-    {
+    if (regexec(&re, s, 1, &pm, 0) == 0) {
       if (pi != NULL)
         *pi = pm.rm_so;
       if (pf != NULL)
@@ -349,8 +339,7 @@ strexpr(s, expr, pi, pf, icase)
       found = TRUE;
     }
     regfree(&re);
-  } else
-  {
+  } else {
     char                s[256];
 
     if (regerror(rerror, &re, s, sizeof (s)) > 0)
@@ -423,8 +412,7 @@ str2tokens(s, sz, argv, sep)
   for (i = 0; i < sz; i++)
     argv[i] = NULL;
   for (p = strtok_r(s, sep, &ptr), i = 0;
-       p != NULL && i < sz - 1; p = strtok_r(NULL, sep, &ptr), i++)
-  {
+       p != NULL && i < sz - 1; p = strtok_r(NULL, sep, &ptr), i++) {
     argv[i] = p;
   }
   argv[i] = NULL;
@@ -453,8 +441,7 @@ j_basename(out, in, size)
   if ((p = strrchr(t, '/')) != NULL && *(p + 1) == '\0')
     *p = '\0';
 
-  if ((p = strrchr(t, '/')) != NULL)
-  {
+  if ((p = strrchr(t, '/')) != NULL) {
     p++;
   } else
     p = t;
@@ -490,10 +477,11 @@ bool
 file_lock(fd)
      int                 fd;
 {
-  if (ssp_flock(fd, F_SETLKW, F_WRLCK) < 0)
-  {
+  if (ssp_flock(fd, F_SETLKW, F_WRLCK) < 0) {
     ZE_LogSysError("lock error");
-    /* exit (EX_SOFTWARE); */
+    /*
+     * exit (EX_SOFTWARE); 
+     */
     return FALSE;
   }
   return TRUE;
@@ -503,10 +491,11 @@ bool
 file_unlock(fd)
      int                 fd;
 {
-  if (ssp_flock(fd, F_SETLK, F_UNLCK) < 0)
-  {
+  if (ssp_flock(fd, F_SETLK, F_UNLCK) < 0) {
     ZE_LogSysError("lock error");
-    /* exit (EX_SOFTWARE); */
+    /*
+     * exit (EX_SOFTWARE); 
+     */
     return FALSE;
   }
   return TRUE;
@@ -572,15 +561,13 @@ readln(fd, buf, size)
     return -1;
 
   *p = '\0';
-  while (size > 0)
-  {
+  while (size > 0) {
     int                 n;
 
     n = read(fd, p, 1);
     if (n == 0)
       break;
-    if (n < 0)
-    {
+    if (n < 0) {
       if (errno == EINTR)
         continue;
       ZE_LogSysError("read error");
@@ -612,35 +599,29 @@ remove_dir(dirname)
   char                fname[PATH_MAX];
   bool                r = TRUE;
 
-  if ((dir = opendir(dirname)) != NULL)
-  {
-    while (r && (p = readdir(dir)) != NULL)
-    {
+  if ((dir = opendir(dirname)) != NULL) {
+    while (r && (p = readdir(dir)) != NULL) {
       if ((strcmp(p->d_name, ".") == 0) || (strcmp(p->d_name, "..") == 0))
         continue;
       snprintf(fname, sizeof (fname), "%s/%s", dirname, p->d_name);
       ZE_LogMsgInfo(9, "ENTRY : %s", fname);
-      if (stat(fname, &st) == 0)
-      {
+      if (stat(fname, &st) == 0) {
         if (S_ISDIR(st.st_mode))
           r = remove_dir(fname);
         else
           unlink(fname);
-      } else
-      {
+      } else {
         ZE_LogSysError("lstat(%s) ", fname);
         r = FALSE;
       }
     }
     closedir(dir);
-  } else
-  {
+  } else {
     ZE_LogSysError("opendir(%s) :", dirname);
     r = FALSE;
   }
 
-  if (r && rmdir(dirname) != 0)
-  {
+  if (r && rmdir(dirname) != 0) {
     ZE_LogSysError("rmdir(%s) :", dirname);
     r = FALSE;
   }
@@ -659,8 +640,7 @@ getdirinfo(dir)
   int                 r = 0;
   struct stat         buf;
 
-  if ((r = stat(dir, &buf)) != 0)
-  {
+  if ((r = stat(dir, &buf)) != 0) {
     ZE_LogSysError("stat(%s) error", dir);
     return FALSE;
   }
@@ -701,8 +681,7 @@ char               *
 path2filename(path)
      char               *path;
 {
-  while (path != NULL && strlen(path) > 0)
-  {
+  while (path != NULL && strlen(path) > 0) {
     char               *p;
 
     p = strchr(path, '/');

@@ -1431,12 +1431,16 @@ dnl
 TOPDIR=`pwd`
 AC_SUBST(TOPDIR)
 
+ZEINCS="-I$TOPDIR/libze/include -I$TOPDIR/libzechk/include -I$TOPDIR/libzefilter/include"
+AC_SUBST(ZEINCS)
+
 dnl from line 963
-CPPFLAGS="$CPPFLAGS -I../include"
+CPPFLAGS="$CPPFLAGS -I../include $ZEINCS"
 
 #JCHKLIBS=" ../libjoe/libjoe.a ../libs/libcommon.a ../librepl/librepl.a ../zelib/libzm.a"
 #JCHKLIBS=" -L../libjoe -ljoe -L../zechklib -lzechk -L../libs -lcommon -L../librepl -lrepl -L../zelib -lze "
-JCHKLIBS=" -L../libjoe -ljoe -L../zechklib -lzechk -L../libs -lcommon -L../zelib -lze "
+#JCHKLIBS=" -L../libjoe -ljoe -L../zechklib -lzechk -L../libs -lcommon -L../zelib -lze "
+JCHKLIBS=" -L../libjoe -ljoe -L../libzechk/src -lzechk -L../libs -lcommon -L../libze/src -lze "
 AC_SUBST(JCHKLIBS)
 dnl
 dnl
@@ -1444,8 +1448,12 @@ dnl
 AC_CONFIG_FILES(Makefile)
 AC_CONFIG_FILES(include/version.h include/defs.h)
 
-AC_CONFIG_FILES(librepl/Makefile libjoe/Makefile libs/Makefile zelib/Makefile zechklib/Makefile)
-AC_CONFIG_FILES(src/Makefile scratch/Makefile ze-bayes-tbx/Makefile ze-makemap/Makefile ze-scanfile/Makefile ze-printstats/Makefile ze-greyd/Makefile ze-logserver/Makefile)
+dnl AC_CONFIG_FILES(libjoe/Makefile libs/Makefile zelib/Makefile zechklib/Makefile)
+AC_CONFIG_FILES(libjoe/Makefile libs/Makefile libze/src/Makefile libzechk/src/Makefile)
+AC_CONFIG_FILES(src/Makefile scratch/Makefile ze-bayes-tbx/Makefile)
+AC_CONFIG_FILES(ze-makemap/Makefile ze-scanfile/Makefile ze-printstats/Makefile)
+AC_CONFIG_FILES(ze-greyd/Makefile ze-logserver/Makefile)
+
 
 AC_CONFIG_FILES(etc/Makefile etc/Makefile.org)
 AC_CONFIG_FILES(etc/get-urlbl.org etc/get-bayes.org)

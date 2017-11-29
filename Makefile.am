@@ -4,9 +4,8 @@
 #CLEANDIRS = etc
 
 SUBDIRS = $(subdirs) \
-	librepl \
-	zelib \
-	zechklib \
+	libze/src \
+	libzechk/src \
 	libs \
 	libjoe \
 	src \

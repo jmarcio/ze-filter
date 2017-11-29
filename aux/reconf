@@ -13,6 +13,8 @@ VERSION=`basename $HERE`
 VERSION=`echo $VERSION | sed s/zefilter-// | sed s/ze-filter-//`
 echo $VERSION > aux/version
 
+aux/set-version
+
 set -x
 
 autoheader
