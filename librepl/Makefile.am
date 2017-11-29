@@ -6,9 +6,6 @@ MAINTAINERCLEANFILES	= Makefile.in
 AM_CPPFLAGS             = -I$(top_builddir) -I$(top_builddir)/include -I$(top_srcdir) -I$(top_srcdir)/include
 
 noinst_LIBRARIES	= librepl.a
-librepl_a_SOURCES	= dummyrepl.c \
-			ffs.c \
-			sm_memcmp.c \
-			strsep.c \
-			vsyslog.c
+librepl_a_SOURCES	= dummyrepl.c
+
 # not yet:		fdwalk.c

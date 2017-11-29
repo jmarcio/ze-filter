@@ -1435,7 +1435,8 @@ dnl from line 963
 CPPFLAGS="$CPPFLAGS -I../include"
 
 #JCHKLIBS=" ../libjoe/libjoe.a ../libs/libcommon.a ../librepl/librepl.a ../zelib/libzm.a"
-JCHKLIBS=" -L../libjoe -ljoe -L../zechklib -lzechk -L../libs -lcommon -L../librepl -lrepl -L../zelib -lze "
+#JCHKLIBS=" -L../libjoe -ljoe -L../zechklib -lzechk -L../libs -lcommon -L../librepl -lrepl -L../zelib -lze "
+JCHKLIBS=" -L../libjoe -ljoe -L../zechklib -lzechk -L../libs -lcommon -L../zelib -lze "
 AC_SUBST(JCHKLIBS)
 dnl
 dnl

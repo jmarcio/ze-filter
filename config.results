@@ -1,11 +1,11 @@
 
-Configuration results : Wed Nov 29 10:06:36 CET 2017
+Configuration results : Wed Nov 29 11:07:46 CET 2017
 -----------------------
   configure arguments      : 
 
   Source directory         : /export/dev-j-chkmail/ze-filter
   Package                  : ze-filter
-  Version                  : ze-filter-develop-171129
+  Version                  : ze-filter
   Host type                : x86_64-pc-linux-gnu
   Host OS                  : linux-gnu
   Host CPU                 : x86_64
@@ -30,7 +30,7 @@ Configuration results : Wed Nov 29 10:06:36 CET 2017
   CFLAGS                   : -pthread 
   LIBS                     : -lmilter -ldl -lrt -lm -lresolv -lc -lresolv -lldap -lnsl -lpthread  
   LDFLAGS                  : 
-  JLIBS                    :  -L../libjoe -ljoe -L../zechklib -lzechk -L../libs -lcommon -L../librepl -lrepl -L../zelib -lze 
+  JLIBS                    :  -L../libjoe -ljoe -L../zechklib -lzechk -L../libs -lcommon -L../zelib -lze 
   
 
   Before upgrading from a previous version, it's absolutely necessary

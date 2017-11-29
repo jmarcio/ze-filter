@@ -338,14 +338,6 @@ libze_a_SOURCES = zeString.c \
 				zeRdFile.c \
 				zeRegex.c
 
-#				ze-linkedlist.c \
-#				ze-map.c \
-#				ze-syslog.c \
-#				ze-divers.c \
-#				ze-strings.c \
-#				ze-strconvert.c \
-#				ze-rdfile.c \
-#				strlcpy.c
 
 #LDADD                 = @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@
 AM_CPPFLAGS = -I../zeinc -I../zechkinc @BDBINCS@ 

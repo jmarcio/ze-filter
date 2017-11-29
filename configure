@@ -16895,7 +16895,8 @@ TOPDIR=`pwd`
 CPPFLAGS="$CPPFLAGS -I../include"
 
 #JCHKLIBS=" ../libjoe/libjoe.a ../libs/libcommon.a ../librepl/librepl.a ../zelib/libzm.a"
-JCHKLIBS=" -L../libjoe -ljoe -L../zechklib -lzechk -L../libs -lcommon -L../librepl -lrepl -L../zelib -lze "
+#JCHKLIBS=" -L../libjoe -ljoe -L../zechklib -lzechk -L../libs -lcommon -L../librepl -lrepl -L../zelib -lze "
+JCHKLIBS=" -L../libjoe -ljoe -L../zechklib -lzechk -L../libs -lcommon -L../zelib -lze "
 
 
 ac_config_files="$ac_config_files Makefile"

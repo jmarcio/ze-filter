@@ -9,5 +9,5 @@ VERSION=`echo $VERSION | sed s/zefilter-// | sed s/ze-filter-//`
 
 BRANCH=$(git branch -l | grep '*' | awk '{print $2}')
 
-echo ze-filter-$BRANCH-$DATE > aux/version
+echo "ze-filter-$BRANCH-$DATE" > aux/version
 
