@@ -99,14 +99,14 @@ add_content_field_attr(c, name, value)
     {
       c->attr[i].name = strdup(name);
       if (c->attr[i].name == NULL)
-        LOG_SYS_ERROR("strdup(name) error");
+        ZE_LogSysError("strdup(name) error");
     }
 
     if (strlen(value) > 0)
     {
       c->attr[i].value = strdup(value);
       if (c->attr[i].value == NULL)
-        LOG_SYS_ERROR("strdup(value) error");
+        ZE_LogSysError("strdup(value) error");
     }
     break;
   }
@@ -129,7 +129,7 @@ save_content_field(buf, head)
 
   if ((new = (content_field_T *) malloc(sizeof (content_field_T))) == NULL)
   {
-    LOG_SYS_ERROR("malloc (content_field)");
+    ZE_LogSysError("malloc (content_field)");
     return NULL;
   }
 
@@ -375,20 +375,20 @@ extract_attachments(chead, ahead)
         file = (attachment_T *) malloc(sizeof (attachment_T));
         if (file == NULL)
         {
-          LOG_SYS_ERROR("file = malloc...");
+          ZE_LogSysError("file = malloc...");
           continue;
         }
         file->name = strdup(p->attr[i].value);
         if (file->name == NULL)
         {
-          LOG_SYS_ERROR("file->name = strdup(p->attr[i].value)");
+          ZE_LogSysError("file->name = strdup(p->attr[i].value)");
           FREE(file);
           continue;
         }
         file->mimetype = strdup(p->value);
         if (file->mimetype == NULL)
         {
-          LOG_SYS_ERROR("file->mimetype = strdup(p->value)");
+          ZE_LogSysError("file->mimetype = strdup(p->value)");
           FREE(file);
           continue;
         }
@@ -396,7 +396,7 @@ extract_attachments(chead, ahead)
         file->disposition = strdup(buf);
         if (file->disposition == NULL)
         {
-          LOG_SYS_ERROR("file->disposition = strdup(buf)");
+          ZE_LogSysError("file->disposition = strdup(buf)");
           FREE(file->name);
           FREE(file->mimetype);
           FREE(file);
@@ -458,20 +458,20 @@ extract_attachments(chead, ahead)
         file = (attachment_T *) malloc(sizeof (attachment_T));
         if (file == NULL)
         {
-          LOG_SYS_ERROR("file = malloc...");
+          ZE_LogSysError("file = malloc...");
           continue;
         }
         file->name = strdup(p->attr[i].value);
         if (file->name == NULL)
         {
-          LOG_SYS_ERROR("file->name = strdup(p->attr[i].value)");
+          ZE_LogSysError("file->name = strdup(p->attr[i].value)");
           FREE(file);
           continue;
         }
         file->disposition = strdup(p->value);
         if (file->disposition == NULL)
         {
-          LOG_SYS_ERROR("file->disposition = strdup(p->disposition)");
+          ZE_LogSysError("file->disposition = strdup(p->disposition)");
           FREE(file->name);
           FREE(file);
           continue;
@@ -517,13 +517,13 @@ extract_attachments(chead, ahead)
       file = (attachment_T *) malloc(sizeof (attachment_T));
       if (file == NULL)
       {
-        LOG_SYS_ERROR("file = malloc...");
+        ZE_LogSysError("file = malloc...");
         continue;
       }
       file->name = strdup(p->value);
       if (file->name == NULL)
       {
-        LOG_SYS_ERROR("file->name = strdup(p->value)");
+        ZE_LogSysError("file->name = strdup(p->value)");
         FREE(file);
         continue;
       }
@@ -532,7 +532,7 @@ extract_attachments(chead, ahead)
       file->disposition = strdup("uuencoded");
       if (file->disposition == NULL)
       {
-        LOG_SYS_ERROR("file->disposition = strdup(uuencoded)");
+        ZE_LogSysError("file->disposition = strdup(uuencoded)");
         FREE(file->name);
         FREE(file);
         continue;
@@ -623,14 +623,14 @@ new_extract_attachments(chead, ahead)
       file = (attachment_T *) malloc(sizeof (attachment_T));
       if (file == NULL)
       {
-        LOG_SYS_ERROR("file = malloc...");
+        ZE_LogSysError("file = malloc...");
         continue;
       }
       memset(file, 0, sizeof (*file));
       file->name = strdup(filename);
       if (file->name == NULL)
       {
-        LOG_SYS_ERROR("file->name = strdup(filename)");
+        ZE_LogSysError("file->name = strdup(filename)");
         FREE(file);
         continue;
       }
@@ -638,7 +638,7 @@ new_extract_attachments(chead, ahead)
       file->mimetype = strdup(p->value);
       if (file->mimetype == NULL)
       {
-        LOG_SYS_ERROR("file->mimetype = strdup(p->value)");
+        ZE_LogSysError("file->mimetype = strdup(p->value)");
         FREE(file);
         continue;
       }
@@ -646,7 +646,7 @@ new_extract_attachments(chead, ahead)
       file->disposition = strdup(buf);
       if (file->disposition == NULL)
       {
-        LOG_SYS_ERROR("file->disposition = strdup(buf)");
+        ZE_LogSysError("file->disposition = strdup(buf)");
         FREE(file->name);
         FREE(file->mimetype);
         FREE(file);
@@ -671,13 +671,13 @@ new_extract_attachments(chead, ahead)
     file = (attachment_T *) malloc(sizeof (attachment_T));
     if (file == NULL)
     {
-      LOG_SYS_ERROR("file = malloc...");
+      ZE_LogSysError("file = malloc...");
       continue;
     }
     file->name = strdup(p->value);
     if (file->name == NULL)
     {
-      LOG_SYS_ERROR("file->name = strdup(p->value)");
+      ZE_LogSysError("file->name = strdup(p->value)");
       FREE(file);
       continue;
     }
@@ -686,7 +686,7 @@ new_extract_attachments(chead, ahead)
     file->disposition = strdup("uuencoded");
     if (file->disposition == NULL)
     {
-      LOG_SYS_ERROR("file->disposition = strdup(uuencoded)");
+      ZE_LogSysError("file->disposition = strdup(uuencoded)");
       FREE(file->name);
       FREE(file);
       continue;

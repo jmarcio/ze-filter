@@ -86,7 +86,7 @@ jsmfi_setreply_from_access(ctx, msg)
   }
 
   if ((res = smfi_setreply(ctx, rcode, xcode, sout)) != MI_SUCCESS)
-    MESSAGE_WARNING(9, "%s smfi_setreply returned MI_FAILURE",
+    ZE_MessageWarning(9, "%s smfi_setreply returned MI_FAILURE",
                     CONNID_STR(priv->id));
 
   FREE(s);
@@ -120,7 +120,7 @@ jsmfi_setreply(ctx, ca, cb, msg)
   }
 
   if ((res = smfi_setreply(ctx, ca, cb, sout)) != MI_SUCCESS)
-    MESSAGE_WARNING(9, "%s smfi_setreply returned MI_FAILURE",
+    ZE_MessageWarning(9, "%s smfi_setreply returned MI_FAILURE",
                     CONNID_STR(priv->id));
 
   {
@@ -141,7 +141,7 @@ jsmfi_setreply(ctx, ca, cb, msg)
   }
 
   if (priv->reply_code == NULL)
-    LOG_SYS_ERROR("strdup error");
+    ZE_LogSysError("strdup error");
 
   return res;
 }

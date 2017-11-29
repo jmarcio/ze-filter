@@ -53,19 +53,19 @@ check_dns_iprbwl(ip, name, rbwl, code, size)
 
   if ((ip == NULL || strlen(ip) == 0) && (name == NULL || strlen(name) == 0))
   {
-    MESSAGE_WARNING(10, "rbwl : no IP nor hostname to check");
+    ZE_MessageWarning(10, "rbwl : no IP nor hostname to check");
     return FALSE;
   }
 
   if ((code != NULL) && (size <= 0))
   {
-    LOG_MSG_ERROR("host size <= 0");
+    ZE_LogMsgError(0, "host size <= 0");
     return FALSE;
   }
 
   if ((rbwl == NULL) || (strlen(rbwl) == 0))
   {
-    LOG_MSG_ERROR("rbwl : NULL pointer or empty string");
+    ZE_LogMsgError(0, "rbwl : NULL pointer or empty string");
     return FALSE;
   }
 
@@ -77,11 +77,11 @@ check_dns_iprbwl(ip, name, rbwl, code, size)
     DNS_HOSTARR_T       a;
 
     memset(domain, 0, sizeof (domain));
-    MESSAGE_INFO(11, "IP     : %s", ip);
+    ZE_MessageInfo(11, "IP     : %s", ip);
 
     sip = strdup(ip);
     if (sip == NULL)
-      MESSAGE_ERROR(10, "strdup(%s) error", ip);
+      ZE_MessageError(10, "strdup(%s) error", ip);
 
     argc = str2tokens(sip, 16, argv, ".");
     while (--argc >= 0)
@@ -93,7 +93,7 @@ check_dns_iprbwl(ip, name, rbwl, code, size)
     }
 
     strlcat(domain, rbwl, sizeof (domain));
-    MESSAGE_INFO(11, "DOMAIN : %s", domain);
+    ZE_MessageInfo(11, "DOMAIN : %s", domain);
 
     FREE(sip);
 
@@ -103,7 +103,7 @@ check_dns_iprbwl(ip, name, rbwl, code, size)
 
       for (i = 0; i < a.count; i++)
       {
-        MESSAGE_INFO(11, " * A  : %-16s %s", a.host[i].ip, a.host[i].name);
+        ZE_MessageInfo(11, " * A  : %-16s %s", a.host[i].ip, a.host[i].name);
         if (code != NULL)
           strlcpy(code, a.host[i].ip, size);
 
@@ -125,10 +125,10 @@ check_dns_iprbwl(ip, name, rbwl, code, size)
   {
     DNS_HOSTARR_T       a;
 
-    MESSAGE_INFO(11, "NAME   : %s", name);
+    ZE_MessageInfo(11, "NAME   : %s", name);
 
     snprintf(domain, sizeof (domain), "%s.%s", name, rbwl);
-    MESSAGE_INFO(11, "DOMAIN : %s", domain);
+    ZE_MessageInfo(11, "DOMAIN : %s", domain);
 
     if (dns_get_a(domain, &a) > 0)
     {
@@ -136,7 +136,7 @@ check_dns_iprbwl(ip, name, rbwl, code, size)
 
       for (i = 0; i < a.count; i++)
       {
-        MESSAGE_INFO(11, " * A  : %-16s %s", a.host[i].ip, a.host[i].name);
+        ZE_MessageInfo(11, " * A  : %-16s %s", a.host[i].ip, a.host[i].name);
         if (code != NULL)
           strlcpy(code, a.host[i].ip, size);
 
@@ -186,12 +186,12 @@ static pthread_mutex_t rbwl_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 #define RBWL_LOCK() \
   if (pthread_mutex_lock(&rbwl_mutex) != 0) { \
-    LOG_SYS_ERROR("pthread_mutex_lock(rbwl_mutex)"); \
+    ZE_LogSysError("pthread_mutex_lock(rbwl_mutex)"); \
   }
 
 #define RBWL_UNLOCK() \
   if (pthread_mutex_unlock(&rbwl_mutex) != 0) { \
-    LOG_SYS_ERROR("pthread_mutex_unlock(rbwl_mutex)"); \
+    ZE_LogSysError("pthread_mutex_unlock(rbwl_mutex)"); \
   }
 
 
@@ -357,7 +357,7 @@ read_iprbwl_line(v, arg)
     ipRbwl.rbwl[ipRbwl.nb] = r;
     ipRbwl.nb++;
   } else
-    MESSAGE_WARNING(9, "Too many RBWLs : limit = %d", DIM_RBWL);
+    ZE_MessageWarning(9, "Too many RBWLs : limit = %d", DIM_RBWL);
 
   return 0;
 }
@@ -369,7 +369,7 @@ read_it(path, tag)
 {
   int                 r;
 
-  r = j_rd_file(path, tag, read_iprbwl_line, NULL);
+  r = zm_RdFile(path, tag, read_iprbwl_line, NULL);
 
   return r >= 0;
 }
@@ -492,7 +492,7 @@ check_iprbwl_table(id, ip, name, rbwl)
     if ((r.flags & RBWL_CHECK_NAME) != RBWL_NONE)
       pname = name;
 
-    MESSAGE_INFO(11, "Checking %s/%s against %s",
+    ZE_MessageInfo(11, "Checking %s/%s against %s",
                  STRNULL(paddr, "(NULL)"), STRNULL(pname, "(NULL)"), r.rbwl);
     if (check_dns_iprbwl(paddr, pname, r.rbwl, code, sizeof (code)))
     {
@@ -546,7 +546,7 @@ check_iprbwl_table(id, ip, name, rbwl)
       if (flag == 0 && rbwl != NULL)
         *rbwl = r;
 
-      MESSAGE_INFO(10,
+      ZE_MessageInfo(10,
                    "%s RBWL check list=(%s) code=(%s) class=(%s) addr=(%s) name=(%s)",
                    id, r.rbwl, code, r.netclass, STREMPTY(ip, "NOIP"),
                    STREMPTY(name, "NONAME"));

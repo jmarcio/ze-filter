@@ -30,6 +30,7 @@
 #include <ze-linkedlist.h>
 #include <zeDb.h>
 #include <zeMap.h>
+#include <zeRdFile.h>
 
 # define ZMLIBS_H    1
 #endif /* ZMLIBS_H */

@@ -447,6 +447,26 @@ zeLog_FacilityValue(ps)
   return syslog_code_by_name(p, ps);
 }
 
+
+char               *
+zeLog_PriorityName(priority)
+     int                 priority;
+{
+  log_code_T         *p = prioritynames;
+  char               *name;
+
+  name = syslog_name_by_code(p, priority);
+  return (name != NULL ? name : "");
+}
+
+int
+zeLog_PriorityValue(ps)
+     char               *ps;
+{
+  log_code_T         *p = prioritynames;
+
+  return syslog_code_by_name(p, ps);
+}
 /******************************************************************************
  *                                                                            * 
  *                                                                            *

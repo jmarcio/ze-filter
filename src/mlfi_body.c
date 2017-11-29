@@ -41,7 +41,7 @@ mlfi_body(ctx, bodyp, bodylen)
 
   INIT_CALLBACK_DELAY();
 
-  MESSAGE_INFO(12, "Entering mlfi_body...");
+  ZE_MessageInfo(12, "Entering mlfi_body...");
 
   stats_inc(STAT_BYTES, bodylen);
 
@@ -77,7 +77,7 @@ mlfi_body(ctx, bodyp, bodylen)
 
   if (bodyp == NULL)
   {
-    MESSAGE_ERROR(9, "%s : bodyp = NULL", CONNID_STR(priv->id));
+    ZE_MessageError(9, "%s : bodyp = NULL", CONNID_STR(priv->id));
     result = SMFIS_TEMPFAIL;
 
     goto fin;
@@ -94,7 +94,7 @@ mlfi_body(ctx, bodyp, bodylen)
   /* output body block to spool file */
   if (!spool_file_write(priv, (char *) bodyp, bodylen))
   {
-    LOG_MSG_WARNING("%s spool_file_write error", CONNID_STR(priv->id));
+    ZE_LogMsgWarning(0, "%s spool_file_write error", CONNID_STR(priv->id));
     (void) spool_file_forget(priv);
   }
 #if 0
@@ -138,7 +138,7 @@ mlfi_body(ctx, bodyp, bodylen)
 
       for (cmd = SYMPA_CMDS; (*cmd != NULL); cmd++)
       {
-        MESSAGE_INFO(12, "Checking body : %s %s", buf, *cmd);
+        ZE_MessageInfo(12, "Checking body : %s %s", buf, *cmd);
         if (strexpr(buf, *cmd, NULL, NULL, TRUE))
           goto ok;
       }
@@ -151,7 +151,7 @@ mlfi_body(ctx, bodyp, bodylen)
 
         for (cmd = SYMPA_CMDS; (*cmd != NULL); cmd++)
         {
-          MESSAGE_INFO(12, "Checking Subject %s %s", h->value, *cmd);
+          ZE_MessageInfo(12, "Checking Subject %s %s", h->value, *cmd);
           if (strexpr(h->value, *cmd, NULL, NULL, TRUE))
             goto ok;
         }
@@ -177,7 +177,7 @@ mlfi_body(ctx, bodyp, bodylen)
     }
 #endif
 
-    MESSAGE_INFO(12, "%s : This is a short message...",
+    ZE_MessageInfo(12, "%s : This is a short message...",
                  CONNID_STR(priv->id), strlen(buf));
     priv->msg_short = TRUE;
   }
@@ -188,7 +188,7 @@ ok:
   /*
    **
    */
-  MESSAGE_INFO(12, "%s : Check X-files : %s",
+  ZE_MessageInfo(12, "%s : Check X-files : %s",
                CONNID_STR(priv->id),
                ((cf_get_int(CF_XFILES) != OPT_OK) ? "YES" : "NO"));
   extract_attachments = (cf_get_int(CF_XFILES) != OPT_OK) ||
@@ -207,12 +207,12 @@ ok:
                                          bodylen,
                                          &priv->body_scan_state,
                                          &priv->tcontent, &priv->lcontent);
-        MESSAGE_INFO(12, "%s : Check X-files : %s",
+        ZE_MessageInfo(12, "%s : Check X-files : %s",
                      CONNID_STR(priv->id),
                      cf_get_int(CF_XFILES) != OPT_OK ? "YES" : "NO");
         if (priv->body_res_scan != 0)
         {
-          MESSAGE_WARNING(11, "%-12s - scan_chunk res = %d",
+          ZE_MessageWarning(11, "%-12s - scan_chunk res = %d",
                           CONNID_STR(priv->id), priv->body_res_scan);
           result = SMFIS_REJECT;
           (void) jsmfi_setreply(ctx, "554", "5.7.1", "Binary message");

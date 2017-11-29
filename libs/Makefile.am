@@ -20,7 +20,6 @@ libcommon_a_SOURCES   = 	ze-base64.c \
 				ze-ipv6.c \
 				ze-ip.c \
 				ze-ipc.c \
-				ze-syslog.c \
 				ze-txtlog.c \
 				ze-morpho.c \
 				ze-name2id.c \
@@ -34,7 +33,6 @@ libcommon_a_SOURCES   = 	ze-base64.c \
 				ze-strings.c \
 				ze-strconvert.c \
 				ze-time.c \
-				ze-rdfile.c \
 				ze-table.c \
 				ze-uudecode.c \
 				ze-unattach.c \

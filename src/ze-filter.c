@@ -144,7 +144,7 @@ static char        *SYMPA_CMDS[] = {
   do {									\
     tf = time (NULL);							\
     if ((priv != NULL) && ((tf - ti) > JSM_TO)) {			\
-      LOG_MSG_NOTICE("%s %s : callback handling time too long : "	\
+      ZE_LogMsgNotice(0, "%s %s : callback handling time too long : "	\
 		     " %ld (threshold = %ld)",				\
 		     CONNID_STR (priv->id), priv->peer_addr,		\
 		     (long ) (tf - ti), (long ) JSM_TO);		\
@@ -285,7 +285,7 @@ new_conn_id(id)
   snprintf(sid.id, sizeof (sid.id), "%08lX.%03lX", (long) sid.t[0],
            (long) sid.t[1]);
   *id = sid;
-  LOG_MSG_INFO(12, "new id = %s", id->id);
+  ZE_LogMsgInfo(12, "new id = %s", id->id);
   MUTEX_UNLOCK(&id_mutex);
   return TRUE;
 }
@@ -314,7 +314,7 @@ count_connections(nb)
   nb = cnt_conn;
   if ((new - old) > 60)
   {
-    MESSAGE_INFO(9, "Current open connections : %d", nb);
+    ZE_MessageInfo(9, "Current open connections : %d", nb);
     old = new;
   }
 
@@ -343,7 +343,7 @@ check_filter_open_connections(ctx, id, ip, ip_class)
 
   if ((nbcmax > 0) && (nb_open > nbcmax))
   {
-    MESSAGE_WARNING(8, "%-12s Too many open connections : %d", id, nb_open);
+    ZE_MessageWarning(8, "%-12s Too many open connections : %d", id, nb_open);
     (void) jsmfi_setreply(ctx, "421", "4.5.1",
                           "I'm too busy. Try again later !");
     return SMFIS_TEMPFAIL;
@@ -377,7 +377,7 @@ check_cpu_load(ctx, id, ip, ip_class)
     reject = TRUE;
   if (reject)
   {
-    MESSAGE_WARNING(8, "%-12s Load Too High : %6.2f", id, load);
+    ZE_MessageWarning(8, "%-12s Load Too High : %6.2f", id, load);
     (void) jsmfi_setreply(ctx, "421", "4.5.1",
                           "I'm too busy. Try again later !");
     return SMFIS_TEMPFAIL;
@@ -532,9 +532,9 @@ zeFilter()
   if (strlen(root_dir) > 0)
   {
     if (*work_dir != '/')
-      LOG_MSG_WARNING("WORKDIR doesn't begins with a / : %s", work_dir);
+      ZE_LogMsgWarning(0, "WORKDIR doesn't begins with a / : %s", work_dir);
     if (chdir(work_dir) != 0)
-      LOG_SYS_ERROR("Error changing to dir %s", work_dir);
+      ZE_LogSysError("Error changing to dir %s", work_dir);
   }
 
   {
@@ -552,11 +552,11 @@ zeFilter()
   cyclic_tasks_init(10 SECONDS);
   (void) setup_filter_signal_handler();
   /* alarm(2 * DT_SIGALRM); */
-  set_log_output(TRUE, FALSE);
+  zeLog_SetOutput(TRUE, FALSE);
   init_proc_state();
   (void) setup_control_handler();
   (void) smtprate_init(0, 0);
-  LOG_MSG_INFO(11, "Will read connection rate history...");
+  ZE_LogMsgInfo(11, "Will read connection rate history...");
   smtprate_read_table(NULL);
   smtprate_update_table(smtprate_window);
   launch_periodic_tasks_thread();
@@ -565,9 +565,9 @@ zeFilter()
 #endif
   memset(my_hostname, 0, sizeof (my_hostname));
   if (!get_hostname(my_hostname, sizeof (my_hostname)))
-    LOG_MSG_ERROR("Error getting host name");
+    ZE_LogMsgError(0, "Error getting host name");
   else
-    MESSAGE_INFO(9, "Running on %s (nodename)", my_hostname);
+    ZE_MessageInfo(9, "Running on %s (nodename)", my_hostname);
   (void) raw_history_open(FALSE);
   (void) load_live_history(NULL, time(NULL), 5 HOURS);
   umask(000);
@@ -616,7 +616,7 @@ zeFilter()
     ADJUST_FILENAME(path, dbname, cfdir, "ze-bayes.db");
     if (strlen(path) > 0 && !bfilter_init(path))
     {
-      LOG_MSG_ERROR("Error while opening %s database\n", path);
+      ZE_LogMsgError(0, "Error while opening %s database\n", path);
     }
 #if 0
     /* crypt = cf_get_int(CF_BAYES_DB_CRYPT); */
@@ -659,17 +659,17 @@ zeFilter()
   {
     char               *milter_debug = getenv("MILTER_DEBUG_LEVEL");
 
-    MESSAGE_INFO(9, "MILTER_DEBUG_LEVEL = %s", STRNULL(milter_debug, "NULL"));
+    ZE_MessageInfo(9, "MILTER_DEBUG_LEVEL = %s", STRNULL(milter_debug, "NULL"));
     if (milter_debug != NULL)
     {
       int                 level = atoi(milter_debug);
 
       if (level > 0)
       {
-        MESSAGE_INFO(9, "Setting milter debug level to %d", level);
+        ZE_MessageInfo(9, "Setting milter debug level to %d", level);
         (void) smfi_setdbg(level);
       } else
-        LOG_MSG_WARNING("Invalid MILTER_DEBUG_LEVEL value %s", milter_debug);
+        ZE_LogMsgWarning(0, "Invalid MILTER_DEBUG_LEVEL value %s", milter_debug);
     }
   }
 
@@ -678,13 +678,13 @@ zeFilter()
     (void) smfi_setconn(milter_sock_file);
   } else
   {
-    LOG_MSG_ERROR("FATAL ERROR Don't know how to communicate with sendmail");
+    ZE_LogMsgError(0, "FATAL ERROR Don't know how to communicate with sendmail");
     exit(1);
   }
 
   if (smfi_register(smfilter) == MI_FAILURE)
   {
-    LOG_MSG_ERROR("smfi_register failed");
+    ZE_LogMsgError(0, "smfi_register failed");
     exit(EX_UNAVAILABLE);
   }
 #if HAVE_SMFI_SETBACKLOG
@@ -694,7 +694,7 @@ zeFilter()
   {
     int                 nw = 4;
 
-    MESSAGE_INFO(9, "Setting the minimum number of workers in the pool to %d",
+    ZE_MessageInfo(9, "Setting the minimum number of workers in the pool to %d",
                  nw);
     smfi_setminworkers(nw);
   }
@@ -704,7 +704,7 @@ zeFilter()
 
     if (smto > 0)
     {
-      MESSAGE_INFO(9, "Setting MTA communication timeout to %d s", smto);
+      ZE_MessageInfo(9, "Setting MTA communication timeout to %d s", smto);
       (void) smfi_settimeout(smto);
     }
   }
@@ -712,7 +712,7 @@ zeFilter()
   stats_inc(STAT_RESTART, 1);
   atexit(print_filter_stats_summary);
   r = smfi_main();
-  MESSAGE_WARNING(0, "Joe's ze-filter terminating : code=(%d) !", r);
+  ZE_MessageWarning(0, "Joe's ze-filter terminating : code=(%d) !", r);
   if (r == 0)
     remove_milter_sock();
 end:

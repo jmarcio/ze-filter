@@ -65,7 +65,7 @@ filter_signal_handler(name)
 
   bool                done = FALSE;
 
-  MESSAGE_INFO(10, "*** Starting %s ...", ZE_FUNCTION);
+  ZE_MessageInfo(10, "*** Starting %s ...", ZE_FUNCTION);
 
   memset(&set, 0, sizeof (set));
   sigemptyset(&set);
@@ -94,40 +94,40 @@ filter_signal_handler(name)
     {
       if (errno == EINTR)
         continue;
-      LOG_SYS_ERROR("sigwait");
+      ZE_LogSysError("sigwait");
       if (++errs > MAX_FAILS_T)
       {
-        LOG_MSG_ERROR("sigwait returned too many errors");
+        ZE_LogMsgError(0, "sigwait returned too many errors");
         break;
       }
       continue;
     }
     errs = 0;
 
-    LOG_MSG_INFO(14, " *** Signal %d received", sig);
+    ZE_LogMsgInfo(14, " *** Signal %d received", sig);
     switch (sig)
     {
       case SIGHUP:
-        LOG_MSG_INFO(10, " *** Terminate command received : SIGHUP");
+        ZE_LogMsgInfo(10, " *** Terminate command received : SIGHUP");
         done = TRUE;
         break;
       case SIGTERM:
-        LOG_MSG_INFO(10, " *** Terminate command received : SIGTERM");
+        ZE_LogMsgInfo(10, " *** Terminate command received : SIGTERM");
         done = TRUE;
         break;
       case SIGUSR1:
-        LOG_MSG_INFO(10, " *** Dump counters command received : SIGUSR1");
+        ZE_LogMsgInfo(10, " *** Dump counters command received : SIGUSR1");
         flag_log = TRUE;
         flag_save = TRUE;
         break;
       case SIGUSR2:
-        LOG_MSG_INFO(10, " *** Reset counters command received : SIGUSR2");
+        ZE_LogMsgInfo(10, " *** Reset counters command received : SIGUSR2");
         flag_reset = TRUE;
         break;
       case SIGALRM:
         break;
       case SIGINT:
-        LOG_MSG_WARNING(" *** Received signal SIGINT");
+        ZE_LogMsgWarning(0, " *** Received signal SIGINT");
         done = TRUE;
         break;
       case SIGQUIT:
@@ -137,11 +137,11 @@ filter_signal_handler(name)
       case SIGSYS:
       case SIGILL:
       case SIGABRT:
-        LOG_MSG_WARNING(" *** Received signal %d", sig);
+        ZE_LogMsgWarning(0, " *** Received signal %d", sig);
         done = TRUE;
         break;
       default:
-        LOG_MSG_WARNING(" *** Undefined behavior defined for signal %d", sig);
+        ZE_LogMsgWarning(0, " *** Undefined behavior defined for signal %d", sig);
         break;
     }
   }
@@ -167,7 +167,7 @@ setup_filter_signal_handler()
   int                 r;
   sigset_t            set;
 
-  MESSAGE_INFO(10, "*** Starting %s ...", ZE_FUNCTION);
+  ZE_MessageInfo(10, "*** Starting %s ...", ZE_FUNCTION);
 
   sigemptyset(&set);
 
@@ -183,11 +183,11 @@ setup_filter_signal_handler()
   if ((r = pthread_sigmask(SIG_BLOCK, &set, NULL)) != 0)
   {
     errno = r;
-    LOG_SYS_ERROR("Couldn't mask signals");
+    ZE_LogSysError("Couldn't mask signals");
   }
 
   if ((r = pthread_create(&tid, NULL, filter_signal_handler, NULL)) != 0)
-    LOG_SYS_ERROR("Error launching filter_signal_handler");
+    ZE_LogSysError("Error launching filter_signal_handler");
 
   return TRUE;
 }
@@ -228,13 +228,13 @@ do_proc_exit()
   do_proc_save();
 
 #if (USE_SMFI_STOP == 1) && defined(HAVE_SMFI_STOP)
-  if (log_level > 10)
-    LOG_MSG_WARNING("USING smfi_stop()");
+  if (ze_logLevel > 10)
+    ZE_LogMsgWarning(0, "USING smfi_stop()");
   smfi_stop();
   remove_milter_sock();
 #else
-  if (log_level > 10)
-    LOG_MSG_WARNING("USING kill(0, SIGTERM)");
+  if (ze_logLevel > 10)
+    ZE_LogMsgWarning(0, "USING kill(0, SIGTERM)");
   remove_milter_sock();
   kill(0, SIGTERM);
   sleep(2);
@@ -269,41 +269,41 @@ reopen_all_log_files()
   bool                res = TRUE;
   bool                log_grey_expire_reopen();
 
-  MESSAGE_INFO(10, "* Reopening all log files");
+  ZE_MessageInfo(10, "* Reopening all log files");
 
   if (!log_attached_files_reopen())
   {
-    LOG_MSG_WARNING("Can't reopen ze-files log file");
+    ZE_LogMsgWarning(0, "Can't reopen ze-files log file");
     res = FALSE;
   }
 
   if (!log_quarantine_reopen())
   {
-    LOG_MSG_WARNING("Can't reopen ze-quarantine log file");
+    ZE_LogMsgWarning(0, "Can't reopen ze-quarantine log file");
     res = FALSE;
   }
 
   if (!log_virus_reopen())
   {
-    LOG_MSG_WARNING("Can't reopen ze-virus log file");
+    ZE_LogMsgWarning(0, "Can't reopen ze-virus log file");
     res = FALSE;
   }
 
   if (!log_counters_reopen())
   {
-    LOG_MSG_WARNING("Can't reopen ze-stats log file");
+    ZE_LogMsgWarning(0, "Can't reopen ze-stats log file");
     res = FALSE;
   }
 
   if (!log_regex_reopen())
   {
-    LOG_MSG_WARNING("Can't reopen ze-regex log file");
+    ZE_LogMsgWarning(0, "Can't reopen ze-regex log file");
     res = FALSE;
   }
 
   if (!log_grey_expire_reopen())
   {
-    LOG_MSG_WARNING("Can't reopen ze-grey-expire log file");
+    ZE_LogMsgWarning(0, "Can't reopen ze-grey-expire log file");
     res = FALSE;
   }
 
@@ -314,7 +314,7 @@ reopen_all_log_files()
     {
       if (!reopen_scores4stats_file())
       {
-        LOG_MSG_WARNING("Can't reopen ze-series log file");
+        ZE_LogMsgWarning(0, "Can't reopen ze-series log file");
         res = FALSE;
       }
     }
@@ -396,7 +396,7 @@ periodic_tasks_loop(data)
 #endif
 #endif
 
-  MESSAGE_INFO(9, "*** Starting %s", ZE_FUNCTION);
+  ZE_MessageInfo(9, "*** Starting %s", ZE_FUNCTION);
 
   /* init server_idle data */
   {
@@ -424,7 +424,7 @@ periodic_tasks_loop(data)
   {
     time_t              dt;
 
-    MESSAGE_INFO(15, " Looping...");
+    ZE_MessageInfo(15, " Looping...");
 
 #if defined(OS_LINUX)
     if (getppid() == 1)
@@ -437,7 +437,7 @@ periodic_tasks_loop(data)
 
     if ((time2exit != 0) && ((t_now - time2exit) > 5))
     {
-      LOG_MSG_WARNING("why system continues to run ? Surely one Linux box...");
+      ZE_LogMsgWarning(0, "why system continues to run ? Surely one Linux box...");
       remove_milter_sock();
       kill(0, SIGTERM);
       sleep(1);
@@ -448,7 +448,7 @@ periodic_tasks_loop(data)
     {
       nb_int++;
       if ((nb_int > MAX_INTR) && ((nb_int % MAX_INTR) == 0))
-        LOG_MSG_WARNING("Too many interrupts : %d", nb_int);
+        ZE_LogMsgWarning(0, "Too many interrupts : %d", nb_int);
       continue;
     }
     nb_int = 0;
@@ -466,7 +466,7 @@ periodic_tasks_loop(data)
     t_log_throttle += dt;
     t_resource += dt;
 
-    if (log_level >= 15)
+    if (ze_logLevel >= 15)
     {
       memset(sout, 0, sizeof (sout));
 #ifdef _POSIX_PTHREAD_SEMANTICS
@@ -474,7 +474,7 @@ periodic_tasks_loop(data)
 #else
       ctime_r(&t_now, sout, sizeof (sout));
 #endif
-      LOG_MSG_INFO(15, "t_now = %s", sout);
+      ZE_LogMsgInfo(15, "t_now = %s", sout);
     }
 
     if (flag_conf)
@@ -515,14 +515,14 @@ periodic_tasks_loop(data)
       msg = MSG_OK;
       if (TRUE || ((nb++ % 5) == 0))
       {
-        MESSAGE_INFO(15, "Will send %4d to the father on fd = %2d", msg,
+        ZE_MessageInfo(15, "Will send %4d to the father on fd = %2d", msg,
                      fd_pipe);
-        MESSAGE_INFO(15, "Child : pipe = %d %d", pipe_filter[0],
+        ZE_MessageInfo(15, "Child : pipe = %d %d", pipe_filter[0],
                      pipe_filter[1]);
       }
 
       if (!send_message_pipe(fd_pipe, msg))
-        LOG_MSG_ERROR("Error sending message to the father...");
+        ZE_LogMsgError(0, "Error sending message to the father...");
     }
 
     if ((statistics_interval > 0) && (t_stats >= statistics_interval))
@@ -550,7 +550,7 @@ periodic_tasks_loop(data)
       int                 nb = count_file_descriptors();
 
       check_file_descriptors();
-      MESSAGE_INFO(13, "%08lX: Nb of open files : %d", t_now, nb);
+      ZE_MessageInfo(13, "%08lX: Nb of open files : %d", t_now, nb);
       t_fd = 0;
     }
 
@@ -561,7 +561,7 @@ periodic_tasks_loop(data)
       int                 idle, mean_idle = 0;
       int                 min_idle = 0;
 
-      MESSAGE_INFO(11, "Checking resources level...");
+      ZE_MessageInfo(11, "Checking resources level...");
 
 #if 0
       ok = check_rusage();
@@ -592,7 +592,7 @@ periodic_tasks_loop(data)
       n = (t_now / DT_RESOURCE) % DIM_LOAD_HISTORY;
       server_idle[n] = idle = get_cpu_load_info(JCPU_IDLE);
 
-      MESSAGE_INFO(11, "   CPU LOAD (IDLE) : %d", idle);
+      ZE_MessageInfo(11, "   CPU LOAD (IDLE) : %d", idle);
 
       n = 0;
       for (i = 0; i < DIM_LOAD_HISTORY; i++)
@@ -606,14 +606,14 @@ periodic_tasks_loop(data)
       /* check if overloaded all time... */
       if (min_idle > 0 && n == DIM_LOAD_HISTORY)
       {
-        MESSAGE_WARNING(9, " Server Load too high - Restarting");
+        ZE_MessageWarning(9, " Server Load too high - Restarting");
         exit(EX_SOFTWARE);
       }
 
       /* check auto restart */
       if (t_restart > 1 HOURS && t_init + t_restart < t_now)
       {
-        MESSAGE_WARNING(9, " Auto restarting after %ld",
+        ZE_MessageWarning(9, " Auto restarting after %ld",
                         (long) (t_now - t_init));
         exit(EX_SOFTWARE);
       }
@@ -623,12 +623,12 @@ periodic_tasks_loop(data)
 
     if ((DT_RATE_UPDATE > 0) && (t_rate_updt >= DT_RATE_UPDATE))
     {
-      LOG_MSG_INFO(11, "DT_RATE_UPDATE...");
+      ZE_LogMsgInfo(11, "DT_RATE_UPDATE...");
 
-      LOG_MSG_INFO(11, "Cleaning up smtprate table...");
+      ZE_LogMsgInfo(11, "Cleaning up smtprate table...");
       (void) smtprate_cleanup_table(t_now, 20 MINUTES);
 
-      if (log_level > 15)
+      if (ze_logLevel > 15)
         smtprate_log_table();
       t_rate_updt = 0;
     }
@@ -658,14 +658,14 @@ periodic_tasks_loop(data)
       {
         nb++;
         msg_ok = 0;
-        LOG_MSG_DEBUG(20, "FILTER - MSG RECV : %d", msg);
+        ZE_LogMsgDebug(20, "FILTER - MSG RECV : %d", msg);
         switch (msg)
         {
           case MSG_OK:
             break;
           case MSG_TERM:
             if (!flag_exit)
-              LOG_MSG_WARNING("SUPERVISOR said : QUIT !");
+              ZE_LogMsgWarning(0, "SUPERVISOR said : QUIT !");
             flag_exit = TRUE;
 #if (USE_SMFI_STOP == 1) && defined(HAVE_SMFI_STOP)
             smfi_stop();
@@ -679,12 +679,12 @@ periodic_tasks_loop(data)
             flag_conf = TRUE;
             break;
           case MSG_RESET:
-            MESSAGE_WARNING(9, " *** Reset state command received");
+            ZE_MessageWarning(9, " *** Reset state command received");
             flag_reset = TRUE;
             break;
           case MSG_DUMP:
             flag_log = TRUE;
-            MESSAGE_WARNING(9, " *** Dump state command received");
+            ZE_MessageWarning(9, " *** Dump state command received");
             break;
           default:
             ;
@@ -693,13 +693,13 @@ periodic_tasks_loop(data)
       if (nb == 0)
       {
         msg_ok++;
-        LOG_MSG_DEBUG(15, "FILTER - MSG RECV : NULL : %d", msg_ok);
+        ZE_LogMsgDebug(15, "FILTER - MSG RECV : NULL : %d", msg_ok);
       }
 
       if (!flag_exit && ((msg_ok > 4) || (getppid() == 1)))
       {
         if (!flag_exit)
-          LOG_MSG_WARNING("FILTER - SUPERVISOR DIED ???");
+          ZE_LogMsgWarning(0, "FILTER - SUPERVISOR DIED ???");
         flag_exit = TRUE;
         save_state();
         smtprate_save_table(NULL);
@@ -734,16 +734,16 @@ launch_periodic_tasks_thread()
   pthread_t           tid;
   int                 r;
 
-  MESSAGE_INFO(9, "*** Starting %s ...", ZE_FUNCTION);
-  MESSAGE_INFO(9, "    Tables will be updated by thread");
+  ZE_MessageInfo(9, "*** Starting %s ...", ZE_FUNCTION);
+  ZE_MessageInfo(9, "    Tables will be updated by thread");
 
   if ((r = pthread_create(&tid, NULL, periodic_tasks_loop, (void *) NULL)) != 0)
-    LOG_SYS_ERROR("Couldn't launch periodic_tasks_loop");
+    ZE_LogSysError("Couldn't launch periodic_tasks_loop");
 
 #if _PERIODIC_DEBUG
   if ((r =
        pthread_create(&tid, NULL, periodic_tasks_debug, (void *) NULL)) != 0)
-    LOG_SYS_ERROR("Couldn't launch periodic_tasks_debug");
+    ZE_LogSysError("Couldn't launch periodic_tasks_debug");
 #endif
 
   (void) cpuload_start();
@@ -778,7 +778,7 @@ remove_milter_unix_sock(void)
 
     if (lstat(sock_file, &buf) == 0)
     {
-      MESSAGE_WARNING(9, "Removing SOCK_FILE : %s", sock_file);
+      ZE_MessageWarning(9, "Removing SOCK_FILE : %s", sock_file);
       remove(sock_file);
     }
   }
@@ -801,7 +801,7 @@ periodic_tasks_debug(data)
     int                 n[4], i, j;
     char                ip[32], name[64];
 
-    MESSAGE_INFO(19, "Debugging... %ld", time(NULL));
+    ZE_MessageInfo(19, "Debugging... %ld", time(NULL));
 
     for (j = 0; j < (3 * DT_DEBUG); j++)
     {
@@ -816,7 +816,7 @@ periodic_tasks_debug(data)
       snprintf(name, sizeof (name), "%d.%d.%d.%d.ensmp.fr", n[0], n[1], n[2],
                n[3]);
 
-      MESSAGE_INFO(19, "Adding   ... %-20s %s", ip, name);
+      ZE_MessageInfo(19, "Adding   ... %-20s %s", ip, name);
       (void) connopen_check_host(ip, name, 1);
 
     }
@@ -833,7 +833,7 @@ periodic_tasks_debug(data)
       snprintf(name, sizeof (name), "%d.%d.%d.%d.ensmp.fr", n[0], n[1], n[2],
                n[3]);
 
-      MESSAGE_INFO(19, "Removing ... %-20s %s", ip, name);
+      ZE_MessageInfo(19, "Removing ... %-20s %s", ip, name);
       (void) connopen_check_host(ip, name, -1);
 
     }

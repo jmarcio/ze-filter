@@ -191,7 +191,7 @@ add_regex_rec(vk, vv)
     char                str[256];
 
     regerror(r.re_ok, &r.re, str, sizeof (str));
-    LOG_MSG_WARNING("regcomp error = %s : %s", str, k);
+    ZE_LogMsgWarning(0, "regcomp error = %s : %s", str, k);
     return 1;
   }
 #if USE_PCRE
@@ -203,7 +203,7 @@ add_regex_rec(vk, vv)
     r.pcre_rebase =
       pcre_compile(r.regex, ZE_PCRE_FLAGS, &errptr, &erroffset, NULL);
     if (r.pcre_rebase == NULL)
-      LOG_MSG_ERROR("pcre_compile error : /%s/ : %s", r.regex,
+      ZE_LogMsgError(0, "pcre_compile error : /%s/ : %s", r.regex,
                     errptr != NULL ? errptr : "(NULL)");
 
     if (r.pcre_rebase != NULL)
@@ -211,7 +211,7 @@ add_regex_rec(vk, vv)
       r.pcre_rextra = pcre_study(r.pcre_rebase, 0, &errptr);
       if (r.pcre_rextra == NULL)
       {
-        LOG_MSG_INFO(12, "pcre_study error : %s",
+        ZE_LogMsgInfo(12, "pcre_study error : %s",
                      errptr != NULL ? errptr : "(NULL)");
       }
     }
@@ -263,7 +263,7 @@ read_it(path, tag)
 {
   int                 r;
 
-  r = j_rd_text_file(path, RD_TWO_COLUMN, RD_REVERSE, tag, add_regex_rec);
+  r = zm_RdTextFile(path, RD_TWO_COLUMN, RD_REVERSE, tag, add_regex_rec);
 
   return r >= 0;
 }
@@ -350,7 +350,7 @@ check_regex(id, ip, msg, where)
             q->pcre_rebase = pcre_compile(q->regex, ZE_PCRE_FLAGS, &errptr,
                                           &erroffset, NULL);
             if (q->pcre_rebase == NULL)
-              LOG_MSG_ERROR("pcre_compile error : /%s/ : %s", q->regex,
+              ZE_LogMsgError(0, "pcre_compile error : /%s/ : %s", q->regex,
                             errptr != NULL ? errptr : "(NULL)");
 
             if (q->pcre_rebase != NULL)
@@ -358,7 +358,7 @@ check_regex(id, ip, msg, where)
               q->pcre_rextra = pcre_study(q->pcre_rebase, 0, &errptr);
               if (q->pcre_rextra == NULL)
               {
-                LOG_MSG_INFO(12, "pcre_study error : %s", errptr);
+                ZE_LogMsgInfo(12, "pcre_study error : %s", errptr);
               }
             }
             q->pcre_ok = (q->pcre_rebase != NULL);
@@ -398,8 +398,7 @@ check_regex(id, ip, msg, where)
             }
           }
 #else              /* USE_PCRE */
-          LOG_MSG_ERROR
-            ("use_pcre set, but ze-filter wasn't compiled with lib pcre");
+          ZE_LogMsgError(0, "use_pcre set, but ze-filter wasn't compiled with lib pcre");
 #endif             /* USE_PCRE */
         } else
         {
@@ -413,7 +412,7 @@ check_regex(id, ip, msg, where)
               char                str[256];
 
               regerror(q->re_ok, &q->re, str, sizeof (str));
-              LOG_MSG_WARNING("regcomp error = %s : %s", str, q->regex);
+              ZE_LogMsgWarning(0, "regcomp error = %s : %s", str, q->regex);
               break;
             }
           }
@@ -504,11 +503,11 @@ check_rurlbl(id, ip, msg)
 
       dirurl = revurl = NULL;
 
-      MESSAGE_INFO(URLBL_LOG + 2, "Hmmm . %s DIR DOMAIN : %s", id, p);
+      ZE_MessageInfo(URLBL_LOG + 2, "Hmmm . %s DIR DOMAIN : %s", id, p);
 
       if ((buf = (char *) malloc(size)) == NULL)
       {
-        LOG_SYS_ERROR("malloc(%d)", size);
+        ZE_LogSysError("malloc(%d)", size);
         goto url_domain_ok;
       }
 
@@ -553,9 +552,9 @@ check_rurlbl(id, ip, msg)
 
       strtolower(buf);
 
-      MESSAGE_INFO(URLBL_LOG + 2, "%s DIR DOMAIN : %s", id, buf);
+      ZE_MessageInfo(URLBL_LOG + 2, "%s DIR DOMAIN : %s", id, buf);
       revurl = strduprev(buf);
-      MESSAGE_INFO(URLBL_LOG + 2, "%s RAW DOMAIN : %s", id, revurl);
+      ZE_MessageInfo(URLBL_LOG + 2, "%s RAW DOMAIN : %s", id, revurl);
 
       if (revurl == NULL)
         goto url_domain_ok;
@@ -581,7 +580,7 @@ check_rurlbl(id, ip, msg)
         }
       }
 
-      MESSAGE_INFO(URLBL_LOG + 2, "%s REV DOMAIN : %s", id, revurl);
+      ZE_MessageInfo(URLBL_LOG + 2, "%s REV DOMAIN : %s", id, revurl);
 
       /* Check if already handled... */
       if (!linked_list_find(urllist, revurl))
@@ -612,7 +611,7 @@ check_rurlbl(id, ip, msg)
               {
                 if (strncasecmp(revurl, sb, strlen(sb)) == 0)
                 {
-                  MESSAGE_NOTICE(10, "%s URLSTR Found %s", id, q->regex);
+                  ZE_MessageNotice(10, "%s URLSTR Found %s", id, q->regex);
                   url_found = TRUE;
                   result += q->score;
                 }
@@ -634,7 +633,7 @@ check_rurlbl(id, ip, msg)
          ** Check URLBL
          */
         if ((dirurl = strduprev(revurl)) == NULL)
-          LOG_SYS_ERROR("strduprev(%s)", STRNULL(revurl, "revurl"));
+          ZE_LogSysError("strduprev(%s)", STRNULL(revurl, "revurl"));
 
         /*
          ** Check URLBL
@@ -663,7 +662,7 @@ check_rurlbl(id, ip, msg)
             url_found = TRUE;
             (void) log_found_regex(id, ip, urlbl, 1, result, dest);
           }
-          MESSAGE_INFO(URLBL_LOG, "%s DB  URLBL handling time = %ld ms", id,
+          ZE_MessageInfo(URLBL_LOG, "%s DB  URLBL handling time = %ld ms", id,
                        time_ms() - ti);
           FREE(dest);
         }
@@ -705,11 +704,11 @@ check_rurlbl(id, ip, msg)
 
             snprintf(buf, sizeof (buf), "DNSURLBL:%s", STREMPTY(rbl.bl, ""));
             (void) log_found_regex(id, ip, buf, 1, result, dirurl);
-            MESSAGE_NOTICE(9, "%s DNSURLBL : %s : %.1f BLACKLISTED in %s",
+            ZE_MessageNotice(9, "%s DNSURLBL : %s : %.1f BLACKLISTED in %s",
                            id, dirurl, rbl.score, rbl.bl);
           }
 
-          MESSAGE_INFO(URLBL_LOG, "%s DNS URLBL handling time = %ld ms", id,
+          ZE_MessageInfo(URLBL_LOG, "%s DNS URLBL handling time = %ld ms", id,
                        time_ms() - ti);
         }
         if (url_found || result >= score_min)
@@ -767,11 +766,11 @@ check_rurlbl(id, ip, msg)
               sb = q->regex;
               if (sb != NULL)
               {
-                MESSAGE_INFO(URLBL_LOG + 2, "%s Checking %s against %s", id,
+                ZE_MessageInfo(URLBL_LOG + 2, "%s Checking %s against %s", id,
                              buf, q->regex);
                 if (strexpr(buf, sb, NULL, NULL, TRUE))
                 {
-                  MESSAGE_NOTICE(10, "%s URLEXPR : Found %s", id, q->regex);
+                  ZE_MessageNotice(10, "%s URLEXPR : Found %s", id, q->regex);
                   found = TRUE;
                   result += q->score;
                 }
@@ -788,7 +787,7 @@ check_rurlbl(id, ip, msg)
         }
       } else
       {
-        LOG_SYS_ERROR("malloc(%d)", size);
+        ZE_LogSysError("malloc(%d)", size);
         break;
       }
 
@@ -805,7 +804,7 @@ check_rurlbl(id, ip, msg)
     {
       time_t              dt = time_ms() - ti;
 
-      MESSAGE_INFO(9, "%s URLBL total handling time = %ld ms (%ld)", id, dt, n);
+      ZE_MessageInfo(9, "%s URLBL total handling time = %ld ms (%ld)", id, dt, n);
     }
 
     n++;
@@ -953,7 +952,7 @@ db_rurlbl_check(id, url, dest, size, urlbl, szurlbl)
       {
         snprintf(key, sizeof (key), "URLBL:%s", q);
 
-        MESSAGE_INFO(URLBL_LOG + 2, " Will look for %s", key);
+        ZE_MessageInfo(URLBL_LOG + 2, " Will look for %s", key);
         if (zeDb_GetRec(&hdb, key, value, sizeof (value)))
         {
           char               *r = strchr(key, ':');
@@ -965,7 +964,7 @@ db_rurlbl_check(id, url, dest, size, urlbl, szurlbl)
 
           strlcpy(dest, r, size);
 
-          MESSAGE_NOTICE(URLBL_LOG, " Found : %s %s", key, value);
+          ZE_MessageNotice(URLBL_LOG, " Found : %s %s", key, value);
 
           {
             char               *s, *ptr;
@@ -983,7 +982,7 @@ db_rurlbl_check(id, url, dest, size, urlbl, szurlbl)
             if (fields[DBBL_ORIGIN] != NULL)
             {
               snprintf(urlbl, szurlbl, "DBURLBL:%s", fields[DBBL_ORIGIN]);
-              MESSAGE_NOTICE(11, "%s Found in  %s", key, STRNULL(urlbl, "--"));
+              ZE_MessageNotice(11, "%s Found in  %s", key, STRNULL(urlbl, "--"));
             }
           }
 
@@ -1014,7 +1013,7 @@ db_rurlbl_check(id, url, dest, size, urlbl, szurlbl)
     if (res > 0)
       level = 9;
 
-    MESSAGE_NOTICE(level, "%s DBURLBL : %s : %3d %s in %s", id, url, res,
+    ZE_MessageNotice(level, "%s DBURLBL : %s : %3d %s in %s", id, url, res,
                    STRBOOL(res > 0, "BLACKLISTED", "OK"), STRNULL(urlbl, "--"));
   }
 

@@ -47,7 +47,7 @@ mlfi_envfrom(ctx, envfrom)
 
   if (envfrom == NULL)
   {
-    MESSAGE_ERROR(9, "%s : envfrom = NULL", CONNID_STR(priv->id));
+    ZE_MessageError(9, "%s : envfrom = NULL", CONNID_STR(priv->id));
     result = SMFIS_TEMPFAIL;
     goto fin;
   }
@@ -57,8 +57,8 @@ mlfi_envfrom(ctx, envfrom)
   {
     FREE(priv->sm_msgid);
     if ((priv->sm_msgid = strdup(sm_msgid)) == NULL)
-      LOG_SYS_ERROR("strdup(sm_msgid) error ");
-    MESSAGE_INFO(19, "msgid : %s", sm_msgid);
+      ZE_LogSysError("strdup(sm_msgid) error ");
+    ZE_MessageInfo(19, "msgid : %s", sm_msgid);
   }
 
   priv->nb_from++;
@@ -82,7 +82,7 @@ mlfi_envfrom(ctx, envfrom)
       strlcpy(priv->netclass.label, NET_CLASS_LABEL(NET_AUTH),
               sizeof (priv->netclass.label));
 
-      MESSAGE_INFO(10, "%-12s : IP=(%s), AUTH=(%s), LOGIN=(%s), FROM=(%s)",
+      ZE_MessageInfo(10, "%-12s : IP=(%s), AUTH=(%s), LOGIN=(%s), FROM=(%s)",
                    CONNID_STR(priv->id),
                    STRNULL(priv->peer_addr, "0.0.0.0"),
                    STREMPTY(auth_type, "???"),
@@ -92,7 +92,7 @@ mlfi_envfrom(ctx, envfrom)
 
   if ((envfrom[0] == NULL) || (strlen(envfrom[0]) == 0))
   {
-    LOG_MSG_WARNING("%-12s : envfrom[0] : %s",
+    ZE_LogMsgWarning(0, "%-12s : envfrom[0] : %s",
                     CONNID_STR(priv->id), STRNULL(envfrom[0], "NULL"));
     result = SMFIS_TEMPFAIL;
     goto fin;
@@ -100,7 +100,7 @@ mlfi_envfrom(ctx, envfrom)
 
   if ((priv->env_from = strdup(envfrom[0])) == NULL)
   {
-    LOG_SYS_ERROR("%-12s : strdup env_from", CONNID_STR(priv->id));
+    ZE_LogSysError("%-12s : strdup env_from", CONNID_STR(priv->id));
     result = SMFIS_TEMPFAIL;
     goto fin;
   }
@@ -146,7 +146,7 @@ mlfi_envfrom(ctx, envfrom)
     ehlo_flags = priv->ehlo_flags;
     if (ehlo_flags != 0)
     {
-      MESSAGE_NOTICE(11, "%-12s BAD HELO : Flags=0x%08X", CONNID_STR(priv->id),
+      ZE_MessageNotice(11, "%-12s BAD HELO : Flags=0x%08X", CONNID_STR(priv->id),
                      ehlo_flags);
     }
 
@@ -167,7 +167,7 @@ mlfi_envfrom(ctx, envfrom)
     (void) smtprate_add_entry(RATE_BOUNCE, priv->peer_addr,
                               priv->peer_name, 1, time(NULL));
 
-    MESSAGE_INFO(11, "%-12s Bounce from %s", CONNID_STR(priv->id),
+    ZE_MessageInfo(11, "%-12s Bounce from %s", CONNID_STR(priv->id),
                  priv->peer_addr);
   }
 #if _FFR_MODULES
@@ -189,7 +189,7 @@ mlfi_envfrom(ctx, envfrom)
 
     if (!strexpr(priv->env_from, "<.*>", NULL, NULL, TRUE))
     {
-      MESSAGE_INFO(9, "%-12s : ENV FROM Syntax Error : %s",
+      ZE_MessageInfo(9, "%-12s : ENV FROM Syntax Error : %s",
                    CONNID_STR(priv->id), priv->env_from);
 
       /*** JOE XXX Reject ***/
@@ -231,7 +231,7 @@ mlfi_envfrom(ctx, envfrom)
         mail_host = buf;
     }
 
-    MESSAGE_INFO(12, "%-12s : mail_host = %s", CONNID_STR(priv->id),
+    ZE_MessageInfo(12, "%-12s : mail_host = %s", CONNID_STR(priv->id),
                  STRNULL(mail_host, "NULL SENDER"));
 
     if (mail_host != NULL && strlen(mail_host) > 0)
@@ -239,7 +239,7 @@ mlfi_envfrom(ctx, envfrom)
       if (strexpr(mail_host, "[^a-zA-Z0-9.-]", NULL, NULL, TRUE))
       {
         if (IS_UNKNOWN(priv->netclass.class))
-          MESSAGE_INFO(11, "%-12s : Bad mail_host = %s", CONNID_STR(priv->id),
+          ZE_MessageInfo(11, "%-12s : Bad mail_host = %s", CONNID_STR(priv->id),
                        mail_host);
       } else
       {
@@ -257,7 +257,7 @@ mlfi_envfrom(ctx, envfrom)
   /* Check content to MAIL FROM parameter */
   if (cf_get_int(CF_SPAM_REGEX) == OPT_YES)
   {
-    LOG_MSG_DEBUG(15, "check_from_content");
+    ZE_LogMsgDebug(15, "check_from_content");
     if (shall_check_content(ctx))
     {
       int                 score_min = cf_get_int(CF_REGEX_MAX_SCORE);

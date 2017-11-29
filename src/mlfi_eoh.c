@@ -66,7 +66,7 @@ mlfi_eoh(ctx)
 
   if (priv->peer_addr == NULL)
   {
-    LOG_MSG_ERROR("peer_addr is NULL ???");
+    ZE_LogMsgError(0, "peer_addr is NULL ???");
     result = SMFIS_TEMPFAIL;
 
     goto fin;
@@ -90,19 +90,19 @@ mlfi_eoh(ctx)
         break;
       case MIME_ENCODE_BINARY:
         s = MSG_BODY_ENCODED_BINARY;
-        LOG_MSG_INFO(12, "HEADER ENCODE : BINARY %d",
+        ZE_LogMsgInfo(12, "HEADER ENCODE : BINARY %d",
                      priv->hdr_content_encoding);
         break;
       case MIME_ENCODE_BASE64:
         s = MSG_BODY_ENCODED_BASE64;
-        LOG_MSG_INFO(12, "HEADER ENCODE : B64 %d", priv->hdr_content_encoding);
+        ZE_LogMsgInfo(12, "HEADER ENCODE : B64 %d", priv->hdr_content_encoding);
         break;
       case MIME_ENCODE_QUOTED_PRINTABLE:
         s = MSG_BODY_ENCODED_QP;
-        LOG_MSG_INFO(12, "HEADER ENCODE : QP %d", priv->hdr_content_encoding);
+        ZE_LogMsgInfo(12, "HEADER ENCODE : QP %d", priv->hdr_content_encoding);
         break;
       default:
-        LOG_MSG_INFO(12, "HEADER ENCODE : OTHER %d",
+        ZE_LogMsgInfo(12, "HEADER ENCODE : OTHER %d",
                      priv->hdr_content_encoding);
         break;
     }
@@ -148,7 +148,7 @@ mlfi_eoh(ctx)
   /* check header contents */
   if (cf_get_int(CF_SPAM_REGEX) == OPT_YES)
   {
-    LOG_MSG_DEBUG(15, "check_header_content");
+    ZE_LogMsgDebug(15, "check_header_content");
     if (shall_check_content(ctx))
     {
       int                 score = 0;
@@ -199,7 +199,7 @@ mlfi_eoh(ctx)
       if (date_secs > (now + 48 HOURS))
       {
         if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-          MESSAGE_INFO(10, "%s SPAM CHECK - DATE IN THE FUTUR : %s",
+          ZE_MessageInfo(10, "%s SPAM CHECK - DATE IN THE FUTUR : %s",
                        CONNID_STR(priv->id), h->value);
         nerr_future++;
         continue;
@@ -208,7 +208,7 @@ mlfi_eoh(ctx)
       if ((date_secs + 12 MONTHS) < now)
       {
         if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-          MESSAGE_INFO(10, "%s SPAM CHECK - DATE IN THE PAST : %s",
+          ZE_MessageInfo(10, "%s SPAM CHECK - DATE IN THE PAST : %s",
                        CONNID_STR(priv->id), h->value);
         nerr_past++;
         continue;

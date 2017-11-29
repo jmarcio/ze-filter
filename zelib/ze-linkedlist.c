@@ -55,7 +55,7 @@ zmLinkedListAdd(head, s, nb, data, size)
 
   p = (LISTR_T *) malloc(sizeof (LISTR_T));
   if (p == NULL) {
-    LOG_SYS_ERROR("malloc(LISTR_T)");
+    ZE_LogSysError("malloc(LISTR_T)");
     return NULL;
   }
   memset(p, 0, sizeof (LISTR_T));
@@ -69,7 +69,7 @@ zmLinkedListAdd(head, s, nb, data, size)
     head->prev = p;
 
   if ((p->key = strdup(s)) == NULL) {
-    LOG_SYS_ERROR("strdup(LISTR_T)");
+    ZE_LogSysError("strdup(LISTR_T)");
     FREE(p);
     return NULL;
   }
@@ -78,7 +78,7 @@ zmLinkedListAdd(head, s, nb, data, size)
       memcpy(p->data, data, size);
       p->size = size;
     } else
-      LOG_SYS_ERROR("strdup(LISTR_T)");
+      ZE_LogSysError("strdup(LISTR_T)");
   }
   p->count = nb;
   head = p;
@@ -118,7 +118,7 @@ zmLinkedListSet(head, s, nb, data, size)
           memcpy(p->data, data, size);
           p->size = size;
         } else
-          LOG_SYS_ERROR("malloc(data)");
+          ZE_LogSysError("malloc(data)");
       }
     }
     return p;

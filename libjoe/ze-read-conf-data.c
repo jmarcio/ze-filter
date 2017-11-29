@@ -61,7 +61,7 @@ read_conf_data_file(cfdir, fname, dfile, func)
     if (tag != NULL)
       *tag++ = '\0';
     ADJUST_FILENAME(path, argv[i], cfdir, dfile);
-    MESSAGE_INFO(11, "  * Loading file path=(%s) tag=(%s)",
+    ZE_MessageInfo(11, "  * Loading file path=(%s) tag=(%s)",
                  path, STRNULL(tag, "(null)"));
 
     result = func(path, tag);

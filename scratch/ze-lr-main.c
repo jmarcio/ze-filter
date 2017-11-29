@@ -237,8 +237,8 @@ main(argc, argv)
     }
   }
 
-  set_log_output(FALSE, TRUE);
-  log_level = 10;
+  zeLog_SetOutput(FALSE, TRUE);
+  ze_logLevel = 10;
 
   if (0)
     configure("ze-lr", conf_file, FALSE);
@@ -299,7 +299,7 @@ cli_lr_classify(fileIn, dataFile)
     fin = fopen(fileIn, "r");
     if (fin == NULL)
     {
-      LOG_SYS_ERROR("Error opening %s", fileIn);;
+      ZE_LogSysError("Error opening %s", fileIn);;
       goto fin;
     }
   }
@@ -331,13 +331,13 @@ cli_lr_classify(fileIn, dataFile)
     {
       spam = STRCASEEQUAL(sclass, "spam");
       fname = sfile;
-      MESSAGE_INFO(13, "%-4s : %s", sclass, sfile);
+      ZE_MessageInfo(13, "%-4s : %s", sclass, sfile);
 
       margs.cmd = LR_CMD_CLASS;
       margs.class = LR_CLASS_UNKNOWN;
       lr_classify(id, fname, &cargs, &margs, &mscore);
 
-      MESSAGE_INFO(10, "%s judge=%-4s class=%-4s score=%.4f prob=%.4f",
+      ZE_MessageInfo(10, "%s judge=%-4s class=%-4s score=%.4f prob=%.4f",
                    fname,
                    spam ? "spam" : "ham",
                    mscore.odds > 0.0 ? "spam" : "ham",
@@ -388,7 +388,7 @@ cli_lr_learn(fileIn, dataFile, cliopt)
     fin = fopen(fileIn, "r");
     if (fin == NULL)
     {
-      LOG_SYS_ERROR("Error opening %s", fileIn);
+      ZE_LogSysError("Error opening %s", fileIn);
       goto fin;
     }
   }
@@ -458,7 +458,7 @@ cli_lr_learn(fileIn, dataFile, cliopt)
       spam = spam = STRCASEEQUAL(sclass, "spam");
       fname = sfile;
 
-      MESSAGE_INFO(10, "%-4s : %s", sclass, sfile);
+      ZE_MessageInfo(10, "%-4s : %s", sclass, sfile);
 
       margs.query = FALSE;
       margs.learnt = FALSE;
@@ -470,7 +470,7 @@ cli_lr_learn(fileIn, dataFile, cliopt)
       ok = lr_learn(id, fname, &cargs, &margs, &mscore, spam);
       ok = TRUE;
 
-      MESSAGE_INFO(10,
+      ZE_MessageInfo(10,
                    "%s classification : %8.4f %.8f judge=%-4s class=%-4s"
                    " learn=%s query=%s features=%d"
                    " score=%g prob=%.6f",
@@ -607,7 +607,7 @@ learn_callback(i, cargs, margs)
       break;
   }
 
-  MESSAGE_INFO(10, "* learning rate  : %7d %8.5f", i, r);
+  ZE_MessageInfo(10, "* learning rate  : %7d %8.5f", i, r);
 
   return r;
 }

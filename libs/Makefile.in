@@ -119,16 +119,16 @@ am_libcommon_a_OBJECTS = ze-base64.$(OBJEXT) ze-btree.$(OBJEXT) \
 	ze-divers.$(OBJEXT) ze-dns-parse.$(OBJEXT) ze-dns.$(OBJEXT) \
 	ze-html.$(OBJEXT) ze-inet.$(OBJEXT) ze-ipv4.$(OBJEXT) \
 	ze-ipv6.$(OBJEXT) ze-ip.$(OBJEXT) ze-ipc.$(OBJEXT) \
-	ze-syslog.$(OBJEXT) ze-txtlog.$(OBJEXT) ze-morpho.$(OBJEXT) \
-	ze-name2id.$(OBJEXT) ze-parse-dns.$(OBJEXT) ze-qp.$(OBJEXT) \
-	ze-regex.$(OBJEXT) ze-server.$(OBJEXT) ze-client.$(OBJEXT) \
-	ze-shmem.$(OBJEXT) ze-smtp-divers.$(OBJEXT) \
-	ze-strings.$(OBJEXT) ze-strconvert.$(OBJEXT) ze-time.$(OBJEXT) \
-	ze-rdfile.$(OBJEXT) ze-table.$(OBJEXT) ze-uudecode.$(OBJEXT) \
-	ze-unattach.$(OBJEXT) ze-load.$(OBJEXT) ze-cyclic.$(OBJEXT) \
-	kstats.$(OBJEXT) ze-logit.$(OBJEXT) ze-bfilter.$(OBJEXT) \
-	ze-bsegmentation.$(OBJEXT) ze-bcheck.$(OBJEXT) md5.$(OBJEXT) \
-	sha1.$(OBJEXT) ze-msg-hash.$(OBJEXT) ze-bestof-n.$(OBJEXT) \
+	ze-txtlog.$(OBJEXT) ze-morpho.$(OBJEXT) ze-name2id.$(OBJEXT) \
+	ze-parse-dns.$(OBJEXT) ze-qp.$(OBJEXT) ze-regex.$(OBJEXT) \
+	ze-server.$(OBJEXT) ze-client.$(OBJEXT) ze-shmem.$(OBJEXT) \
+	ze-smtp-divers.$(OBJEXT) ze-strings.$(OBJEXT) \
+	ze-strconvert.$(OBJEXT) ze-time.$(OBJEXT) ze-table.$(OBJEXT) \
+	ze-uudecode.$(OBJEXT) ze-unattach.$(OBJEXT) ze-load.$(OBJEXT) \
+	ze-cyclic.$(OBJEXT) kstats.$(OBJEXT) ze-logit.$(OBJEXT) \
+	ze-bfilter.$(OBJEXT) ze-bsegmentation.$(OBJEXT) \
+	ze-bcheck.$(OBJEXT) md5.$(OBJEXT) sha1.$(OBJEXT) \
+	ze-msg-hash.$(OBJEXT) ze-bestof-n.$(OBJEXT) \
 	ze-lr-funcs.$(OBJEXT)
 libcommon_a_OBJECTS = $(am_libcommon_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
@@ -364,7 +364,6 @@ libcommon_a_SOURCES = ze-base64.c \
 				ze-ipv6.c \
 				ze-ip.c \
 				ze-ipc.c \
-				ze-syslog.c \
 				ze-txtlog.c \
 				ze-morpho.c \
 				ze-name2id.c \
@@ -378,7 +377,6 @@ libcommon_a_SOURCES = ze-base64.c \
 				ze-strings.c \
 				ze-strconvert.c \
 				ze-time.c \
-				ze-rdfile.c \
 				ze-table.c \
 				ze-uudecode.c \
 				ze-unattach.c \
@@ -486,7 +484,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-name2id.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-parse-dns.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-qp.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-rdfile.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-regex.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-rfc2822.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-server.Po@am__quote@
@@ -494,7 +491,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-smtp-divers.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-strconvert.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-strings.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-syslog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-table.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-time.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-txtlog.Po@am__quote@

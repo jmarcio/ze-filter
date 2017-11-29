@@ -6,7 +6,9 @@ libze_a_SOURCES       = 	zeStrings.c \
 				zeFileSystem.c \
 				zeDb.c \
 				zeMap.c \
-				zeSyslog.c
+				zeSyslog.c \
+				zeRdFile.c \
+				strlcat.c 
 #				ze-linkedlist.c \
 #				ze-map.c \
 #				ze-syslog.c \

@@ -45,7 +45,7 @@ open_work_db_env(cfdir, defdir, rdonly)
 
   if (work_db_env != NULL)
   {
-    MESSAGE_INFO(9, "Work database environnement already initialized");
+    ZE_MessageInfo(9, "Work database environnement already initialized");
     return TRUE;
   }
 
@@ -61,7 +61,7 @@ open_work_db_env(cfdir, defdir, rdonly)
     (void) atexit(close_work_db_env);
     work_db_dir = strdup(home);
     if (work_db_dir == NULL)
-      LOG_SYS_ERROR("Error strdup(%s)", home);
+      ZE_LogSysError("Error strdup(%s)", home);
   }
 
   return work_db_env != NULL;

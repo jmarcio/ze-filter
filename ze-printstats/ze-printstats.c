@@ -26,7 +26,7 @@
 #include "ze-filter.h"
 #include "ze-filter-data.h"
 
-extern int          log_level;
+extern int          ze_logLevel;
 
 
 void                usage();
@@ -58,9 +58,9 @@ main(int argc, char **argv)
 
   long                dt = 3600;
 
-  set_log_output(FALSE, TRUE);
+  zeLog_SetOutput(FALSE, TRUE);
 
-  log_level = 9;
+  ze_logLevel = 9;
   memset(host, 0, sizeof (host));
 
   while ((c = getopt(argc, argv, args)) != -1)

@@ -44,7 +44,7 @@ create_pid_file(fname)
 
   if (fname == NULL || strlen(fname) == 0)
   {
-    MESSAGE_INFO(0, "pid_file : NULL pointer");
+    ZE_MessageInfo(0, "pid_file : NULL pointer");
     return FALSE;
   }
 
@@ -73,12 +73,12 @@ create_pid_file(fname)
 
     if (!running)
     {
-      LOG_MSG_WARNING("PID_FILE %s exists, but ze-filter isn't running !",
+      ZE_LogMsgWarning(0, "PID_FILE %s exists, but ze-filter isn't running !",
                       fname);
       (void) remove(fname);
     } else
     {
-      LOG_MSG_ERROR("PID_FILE %s exists. Is there another ze-filter running ?",
+      ZE_LogMsgError(0, "PID_FILE %s exists. Is there another ze-filter running ?",
                     fname);
       exit(EX_SOFTWARE);
     }
@@ -90,16 +90,16 @@ create_pid_file(fname)
     fclose(fpid);
 
     if (chmod(fname, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH) != 0)
-      LOG_SYS_ERROR("error changing pid file mode %s", fname);
+      ZE_LogSysError("error changing pid file mode %s", fname);
 
     pid_file = strdup(fname);
     if (pid_file == NULL)
-      LOG_SYS_ERROR("error strdup(%s)", fname);
+      ZE_LogSysError("error strdup(%s)", fname);
 
     return TRUE;
   }
 
-  LOG_SYS_ERROR("PID_FILE %s : can't create", fname);
+  ZE_LogSysError("PID_FILE %s : can't create", fname);
 
   exit(EX_CANTCREAT);
 }
@@ -117,7 +117,7 @@ remove_pid_file()
 
   pid = getpid();
 
-  LOG_MSG_DEBUG(20, "remove_pid_file : %d", pid);
+  ZE_LogMsgDebug(20, "remove_pid_file : %d", pid);
 
   if (pid_file == NULL || strlen(pid_file) == 0)
     return;
@@ -165,7 +165,7 @@ remove_milter_sock()
 
     if (lstat(sock_file, &buf) == 0)
     {
-      MESSAGE_WARNING(9, "Removing SOCK_FILE : %s", sock_file);
+      ZE_MessageWarning(9, "Removing SOCK_FILE : %s", sock_file);
       remove(sock_file);
     }
   }
@@ -207,7 +207,7 @@ define_milter_sock(cf, arg_p, arg_u, arg_i)
   if (arg_p != NULL)
     strlcpy(sm_sock, arg_p, sizeof (sm_sock));
 
-  MESSAGE_INFO(12, "SM_SOCK = %s", sm_sock);
+  ZE_MessageInfo(12, "SM_SOCK = %s", sm_sock);
 
   milter_sock_file = sm_sock;
 

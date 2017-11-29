@@ -75,27 +75,27 @@ save_mime_part(buf, size, id, level, type, arg, mime_part)
   fd = mkstemp(fname);
   if (fd < 0)
   {
-    LOG_SYS_ERROR("mkstemp %s", fname);
+    ZE_LogSysError("mkstemp %s", fname);
     return FALSE;
   }
 
   if (fchmod(fd, mode) < 0)
   {
-    LOG_SYS_ERROR("fchmod %s", fname);
+    ZE_LogSysError("fchmod %s", fname);
     close(fd);
     return FALSE;
   }
 
   if ((nbytes = write(fd, buf, size)) < size)
   {
-    LOG_SYS_ERROR("write %s", fname);
+    ZE_LogSysError("write %s", fname);
     close(fd);
     return FALSE;
   }
 
   close(fd);
 
-  LOG_MSG_INFO(15, "FILENAME = %s", fname);
+  ZE_LogMsgInfo(15, "FILENAME = %s", fname);
 
   return TRUE;
 }
@@ -137,7 +137,7 @@ unattach(id, fname, dirout, flags)
   {
     if (errno != EEXIST)
     {
-      LOG_SYS_ERROR("mkdir %s ", prefix);
+      ZE_LogSysError("mkdir %s ", prefix);
       return FALSE;
     }
   }

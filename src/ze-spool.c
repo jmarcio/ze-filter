@@ -66,7 +66,7 @@ spool_file_create(priv)
   priv->fp_open = FALSE;
 
   if (priv->fname != NULL)
-    LOG_MSG_WARNING("fd closed, but fname not NULL");
+    ZE_LogMsgWarning(0, "fd closed, but fname not NULL");
   FREE(priv->fname);
 
   if ((p = cf_get_str(CF_SPOOLDIR)) == NULL)
@@ -91,19 +91,19 @@ spool_file_create(priv)
 
   if (fd < 0)
   {
-    LOG_SYS_ERROR("can't create spool file (%s)", fname);
+    ZE_LogSysError("can't create spool file (%s)", fname);
     fd = -1;
     return FALSE;
   }
 
   if (fchmod(fd, S_IRUSR | S_IWUSR) != 0)
-    LOG_SYS_ERROR("can't change spool file rights (%s)", fname);
+    ZE_LogSysError("can't change spool file rights (%s)", fname);
 
   priv->fd = fd;
   priv->fp_open = TRUE;
 
   if ((priv->fname = strdup(fname)) == NULL)
-    LOG_SYS_ERROR("strdup(%s) error", fname);
+    ZE_LogSysError("strdup(%s) error", fname);
 
   /* Let's add a fake From line */
   if (cf_get_int(CF_QUARANTINE_ADD_FROM_LINE) == OPT_YES)
@@ -138,7 +138,7 @@ spool_file_create(priv)
     strcat(s, rc);
 
     if (write(priv->fd, s, strlen(s)) != strlen(s))
-      LOG_SYS_ERROR("can't write fake From: line to %s", priv->fname);
+      ZE_LogSysError("can't write fake From: line to %s", priv->fname);
    }
 
    if (1)
@@ -177,7 +177,7 @@ Received: from qxxge.proxad.net (sge78-3-82-247-96-164.fbx.proxad.net [82.247.96
 	     rc);
 
     if (write(priv->fd, rbuf, strlen(rbuf)) != strlen(rbuf))
-      LOG_SYS_ERROR("can't write fake Received: line to %s", priv->fname);
+      ZE_LogSysError("can't write fake Received: line to %s", priv->fname);
 
     snprintf(rbuf, sizeof (rbuf), 
 	     "X-ze-filter-Enveloppe: %s from %s/%s/%s/%s/%s%s",
@@ -193,7 +193,7 @@ Received: from qxxge.proxad.net (sge78-3-82-247-96-164.fbx.proxad.net [82.247.96
 	     rc);
     */
     if (write(priv->fd, rbuf, strlen(rbuf)) != strlen(rbuf))
-      LOG_SYS_ERROR("can't write fake X-ze-filter-Enveloppe: line to %s", priv->fname);
+      ZE_LogSysError("can't write fake X-ze-filter-Enveloppe: line to %s", priv->fname);
    }
 
   return TRUE;
@@ -214,7 +214,7 @@ spool_file_write(priv, buf, size)
 
   if (write(priv->fd, buf, size) != size)
   {
-    LOG_SYS_ERROR("Error writing on spool file %s", priv->fname);
+    ZE_LogSysError("Error writing on spool file %s", priv->fname);
     return FALSE;
   }
 
@@ -235,7 +235,7 @@ spool_file_close(priv)
   priv->fp_open = FALSE;
   if (close(priv->fd) < 0)
   {
-    LOG_SYS_ERROR("error closing spool file");
+    ZE_LogSysError("error closing spool file");
     priv->fd = -1;
     return FALSE;
   }
@@ -278,10 +278,10 @@ spool_file_forget(priv)
     if (rename(priv->fname, filename) == 0)
       SWAP_PTR(filename, priv->fname);
     else
-      LOG_SYS_ERROR("Error renaming quarantine file : %s", priv->fname);
+      ZE_LogSysError("Error renaming quarantine file : %s", priv->fname);
   } else
-    LOG_SYS_ERROR("Quarantine file name malloc error : %s", priv->fname);
-  MESSAGE_INFO(11, "%-12s : quarantine file %s", CONNID_STR(priv->id),
+    ZE_LogSysError("Quarantine file name malloc error : %s", priv->fname);
+  ZE_MessageInfo(11, "%-12s : quarantine file %s", CONNID_STR(priv->id),
                priv->fname);
 
 fin:

@@ -30,12 +30,12 @@ main(argc, argv)
      char              **argv;
 {
   int                 res = 0;
-  extern int          log_level;
+  extern int          ze_logLevel;
 
   configure("ze-rbwl-test", conf_file, FALSE);
 
-  set_log_output(FALSE, TRUE);
-  log_level = 10;
+  zeLog_SetOutput(FALSE, TRUE);
+  ze_logLevel = 10;
 
   {
     char               *ip, *name;
@@ -64,10 +64,10 @@ main(argc, argv)
           name = optarg;
           break;
         case 'v':
-          log_level++;
+          ze_logLevel++;
           break;
         case 'l':
-          log_level = atoi(optarg);
+          ze_logLevel = atoi(optarg);
           break;
         default:
           (void) fprintf(stderr, "-> Unknown command line option : %c\n", c);
@@ -75,7 +75,7 @@ main(argc, argv)
       }
     }
 
-    if (log_level > 11)
+    if (ze_logLevel > 11)
     {
 #if 0
 #define HOSTNAME_REGEX         "^[a-z0-9.-]+\\.[a-z]{2,6}$"
@@ -83,11 +83,11 @@ main(argc, argv)
 #define HOSTNAME_REGEX         DOMAINNAME_REGEX
 #endif
 
-      MESSAGE_INFO(10, "* HOSTNAME_REGEX %s", HOSTNAME_REGEX);
+      ZE_MessageInfo(10, "* HOSTNAME_REGEX %s", HOSTNAME_REGEX);
       if (strexpr(name, HOSTNAME_REGEX, NULL, NULL, TRUE))
-        MESSAGE_INFO(10, "* %s is a domain name", name);
+        ZE_MessageInfo(10, "* %s is a domain name", name);
       else
-        MESSAGE_INFO(10, "* %s isn't a domain name", name);
+        ZE_MessageInfo(10, "* %s isn't a domain name", name);
     }
 
     netclass = GetClientNetClass(ip, name, NULL, NULL, 0);
@@ -98,13 +98,13 @@ main(argc, argv)
     if (flag > 0)
       strlcpy(class, rbwl.netclass, sizeof (class));
 
-    MESSAGE_INFO(0, "Client IP address : %s", ip);
-    MESSAGE_INFO(0, "Client hostname   : %s", name);
-    MESSAGE_INFO(0, "Client NET class  : %02X %s", netclass, class);
+    ZE_MessageInfo(0, "Client IP address : %s", ip);
+    ZE_MessageInfo(0, "Client hostname   : %s", name);
+    ZE_MessageInfo(0, "Client NET class  : %02X %s", netclass, class);
 
     result = STRNULL(result, "...");
 
-    MESSAGE_INFO(0, "RESULT            = %2d %s", flag, result);
+    ZE_MessageInfo(0, "RESULT            = %2d %s", flag, result);
   }
 
   return 0;

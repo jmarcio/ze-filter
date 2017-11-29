@@ -124,7 +124,7 @@ jstrdup(s)
   if (p != NULL)
     strlcpy(p, s, sz);
   else
-    LOG_SYS_ERROR("malloc(s)");
+    ZE_LogSysError("malloc(s)");
 
   return p;
 }
@@ -142,7 +142,7 @@ jmalloc(sz)
 
   p = malloc(sz + xtra);
   if (p == NULL) {
-    LOG_SYS_ERROR("malloc(%lu)", (unsigned long) (sz + xtra));
+    ZE_LogSysError("malloc(%lu)", (unsigned long) (sz + xtra));
   }
 
   return p;
@@ -340,7 +340,7 @@ strexpr(s, expr, pi, pf, icase)
     char                s[256];
 
     if (regerror(rerror, &re, s, sizeof (s)) > 0)
-      LOG_MSG_ERROR("regcomp(%s) error : %s", expr, s);
+      ZE_LogMsgError(0, "regcomp(%s) error : %s", expr, s);
   }
 
   return found;
@@ -475,7 +475,7 @@ file_lock(fd)
      int                 fd;
 {
   if (ssp_flock(fd, F_SETLKW, F_WRLCK) < 0) {
-    LOG_SYS_ERROR("lock error");
+    ZE_LogSysError("lock error");
     /*
      * exit (EX_SOFTWARE); 
      */
@@ -489,7 +489,7 @@ file_unlock(fd)
      int                 fd;
 {
   if (ssp_flock(fd, F_SETLK, F_UNLCK) < 0) {
-    LOG_SYS_ERROR("lock error");
+    ZE_LogSysError("lock error");
     /*
      * exit (EX_SOFTWARE); 
      */
@@ -515,7 +515,7 @@ get_file_size(fname)
     return fstat.st_size;
 
 #if 0
-  LOG_SYS_ERROR("stat(%s) error", fname);
+  ZE_LogSysError("stat(%s) error", fname);
 #endif
 
   return 0;
@@ -537,7 +537,7 @@ get_fd_size(fd)
   if (fstat(fd, &st) == 0)
     return st.st_size;
 
-  LOG_SYS_ERROR("fstat error");
+  ZE_LogSysError("fstat error");
 
   return 0;
 }
@@ -567,7 +567,7 @@ readln(fd, buf, size)
     if (n < 0) {
       if (errno == EINTR)
         continue;
-      LOG_SYS_ERROR("read error");
+      ZE_LogSysError("read error");
       break;
     }
 
@@ -601,25 +601,25 @@ remove_dir(dirname)
       if ((strcmp(p->d_name, ".") == 0) || (strcmp(p->d_name, "..") == 0))
         continue;
       snprintf(fname, sizeof (fname), "%s/%s", dirname, p->d_name);
-      LOG_MSG_INFO(9, "ENTRY : %s", fname);
+      ZE_LogMsgInfo(9, "ENTRY : %s", fname);
       if (stat(fname, &st) == 0) {
         if (S_ISDIR(st.st_mode))
           r = remove_dir(fname);
         else
           unlink(fname);
       } else {
-        LOG_SYS_ERROR("lstat(%s) ", fname);
+        ZE_LogSysError("lstat(%s) ", fname);
         r = FALSE;
       }
     }
     closedir(dir);
   } else {
-    LOG_SYS_ERROR("opendir(%s) :", dirname);
+    ZE_LogSysError("opendir(%s) :", dirname);
     r = FALSE;
   }
 
   if (r && rmdir(dirname) != 0) {
-    LOG_SYS_ERROR("rmdir(%s) :", dirname);
+    ZE_LogSysError("rmdir(%s) :", dirname);
     r = FALSE;
   }
 
@@ -638,7 +638,7 @@ getdirinfo(dir)
   struct stat         buf;
 
   if ((r = stat(dir, &buf)) != 0) {
-    LOG_SYS_ERROR("stat(%s) error", dir);
+    ZE_LogSysError("stat(%s) error", dir);
     return FALSE;
   }
 
@@ -706,6 +706,6 @@ fd_printf(int fd, char *format, ...)
   va_end(arg);
 
   if ((ret = write(fd, s, strlen(s))) != strlen(s))
-    LOG_SYS_ERROR("error on FD_PRINTF");
+    ZE_LogSysError("error on FD_PRINTF");
   return ret;
 }

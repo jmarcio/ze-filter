@@ -43,9 +43,9 @@ main(argc, argv)
   char               *id = "000000.000";
   char               *fname;
 
-  set_log_output(FALSE, TRUE);
+  zeLog_SetOutput(FALSE, TRUE);
 
-  log_level = 0;
+  ze_logLevel = 0;
 
   init_default_file_extensions();
 
@@ -241,12 +241,12 @@ check_garbled_buffer(buffer)
 
 #if 0
   t = buf_get_token_types(buffer);
-  MESSAGE_INFO(0, "\nBUF BRUT...    %s\n", STRNULL(t, "NULL"));
+  ZE_MessageInfo(0, "\nBUF BRUT...    %s\n", STRNULL(t, "NULL"));
 
   if (t != NULL)
   {
     u = buf_get_token_types_delta(t);
-    MESSAGE_INFO(0, "\nBUF GARB d tok %s\n", STRNULL(u, "NULL"));
+    ZE_MessageInfo(0, "\nBUF GARB d tok %s\n", STRNULL(u, "NULL"));
   }
 #else
   t = buf_get_token_types_new(buffer);
@@ -271,24 +271,24 @@ check_garbled_buffer(buffer)
       if (nb > 3)
       {
         if (0)
-          MESSAGE_INFO(10, "POS : %3d", strlen(u) - sz);
+          ZE_MessageInfo(10, "POS : %3d", strlen(u) - sz);
         nbt++;
       }
     }
     result = ((double) nbt) / strlen(u);
 
-    MESSAGE_INFO(0, " RATIO : %7.3f", result);
+    ZE_MessageInfo(0, " RATIO : %7.3f", result);
 	}
 
   if (u != NULL)
   {
     morpho_bin_closing((uint8_t *) u, strlen(u));
 
-    MESSAGE_INFO(0, "\nBUF CLOSE d tok %s\n", STRNULL(u, "NULL"));
+    ZE_MessageInfo(0, "\nBUF CLOSE d tok %s\n", STRNULL(u, "NULL"));
 
     morpho_bin_openning((uint8_t *) u, strlen(u));
 
-    MESSAGE_INFO(0, "\nBUF OPEN d tok %s\n", STRNULL(u, "NULL"));
+    ZE_MessageInfo(0, "\nBUF OPEN d tok %s\n", STRNULL(u, "NULL"));
   }
 
   if (u != NULL)
@@ -307,7 +307,7 @@ check_garbled_buffer(buffer)
       p += n;
     }
 
-    MESSAGE_INFO(0, " LENGHT : %5d", lmax);
+    ZE_MessageInfo(0, " LENGHT : %5d", lmax);
   }
 
   FREE(t);
@@ -324,12 +324,12 @@ check_ungarbled_buffer(buffer)
   double              result = 0.;
 
   t = buf_get_token_types(buffer);
-  MESSAGE_INFO(0, "\nBUF tok...\n%s\n", STRNULL(t, "NULL"));
+  ZE_MessageInfo(0, "\nBUF tok...\n%s\n", STRNULL(t, "NULL"));
 
   if (t != NULL)
   {
     u = buf_get_token_types_delta(t);
-    MESSAGE_INFO(0, "\nBUF d tok...\n%s\n", STRNULL(u, "NULL"));
+    ZE_MessageInfo(0, "\nBUF d tok...\n%s\n", STRNULL(u, "NULL"));
   }
 #define LEN   10
   if (u != NULL)
@@ -348,13 +348,13 @@ check_ungarbled_buffer(buffer)
       }
       if (nb > 3)
       {
-        MESSAGE_INFO(10, "POS : %3d", strlen(u) - sz);
+        ZE_MessageInfo(10, "POS : %3d", strlen(u) - sz);
         nbt++;
       }
     }
     result = ((double) nbt) / strlen(u);
 
-    MESSAGE_INFO(0, " NBT : %7.3f", result);
+    ZE_MessageInfo(0, " NBT : %7.3f", result);
   }
 
   FREE(t);
@@ -423,10 +423,10 @@ tokens_mime_part(buf, size, id, level, type, arg, mime_part)
 
 #if 1
     if (0)
-    MESSAGE_INFO(9, "\nBUF (buf)...\n%s\n", buf);
+    ZE_MessageInfo(9, "\nBUF (buf)...\n%s\n", buf);
 
     if (cleanbuf != NULL)
-      MESSAGE_INFO(0, "\nBUF (cleanbuf)...%d \n%s\n", strlen(cleanbuf), cleanbuf);
+      ZE_MessageInfo(0, "\nBUF (cleanbuf)...%d \n%s\n", strlen(cleanbuf), cleanbuf);
 
     if (1)
     {
@@ -436,7 +436,7 @@ tokens_mime_part(buf, size, id, level, type, arg, mime_part)
 
       if (x != NULL)
       {
-        MESSAGE_INFO(0, "\nBUF ...\n%s\n", x);
+        ZE_MessageInfo(0, "\nBUF ...\n%s\n", x);
         buf_extract_tokens(x);
 
         FREE(x);
@@ -472,8 +472,8 @@ check_message_tokens(id, fname)
   DATA_T              data;
 
 #if 0
-  set_log_output(FALSE, TRUE);
-  log_level = 0;
+  zeLog_SetOutput(FALSE, TRUE);
+  ze_logLevel = 0;
 
   set_mime_debug(TRUE);
 #endif

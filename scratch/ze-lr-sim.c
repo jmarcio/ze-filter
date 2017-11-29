@@ -236,8 +236,8 @@ main(argc, argv)
     }
   }
 
-  set_log_output(FALSE, TRUE);
-  log_level = 10;
+  zeLog_SetOutput(FALSE, TRUE);
+  ze_logLevel = 10;
 
   if (0)
     configure("ze-lr", conf_file, FALSE);
@@ -306,7 +306,7 @@ cli_lr_extract(fileIn, dataFile, cliopt, lropts)
     fin = fopen(fileIn, "r");
     if (fin == NULL)
     {
-      LOG_SYS_ERROR("Error opening %s", fileIn);;
+      ZE_LogSysError("Error opening %s", fileIn);;
       goto fin;
     }
   }
@@ -342,7 +342,7 @@ cli_lr_extract(fileIn, dataFile, cliopt, lropts)
       fname = sfile;
 
       snprintf(id, sizeof(id), "%08d", nid++);
-      MESSAGE_INFO(13, "# %-4s : %s", sclass, sfile);
+      ZE_MessageInfo(13, "# %-4s : %s", sclass, sfile);
 
       margs.cmd = LR_CMD_EXTRACT;
       margs.class = LR_CLASS_UNKNOWN;
@@ -381,7 +381,7 @@ cli_lr_classify(fileIn, dataFile)
     fin = fopen(fileIn, "r");
     if (fin == NULL)
     {
-      LOG_SYS_ERROR("Error opening %s", fileIn);;
+      ZE_LogSysError("Error opening %s", fileIn);;
       goto fin;
     }
   }
@@ -413,13 +413,13 @@ cli_lr_classify(fileIn, dataFile)
     {
       spam = STRCASEEQUAL(sclass, "spam");
       fname = sfile;
-      MESSAGE_INFO(13, "%-4s : %s", sclass, sfile);
+      ZE_MessageInfo(13, "%-4s : %s", sclass, sfile);
 
       margs.cmd = LR_CMD_CLASS;
       margs.class = LR_CLASS_UNKNOWN;
       lr_classify(id, fname, &cargs, &margs, &mscore);
 
-      MESSAGE_INFO(10, "%s %s op=%s judge=%-4s class=%-4s score=%.4f prob=%.4f",
+      ZE_MessageInfo(10, "%s %s op=%s judge=%-4s class=%-4s score=%.4f prob=%.4f",
                    stime, fname,
                    "class",
                    spam ? "spam" : "ham",
@@ -466,7 +466,7 @@ cli_lr_learn(fileIn, dataFile, cliopt, lropts)
     fin = fopen(fileIn, "r");
     if (fin == NULL)
     {
-      LOG_SYS_ERROR("Error opening %s", fileIn);
+      ZE_LogSysError("Error opening %s", fileIn);
       goto fin;
     }
   }
@@ -536,7 +536,7 @@ cli_lr_learn(fileIn, dataFile, cliopt, lropts)
       spam = spam = STRCASEEQUAL(sclass, "spam");
       fname = sfile;
 
-      MESSAGE_INFO(10, "%-4s : %s", sclass, sfile);
+      ZE_MessageInfo(10, "%-4s : %s", sclass, sfile);
 
       margs.query = FALSE;
       margs.learnt = FALSE;
@@ -548,7 +548,7 @@ cli_lr_learn(fileIn, dataFile, cliopt, lropts)
       ok = lr_learn(id, fname, &cargs, &margs, &mscore, spam);
       ok = TRUE;
 
-      MESSAGE_INFO(10,
+      ZE_MessageInfo(10,
                    "%s classification : %8.4f %.8f judge=%-4s class=%-4s"
                    " learn=%s query=%s features=%d"
                    " score=%g prob=%.6f",
@@ -656,7 +656,7 @@ cli_simul_handle(cargs, margs, pile, evt)
   margs->class = evt->class;
   fname = evt->fname;
 
-  MESSAGE_INFO(17, "* Handle %3d %s", evt->cmd, fname);
+  ZE_MessageInfo(17, "* Handle %3d %s", evt->cmd, fname);
   switch (evt->cmd)
   {
     case LR_CMD_CLASS:
@@ -747,7 +747,7 @@ cli_lr_simul(fileIn, dataFile, cliopt, lropts)
     fin = fopen(fileIn, "r");
     if (fin == NULL)
     {
-      LOG_SYS_ERROR("Error opening %s", fileIn);
+      ZE_LogSysError("Error opening %s", fileIn);
       goto fin;
     }
   }
@@ -830,7 +830,7 @@ cli_lr_simul(fileIn, dataFile, cliopt, lropts)
 	  continue;
 #endif
 
-        MESSAGE_INFO(17, "* Read task %s", sfile);
+        ZE_MessageInfo(17, "* Read task %s", sfile);
         (void) lr_evt_fill(&fevt, LR_CMD_CLASS, date, class, fname);
 
         if (spam)
@@ -861,7 +861,7 @@ cli_lr_simul(fileIn, dataFile, cliopt, lropts)
 
         spam = (pevt.class == LR_CLASS_SPAM);
 
-        MESSAGE_INFO(10, "* %ld : Handle pile event %s", pevt.date, pevt.fname);
+        ZE_MessageInfo(10, "* %ld : Handle pile event %s", pevt.date, pevt.fname);
         /*
          ** Should I miss it ???
          */
@@ -871,7 +871,7 @@ cli_lr_simul(fileIn, dataFile, cliopt, lropts)
          */
         cli_simul_handle(&cargs, &margs, &pile, &pevt);
 
-        MESSAGE_INFO(10,
+        ZE_MessageInfo(10,
                      "%ld %s op=%s judge=%-4s class=%-4s"
                      " learn=%-5s query=%-5s miss=%-5s noisy=%-5s features=%d"
                      " score=%g prob=%.6f",
@@ -905,7 +905,7 @@ cli_lr_simul(fileIn, dataFile, cliopt, lropts)
         stcl[stp].query = FALSE;
         stcl[stp].loss = 0.;
 
-        MESSAGE_INFO(10, "* %ld : Handle file event %s", fevt.date, fevt.fname);
+        ZE_MessageInfo(10, "* %ld : Handle file event %s", fevt.date, fevt.fname);
         cli_simul_handle(&cargs, &margs, &pile, &fevt);
 
         spam = (fevt.class == LR_CLASS_SPAM);
@@ -965,7 +965,7 @@ cli_lr_simul(fileIn, dataFile, cliopt, lropts)
             erate = ((double) ne) / stmax;
             qrate = ((double) nq) / stmax;
             risk = risk / stmax;
-            MESSAGE_INFO(10, "STATS: %7d QRATE %8.5f ERATE: %8.5f RISK: %8.5f",
+            ZE_MessageInfo(10, "STATS: %7d QRATE %8.5f ERATE: %8.5f RISK: %8.5f",
                          stn, qrate, erate, risk);
           }
 
@@ -973,7 +973,7 @@ cli_lr_simul(fileIn, dataFile, cliopt, lropts)
           {
             learn_evt_T         evt;
 
-            MESSAGE_INFO(17, "* Add to pile %s spam : %d %8.3f ",
+            ZE_MessageInfo(17, "* Add to pile %s spam : %d %8.3f ",
                          fevt.fname, spam, margs.score.odds);
             evt = fevt;
             evt.cmd = LR_CMD_LEARN_FEEDBACK;
@@ -1021,7 +1021,7 @@ cli_lr_simul(fileIn, dataFile, cliopt, lropts)
 
         /* print results */
 
-        MESSAGE_INFO(10,
+        ZE_MessageInfo(10,
                      "%ld %s op=%s judge=%-4s class=%-4s"
                      " learn=%-5s query=%-5s miss=%-5s noisy=%-5s features=%d"
                      " score=%g prob=%.6f",
@@ -1140,7 +1140,7 @@ learn_callback(i, cargs, margs)
       break;
   }
 
-  MESSAGE_INFO(10, "* learning rate  : %7d %8.5f", i, r);
+  ZE_MessageInfo(10, "* learning rate  : %7d %8.5f", i, r);
 
   return r;
 }

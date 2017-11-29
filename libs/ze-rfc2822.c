@@ -48,9 +48,9 @@
 
 #define LOG_HEADER(h)					\
   {							\
-    MESSAGE_INFO(15, "hdr->key   : %s", h->key);	\
-    MESSAGE_INFO(15, "hdr->value : %s", h->value);	\
-    MESSAGE_INFO(15, "------------");			\
+    ZE_MessageInfo(15, "hdr->key   : %s", h->key);	\
+    ZE_MessageInfo(15, "hdr->value : %s", h->value);	\
+    ZE_MessageInfo(15, "------------");			\
   }
 
 static rfc2822_hdr_T *line2header(char *line);
@@ -94,7 +94,7 @@ rfc2822_get_headers(buf, size, nptr)
       /* New header */
       if (cline != NULL)
       {
-        MESSAGE_INFO(15, "LINE       : %s", cline);
+        ZE_MessageInfo(15, "LINE       : %s", cline);
 
         hdr = line2header(cline);
         APPEND_HEADER(head, hdr);
@@ -123,12 +123,12 @@ rfc2822_get_headers(buf, size, nptr)
 
   if (cline != NULL)
   {
-    MESSAGE_INFO(15, "LINE       : %s", cline);
+    ZE_MessageInfo(15, "LINE       : %s", cline);
     hdr = line2header(cline);
     APPEND_HEADER(head, hdr);
     LOG_HEADER(hdr);
   }
-  MESSAGE_INFO(15, "***FIN***");
+  ZE_MessageInfo(15, "***FIN***");
 
 fin:
   if (nptr != NULL)
@@ -188,7 +188,7 @@ rfc2822_get_main_attr(header)
   if ((p = malloc(n + 1)) != NULL)
     safe_strncpy(p, n + 1, header->value, n);
   else 
-    LOG_SYS_ERROR("malloc error");
+    ZE_LogSysError("malloc error");
 
   return p;
 }
@@ -229,7 +229,7 @@ rfc2822_get_attr(head, attr)
     value = malloc(n + 1);
     safe_strncpy(value, n + 1, s, n);
 
-    MESSAGE_INFO(15, "    -> %s : %s", attr, value);
+    ZE_MessageInfo(15, "    -> %s : %s", attr, value);
   }
 
   return value;
@@ -264,7 +264,7 @@ append2line(line, str)
   if (line == NULL)
   {
     if ((p = strdup(str)) == NULL)
-      LOG_SYS_ERROR("strdup(%s) error", str);
+      ZE_LogSysError("strdup(%s) error", str);
     return p;
   }
 

@@ -64,7 +64,7 @@ main(int argc, char **argv)
   if (argc > 1)
     fname = argv[1];
 
-  set_log_output(FALSE, TRUE);
+  zeLog_SetOutput(FALSE, TRUE);
 
   init_default_file_extensions();
 
@@ -91,12 +91,12 @@ main(int argc, char **argv)
         }
         if (cf_opt.arg_c != NULL)
         {
-          MESSAGE_INFO(0, "Only one c option, please");
+          ZE_MessageInfo(0, "Only one c option, please");
           exit(RES_ERROR);
         }
         if ((cf_opt.arg_c = strdup(optarg)) == NULL)
         {
-          LOG_SYS_ERROR("FATAL ERROR - memory allocation cf_opt.arg_c");
+          ZE_LogSysError("FATAL ERROR - memory allocation cf_opt.arg_c");
           exit(RES_ERROR);
         }
         conf_file = cf_opt.arg_c;

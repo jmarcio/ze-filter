@@ -281,12 +281,12 @@ static blpool_T     blpool = { FALSE, PTHREAD_MUTEX_INITIALIZER };
 
 #define DATA_LOCK() \
   if (pthread_mutex_lock(&blpool.mutex) != 0) { \
-    LOG_SYS_ERROR("pthread_mutex_lock"); \
+    ZE_LogSysError("pthread_mutex_lock"); \
   }
 
 #define DATA_UNLOCK() \
   if (pthread_mutex_unlock(&blpool.mutex) != 0) { \
-    LOG_SYS_ERROR("pthread_mutex_unlock"); \
+    ZE_LogSysError("pthread_mutex_unlock"); \
   }
 
 /* ****************************************************************************
@@ -301,7 +301,7 @@ db_map_get_index(bl)
 
   if ((bl == NULL) || (strlen(bl) == 0))
   {
-    MESSAGE_WARNING(8, "Blacklist name empty or NULL pointer");
+    ZE_MessageWarning(8, "Blacklist name empty or NULL pointer");
     return -1;
   }
 
@@ -312,7 +312,7 @@ db_map_get_index(bl)
   }
 
   if (i >= SZPOOL)
-    MESSAGE_WARNING(8, "Blacklist %s not found");
+    ZE_MessageWarning(8, "Blacklist %s not found");
 
   return i;
 }
@@ -332,7 +332,7 @@ db_map_open(bl)
 
   if ((bl == NULL) || (strlen(bl) == 0))
   {
-    MESSAGE_WARNING(8, "Blacklist name empty or NULL pointer");
+    ZE_MessageWarning(8, "Blacklist name empty or NULL pointer");
     return FALSE;
   }
 
@@ -342,7 +342,7 @@ db_map_open(bl)
 
   if (i < 0)
   {
-    MESSAGE_WARNING(8,
+    ZE_MessageWarning(8,
                     "Blacklist pool is xxxx - consider increasing it's size");
     DATA_UNLOCK();
     return FALSE;
@@ -350,7 +350,7 @@ db_map_open(bl)
 
   if (i >= SZPOOL)
   {
-    MESSAGE_WARNING(8,
+    ZE_MessageWarning(8,
                     "Blacklist pool is full - consider increasing it's size");
     DATA_UNLOCK();
     return FALSE;
@@ -358,7 +358,7 @@ db_map_open(bl)
 
   if ((blpool.bl[i] != NULL) || zeDb_OK(&blpool.hdb[i]))
   {
-    MESSAGE_WARNING(8, "Blacklist %s already open", bl);
+    ZE_MessageWarning(8, "Blacklist %s already open", bl);
     DATA_UNLOCK();
     return TRUE;
   }
@@ -366,7 +366,7 @@ db_map_open(bl)
   if ((blpool.bl[i] = strdup(bl)) == NULL)
   {
     DATA_UNLOCK();
-    LOG_SYS_ERROR("strdup(%s) error", bl);
+    ZE_LogSysError("strdup(%s) error", bl);
     return FALSE;
   }
 
@@ -377,7 +377,7 @@ db_map_open(bl)
     res = zeDb_Open(&blpool.hdb[i], work_db_env, path, 0644, FALSE, TRUE, 0);
   zeDb_Unlock(&blpool.hdb[i]);
 
-  MESSAGE_INFO(9, "Database %s created/openned using handler no %d !", bl, i);
+  ZE_MessageInfo(9, "Database %s created/openned using handler no %d !", bl, i);
 
   DATA_UNLOCK();
 
@@ -397,7 +397,7 @@ db_map_close(bl)
 
   if ((bl == NULL) || (strlen(bl) == 0))
   {
-    MESSAGE_WARNING(8, "Blacklist name empty or NULL pointer");
+    ZE_MessageWarning(8, "Blacklist name empty or NULL pointer");
     return FALSE;
   }
 
@@ -407,14 +407,14 @@ db_map_close(bl)
 
   if ((i < 0) || (i >= SZPOOL))
   {
-    MESSAGE_WARNING(8, "Blacklist not found");
+    ZE_MessageWarning(8, "Blacklist not found");
     DATA_UNLOCK();
     return FALSE;
   }
 
   if ((blpool.bl[i] == NULL) || !zeDb_OK(&blpool.hdb[i]))
   {
-    MESSAGE_WARNING(8, "Blacklist %s already closed", STRNULL(bl, "(null)"));
+    ZE_MessageWarning(8, "Blacklist %s already closed", STRNULL(bl, "(null)"));
     DATA_UNLOCK();
     return TRUE;
   }
@@ -425,7 +425,7 @@ db_map_close(bl)
   zeDb_Unlock(&blpool.hdb[i]);
   FREE(blpool.bl[i]);
 
-  MESSAGE_INFO(9, "Database %s closed !", bl);
+  ZE_MessageInfo(9, "Database %s closed !", bl);
 
   DATA_UNLOCK();
 
@@ -484,7 +484,7 @@ db_map_check(bl, why, key, buf, sz)
   /* new ... */
   if ((bl == NULL) || (strlen(bl) == 0))
   {
-    MESSAGE_WARNING(8, "Blacklist name empty or NULL pointer");
+    ZE_MessageWarning(8, "Blacklist name empty or NULL pointer");
     return FALSE;
   }
 
@@ -496,7 +496,7 @@ db_map_check(bl, why, key, buf, sz)
 
     if (i < 0)
     {
-      MESSAGE_WARNING(8,
+      ZE_MessageWarning(8,
                       "Blacklist pool is xxxx - consider increasing it's size");
       DATA_UNLOCK();
       return FALSE;
@@ -504,7 +504,7 @@ db_map_check(bl, why, key, buf, sz)
 
     if (i >= SZPOOL)
     {
-      MESSAGE_WARNING(8,
+      ZE_MessageWarning(8,
                       "Blacklist pool is full - consider increasing it's size");
       DATA_UNLOCK();
       return FALSE;
@@ -553,7 +553,7 @@ db_map_add(bl, why, key, buf)
   /* new ... */
   if ((bl == NULL) || (strlen(bl) == 0))
   {
-    MESSAGE_WARNING(8, "Blacklist name empty or NULL pointer");
+    ZE_MessageWarning(8, "Blacklist name empty or NULL pointer");
     return FALSE;
   }
 
@@ -563,7 +563,7 @@ db_map_add(bl, why, key, buf)
 
   if ((i < 0) || (i >= SZPOOL))
   {
-    MESSAGE_WARNING(8, "Map %s not found !");
+    ZE_MessageWarning(8, "Map %s not found !");
     DATA_UNLOCK();
     return FALSE;
   }

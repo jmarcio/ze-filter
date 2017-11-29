@@ -65,7 +65,7 @@ tcp_server_listen(ip, service, port, addrlen)
     snprintf(iport, sizeof (iport), "%d", port);
     sport = (service != NULL ? service : iport);
 
-    MESSAGE_INFO(11, "tcp_server_listen : %s %s %d",
+    ZE_MessageInfo(11, "tcp_server_listen : %s %s %d",
                  STRNULL(ip, "IP???"), STRNULL(service, "SERVICE?"), port);
 
     memset(&hints, 0, sizeof (struct addrinfo));
@@ -80,7 +80,7 @@ tcp_server_listen(ip, service, port, addrlen)
     s = getaddrinfo(ip, sport, &hints, &result);
     if (s != 0)
     {
-      LOG_SYS_ERROR("getaddrinfo: %s", gai_strerror(s));
+      ZE_LogSysError("getaddrinfo: %s", gai_strerror(s));
       exit(EXIT_FAILURE);
     }
 
@@ -95,7 +95,7 @@ tcp_server_listen(ip, service, port, addrlen)
       if (setsockopt(sd, SOL_SOCKET, SO_REUSEADDR, (void *) &sopt,
                      sizeof (sopt)) < 0)
       {
-        LOG_SYS_ERROR("Error setsockopt(SO_REUSEADDR)");
+        ZE_LogSysError("Error setsockopt(SO_REUSEADDR)");
         (void) close(sd);
         return -1;
       }
@@ -108,7 +108,7 @@ tcp_server_listen(ip, service, port, addrlen)
 
     if (rp == NULL)
     {                           /* No address succeeded */
-      LOG_MSG_ERROR("Could not bind");
+      ZE_LogMsgError(0, "Could not bind");
       exit(EXIT_FAILURE);
     }
 
@@ -117,7 +117,7 @@ tcp_server_listen(ip, service, port, addrlen)
 
   if (listen(sd, SZ_QUEUE) < 0)
   {
-    LOG_SYS_ERROR("Error creating socket listening queue");
+    ZE_LogSysError("Error creating socket listening queue");
     (void) close(sd);
     return -1;
   }
@@ -153,20 +153,20 @@ local_server_listen(sname, addrlen)
   /* Let's create reception socket... */
   if ((sd = socket(AF_UNIX, SOCK_STREAM, 0)) < 0)
   {
-    LOG_SYS_ERROR("Error creating socket");
+    ZE_LogSysError("Error creating socket");
     return -1;
   }
 
   if (bind(sd, (struct sockaddr *) &srv_sock, sizeof (srv_sock)) < 0)
   {
-    LOG_SYS_ERROR("Error binding socket");
+    ZE_LogSysError("Error binding socket");
     (void) close(sd);
     return -1;
   }
 
   if (listen(sd, SZ_QUEUE) < 0)
   {
-    LOG_SYS_ERROR("Error creating socket listening queue");
+    ZE_LogSysError("Error creating socket listening queue");
     (void) close(sd);
     return -1;
   }
@@ -200,7 +200,7 @@ inet_server_listen(node, service, socktype, server)
   if (socktype != SOCK_STREAM && socktype != SOCK_DGRAM)
     socktype = SOCK_STREAM;
 
-  MESSAGE_INFO(12, "inet_server_listen : %s %s/%s",
+  ZE_MessageInfo(12, "inet_server_listen : %s %s/%s",
                STRNULL(node, "NODE???"), STRNULL(service, "SERVICE???"),
                socktype == SOCK_STREAM ? "tcp" : "udp");
 
@@ -216,7 +216,7 @@ inet_server_listen(node, service, socktype, server)
   s = getaddrinfo(node, service, &hints, &addrinfo);
   if (s != 0)
   {
-    LOG_SYS_ERROR("getaddrinfo: %s", gai_strerror(s));
+    ZE_LogSysError("getaddrinfo: %s", gai_strerror(s));
     exit(EXIT_FAILURE);
   }
 
@@ -232,7 +232,7 @@ inet_server_listen(node, service, socktype, server)
     if (setsockopt(sd, SOL_SOCKET, SO_REUSEADDR, (void *) &sopt,
                    sizeof (sopt)) < 0)
     {
-      LOG_SYS_ERROR("Error setsockopt(SO_REUSEADDR)");
+      ZE_LogSysError("Error setsockopt(SO_REUSEADDR)");
       close(sd);
       sd = -1;
       continue;
@@ -240,7 +240,7 @@ inet_server_listen(node, service, socktype, server)
 
     if (bind(sd, rp->ai_addr, rp->ai_addrlen) != 0)
     {
-      LOG_SYS_ERROR("Bind error");
+      ZE_LogSysError("Bind error");
       close(sd);
       sd = -1;
       continue;
@@ -250,7 +250,7 @@ inet_server_listen(node, service, socktype, server)
     {
       if (listen(sd, SZ_QUEUE) < 0)
       {
-        LOG_SYS_ERROR("Error creating listening socket");
+        ZE_LogSysError("Error creating listening socket");
         close(sd);
         sd = -1;
         continue;
@@ -271,7 +271,7 @@ inet_server_listen(node, service, socktype, server)
   if (sd < 0)
   {
     /* XXXX not a good message - correct it */
-    LOG_MSG_ERROR("Unable to create a listening socket");
+    ZE_LogMsgError(0, "Unable to create a listening socket");
     if (server != NULL)
       memset(server, 0, sizeof (server));
   }
@@ -340,7 +340,7 @@ server_listen(spec, server)
   if ((spec == NULL) || (strlen(spec) == 0))
     return FALSE;
 
-  MESSAGE_INFO(12, "   CONTROL SOCKET %s", spec);
+  ZE_MessageInfo(12, "   CONTROL SOCKET %s", spec);
 
   if ((s = tcp_prefix(spec)) != NULL)
   {
@@ -357,7 +357,7 @@ server_listen(spec, server)
 
     if ((ts = strdup(p)) == NULL)
     {
-      LOG_SYS_ERROR("strdup error");
+      ZE_LogSysError("strdup error");
       goto fin;
     }
     argc = str2tokens(ts, 4, argv, "@");
@@ -372,7 +372,7 @@ server_listen(spec, server)
 
     FREE(ts);
 
-    MESSAGE_INFO(10, "Launching inet server on port [%s/tcp] of [%s]", sport,
+    ZE_MessageInfo(10, "Launching inet server on port [%s/tcp] of [%s]", sport,
                  shost);
     fd = inet_server_listen(shost, sport, SOCK_STREAM, server);
 
@@ -394,7 +394,7 @@ server_listen(spec, server)
 
     if ((ts = strdup(p)) == NULL)
     {
-      LOG_SYS_ERROR("strdup error");
+      ZE_LogSysError("strdup error");
       goto fin;
     }
     argc = str2tokens(ts, 4, argv, "@");
@@ -412,7 +412,7 @@ server_listen(spec, server)
 
     FREE(ts);
 
-    MESSAGE_INFO(10, "Launching inet server on port [%s/udp] of  [%s]", sport,
+    ZE_MessageInfo(10, "Launching inet server on port [%s/udp] of  [%s]", sport,
                  shost);
     fd = inet_server_listen(shost, sport, SOCK_DGRAM, server);
 
@@ -430,7 +430,7 @@ server_listen(spec, server)
     if (*p != '/')
       goto fin;
 
-    MESSAGE_INFO(10, "Launching local server on %s", p);
+    ZE_MessageInfo(10, "Launching local server on %s", p);
     fd = local_server_listen(p, &addrlen);
     if (fd >= 0 && server != NULL)
     {

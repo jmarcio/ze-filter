@@ -373,7 +373,7 @@ log_counters(fd, dump)
 
     if (strlen(path) == 0)
     {
-      LOG_MSG_ERROR("undefined state file");
+      ZE_LogMsgError(0, "undefined state file");
       return;
     }
 
@@ -461,7 +461,7 @@ save_state()
 
   if (strlen(path) == 0)
   {
-    LOG_MSG_ERROR("undefined state file");
+    ZE_LogMsgError(0, "undefined state file");
     return;
   }
 
@@ -472,10 +472,10 @@ save_state()
     STATS_UNLOCK();
 
     if (write(fd, &m_stats, sizeof (m_stats)) != sizeof (m_stats))
-      LOG_SYS_ERROR("error writing %s file", STRNULL(path, "NULL"));
+      ZE_LogSysError("error writing %s file", STRNULL(path, "NULL"));
     close(fd);
   } else
-    LOG_SYS_ERROR("error opening %s file", STRNULL(path, "NULL"));
+    ZE_LogSysError("error opening %s file", STRNULL(path, "NULL"));
 }
 
 /* ****************************************************************************
@@ -500,7 +500,7 @@ read_state()
 
   if (strlen(path) == 0)
   {
-    LOG_MSG_ERROR("undefined state file");
+    ZE_LogMsgError(0, "undefined state file");
     return;
   }
 
@@ -508,11 +508,11 @@ read_state()
   {
     STATS_LOCK();
     if (read(fd, &m_stats, sizeof (m_stats)) != sizeof (m_stats))
-      LOG_SYS_ERROR("error reading %s file", STRNULL(path, "NULL"));
+      ZE_LogSysError("error reading %s file", STRNULL(path, "NULL"));
     STATS_UNLOCK();
     close(fd);
   } else
-    LOG_SYS_ERROR("error opening %s file", STRNULL(path, "NULL"));
+    ZE_LogSysError("error opening %s file", STRNULL(path, "NULL"));
 }
 
 /* ****************************************************************************
@@ -583,7 +583,7 @@ print_state(ofd)
 
   if (strlen(path) == 0)
   {
-    LOG_MSG_ERROR("undefined state file");
+    ZE_LogMsgError(0, "undefined state file");
     return 1;
   }
 
@@ -1123,7 +1123,7 @@ dump_state(ofd, jp, jg, all, nf)
 
   if (strlen(path) == 0)
   {
-    LOG_MSG_ERROR("undefined state file");
+    ZE_LogMsgError(0, "undefined state file");
     return 1;
   }
 
@@ -1161,12 +1161,12 @@ dump_state(ofd, jp, jg, all, nf)
     } else
     {
       close(fd);
-      LOG_SYS_ERROR("Error reading %s file", path);
+      ZE_LogSysError("Error reading %s file", path);
       return 1;
     }
   } else
   {
-    LOG_SYS_ERROR("Error opening %s file", path);
+    ZE_LogSysError("Error opening %s file", path);
     return 1;
   }
   return 0;
@@ -1190,54 +1190,54 @@ print_filter_stats_summary()
 
   st = &m_stats.proc;
 
-  MESSAGE_INFO(9, "%s", title);
+  ZE_MessageInfo(9, "%s", title);
   strlcpy(out, ctime(&st->start), sizeof (out));
 
   if ((p = strchr(out, '\n')) != NULL)
     *p = '\0';
-  MESSAGE_INFO(9, "%c %-30s : %s", c, "Start", out);
-  /* MESSAGE_INFO(9, "%c %-30s : %10ld", c, "# Start-up", st->value[STAT_RESTART]); */
-  MESSAGE_INFO(9, "%c %-30s : %10ld", c, "# Messages", st->value[STAT_MSGS]);
-  MESSAGE_INFO(9, "%c %-30s : %10lu", c, "# KBytes",
+  ZE_MessageInfo(9, "%c %-30s : %s", c, "Start", out);
+  /* ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# Start-up", st->value[STAT_RESTART]); */
+  ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# Messages", st->value[STAT_MSGS]);
+  ZE_MessageInfo(9, "%c %-30s : %10lu", c, "# KBytes",
                ((unsigned long) (st->value[STAT_BYTES]) >> 4));
-  MESSAGE_INFO(9, "%c %-30s : %10ld", c, "# Connect", st->value[STAT_CONNECT]);
-  MESSAGE_INFO(9, "%c %-30s : %10ld", c, "# Abort", st->value[STAT_ABORT]);
-  MESSAGE_INFO(9, "%c %-30s : %10ld", c, "# Close", st->value[STAT_CLOSE]);
+  ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# Connect", st->value[STAT_CONNECT]);
+  ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# Abort", st->value[STAT_ABORT]);
+  ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# Close", st->value[STAT_CLOSE]);
   if (st->value[STAT_ENVTO] > 0)
-    MESSAGE_INFO(9, "%c %-30s : %10ld", c, "# ENV RCPT", st->value[STAT_ENVTO]);
+    ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# ENV RCPT", st->value[STAT_ENVTO]);
   if (st->value[STAT_FILES] > 0)
-    MESSAGE_INFO(9, "%c %-30s : %10ld", c, "# Attached files",
+    ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# Attached files",
                  st->value[STAT_FILES]);
   if (st->value[STAT_XFILES] > 0)
-    MESSAGE_INFO(9, "%c %-30s : %10ld", c, "# X-Files", st->value[STAT_XFILES]);
+    ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# X-Files", st->value[STAT_XFILES]);
   if (st->value[STAT_VIRUS] > 0)
-    MESSAGE_INFO(9, "%c %-30s : %10ld", c, "# Virus", st->value[STAT_VIRUS]);
+    ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# Virus", st->value[STAT_VIRUS]);
   if (st->value[STAT_LUSERS] > 0)
-    MESSAGE_INFO(9, "%c %-30s : %10ld", c, "# Reject Local Users",
+    ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# Reject Local Users",
                  st->value[STAT_LUSERS]);
   if (st->value[STAT_NO_TO_HEADERS] > 0)
-    MESSAGE_INFO(9, "%c %-30s : %10ld", c, "# Reject No RCPT Headers",
+    ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# Reject No RCPT Headers",
                  st->value[STAT_NO_TO_HEADERS]);
   if (st->value[STAT_NO_FROM_HEADERS] > 0)
-    MESSAGE_INFO(9, "%c %-30s : %10ld", c, "# Reject No Senders ",
+    ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# Reject No Senders ",
                  st->value[STAT_NO_FROM_HEADERS]);
   if (st->value[STAT_MAX_RCPT] > 0)
-    MESSAGE_INFO(9, "%c %-30s : %10ld", c, "# Reject Exceed Max RCPT",
+    ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# Reject Exceed Max RCPT",
                  st->value[STAT_MAX_RCPT]);
   if (st->value[STAT_RCPT_RATE] > 0)
-    MESSAGE_INFO(9, "%c %-30s : %10ld", c, "# Reject Exceed rcpt rate",
+    ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# Reject Exceed rcpt rate",
                  st->value[STAT_RCPT_RATE]);
   if (st->value[STAT_CONN_RATE] > 0)
-    MESSAGE_INFO(9, "%c %-30s : %10ld", c, "# Reject Exceed conn rate",
+    ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# Reject Exceed conn rate",
                  st->value[STAT_CONN_RATE]);
   if (st->value[STAT_RESOLVE_FAIL] > 0)
-    MESSAGE_INFO(9, "%c %-30s : %10ld", c, "# Resolve FAIL",
+    ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# Resolve FAIL",
                  st->value[STAT_RESOLVE_FAIL]);
   if (st->value[STAT_RESOLVE_FORGED] > 0)
-    MESSAGE_INFO(9, "%c %-30s : %10ld", c, "# Resolve FORGED",
+    ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# Resolve FORGED",
                  st->value[STAT_RESOLVE_FORGED]);
   if (st->value[STAT_BADMX] > 0)
-    MESSAGE_INFO(9, "%c %-30s : %10ld", c, "# Sender with bad MX",
+    ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# Sender with bad MX",
                  st->value[STAT_BADMX]);
 
 }

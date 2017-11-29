@@ -58,7 +58,7 @@ db_policy_open(rd)
   dbname = cf_get_str(CF_DB_POLICY);
   ADJUST_FILENAME(dbpath, dbname, cfdir, "ze-policy.db");
 
-  MESSAGE_INFO(15, "Opening Policy Database : %s", dbpath);
+  ZE_MessageInfo(15, "Opening Policy Database : %s", dbpath);
 
   if (zeDb_OK(&hdb))
     return TRUE;
@@ -154,7 +154,7 @@ db_policy_check(prefix, key, bufout, size)
   if (!zeDb_OK(&hdb) && !db_policy_open(TRUE))
   {
     if (nerr++ < MAX_ERR)
-      LOG_MSG_ERROR("Can't open policy database");
+      ZE_LogMsgError(0, "Can't open policy database");
     return FALSE;
   }
 
@@ -177,7 +177,7 @@ db_policy_check(prefix, key, bufout, size)
     if ((email = strdup(key)) != NULL)
       (void) extract_email_address(email, key, strlen(key) + 1);
     else
-      LOG_SYS_ERROR("strdup(%s) error", key);
+      ZE_LogSysError("strdup(%s) error", key);
 
     domain++;
   } else
@@ -191,12 +191,12 @@ db_policy_check(prefix, key, bufout, size)
     /* First of all, let's check the entire key */
     snprintf(k, sizeof (k), "%s:%s", prefix, email);
     (void) strtolower(k);
-    MESSAGE_INFO(DBG_LEVEL, "KEY FULL : Looking for %s ...", k);
+    ZE_MessageInfo(DBG_LEVEL, "KEY FULL : Looking for %s ...", k);
     if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
     {
       if ((bufout != NULL) && (size > 0))
         strlcpy(bufout, v, size);
-      MESSAGE_INFO(DBG_LEVEL, "         : Found %s %s...", k, v);
+      ZE_MessageInfo(DBG_LEVEL, "         : Found %s %s...", k, v);
       found = TRUE;
       goto fin;
     }
@@ -210,7 +210,7 @@ db_policy_check(prefix, key, bufout, size)
   if (found)
     goto fin;
 
-  MESSAGE_INFO(DBG_LEVEL, "db_policy : domain = %s", domain);
+  ZE_MessageInfo(DBG_LEVEL, "db_policy : domain = %s", domain);
 
   /* Entire key doesn't match - lets check domain part */
   if (strexpr(domain, IPV4_ADDR_REGEX, NULL, NULL, TRUE))
@@ -223,12 +223,12 @@ db_policy_check(prefix, key, bufout, size)
     /* Try each part beginning from the most complete one */
     while (strlen(k) > 0)
     {
-      MESSAGE_INFO(DBG_LEVEL, "IP   : Looking for %s ...", k);
+      ZE_MessageInfo(DBG_LEVEL, "IP   : Looking for %s ...", k);
       if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
       {
         if ((bufout != NULL) && (size > 0))
           strlcpy(bufout, v, size);
-        MESSAGE_INFO(DBG_LEVEL, "         : Found %s %s...", k, v);
+        ZE_MessageInfo(DBG_LEVEL, "         : Found %s %s...", k, v);
         found = TRUE;
         break;
       }
@@ -246,12 +246,12 @@ db_policy_check(prefix, key, bufout, size)
     char                buf[256];
 
     snprintf(k, sizeof (k), "%s:%s", prefix, domain);
-    MESSAGE_INFO(DBG_LEVEL, "IP   : Looking for %s ...", k);
+    ZE_MessageInfo(DBG_LEVEL, "IP   : Looking for %s ...", k);
     if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
     {
       if ((bufout != NULL) && (size > 0))
         strlcpy(bufout, v, size);
-      MESSAGE_INFO(DBG_LEVEL, "         : Found %s %s...", k, v);
+      ZE_MessageInfo(DBG_LEVEL, "         : Found %s %s...", k, v);
       found = TRUE;
       goto host_check_ok;
     }
@@ -266,12 +266,12 @@ db_policy_check(prefix, key, bufout, size)
 
       ipv6_rec2str(buf, &ipv6, sizeof (buf));
       snprintf(k, sizeof (k), "%s:%s", prefix, buf);
-      MESSAGE_INFO(DBG_LEVEL, "IP   : Looking for %s ...", k);
+      ZE_MessageInfo(DBG_LEVEL, "IP   : Looking for %s ...", k);
       if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
       {
         if ((bufout != NULL) && (size > 0))
           strlcpy(bufout, v, size);
-        MESSAGE_INFO(DBG_LEVEL, "         : Found %s %s...", k, v);
+        ZE_MessageInfo(DBG_LEVEL, "         : Found %s %s...", k, v);
         found = TRUE;
         goto host_check_ok;
       }
@@ -289,12 +289,12 @@ db_policy_check(prefix, key, bufout, size)
         ipv6_rec2str(buf, &net, sizeof (buf));
 #endif
         snprintf(k, sizeof (k), "%s:%s", prefix, buf);
-        MESSAGE_INFO(DBG_LEVEL, "IP   : Looking for %s ...", k);
+        ZE_MessageInfo(DBG_LEVEL, "IP   : Looking for %s ...", k);
         if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
         {
           if ((bufout != NULL) && (size > 0))
             strlcpy(bufout, v, size);
-          MESSAGE_INFO(DBG_LEVEL, "         : Found %s %s...", k, v);
+          ZE_MessageInfo(DBG_LEVEL, "         : Found %s %s...", k, v);
           found = TRUE;
           goto host_check_ok;
         }
@@ -312,12 +312,12 @@ db_policy_check(prefix, key, bufout, size)
     {
       snprintf(k, sizeof (k), "%s:%s", prefix, p);
       (void) strtolower(k);
-      MESSAGE_INFO(DBG_LEVEL, "NAME : Looking for %s", k);
+      ZE_MessageInfo(DBG_LEVEL, "NAME : Looking for %s", k);
       if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
       {
         if ((bufout != NULL) && (size > 0))
           strlcpy(bufout, v, size);
-        MESSAGE_INFO(DBG_LEVEL, "         : Found %s %s...", k, v);
+        ZE_MessageInfo(DBG_LEVEL, "         : Found %s %s...", k, v);
         found = TRUE;
         break;
       }
@@ -342,7 +342,7 @@ host_check_ok:
     if (p != NULL)
       *(++p) = '\0';
 
-    MESSAGE_INFO(DBG_LEVEL, "k = %s", k);
+    ZE_MessageInfo(DBG_LEVEL, "k = %s", k);
 
     if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
     {
@@ -381,7 +381,7 @@ db_policy_lookup(prefix, key, bufout, size)
   if (!zeDb_OK(&hdb) && !db_policy_open(TRUE))
   {
     if (nerr++ < MAX_ERR)
-      LOG_MSG_ERROR("Can't open policy database");
+      ZE_LogMsgError(0, "Can't open policy database");
     return FALSE;
   }
 
@@ -397,12 +397,12 @@ db_policy_lookup(prefix, key, bufout, size)
   /* First of all, let's check the entire key */
   snprintf(k, sizeof (k), "%s:%s", prefix, key);
   (void) strtolower(k);
-  MESSAGE_INFO(DBG_LEVEL, "KEY FULL : Looking for %s ...", k);
+  ZE_MessageInfo(DBG_LEVEL, "KEY FULL : Looking for %s ...", k);
   if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
   {
     if ((bufout != NULL) && (size > 0))
       strlcpy(bufout, v, size);
-    MESSAGE_INFO(DBG_LEVEL, "         : Found %s %s...", k, v);
+    ZE_MessageInfo(DBG_LEVEL, "         : Found %s %s...", k, v);
     found = TRUE;
     goto fin;
   }
@@ -411,7 +411,7 @@ fin:
   zeDb_Unlock(&hdb);
 
   if (getenv("SHOWLOOKUP") != NULL)
-    MESSAGE_INFO(0, "%-40s %s", k, found ? bufout : ""); 
+    ZE_MessageInfo(0, "%-40s %s", k, found ? bufout : ""); 
 
   return found;
 }

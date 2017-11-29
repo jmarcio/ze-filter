@@ -55,7 +55,7 @@ mlfi_helo(ctx, helohost)
 
   if ((priv->helohost = strdup(helohost)) == NULL)
   {
-    LOG_SYS_ERROR("strdup(helohost) error");
+    ZE_LogSysError("strdup(helohost) error");
     result = SMFIS_TEMPFAIL;
 
     goto fin;

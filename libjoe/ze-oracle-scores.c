@@ -659,7 +659,7 @@ oracle_dump_counters(fd, verbose)
 
     if ((fd = open(fname, O_WRONLY | O_TRUNC | O_CREAT, 0644)) < 0)
     {
-      LOG_SYS_ERROR("Error opening %s file ", fname);
+      ZE_LogSysError("Error opening %s file ", fname);
       return FALSE;
     }
   }
@@ -924,14 +924,14 @@ read_oracle_def_string(v, arg)
       s += pf;
       *s++ = '\0';
 
-      MESSAGE_INFO(19, "KEY = (%s) VALUE = (%s)\n", key, val);
+      ZE_MessageInfo(19, "KEY = (%s) VALUE = (%s)\n", key, val);
 
       if (STRCASEEQUAL(key, "score"))
       {
         if (strspn(val, "0123456789.") == strlen(val))
           score = atof(val);
         else
-          MESSAGE_WARNING(9, "Non numeric value found... %s=%s", key, val);
+          ZE_MessageWarning(9, "Non numeric value found... %s=%s", key, val);
       }
 
       if (STRCASEEQUAL(key, "odds"))
@@ -944,7 +944,7 @@ read_oracle_def_string(v, arg)
           if (v > 0.)
             odds = log(v);
         } else
-          MESSAGE_WARNING(9, "Non numeric value found... %s=%s", key, val);
+          ZE_MessageWarning(9, "Non numeric value found... %s=%s", key, val);
       }
 #if 0
       if (STRCASEEQUAL(key, "action"))
@@ -993,7 +993,7 @@ read_it(path, tag)
 {
   int                 r;
 
-  r = j_rd_file(path, tag, read_oracle_def_string, NULL);
+  r = zm_RdFile(path, tag, read_oracle_def_string, NULL);
 
   return r >= 0;
 }
@@ -1137,7 +1137,7 @@ oracle_compute_score(id, ip, data)
           }
           msg = oracle_get_label(ORACLE_TYPE_CONN, i);
           if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 1)
-            MESSAGE_INFO(9, "%s ORACLE - C%02d %s (%6.1f)", id, i, msg, value * v);
+            ZE_MessageInfo(9, "%s ORACLE - C%02d %s (%6.1f)", id, i, msg, value * v);
           score += value * v;
         }
       } else
@@ -1229,7 +1229,7 @@ oracle_compute_score(id, ip, data)
           }
           msg = oracle_get_label(ORACLE_TYPE_MSG, i);
           if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 1)
-            MESSAGE_INFO(9, "%s ORACLE - M%02d %s (%6.1f)", id, i, msg, value * v);
+            ZE_MessageInfo(9, "%s ORACLE - M%02d %s (%6.1f)", id, i, msg, value * v);
           score += value * v;
         }
       } else
@@ -1267,7 +1267,7 @@ oracle_compute_score(id, ip, data)
           }
           msg = oracle_get_label(ORACLE_TYPE_PLAIN, i);
           if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 1)
-            MESSAGE_INFO(9, "%s ORACLE - P%02d %s (%6.1f)", id, i, msg, value * v);
+            ZE_MessageInfo(9, "%s ORACLE - P%02d %s (%6.1f)", id, i, msg, value * v);
           score += value * v;
         }
       } else
@@ -1309,7 +1309,7 @@ oracle_compute_score(id, ip, data)
           }
           msg = oracle_get_label(ORACLE_TYPE_HTML, i);
           if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 1)
-            MESSAGE_INFO(9, "%s ORACLE - H%02d %s (%6.1f)", id, i, msg, value * v);
+            ZE_MessageInfo(9, "%s ORACLE - H%02d %s (%6.1f)", id, i, msg, value * v);
           score += value * v;
         }
       } else
@@ -1320,7 +1320,7 @@ oracle_compute_score(id, ip, data)
     }
   }
 
-  MESSAGE_INFO(12, "%s ->Computed ORACLE score is %5.2f ...", id, score);
+  ZE_MessageInfo(12, "%s ->Computed ORACLE score is %5.2f ...", id, score);
 
   {
     double              lam = 0.0;
@@ -1330,7 +1330,7 @@ oracle_compute_score(id, ip, data)
 
     data->scores.noracle = lam;
 
-    MESSAGE_INFO(12, "%s ->Computed ORACLE score is %5.2f odds=%6.3f lam=%6.3f...",
+    ZE_MessageInfo(12, "%s ->Computed ORACLE score is %5.2f odds=%6.3f lam=%6.3f...",
                  id, score, odds, lam);
   }
 

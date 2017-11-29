@@ -61,10 +61,10 @@ mlfi_abort(ctx)
     int                 n;
 
     if ((n = update_nb_badrcpts(ctx)) > 0)
-      MESSAGE_INFO(19, "%s : BAD RECIPIENTS : %d", CONNID_STR(priv->id), n);
+      ZE_MessageInfo(19, "%s : BAD RECIPIENTS : %d", CONNID_STR(priv->id), n);
     priv->nb_mbadrcpt = 0;
     priv->nb_cbadrcpt += n;
-    MESSAGE_INFO(19, "mlfi_abort : bad = %d", n);
+    ZE_MessageInfo(19, "mlfi_abort : bad = %d", n);
   }
 
   result = mlfi_cleanup(ctx, FALSE);

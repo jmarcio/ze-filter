@@ -115,7 +115,7 @@ ipv6_str2rec(addr, sin)
     p = strstr(p, "::");
     if (p != NULL)
     {
-      MESSAGE_WARNING(10, "   Invalid IPV6 address : %s", sin);
+      ZE_MessageWarning(10, "   Invalid IPV6 address : %s", sin);
       goto fin;
     }
   }
@@ -132,13 +132,13 @@ ipv6_str2rec(addr, sin)
     u = strtoul(p, &ptr, 16);
     if (errno != 0)
     {
-      MESSAGE_WARNING(10, "   Invalid IPV6 address : %s", sin);
+      ZE_MessageWarning(10, "   Invalid IPV6 address : %s", sin);
       goto fin;
     }
 
     if (u >= 0x10000)
     {
-      MESSAGE_WARNING(10, "   Invalid IPV6 address : %s", sin);
+      ZE_MessageWarning(10, "   Invalid IPV6 address : %s", sin);
       goto fin;
     }
 

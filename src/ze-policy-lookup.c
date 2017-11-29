@@ -70,7 +70,7 @@ main(argc, argv)
      char              **argv;
 {
   int                 res = 0;
-  extern int          log_level;
+  extern int          ze_logLevel;
 
   char               *prefix, *ip, *name, *from, *to, *key;
   int                 netclass = NET_UNKNOWN;
@@ -86,8 +86,8 @@ main(argc, argv)
 
   configure("ze-policy-lookup", conf_file, FALSE);
 
-  set_log_output(FALSE, TRUE);
-  log_level = 10;
+  zeLog_SetOutput(FALSE, TRUE);
+  ze_logLevel = 10;
 
   {
     const char         *args = "P:K:I:H:F:T:htvs";
@@ -124,7 +124,7 @@ main(argc, argv)
           fromStdin = TRUE;
           break;
         case 'v':
-          log_level++;
+          ze_logLevel++;
           break;
         case 'l':
           break;
@@ -136,7 +136,7 @@ main(argc, argv)
   }
 
   if (!policy_init()) {
-    MESSAGE_INFO(0, "Error opening policy database !");
+    ZE_MessageInfo(0, "Error opening policy database !");
     exit(1);
   }
 
@@ -154,15 +154,15 @@ main(argc, argv)
 
     if (strlen(class) == 0)
       strlcpy(class, NET_CLASS_LABEL(netclass), sizeof (class));
-    MESSAGE_INFO(0, "Client IP address : %s", ip);
-    MESSAGE_INFO(0, "Client hostname   : %s", name);
-    MESSAGE_INFO(0, "Sender            : %s", from);
-    MESSAGE_INFO(0, "Recipient         : %s", to);
-    MESSAGE_INFO(0, "Client NET class  : %02X %s", netclass, class);
-    MESSAGE_INFO(0, "");
-    MESSAGE_INFO(0, "Checking = %s %s %s %s %s", prefix, ip, name, from, to);
+    ZE_MessageInfo(0, "Client IP address : %s", ip);
+    ZE_MessageInfo(0, "Client hostname   : %s", name);
+    ZE_MessageInfo(0, "Sender            : %s", from);
+    ZE_MessageInfo(0, "Recipient         : %s", to);
+    ZE_MessageInfo(0, "Client NET class  : %02X %s", netclass, class);
+    ZE_MessageInfo(0, "");
+    ZE_MessageInfo(0, "Checking = %s %s %s %s %s", prefix, ip, name, from, to);
     flag = check_policy_tuple(prefix, ip, name, class, from, to, TRUE);
-    MESSAGE_INFO(0, "RESULT   = %s", STRBOOL(flag, "YES", "NO"));
+    ZE_MessageInfo(0, "RESULT   = %s", STRBOOL(flag, "YES", "NO"));
 
     goto end;
   }
@@ -171,10 +171,10 @@ main(argc, argv)
     bool                flag;
     char                buf[256];
 
-    MESSAGE_INFO(0, "Checking = %s %s", prefix, key);
+    ZE_MessageInfo(0, "Checking = %s %s", prefix, key);
     memset(buf, 0, sizeof (buf));
     flag = check_policy(prefix, key, buf, sizeof (buf), TRUE);
-    MESSAGE_INFO(0, "RESULT   = %s - %s", buf, STRBOOL(flag, "YES", "NO"));
+    ZE_MessageInfo(0, "RESULT   = %s - %s", buf, STRBOOL(flag, "YES", "NO"));
   }
 
 end:
@@ -215,11 +215,11 @@ HandleStdin()
         extract_email_address(eMail, argv[2], sizeof (eMail));
         if (strlen(eMail) == 0)
           strlcpy(eMail, "nullsender", sizeof (eMail));
-        MESSAGE_INFO(0, "====== %s", args);
+        ZE_MessageInfo(0, "====== %s", args);
         ok = PolicyLookupEmailAddr(argv[1], eMail, buf, sizeof (buf));
-        MESSAGE_INFO(0, " ->  Result : %-5s : %s", (ok ? "OK" : "--"),
+        ZE_MessageInfo(0, " ->  Result : %-5s : %s", (ok ? "OK" : "--"),
                      (ok ? buf : ""));
-        MESSAGE_INFO(0, "");
+        ZE_MessageInfo(0, "");
         continue;
       }
 
@@ -231,13 +231,13 @@ HandleStdin()
           strlcpy(nClass.label, argv[4], sizeof (nClass.label));
           nClass.ok = TRUE;
         }
-        MESSAGE_INFO(0, "====== %s", args);
+        ZE_MessageInfo(0, "====== %s", args);
         ok =
           PolicyLookupClient(argv[1], argv[2], argv[3], &nClass, buf,
                              sizeof (buf));
-        MESSAGE_INFO(0, " ->  Result : %-5s : %s", (ok ? "OK" : "--"),
+        ZE_MessageInfo(0, " ->  Result : %-5s : %s", (ok ? "OK" : "--"),
                      (ok ? buf : ""));
-        MESSAGE_INFO(0, "");
+        ZE_MessageInfo(0, "");
         continue;
       }
 
@@ -246,11 +246,11 @@ HandleStdin()
 
         memset(&nClass, 0, sizeof (nClass));
 
-        MESSAGE_INFO(0, "====== %s", args);
+        ZE_MessageInfo(0, "====== %s", args);
         ok = PolicyLookupNetClass(argv[1], argv[2], &nClass, buf, sizeof (buf));
-        MESSAGE_INFO(0, " ->  Result : %-5s : %s %s", (ok ? "OK" : "--"),
+        ZE_MessageInfo(0, " ->  Result : %-5s : %s %s", (ok ? "OK" : "--"),
                      (ok ? nClass.label : ""), (ok ? nClass.equiv : ""));
-        MESSAGE_INFO(0, "");
+        ZE_MessageInfo(0, "");
         continue;
       }
 
@@ -258,9 +258,9 @@ HandleStdin()
         char               *addr = NULL, *from = NULL, *to = NULL;
         char               *s = "OK";
 
-        MESSAGE_INFO(0, "====== %s", args);
+        ZE_MessageInfo(0, "====== %s", args);
         if (argc < 4) {
-          MESSAGE_INFO(0, "  Not enough arguments");
+          ZE_MessageInfo(0, "  Not enough arguments");
           continue;
         }
         if (!STRCASEEQUAL(argv[1], "null"))
@@ -281,8 +281,8 @@ HandleStdin()
             s = "REJECT";
             break;
         }
-        MESSAGE_INFO(0, " ->  Result : %d %s", ok, s);
-        MESSAGE_INFO(0, "");
+        ZE_MessageInfo(0, " ->  Result : %d %s", ok, s);
+        ZE_MessageInfo(0, "");
         continue;
       }
 

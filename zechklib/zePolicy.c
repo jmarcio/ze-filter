@@ -61,7 +61,7 @@ zmStrDump(s)
     strlcat(buf, tbuf, sizeof (buf));
 
   }
-  MESSAGE_INFO(0, "* %s", buf);
+  ZE_MessageInfo(0, "* %s", buf);
 }
 
 /******************************************************************************
@@ -310,7 +310,7 @@ stPolicyLookupDomain(prefix, key, buf, bufSize, recurse, chkDefault)
   if (recurse) {
     domKey = strdup(key);
     if (domKey == NULL) {
-      LOG_SYS_ERROR("Can't strdup(%s)", key);
+      ZE_LogSysError("Can't strdup(%s)", key);
       goto fin;
     }
     argc = str2tokens(domKey, 32, argv, ".");
@@ -364,7 +364,7 @@ stPolicyLookupIPv4Addr(prefix, key, buf, bufSize, recurse, chkDefault)
   if (recurse) {
     addrKey = strdup(key);
     if (addrKey == NULL) {
-      LOG_SYS_ERROR("Can't strdup(%s)", key);
+      ZE_LogSysError("Can't strdup(%s)", key);
       goto fin;
     }
     argc = str2tokens(addrKey, 32, argv, ".");
@@ -416,7 +416,7 @@ stPolicyLookupIPv6Addr(prefix, key, buf, bufSize, recurse, chkDefault)
   if (recurse) {
     addrKey = strdup(key);
     if (addrKey == NULL) {
-      LOG_SYS_ERROR("Can't strdup(%s)", key);
+      ZE_LogSysError("Can't strdup(%s)", key);
       goto fin;
     }
     argc = str2tokens(addrKey, 32, argv, ".");
@@ -470,7 +470,7 @@ stPolicyLookupNetClass(addr, name, class, buf, bufSize, recurse)
 
     addrKey = strdup(addr);
     if (addrKey == NULL) {
-      LOG_SYS_ERROR("Can't strdup(%s)", addr);
+      ZE_LogSysError("Can't strdup(%s)", addr);
       goto fin;
     }
     argc = str2tokens(addrKey, 32, argv, ".");
@@ -500,7 +500,7 @@ stPolicyLookupNetClass(addr, name, class, buf, bufSize, recurse)
 
     nameKey = strdup(name);
     if (nameKey == NULL) {
-      LOG_SYS_ERROR("Can't strdup(%s)", name);
+      ZE_LogSysError("Can't strdup(%s)", name);
       goto fin;
     }
     argc = str2tokens(nameKey, 32, argv, ".");
@@ -571,7 +571,7 @@ stPolicyLookupEmailAddr(prefix, key, buf, bufSize, recurse, chkDefault)
 
   emailKey = strdup(key);
   if (emailKey == NULL) {
-    LOG_SYS_ERROR("Can't strdup(%s)", key);
+    ZE_LogSysError("Can't strdup(%s)", key);
     goto fin;
   }
   if ((p = strchr(emailKey, '@')) != NULL) {

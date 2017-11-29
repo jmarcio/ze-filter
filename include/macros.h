@@ -48,7 +48,7 @@
       char fdp_str[1024];					    \
       (void ) snprintf(fdp_str, sizeof(fdp_str), __VA_ARGS__);	    \
       if (write (fdp, fdp_str, strlen(fdp_str)) != strlen(fdp_str)) \
-        LOG_SYS_ERROR("error on FD_PRINTF");			    \
+        ZE_LogSysError(0, "error on FD_PRINTF");			    \
     } else							    \
       printf(__VA_ARGS__);					    \
   } while (0)
@@ -59,7 +59,7 @@
       char fdp_str[1024];					    \
       (void ) snprintf(fdp_str, sizeof(fdp_str), __VA_ARGS__);	    \
       if (sendto(fdp, fdp_str, strlen(fdp_str), 0, NULL, 0) != strlen(fdp_str)) \
-        LOG_SYS_ERROR("error on SD_PRINTF");			    \
+        ZE_LogSysError(0, "error on SD_PRINTF");			    \
     } else							    \
       printf(__VA_ARGS__);					    \
   } while (0)
@@ -94,7 +94,7 @@
   {                                                          \
     int r = 0;                                               \
     if ((r = pthread_mutex_lock(mutex)) != 0) {              \
-      LOG_SYS_ERROR("pthread_mutex_lock : %s", strerror(r)); \
+      ZE_LogSysError(0, "pthread_mutex_lock : %s", strerror(r)); \
     }                                                        \
   }
 
@@ -102,23 +102,23 @@
   {                                                            \
     int r = 0;                                                 \
     if ((r = pthread_mutex_unlock(mutex)) != 0) {              \
-      LOG_SYS_ERROR("pthread_mutex_unlock : %s", strerror(r)); \
+      ZE_LogSysError(0, "pthread_mutex_unlock : %s", strerror(r)); \
     }                                                          \
   }
 
 #define RWLOCK_RDLOCK(lock) \
   if (pthread_rwlock_rdlock(lock) != 0) { \
-    LOG_SYS_ERROR("pthread_rwlock_rdlock"); \
+    ZE_LogSysError(0, "pthread_rwlock_rdlock"); \
   }
 
 #define RWLOCK_WRLOCK(lock) \
   if (pthread_rwlock_wrlock(lock) != 0) { \
-    LOG_SYS_ERROR("pthread_rwlock_rdlock"); \
+    ZE_LogSysError(0, "pthread_rwlock_rdlock"); \
   }
 
 #define RWLOCK_UNLOCK(lock) \
   if (pthread_rwlock_unlock(lock) != 0) { \
-    LOG_SYS_ERROR("pthread_rwlock_rdlock"); \
+    ZE_LogSysError(0, "pthread_rwlock_rdlock"); \
   }
 
 
@@ -242,7 +242,7 @@
       strlcpy(path, name, sizeof(path));				\
     else								\
       snprintf(path, sizeof(path), "%s/%s", cfdir, name);		\
-    MESSAGE_INFO(15, "Adjusted path is %s", path);			\
+    zeLog_MessageInfo(15, "Adjusted path is %s", path);			\
   } while (FALSE);
 
 

@@ -37,7 +37,7 @@ main(argc, argv)
   uint64_t            ti, tf;
 
   int                 res = 0;
-  extern int          log_level;
+  extern int          ze_logLevel;
 
   memset(tok, 0, sizeof (tok));
 

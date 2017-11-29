@@ -504,14 +504,14 @@ grey_check(kAddr, kFrom, kRcpt, kName, new, can_validate)
   if ((from = strdup(kFrom)) != NULL)
     (void) extract_email_address(from, kFrom, strlen(kFrom) + 1);
   else
-    LOG_SYS_ERROR("Error malloc strdup(%s)", kFrom);
+    ZE_LogSysError("Error malloc strdup(%s)", kFrom);
 
-  MESSAGE_INFO(19, "from - %s - %s", kFrom, from);
+  ZE_MessageInfo(19, "from - %s - %s", kFrom, from);
 
   if ((rcpt = strdup(kRcpt)) != NULL)
     (void) extract_email_address(rcpt, kRcpt, strlen(kRcpt) + 1);
   else
-    LOG_SYS_ERROR("Error malloc strdup(%s)", kRcpt);
+    ZE_LogSysError("Error malloc strdup(%s)", kRcpt);
 
   if (from == NULL || rcpt == NULL)
     goto end;
@@ -520,7 +520,7 @@ grey_check(kAddr, kFrom, kRcpt, kName, new, can_validate)
 
   now = time(NULL);
 
-  LOG_MSG_INFO(DBG_LEVEL, "IP  : %s", ip);
+  ZE_LogMsgInfo(DBG_LEVEL, "IP  : %s", ip);
 
   /* check static whitelist database */
   {
@@ -554,7 +554,7 @@ grey_check(kAddr, kFrom, kRcpt, kName, new, can_validate)
             grey_entry_free(&entry);
             (void) grey_value_str2entry(&entry, value);
 
-            MESSAGE_INFO(19, "date_updt/now : %ld/%ld", entry.date_updt, now);
+            ZE_MessageInfo(19, "date_updt/now : %ld/%ld", entry.date_updt, now);
             if (entry.date_updt + DT_GREY_INTERVAL < now)
             {
               entry.date_updt = now;
@@ -567,7 +567,7 @@ grey_check(kAddr, kFrom, kRcpt, kName, new, can_validate)
             result = GREY_OK;
           }
         } else
-          LOG_SYS_ERROR("grey_key_white error...");
+          ZE_LogSysError("grey_key_white error...");
 
         FREE(key);
 
@@ -590,7 +590,7 @@ grey_check(kAddr, kFrom, kRcpt, kName, new, can_validate)
     goto endlock;
   }
 
-  MESSAGE_INFO(DBG_LEVEL, "KEY : %s", key);
+  ZE_MessageInfo(DBG_LEVEL, "KEY : %s", key);
 
   /* check against valid entries database */
   if (grey_get_rec(&gdata.gdbv, key, value, sizeof (value)))
@@ -600,7 +600,7 @@ grey_check(kAddr, kFrom, kRcpt, kName, new, can_validate)
 
     /* XXX JOE - check if the entry is already expired */
 
-    MESSAGE_INFO(19, "date_updt/now : %ld/%ld", entry.date_updt, now);
+    ZE_MessageInfo(19, "date_updt/now : %ld/%ld", entry.date_updt, now);
     if (entry.date_updt + DT_GREY_INTERVAL < now)
     {
       entry.date_updt = now;
@@ -644,10 +644,10 @@ grey_check(kAddr, kFrom, kRcpt, kName, new, can_validate)
                  entry.hostname,
                  STRBOOL(ISNULLSENDER(entry.from), "nullsender", entry.from),
                  "FLAGS", entry.count < 1 ? 1 : entry.count, "NULL");
-        MESSAGE_INFO(9, "ENTRY - Decoding error");
-        MESSAGE_INFO(9, "ENTRY - KEY       : %s", key);
-        MESSAGE_INFO(9, "ENTRY - VALUE IN  : %s", value);
-        MESSAGE_INFO(9, "ENTRY - VALUE OUT : %s", tbuf);
+        ZE_MessageInfo(9, "ENTRY - Decoding error");
+        ZE_MessageInfo(9, "ENTRY - KEY       : %s", key);
+        ZE_MessageInfo(9, "ENTRY - VALUE IN  : %s", value);
+        ZE_MessageInfo(9, "ENTRY - VALUE OUT : %s", tbuf);
       }
     }
 
@@ -724,7 +724,7 @@ grey_check(kAddr, kFrom, kRcpt, kName, new, can_validate)
     if (max_pending > 0)
     {
       count = grey_count_pending(ip);
-      MESSAGE_INFO(DBG_LEVEL, "COUNT  KEY : %-16s %d", key, count);
+      ZE_MessageInfo(DBG_LEVEL, "COUNT  KEY : %-16s %d", key, count);
     }
 
     if (max_pending == 0 || count < max_pending)
@@ -732,7 +732,7 @@ grey_check(kAddr, kFrom, kRcpt, kName, new, can_validate)
       bool                r = FALSE;
 
       /* add entry to pending database */
-      MESSAGE_INFO(DBG_LEVEL, "ADDING KEY : %s %s %s", key, value,
+      ZE_MessageInfo(DBG_LEVEL, "ADDING KEY : %s %s %s", key, value,
                    STRBOOL(r, "OK", "KO"));
 
       grey_entry_free(&entry);
@@ -840,7 +840,7 @@ grey_validate(kAddr, kFrom, kRcpt, kName)
     goto end;
   }
 
-  LOG_MSG_INFO(DBG_LEVEL, "IP  : %s", ip);
+  ZE_LogMsgInfo(DBG_LEVEL, "IP  : %s", ip);
 
   now = time(NULL);
 
@@ -851,7 +851,7 @@ grey_validate(kAddr, kFrom, kRcpt, kName)
     goto end;
   }
 
-  MESSAGE_INFO(DBG_LEVEL, "KEY : %s", vkey);
+  ZE_MessageInfo(DBG_LEVEL, "KEY : %s", vkey);
 
   GREY_CRIT_LOCK();
 
@@ -877,7 +877,7 @@ grey_validate(kAddr, kFrom, kRcpt, kName)
           grey_entry_free(&entry);
           (void) grey_value_str2entry(&entry, value);
 
-          MESSAGE_INFO(19, "date_updt/now : %ld/%ld", entry.date_updt, now);
+          ZE_MessageInfo(19, "date_updt/now : %ld/%ld", entry.date_updt, now);
           if (entry.date_updt + DT_GREY_INTERVAL < now)
           {
             entry.date_updt = now;
@@ -887,7 +887,7 @@ grey_validate(kAddr, kFrom, kRcpt, kName)
           }
         }
       } else
-        LOG_SYS_ERROR("grey_key_white error...");
+        ZE_LogSysError("grey_key_white error...");
 
       FREE(wkey);
 
@@ -1023,7 +1023,7 @@ grey_key(ip, from, rcpt, ipFlags, fromFlags, rcptFlags)
 
   if ((p = malloc(sz)) == NULL)
   {
-    LOG_SYS_ERROR("malloc(%ld)", (long) sz);
+    ZE_LogSysError("malloc(%ld)", (long) sz);
     return NULL;
   }
 
@@ -1056,7 +1056,7 @@ grey_key(ip, from, rcpt, ipFlags, fromFlags, rcptFlags)
     if (fromFlags != GREY_EMAIL_NONE && nullsender)
       snprintf(buf_from, sizeof (buf_from), "nullsender");
 
-    MESSAGE_INFO(DBG_LEVEL, "GREY FLAGS : %d %d %d", ipFlags, fromFlags,
+    ZE_MessageInfo(DBG_LEVEL, "GREY FLAGS : %d %d %d", ipFlags, fromFlags,
                  rcptFlags);
 
     switch (ipFlags)
@@ -1151,7 +1151,7 @@ grey_key_white(ip, from)
 
   if ((p = malloc(sz)) == NULL)
   {
-    LOG_SYS_ERROR("malloc(%ld)", (long) sz);
+    ZE_LogSysError("malloc(%ld)", (long) sz);
     return NULL;
   }
 
@@ -1570,7 +1570,7 @@ db_grey_open(workdir, rd)
     snprintf(path, sizeof (path), "%s/%s", workdir, "ze-greypend.db");
 
     res = zeDb_Open(&gdata.gdbp, work_db_env, path, mode, rdonly, TRUE, 0);
-    MESSAGE_INFO(DBG_LEVEL, "PATH = %-32s, %s", path, STRBOOL(res, "OK", "KO"));
+    ZE_MessageInfo(DBG_LEVEL, "PATH = %-32s, %s", path, STRBOOL(res, "OK", "KO"));
   }
   zeDb_Unlock(&gdata.gdbp);
 
@@ -1580,7 +1580,7 @@ db_grey_open(workdir, rd)
     snprintf(path, sizeof (path), "%s/%s", workdir, "ze-greyvalid.db");
 
     res = zeDb_Open(&gdata.gdbv, work_db_env, path, mode, rdonly, TRUE, 0);
-    MESSAGE_INFO(DBG_LEVEL, "PATH = %-32s, %s", path, STRBOOL(res, "OK", "KO"));
+    ZE_MessageInfo(DBG_LEVEL, "PATH = %-32s, %s", path, STRBOOL(res, "OK", "KO"));
   }
   zeDb_Unlock(&gdata.gdbv);
 
@@ -1590,7 +1590,7 @@ db_grey_open(workdir, rd)
     snprintf(path, sizeof (path), "%s/%s", workdir, "ze-greywhitelist.db");
 
     res = zeDb_Open(&gdata.gdbw, work_db_env, path, mode, rdonly, TRUE, 0);
-    MESSAGE_INFO(DBG_LEVEL, "PATH = %-32s, %s", path, STRBOOL(res, "OK", "KO"));
+    ZE_MessageInfo(DBG_LEVEL, "PATH = %-32s, %s", path, STRBOOL(res, "OK", "KO"));
   }
   zeDb_Unlock(&gdata.gdbw);
 
@@ -1600,7 +1600,7 @@ db_grey_open(workdir, rd)
     snprintf(path, sizeof (path), "%s/%s", workdir, "ze-greyblacklist.db");
 
     res = zeDb_Open(&gdata.gdbb, work_db_env, path, mode, rdonly, TRUE, 0);
-    MESSAGE_INFO(DBG_LEVEL, "PATH = %-32s, %s", path, STRBOOL(res, "OK", "KO"));
+    ZE_MessageInfo(DBG_LEVEL, "PATH = %-32s, %s", path, STRBOOL(res, "OK", "KO"));
   }
   zeDb_Unlock(&gdata.gdbb);
 
@@ -1683,10 +1683,10 @@ db_grey_flush()
       zeDb_errno(&gdata.gdbw) == DB_RUNRECOVERY ||
       zeDb_errno(&gdata.gdbb) == DB_RUNRECOVERY)
   {
-    MESSAGE_WARNING(8, "Reloading Greylisting databases after error (pending)");
+    ZE_MessageWarning(8, "Reloading Greylisting databases after error (pending)");
     if (!(res = grey_reload()))
     {
-      MESSAGE_WARNING(8, "Reloading Greylisting error - restarting");
+      ZE_MessageWarning(8, "Reloading Greylisting error - restarting");
       kill(0, SIGTERM);
       sleep(1);
       exit(0);
@@ -1716,16 +1716,16 @@ grey_launch_thread()
 
   if (tid != SIGTID && (time(NULL) - tlast > 2 * dt_grey_cleanup))
   {
-    LOG_SYS_WARNING("grey_task thread not running ???");
+    ZE_LogSysWarning("grey_task thread not running ???");
     tid = SIGTID;
   }
 
   if (tid == SIGTID)
   {
-    MESSAGE_INFO(9, "*** Starting grey_task thread ...");
+    ZE_MessageInfo(9, "*** Starting grey_task thread ...");
 
     if ((r = pthread_create(&tid, NULL, grey_task, (void *) NULL)) != 0)
-      LOG_SYS_ERROR("Couldn't launch periodic_tasks_loop");
+      ZE_LogSysError("Couldn't launch periodic_tasks_loop");
   }
 }
 
@@ -1757,7 +1757,7 @@ grey_set_dewhite_flags(s, reset)
 
   if ((ts = strdup(s)) == NULL)
   {
-    LOG_SYS_ERROR("strdup(%s) error", s);
+    ZE_LogSysError("strdup(%s) error", s);
     return;
   }
 
@@ -1840,7 +1840,7 @@ grey_set_dewhite_flags(s, reset)
 #define TIMER_LOG(s, t)						\
   do {								\
     timems_T dt = TIMER_NOW(t);					\
-    MESSAGE_INFO(0, "%-12s : Elapsed time %ld ms",s, (long ) (dt));	\
+    ZE_MessageInfo(0, "%-12s : Elapsed time %ld ms",s, (long ) (dt));	\
   } while (0)
 
 
@@ -1896,7 +1896,7 @@ grey_database_expire(h, st, tmax_norm, tmax_null, gdb)
       break;
   }
 
-  MESSAGE_INFO(10, "Entering %s (%s)", ZE_FUNCTION, label);
+  ZE_MessageInfo(10, "Entering %s (%s)", ZE_FUNCTION, label);
 
   {
     char               *env = NULL;
@@ -1972,7 +1972,7 @@ grey_database_expire(h, st, tmax_norm, tmax_null, gdb)
       DB_BTREE_SEQ_CHECK(key, h->database);
 
 #if 0
-      MESSAGE_INFO(10, "->  key %s / value %s", key, data);
+      ZE_MessageInfo(10, "->  key %s / value %s", key, data);
 #endif
 
       ntp++;
@@ -1996,7 +1996,7 @@ grey_database_expire(h, st, tmax_norm, tmax_null, gdb)
 
       if (argcv == 0)
       {
-        MESSAGE_INFO(10, "key %s has empty value", key);
+        ZE_MessageInfo(10, "key %s has empty value", key);
         (void) grey_cursor_del(h);
         if (st != NULL)
           st->nke++;
@@ -2043,7 +2043,7 @@ grey_database_expire(h, st, tmax_norm, tmax_null, gdb)
       {
         coef *= 4;
         why = "bad ip";
-        MESSAGE_INFO(11, "* Removing %s (%s)", key, why);
+        ZE_MessageInfo(11, "* Removing %s (%s)", key, why);
         (void) grey_cursor_del(h);
         if (st != NULL)
           st->nke++;
@@ -2108,7 +2108,7 @@ grey_database_expire(h, st, tmax_norm, tmax_null, gdb)
           char                logstr[1024];
           void                log_grey_expire(char *);
 
-          MESSAGE_INFO(11, "* Removing %s %s (%s %s %s)",
+          ZE_MessageInfo(11, "* Removing %s %s (%s %s %s)",
                        STRNULL(label, "-"), key, why, from, STRNULL(hostname,
                                                                     "-"));
 
@@ -2145,7 +2145,7 @@ grey_database_expire(h, st, tmax_norm, tmax_null, gdb)
         /* check load - maybe... */
         if (TIMER_NOW(tims) > dt_lock_max)
         {
-          MESSAGE_INFO(10,
+          ZE_MessageInfo(10,
                        "Handling %s database : max delay expired : %d entries handled",
                        label, ntp);
 
@@ -2249,7 +2249,7 @@ grey_list2white(dbw, list)
     /* XXX JOE : wkey = grey_key(GDB_WHITE, ...); */
     strlcpy(wkey, lst->key, sizeof (wkey));
 
-    MESSAGE_INFO(10, "Adding to whitelist : %3d %s", lst->count, wkey);
+    ZE_MessageInfo(10, "Adding to whitelist : %3d %s", lst->count, wkey);
 
     snprintf(wval, sizeof (wval), "%lu:%lu:%d", now, now, lst->count);
 
@@ -2302,7 +2302,7 @@ grey_database_whitelist(dba, dbb, st)
 {
   bool                ok = FALSE;
 
-  MESSAGE_INFO(10, "Entering %s", ZE_FUNCTION);
+  ZE_MessageInfo(10, "Entering %s", ZE_FUNCTION);
 
   GREY_CRIT_LOCK();
 
@@ -2383,20 +2383,20 @@ grey_database_whitelist(dba, dbb, st)
 
         snprintf(lkey, sizeof (lkey), "%s %s", argv[0], argv[1]);
 
-        MESSAGE_INFO(15, "DATA : %s", data);
+        ZE_MessageInfo(15, "DATA : %s", data);
 
         if (grey_value_str2entry(&entry, data))
         {
           char               *p = entry.from;
 
-          MESSAGE_INFO(15, "get_value_str2entry OK ");
+          ZE_MessageInfo(15, "get_value_str2entry OK ");
           p = strchr(entry.from, '@');
           if (p != NULL)
             p++;
           else
             p = entry.from;
 
-          MESSAGE_INFO(15, "ENTRY : from=%s p=%s vip=%s", entry.from, p,
+          ZE_MessageInfo(15, "ENTRY : from=%s p=%s vip=%s", entry.from, p,
                        entry.ip);
           snprintf(lkey, sizeof (lkey), "%s;%s", entry.ip, p);
 
@@ -2515,7 +2515,7 @@ grey_task(data)
   {
     tlast = now;
 
-    MESSAGE_INFO(12, "%s running : %ld", ZE_FUNCTION, time(NULL));
+    ZE_MessageInfo(12, "%s running : %ld", ZE_FUNCTION, time(NULL));
 
     sleep(DT_GREY_SLEEP);
 
@@ -2542,7 +2542,7 @@ grey_task(data)
       {
         bool                done;
 
-        MESSAGE_INFO(12, "GREY_TASK state = %d; key   : %s", upd_state,
+        ZE_MessageInfo(12, "GREY_TASK state = %d; key   : %s", upd_state,
                      p_st.key);
         done =
           grey_database_expire(&gdata.gdbp, &p_st, grey_tp_max_norm,
@@ -2561,7 +2561,7 @@ grey_task(data)
       {
         bool                done;
 
-        MESSAGE_INFO(12, "GREY_TASK state = %d; key   : %s", upd_state,
+        ZE_MessageInfo(12, "GREY_TASK state = %d; key   : %s", upd_state,
                      v_st.key);
         done =
           grey_database_expire(&gdata.gdbv, &v_st, grey_tv_max, 12 HOURS,
@@ -2583,7 +2583,7 @@ grey_task(data)
       {
         bool                done;
 
-        MESSAGE_INFO(12, "GREY_TASK state = %d; key   : %s", upd_state,
+        ZE_MessageInfo(12, "GREY_TASK state = %d; key   : %s", upd_state,
                      w_st.key);
         done =
           grey_database_expire(&gdata.gdbw, &w_st, grey_tw_max, 12 HOURS,
@@ -2602,7 +2602,7 @@ grey_task(data)
       {
         bool                done = FALSE;
 
-        MESSAGE_INFO(12, "GREY_TASK state = %d; key   : %s", upd_state,
+        ZE_MessageInfo(12, "GREY_TASK state = %d; key   : %s", upd_state,
                      b_st.key);
         done =
           grey_database_expire(&gdata.gdbb, &b_st, grey_tb_max, 12 HOURS,
@@ -2618,7 +2618,7 @@ grey_task(data)
 
       if (upd_state == ST_DONE)
       {
-        MESSAGE_INFO(10,
+        ZE_MessageInfo(10,
                      "GREY database cleanup : pending=%d/%d valid=%d/%d white=%d/%d",
                      p_st.nke, p_st.nkt, v_st.nke, v_st.nkt, w_st.nke,
                      w_st.nkt);
@@ -2632,7 +2632,7 @@ grey_task(data)
 
 fin:
 
-  LOG_MSG_ERROR("Error exiting thread");
+  ZE_LogMsgError(0, "Error exiting thread");
   exit(EX_SOFTWARE);
 
   return NULL;
@@ -2859,7 +2859,7 @@ grey_value_str2entry(entry, s)
 
   if ((tstr = strdup(s)) == NULL)
   {
-    LOG_SYS_ERROR("strdup(%s) error", s);
+    ZE_LogSysError("strdup(%s) error", s);
     return FALSE;
   }
 
@@ -2874,7 +2874,7 @@ grey_value_str2entry(entry, s)
     if (errno != EINVAL && errno != ERANGE)
       entry->date_init = t;
     else
-      LOG_SYS_WARNING("Conversion %s to DATE_INIT error", argv[ARG_DATE_INIT]);
+      ZE_LogSysWarning("Conversion %s to DATE_INIT error", argv[ARG_DATE_INIT]);
   }
 
   if (argc > ARG_DATE_UPDT)
@@ -2886,7 +2886,7 @@ grey_value_str2entry(entry, s)
     if (errno != EINVAL && errno != ERANGE)
       entry->date_updt = t;
     else
-      LOG_SYS_WARNING("Conversion %s to DATE_UPDT error", argv[ARG_DATE_UPDT]);
+      ZE_LogSysWarning("Conversion %s to DATE_UPDT error", argv[ARG_DATE_UPDT]);
   }
 
   if (argc > ARG_IP)
@@ -3098,13 +3098,13 @@ recursive_compatible_domainnames(da, db, level)
 
   if ((ta = strdup(da)) == NULL)
   {
-    LOG_SYS_ERROR("strdup() error");
+    ZE_LogSysError("strdup() error");
     goto error;
   }
 
   if ((tb = strdup(db)) == NULL)
   {
-    LOG_SYS_ERROR("strdup() error");
+    ZE_LogSysError("strdup() error");
     goto error;
   }
 
@@ -3213,7 +3213,7 @@ recursive_compatible_domainnames(da, db, level)
   goto end;
 
 error:
-  LOG_SYS_ERROR("strdup() error");
+  ZE_LogSysError("strdup() error");
 
 end:
   FREE(ta);

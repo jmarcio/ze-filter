@@ -42,9 +42,9 @@ main(argc, argv)
   char               *id = "000000.000";
   char               *fname;
 
-  set_log_output(FALSE, TRUE);
+  zeLog_SetOutput(FALSE, TRUE);
 
-  log_level = 0;
+  ze_logLevel = 0;
 
   init_default_file_extensions();
 

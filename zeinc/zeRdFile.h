@@ -29,12 +29,12 @@
 #define            RD_NORMAL       0
 #define            RD_REVERSE      1
 
-int                 j_rd_text_file (char *, int, int, char *,
+int                 zm_RdTextFile (char *, int, int, char *,
                                     int (*)(void *, void *));
 
 typedef int (*RDFILE_F)(void *, void *);
 
-int                 j_rd_file (char *fname, char *tag, RDFILE_F f, void *arg);
+int                 zm_RdFile (char *fname, char *tag, RDFILE_F f, void *arg);
 
 #define __JRDFILE_H_
 #endif

@@ -104,7 +104,7 @@ resolve_cache_check(prefix, key, value, size)
         res = FALSE;
     }
   } else
-    LOG_SYS_ERROR("malloc error");
+    ZE_LogSysError("malloc error");
   FREE(s);
 
 fin:
@@ -177,7 +177,7 @@ resolve_cache_add(prefix, key, value)
     }
 
   } else
-    LOG_SYS_ERROR("malloc error");
+    ZE_LogSysError("malloc error");
   FREE(s);
 
 fin:
@@ -237,7 +237,7 @@ resolve_cache_init(dbdir, rwmode)
       (void) atexit(resolve_cache_close);
 
       memset(browsekey, 0, sizeof (browsekey));
-      MESSAGE_INFO(10, "*** Registering resolve cache cyclic task...");
+      ZE_MessageInfo(10, "*** Registering resolve cache cyclic task...");
       cyclic_tasks_register(resolve_cyclic_task, NULL, RESOLVE_DT_LOOP);
     }
   }
@@ -291,7 +291,7 @@ clean_up_cache(key, val, arg)
   if (key == NULL || val == NULL)
     return r;
 
-  MESSAGE_INFO(11, "CALLBACK : key=%-20s val=%s", key, val);
+  ZE_MessageInfo(11, "CALLBACK : key=%-20s val=%s", key, val);
 
   {
     char               *argv[8];
@@ -310,7 +310,7 @@ clean_up_cache(key, val, arg)
 
     if (last + dt_expire < *now)
     {
-      MESSAGE_INFO(11, "Resolve cache entry expired %s %lu %lu", key, last);
+      ZE_MessageInfo(11, "Resolve cache entry expired %s %lu %lu", key, last);
       r |= ZEMAP_BROWSE_DELETE;
     }
   }
@@ -338,7 +338,7 @@ resolve_cyclic_task(arg)
   if (last_sync == 0)
     last_sync = now;
 
-  MESSAGE_INFO(11, "Cleaning up and syncing map cyclic task...");
+  ZE_MessageInfo(11, "Cleaning up and syncing map cyclic task...");
 
   zeMap_Lock(&map);
 
@@ -354,7 +354,7 @@ resolve_cyclic_task(arg)
     if (resolve_cache_show_cyclic_task)
     {
       tf = time_ms();
-      MESSAGE_INFO(10, "Cleaning up resolve cache map dt = %lu", (long) (tf - ti));
+      ZE_MessageInfo(10, "Cleaning up resolve cache map dt = %lu", (long) (tf - ti));
     }
   }
 #if 0
@@ -371,7 +371,7 @@ resolve_cyclic_task(arg)
     if (resolve_cache_show_cyclic_task && (++i % 6) == 0)
     {
       tf = time_ms();
-      MESSAGE_INFO(10, "Syncing resolve cache map dt = %lu", (long) (tf - ti));
+      ZE_MessageInfo(10, "Syncing resolve cache map dt = %lu", (long) (tf - ti));
     }
   }
 #endif

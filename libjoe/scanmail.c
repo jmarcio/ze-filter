@@ -220,21 +220,21 @@ init_regex()
     if ((r = regcomp(&RE.re_ct, RE_CT, REGCOMP_FLAGS)) != 0)
     {
       regerror(r, &RE.re_ct, sout, sizeof (sout));
-      LOG_MSG_ERROR("regcomp error : %d %s", r, sout);
+      ZE_LogMsgError(0, "regcomp error : %d %s", r, sout);
       ok = FALSE;
     }
 
     if ((r = regcomp(&RE.re_cd, RE_CD, REGCOMP_FLAGS)) != 0)
     {
       regerror(r, &RE.re_cd, sout, sizeof (sout));
-      LOG_MSG_ERROR("regcomp error : %d %s", r, sout);
+      ZE_LogMsgError(0, "regcomp error : %d %s", r, sout);
       ok = FALSE;
     }
 
     if ((r = regcomp(&RE.re_uu, RE_UU, REGCOMP_FLAGS)) != 0)
     {
       regerror(r, &RE.re_uu, sout, sizeof (sout));
-      LOG_MSG_ERROR("regcomp error : %d %s", r, sout);
+      ZE_LogMsgError(0, "regcomp error : %d %s", r, sout);
       ok = FALSE;
     }
 
@@ -313,10 +313,10 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
 
   if (!RE.ok)
   {
-    LOG_MSG_INFO(11, "Initialising REGEX structure");
+    ZE_LogMsgInfo(11, "Initialising REGEX structure");
     if (!init_regex())
     {
-      LOG_MSG_ERROR("Unable to initialise REGEX structure");
+      ZE_LogMsgError(0, "Unable to initialise REGEX structure");
       return 9;
     }
   }
@@ -336,7 +336,7 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
 #if MALLOC_WORK == 1
   if ((work = malloc(SZ_WORK + 1)) == NULL)
   {
-    LOG_SYS_ERROR("%-12s : malloc work error", id);
+    ZE_LogSysError("%-12s : malloc work error", id);
     return 15;
   }
 #endif
@@ -348,7 +348,7 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
 
     if (strlen(old) > SZ_WORK)
     {
-      LOG_MSG_NOTICE("%-12s scan_block : strlen(old) = %ld", id,
+      ZE_LogMsgNotice(0, "%-12s scan_block : strlen(old) = %ld", id,
                      (long) strlen(old));
       *old = '\0';
       result = 3;
@@ -369,7 +369,7 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
          Feb 24 00:30:08 paris sendmail[17502]: [ID 801593 mail.error] g1NNU6WZ017502:
          milter_read(ze-filter): cmd read returned 0, expecting 5
        */
-      LOG_MSG_NOTICE("%-12s scan_block : strlen(work) + szc = %ld, %ld",
+      ZE_LogMsgNotice(0, "%-12s scan_block : strlen(work) + szc = %ld, %ld",
                      id, (long) (strlen(work) + szc), (long) szc);
       last_rc = NULL;
       result = 4;
@@ -381,7 +381,7 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
 
     if (strcspn(p, "\r\n") > SZ_FREE)
     {
-      LOG_MSG_NOTICE("%-12s scan_block : trying a buffer overflow ??? "
+      ZE_LogMsgNotice(0, "%-12s scan_block : trying a buffer overflow ??? "
                      "linelenght : %ld; strlen : %ld", id, (long) strcspn(p,
                                                                           "\r\n"),
                      (long) strlen(p));
@@ -403,7 +403,7 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
 
     if (last_rc == NULL && strlen(work) > SZ_P)
     {
-      LOG_MSG_ERROR("ERROR : scanmail strlen(work) = %ld result = 6",
+      ZE_LogMsgError(0, "ERROR : scanmail strlen(work) = %ld result = 6",
                     (long) strlen(work));
       result = 6;
       break;
@@ -427,7 +427,7 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
         regmatch_t          pm_cd, pm_ct, pm_uu;
         bool                ok_cd, ok_ct, ok_uu;
 
-        MESSAGE_DEBUG(20, "STATE ---> ST_INIT");
+        ZE_MessageDebug(20, "STATE ---> ST_INIT");
 
         if (content->field_type != CT_NONE)
           save_content_field(content, list);
@@ -465,7 +465,7 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
             /* XXX */
             safe_strncpy(fname, sizeof (fname), t, strcspn(t, " \t\r\n"));
 
-            MESSAGE_INFO(10, "fname : %s", fname);
+            ZE_MessageInfo(10, "fname : %s", fname);
             if (is_rfc2047_encoded(fname))
             {
               char                tmp[MAX_LINE];
@@ -473,7 +473,7 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
               decode_rfc2047(tmp, fname, sizeof (tmp));
               strlcpy(fname, tmp, sizeof (fname));
 
-              MESSAGE_INFO(19, "fname 2047 : %s", fname);
+              ZE_MessageInfo(19, "fname 2047 : %s", fname);
             }
             if (is_rfc2231_encoded(fname))
             {
@@ -482,13 +482,13 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
               decode_rfc2231(tmp, fname, sizeof (tmp));
               strlcpy(fname, tmp, sizeof (fname));
 
-              MESSAGE_INFO(19, "fname 2231 : %s", fname);
+              ZE_MessageInfo(19, "fname 2231 : %s", fname);
             }
             content->field_type = CT_UUFILE;
             content->value = strdup(fname);
             if (content->value == NULL)
             {
-              LOG_SYS_ERROR("Error strdup CT_UUFILE %s", fname);
+              ZE_LogSysError("Error strdup CT_UUFILE %s", fname);
             }
             p += pm_uu.rm_eo;
             continue;
@@ -536,14 +536,14 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
        */
       if (*state == ST_VALUE)
       {
-        MESSAGE_DEBUG(20, "STATE ---> ST_VALUE");
+        ZE_MessageDebug(20, "STATE ---> ST_VALUE");
         p += strspn(p, " \t\r\n");
         if (*p == '\0')
           break;
 
         d = strcspn(p, " \t\r\n;");
         if (d >= sizeof (sout))
-          LOG_MSG_NOTICE("%-12s scan_block : d >= sizeof(sout) = %ld", id, d);
+          ZE_LogMsgNotice(0, "%-12s scan_block : d >= sizeof(sout) = %ld", id, d);
         d = safe_strncpy(sout, sizeof (sout), p, d);
         /*sout[d] = '\0'; */
         p += d;
@@ -603,7 +603,7 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
               strncat(sout, p, d1);
               sout[d + d1] = '\0';
             } else
-              LOG_MSG_NOTICE("%-12s scan_block : d + d1 >= sizeof(sout) = %ld",
+              ZE_LogMsgNotice(0, "%-12s scan_block : d + d1 >= sizeof(sout) = %ld",
                              id, d + d1);
 
             content->value = strdup(sout);
@@ -612,7 +612,7 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
           *state = ST_INIT;
         }
 
-        MESSAGE_DEBUG(20, " ***  TAG    : %s", sout);
+        ZE_MessageDebug(20, " ***  TAG    : %s", sout);
 
         if (content->value != NULL)
           free(content->value);
@@ -625,7 +625,7 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
        */
       if (*state == ST_CHECK)
       {
-        MESSAGE_DEBUG(20, "STATE ---> ST_CHECK");
+        ZE_MessageDebug(20, "STATE ---> ST_CHECK");
         d = strspn(p, " \t\r\n");
         p += d;
         if (*p == '\0')
@@ -651,7 +651,7 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
         char                name[MAX_LINE];
         char                value[MAX_LINE];
 
-        MESSAGE_DEBUG(20, "STATE ---> ST_TOKEN");
+        ZE_MessageDebug(20, "STATE ---> ST_TOKEN");
         p += strspn(p, " \t\r\n");
         if (*p == '\0')
           continue;
@@ -673,7 +673,7 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
           int                 rfc2231_code = 0;
 
           if (d >= sizeof (name))
-            LOG_MSG_NOTICE("%-12s scan_block : d >= sizeof(name) = %ld", id, d);
+            ZE_LogMsgNotice(0, "%-12s scan_block : d >= sizeof(name) = %ld", id, d);
           /* XXX */
           d = safe_strncpy(name, sizeof (name), p, d);
           name[d] = '\0';
@@ -687,7 +687,7 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
           p += strspn(p, " ");
 #endif
 
-          MESSAGE_DEBUG(20, "      NAME   : %s", name);
+          ZE_MessageDebug(20, "      NAME   : %s", name);
 
           p++;
           /* decoder le deuxieme champs */
@@ -723,7 +723,7 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
             }
           }
           if (d >= sizeof (value))
-            LOG_MSG_NOTICE("%-12s scan_block : d >= sizeof(value) = %ld", id,
+            ZE_LogMsgNotice(0, "%-12s scan_block : d >= sizeof(value) = %ld", id,
                            d);
           d = safe_strncpy(value, sizeof (value), p, d);
           value[d] = '\0';
@@ -747,7 +747,7 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
           }
           clean_tag_value(value);
 
-          MESSAGE_DEBUG(20, "      VALEUR : %s", value);
+          ZE_MessageDebug(20, "      VALEUR : %s", value);
           add_content_field_attr(content, name, value);
           *state = ST_CHECK;
           continue;
@@ -757,12 +757,12 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
         if (d == d4)
         {
           if (d >= sizeof (sout))
-            LOG_MSG_NOTICE("%-12s scan_block : d >= sizeof(sout) = %ld (2)",
+            ZE_LogMsgNotice(0, "%-12s scan_block : d >= sizeof(sout) = %ld (2)",
                            id, d);
           d = safe_strncpy(sout, sizeof (sout), p, d);
           sout[d] = '\0';
 
-          MESSAGE_DEBUG(20, "      NAME  : %s ", sout);
+          ZE_MessageDebug(20, "      NAME  : %s ", sout);
           add_content_field_attr(content, sout, "");
           p += d;
           *state = ST_CHECK;
@@ -784,7 +784,7 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
       if (strlen((char *) (last_rc + 1)) >= sizeof (old))
       {
         strlcpy(old, "", sizeof (old));
-        LOG_MSG_NOTICE("scan_block : strlen(last_rc + 1) = %ld > SZ_CHUNK",
+        ZE_LogMsgNotice(0, "scan_block : strlen(last_rc + 1) = %ld > SZ_CHUNK",
                        (long) sz);
         result = 7;
         break;
@@ -798,7 +798,7 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
   if (strlen(old) < sz_chunk)
     strlcpy(chunk, old, sz_chunk);
   else
-    LOG_MSG_NOTICE("scan_block : sizeof(old) = %ld > SZ_CHUNK",
+    ZE_LogMsgNotice(0, "scan_block : sizeof(old) = %ld > SZ_CHUNK",
                    (long) strlen(old));
 
 #if MALLOC_WORK == 1
@@ -806,7 +806,7 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
     free(work);
 #endif
 
-  LOG_MSG_INFO(12, "returning %d", result);
+  ZE_LogMsgInfo(12, "returning %d", result);
 
   return result;
 }
@@ -860,10 +860,10 @@ new_scan_block(id, old, sz_old, new, sz_new, state, content, list)
 
   if (!RE.ok)
   {
-    LOG_MSG_INFO(10, "Initialising REGEX structure");
+    ZE_LogMsgInfo(10, "Initialising REGEX structure");
     if (!init_regex())
     {
-      LOG_MSG_ERROR("Unable to initialise REGEX structure");
+      ZE_LogMsgError(0, "Unable to initialise REGEX structure");
       return 9;
     }
   }
@@ -883,7 +883,7 @@ new_scan_block(id, old, sz_old, new, sz_new, state, content, list)
 
   if ((work = malloc(SZ_WORK + 1)) == NULL)
   {
-    LOG_SYS_ERROR("%-12s : malloc work error", id);
+    ZE_LogSysError("%-12s : malloc work error", id);
     return 15;
   }
 
@@ -935,7 +935,7 @@ new_scan_block(id, old, sz_old, new, sz_new, state, content, list)
         if (regex_lookup(&RE.re_cd, wptr, &pi, &pf))
           n3 = pi;
 
-        MESSAGE_INFO(18, "N = %d %d %d (%d)", n1, n2, n3, SZ_WORK);
+        ZE_MessageInfo(18, "N = %d %d %d (%d)", n1, n2, n3, SZ_WORK);
         if ((m = MIN3(n1, n2, n3)) < SZ_WORK)
         {
           wptr += m;
@@ -1002,11 +1002,11 @@ new_scan_block(id, old, sz_old, new, sz_new, state, content, list)
               content->value = strdup("attachment/uuencoded");
 #endif             /* 1 */
               if (content->value == NULL)
-                LOG_SYS_ERROR("Error strdup CT_UUFILE %s", fname);
+                ZE_LogSysError("Error strdup CT_UUFILE %s", fname);
 
               if (!add_content_field_attr(content, "name", fname))
               {
-                LOG_MSG_NOTICE("add_content_field_attr call error : %s", fname);
+                ZE_LogMsgNotice(0, "add_content_field_attr call error : %s", fname);
               }
 
               save_content_field(content, list);
@@ -1038,7 +1038,7 @@ new_scan_block(id, old, sz_old, new, sz_new, state, content, list)
                 /* XXX */
               }
               strncpy(str, p, len);
-              MESSAGE_INFO(19, "CT_TYPE : %s", str);
+              ZE_MessageInfo(19, "CT_TYPE : %s", str);
               content->value = strdup(str);
               if (content->value == NULL)
               {
@@ -1071,7 +1071,7 @@ new_scan_block(id, old, sz_old, new, sz_new, state, content, list)
                 /* XXX */
               }
               strncpy(str, p, len);
-              MESSAGE_INFO(19, "CT_DISP : %s", str);
+              ZE_MessageInfo(19, "CT_DISP : %s", str);
               content->value = strdup(str);
               if (content->value == NULL)
               {
@@ -1204,21 +1204,21 @@ decode_mime_content_tag(buf, content)
     ptr = line;
     ptr += strspn(ptr, " \t");
 
-    MESSAGE_INFO(19, "-> LINE : %s", ptr);
+    ZE_MessageInfo(19, "-> LINE : %s", ptr);
 
     while ((*ptr == ';') || (strlen(ptr) > 0))
     {
       bool                doublequotes = FALSE;
       size_t              valLength;
 
-      MESSAGE_INFO(19, "??? %s", ptr);
+      ZE_MessageInfo(19, "??? %s", ptr);
       rfc2047 = rfc2231 = FALSE;
       ptr += strspn(ptr, "; \t\r\n");
       if (strlen(ptr) == 0)
         continue;
 
-      if (strexpr(ptr, "[a-z]*=", &pi, &pf, TRUE))
-        MESSAGE_INFO(19, "-> TAG  : %s", ptr);
+      if (zeStrRegex(ptr, "[a-z]*=", &pi, &pf, TRUE))
+        ZE_MessageInfo(19, "-> TAG  : %s", ptr);
 
       if (strchr(TSPECIALS, *ptr) != NULL)
       {
@@ -1263,7 +1263,7 @@ decode_mime_content_tag(buf, content)
       else
         valLength = strcspn(ptr, TSPECIALS);
 
-      MESSAGE_INFO(9, "valLength %d", valLength);
+      ZE_MessageInfo(9, "valLength %d", valLength);
 
       if (rfc2047)
         decode_rfc2047(val, ptr, sizeof (val));
@@ -1297,7 +1297,7 @@ decode_mime_content_tag(buf, content)
 
       if (!add_content_field_attr(content, key, val))
       {
-        LOG_MSG_NOTICE("add_content_field_attr call error : %s", key);
+        ZE_LogMsgNotice(0, "add_content_field_attr call error : %s", key);
       }
 
       /* Cases to check
@@ -1323,11 +1323,11 @@ decode_mime_content_tag(buf, content)
           if ((strchr(ptr, ' ') != NULL) && (strchr(ptr, ';') == NULL))
           {
             pname[0] = ptr;
-            MESSAGE_INFO(19, "Case 1 detected : %s", ptr);
+            ZE_MessageInfo(19, "Case 1 detected : %s", ptr);
             log_mime_attr_value(key, ptr, FALSE, FALSE);
             if (!add_content_field_attr(content, key, ptr))
             {
-              LOG_MSG_NOTICE("add_content_field_attr call error : %s", key);
+              ZE_LogMsgNotice(0, "add_content_field_attr call error : %s", key);
             }
           }
 
@@ -1338,11 +1338,11 @@ decode_mime_content_tag(buf, content)
             pname[1] = ptr;
             if (!already_there)
             {
-              MESSAGE_INFO(19, "Case 2 detected : %s", ptr);
+              ZE_MessageInfo(19, "Case 2 detected : %s", ptr);
               log_mime_attr_value(key, ptr, FALSE, FALSE);
               if (!add_content_field_attr(content, key, ptr))
               {
-                LOG_MSG_NOTICE("add_content_field_attr call error : %s", key);
+                ZE_LogMsgNotice(0, "add_content_field_attr call error : %s", key);
               }
             }
           }
@@ -1359,11 +1359,11 @@ decode_mime_content_tag(buf, content)
               pname[2] = ptr;
               if (!already_there)
               {
-                MESSAGE_INFO(19, "Case 3a detected : %s", ptr);
+                ZE_MessageInfo(19, "Case 3a detected : %s", ptr);
                 log_mime_attr_value(key, ptr, FALSE, FALSE);
                 if (!add_content_field_attr(content, key, ptr))
                 {
-                  LOG_MSG_NOTICE("add_content_field_attr call error : %s", key);
+                  ZE_LogMsgNotice(0, "add_content_field_attr call error : %s", key);
                 }
               }
             }
@@ -1376,11 +1376,11 @@ decode_mime_content_tag(buf, content)
             pname[3] = ptr;
             if (!already_there)
             {
-              MESSAGE_INFO(19, "Case 4 detected : %s", ptr);
+              ZE_MessageInfo(19, "Case 4 detected : %s", ptr);
               log_mime_attr_value(key, ptr, FALSE, FALSE);
               if (!add_content_field_attr(content, key, ptr))
               {
-                LOG_MSG_NOTICE("add_content_field_attr call error : %s", key);
+                ZE_LogMsgNotice(0, "add_content_field_attr call error : %s", key);
               }
             }
           }
@@ -1390,7 +1390,7 @@ decode_mime_content_tag(buf, content)
       ptr += valLength;
       if (doublequotes)
         ptr++;
-      MESSAGE_INFO(9, "   PTR     : %s", ptr);
+      ZE_MessageInfo(9, "   PTR     : %s", ptr);
     }
   }
 
@@ -1427,8 +1427,8 @@ log_mime_attr_value(key, value, rfc2047, rfc2231)
      bool                rfc2047;
      bool                rfc2231;
 {
-  MESSAGE_INFO(19, "   KEY     : %s", key);
-  MESSAGE_INFO(19, "   VALUE   : %s", value);
-  MESSAGE_INFO(19, "   RFC2231 : %s", STRBOOL(rfc2231, "YES", "NO"));
-  MESSAGE_INFO(19, "   RFC2047 : %s", STRBOOL(rfc2047, "YES", "NO"));
+  ZE_MessageInfo(19, "   KEY     : %s", key);
+  ZE_MessageInfo(19, "   VALUE   : %s", value);
+  ZE_MessageInfo(19, "   RFC2231 : %s", STRBOOL(rfc2231, "YES", "NO"));
+  ZE_MessageInfo(19, "   RFC2047 : %s", STRBOOL(rfc2047, "YES", "NO"));
 }

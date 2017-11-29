@@ -196,7 +196,7 @@ gather_cpu_load_info()
   {
     if ((kc = kstat_open()) == NULL)
     {
-      LOG_SYS_ERROR("kstat_open() error");
+      ZE_LogSysError("kstat_open() error");
       return FALSE;
     }
   } else
@@ -205,14 +205,14 @@ gather_cpu_load_info()
 
     if ((kid = kstat_chain_update(kc)) < 0)
     {
-      LOG_SYS_ERROR("kstat_open() error");
+      ZE_LogSysError("kstat_open() error");
       return FALSE;
     }
   }
 
   if (kc == NULL)
   {
-    LOG_MSG_ERROR("ks NULL");
+    ZE_LogMsgError(0, "ks NULL");
     return FALSE;
   }
 
@@ -236,7 +236,7 @@ gather_cpu_load_info()
 
       if (kstat_read(kc, ksp, &cpu_buf) < 0)
       {
-        LOG_SYS_ERROR("kstat_read() error");
+        ZE_LogSysError("kstat_read() error");
         CPU_LOAD_UNLOCK();
         return FALSE;
       }
@@ -287,7 +287,7 @@ gather_cpu_load_info()
 
   if ((fd = open(PROC_STAT_FILE, O_RDONLY)) < 0)
   {
-    LOG_SYS_ERROR("Error opening %s", PROC_STAT_FILE);
+    ZE_LogSysError("Error opening %s", PROC_STAT_FILE);
     return FALSE;
   }
 
@@ -490,7 +490,7 @@ gather_cpu_load_info()
 
       cpu_new.ok = TRUE;
     } else
-      LOG_SYS_ERROR("sysctlbyname error");
+      ZE_LogSysError("sysctlbyname error");
 
     (void) evaluate_load_pct(&cpu_pct, &cpu_old, &cpu_new);
 
@@ -510,7 +510,7 @@ gather_cpu_load_info()
       if ((kd = kvm_openfiles(NULL, NULL, NULL, O_RDONLY, errbuf)) == NULL)
       {
         nerr++;
-        LOG_MSG_ERROR("kvm_openfiles : %s", errbuf);
+        ZE_LogMsgError(0, "kvm_openfiles : %s", errbuf);
         return FALSE;
       }
       if (kvm_nlist(kd, namelist) != 0)
@@ -543,7 +543,7 @@ gather_cpu_load_info()
 
         cpu_new.ok = TRUE;
       } else
-        LOG_MSG_ERROR("kvm_read error");
+        ZE_LogMsgError(0, "kvm_read error");
 
       (void) evaluate_load_pct(&cpu_pct, &cpu_old, &cpu_new);
 
@@ -699,7 +699,7 @@ log_cpu_load_info()
   fmt =
     "SYSTEM LOAD - idle : %5.1f - user : %5.1f - kernel : %5.1f - wait %5.1f - %3d";
 
-  MESSAGE_INFO(9, fmt,
+  ZE_MessageInfo(9, fmt,
                get_cpu_load_info(JCPU_IDLE),
                get_cpu_load_info(JCPU_USER),
                get_cpu_load_info(JCPU_KERNEL),
@@ -709,7 +709,7 @@ log_cpu_load_info()
 #if OS_LINUX
   fmt = "SYSTEM LOAD - idle/kernel/user/nice = %5.1f %5.1f %5.1f %5.1f %3d";
 
-  MESSAGE_INFO(9, fmt,
+  ZE_MessageInfo(9, fmt,
                get_cpu_load_info(JCPU_IDLE),
                get_cpu_load_info(JCPU_KERNEL),
                get_cpu_load_info(JCPU_USER),
@@ -719,7 +719,7 @@ log_cpu_load_info()
 #if OS_FREEBSD
   fmt = "SYSTEM LOAD - idle/kernel/user/nice = %5.1f %5.1f %5.1f %5.1f %3d";
 
-  MESSAGE_INFO(9, fmt,
+  ZE_MessageInfo(9, fmt,
                get_cpu_load_info(JCPU_IDLE),
                get_cpu_load_info(JCPU_KERNEL),
                get_cpu_load_info(JCPU_USER),
@@ -784,7 +784,7 @@ cpuload_thread(data)
   pthread_t           tid;
   time_t              old, now;
 
-  MESSAGE_INFO(9, "*** cpuload_tread starting...");
+  ZE_MessageInfo(9, "*** cpuload_tread starting...");
   tid = pthread_self();
   (void) pthread_detach(tid);
 
@@ -805,7 +805,7 @@ cpuload_thread(data)
     if (gather_cpu_load_info())
     {
       if ((int) get_cpu_load_info(JCPU_SLOPE) > 2)
-        MESSAGE_INFO(9,
+        ZE_MessageInfo(9,
                      "System Load increasing for more than %ld sec - Last Idle = %5.1f",
                      (int) get_cpu_load_info(JCPU_SLOPE) * dt_stat,
                      get_cpu_load_info(JCPU_IDLE));
@@ -819,7 +819,7 @@ cpuload_thread(data)
         }
       }
     } else
-      MESSAGE_INFO(9, "Can't gather_cpu_load_info...");
+      ZE_MessageInfo(9, "Can't gather_cpu_load_info...");
   }
 
   cpuloadok = FALSE;
@@ -848,12 +848,12 @@ cpuload_start()
   pthread_t           tid;
   int                 r;
 
-  MESSAGE_INFO(10, "*** Starting %s ...", ZE_FUNCTION);
+  ZE_MessageInfo(10, "*** Starting %s ...", ZE_FUNCTION);
 
 #if OS_LINUX
   if ((r = pthread_create(&tid, NULL, cpuload_thread, (void *) NULL)) != 0)
   {
-    LOG_SYS_ERROR("Couldn't launch cpuload_thread");
+    ZE_LogSysError("Couldn't launch cpuload_thread");
     return FALSE;
   }
 #endif
@@ -861,7 +861,7 @@ cpuload_start()
 #if OS_SOLARIS
   if ((r = pthread_create(&tid, NULL, cpuload_thread, (void *) NULL)) != 0)
   {
-    LOG_SYS_ERROR("Couldn't launch cpuload_thread");
+    ZE_LogSysError("Couldn't launch cpuload_thread");
     return FALSE;
   }
 #endif
@@ -869,7 +869,7 @@ cpuload_start()
 #if OS_FREEBSD
   if ((r = pthread_create(&tid, NULL, cpuload_thread, (void *) NULL)) != 0)
   {
-    LOG_SYS_ERROR("Couldn't launch cpuload_thread");
+    ZE_LogSysError("Couldn't launch cpuload_thread");
     return FALSE;
   }
 #endif
@@ -877,7 +877,7 @@ cpuload_start()
 #if OS_TRU64
   if ((r = pthread_create(&tid, NULL, cpuload_thread, (void *) NULL)) != 0)
   {
-    LOG_SYS_ERROR("Couldn't launch cpuload_thread");
+    ZE_LogSysError("Couldn't launch cpuload_thread");
     return FALSE;
   }
 #endif
@@ -885,7 +885,7 @@ cpuload_start()
 #if OS_OTHER
   if ((r = pthread_create(&tid, NULL, cpuload_thread, (void *) NULL)) != 0)
   {
-    LOG_SYS_ERROR("Couldn't launch cpuload_thread");
+    ZE_LogSysError("Couldn't launch cpuload_thread");
     return FALSE;
   }
 #endif

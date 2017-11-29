@@ -51,19 +51,19 @@ check_dns_urlbl(name, bl, code, size, recurse)
 
   if (name == NULL || strlen(name) == 0)
   {
-    LOG_MSG_ERROR("name : NULL pointer");
+    ZE_LogMsgError(0, "name : NULL pointer");
     return FALSE;
   }
 
   if ((bl == NULL) || (strlen(bl) == 0))
   {
-    LOG_MSG_ERROR("urlbl : NULL pointer or empty string");
+    ZE_LogMsgError(0, "urlbl : NULL pointer or empty string");
     return FALSE;
   }
 
   if ((code != NULL) && (size <= 0))
   {
-    LOG_MSG_ERROR("host size <= 0");
+    ZE_LogMsgError(0, "host size <= 0");
     return FALSE;
   }
 
@@ -77,11 +77,11 @@ check_dns_urlbl(name, bl, code, size, recurse)
     DNS_HOSTARR_T       a;
 
     memset(domain, 0, sizeof (domain));
-    MESSAGE_INFO(11, "IP     : %s", name);
+    ZE_MessageInfo(11, "IP     : %s", name);
 
     sip = strdup(name);
     if (sip == NULL)
-      MESSAGE_ERROR(10, "strdup(%s) error", name);
+      ZE_MessageError(10, "strdup(%s) error", name);
 
     argc = str2tokens(sip, 16, argv, ".");
     while (--argc >= 0)
@@ -94,7 +94,7 @@ check_dns_urlbl(name, bl, code, size, recurse)
     strlcat(domain, ".", sizeof (domain));
     strlcat(domain, bl, sizeof (domain));
 
-    MESSAGE_INFO(11, "DOMAIN : %s", domain);
+    ZE_MessageInfo(11, "DOMAIN : %s", domain);
 
     FREE(sip);
 
@@ -104,7 +104,7 @@ check_dns_urlbl(name, bl, code, size, recurse)
 
       for (i = 0; i < a.count; i++)
       {
-        MESSAGE_INFO(11, " * A  : %-16s %s", a.host[i].ip, a.host[i].name);
+        ZE_MessageInfo(11, " * A  : %-16s %s", a.host[i].ip, a.host[i].name);
         if (code != NULL)
           strlcpy(code, a.host[i].ip, size);
 
@@ -132,7 +132,7 @@ check_dns_urlbl(name, bl, code, size, recurse)
 
         for (i = 0; i < a.count; i++)
         {
-          MESSAGE_INFO(12, " * A  : %-16s %s", a.host[i].ip, a.host[i].name);
+          ZE_MessageInfo(12, " * A  : %-16s %s", a.host[i].ip, a.host[i].name);
           if (code != NULL)
             strlcpy(code, a.host[i].ip, size);
 
@@ -191,12 +191,12 @@ static pthread_mutex_t urlbl_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 #define URLBL_LOCK() \
   if (pthread_mutex_lock(&urlbl_mutex) != 0) { \
-    LOG_SYS_ERROR("pthread_mutex_lock(urlbl_mutex)"); \
+    ZE_LogSysError("pthread_mutex_lock(urlbl_mutex)"); \
   }
 
 #define URLBL_UNLOCK() \
   if (pthread_mutex_unlock(&urlbl_mutex) != 0) { \
-    LOG_SYS_ERROR("pthread_mutex_unlock(urlbl_mutex)"); \
+    ZE_LogSysError("pthread_mutex_unlock(urlbl_mutex)"); \
   }
 
 
@@ -350,7 +350,7 @@ read_urlbl_line(v, arg)
     urlblCf.urlbl[urlblCf.nb] = r;
     urlblCf.nb++;
   } else
-    MESSAGE_WARNING(9, "Too many URLBLs : limit = %d", DIM_URLBL);
+    ZE_MessageWarning(9, "Too many URLBLs : limit = %d", DIM_URLBL);
 
   return 0;
 }
@@ -362,7 +362,7 @@ read_it(path, tag)
 {
   int                 r;
 
-  r = j_rd_file(path, tag, read_urlbl_line, NULL);
+  r = zm_RdFile(path, tag, read_urlbl_line, NULL);
 
   return r >= 0;
 }
@@ -520,7 +520,7 @@ check_urlbl_table(id, name, urlbl)
       if (urlbl != NULL)
         *urlbl = r;
 
-      MESSAGE_INFO(9, "%s URLBL check list=(%s) code=(%s) name=(%s)",
+      ZE_MessageInfo(9, "%s URLBL check list=(%s) code=(%s) name=(%s)",
                    id, r.bl, code, STREMPTY(name, "NONAME"));
 
       SET_BIT(flag, i);

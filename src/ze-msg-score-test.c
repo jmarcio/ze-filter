@@ -37,7 +37,7 @@ main(argc, argv)
   int                 i;
 
   int                 res = 0;
-  extern int          log_level;
+  extern int          ze_logLevel;
 
   bool                eval = FALSE;
   char               *s;
@@ -54,10 +54,10 @@ main(argc, argv)
   scores.oracle = 0;
 
 
-  log_level = 10;
-  set_log_output(FALSE, TRUE);
+  ze_logLevel = 10;
+  zeLog_SetOutput(FALSE, TRUE);
 
-  MESSAGE_INFO(9, "\n --- ");
+  ZE_MessageInfo(9, "\n --- ");
   s = "VECTOR; " COEFS;
 
   eval = register_msg_action(MSG_ACTION_OK, "REGEX:");
@@ -104,50 +104,50 @@ main(argc, argv)
   display_msg_eval();
 
   score = compute_msg_score(&scores);
-  MESSAGE_INFO(9, "  SCORE : %7.3f", score);
+  ZE_MessageInfo(9, "  SCORE : %7.3f", score);
   create_msg_score_header(buf, sizeof (buf), NULL, NULL, &scores);
-  MESSAGE_INFO(9, "  HEADER : %s", buf);
+  ZE_MessageInfo(9, "  HEADER : %s", buf);
 
 #if 0
-  MESSAGE_INFO(9, "\n --- ??? ");
+  ZE_MessageInfo(9, "\n --- ??? ");
   score = compute_msg_score(regex, oracle, urlbl, -1.);
-  MESSAGE_INFO(9, "  SCORE : %7.3f", score);
+  ZE_MessageInfo(9, "  SCORE : %7.3f", score);
   create_msg_score_header(buf, sizeof (buf), NULL, NULL, regex, oracle, urlbl, -1);
-  MESSAGE_INFO(9, "  HEADER : %s", buf);
+  ZE_MessageInfo(9, "  HEADER : %s", buf);
 
-  MESSAGE_INFO(9, "\n --- ??? ");
+  ZE_MessageInfo(9, "\n --- ??? ");
   score = evaluate_msg_score(regex, oracle, urlbl, -1.);
-  MESSAGE_INFO(9, "  SCORE : %7.3f", score);
+  ZE_MessageInfo(9, "  SCORE : %7.3f", score);
   create_msg_score_header(buf, sizeof (buf), NULL, NULL, regex, oracle, urlbl, -1);
-  MESSAGE_INFO(9, "  HEADER : %s", buf);
+  ZE_MessageInfo(9, "  HEADER : %s", buf);
 #endif
 
 #if 0
-  MESSAGE_INFO(9, "\n --- ");
+  ZE_MessageInfo(9, "\n --- ");
   s = "VEC; " COEFS;
   eval = configure_msg_eval_function(s);
   printf("* %-60s : %s\n", STRNULL(s, "NULL"), STRBOOL(eval, "OK", "KO"));
   display_msg_eval();
 
   score = evaluate_msg_score(regex, oracle, urlbl, bayes);
-  MESSAGE_INFO(9, "  SCORE : %7.3f", score);
+  ZE_MessageInfo(9, "  SCORE : %7.3f", score);
   create_msg_score_header(buf, sizeof (buf), NULL, NULL,
                           regex, oracle, urlbl, bayes);
-  MESSAGE_INFO(9, "  HEADER : %s", buf);
+  ZE_MessageInfo(9, "  HEADER : %s", buf);
 #endif
 
 #if 0
-  MESSAGE_INFO(9, "\n --- ");
+  ZE_MessageInfo(9, "\n --- ");
   s = "VECTOR; " COEFS;
   eval = configure_msg_eval_function(s);
   printf("* %-60s : %s\n", STRNULL(s, "NULL"), STRBOOL(eval, "OK", "KO"));
   display_msg_eval();
 
   score = evaluate_msg_score(regex, oracle, urlbl, bayes);
-  MESSAGE_INFO(9, "  SCORE : %7.3f", score);
+  ZE_MessageInfo(9, "  SCORE : %7.3f", score);
   create_msg_score_header(buf, sizeof (buf), NULL, NULL,
                           regex, oracle, urlbl, bayes);
-  MESSAGE_INFO(9, "  HEADER : %s", buf);
+  ZE_MessageInfo(9, "  HEADER : %s", buf);
 #endif
 
   return 0;

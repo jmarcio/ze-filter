@@ -150,7 +150,7 @@ static char *sympa_cmds[] = {
     }
 #endif
 
-    MESSAGE_INFO(10, "%s : This is a short message...",
+    ZE_MessageInfo(10, "%s : This is a short message...",
 		 CONNID_STR(priv->id), strlen(buf));
 
     priv->msg_short = TRUE;

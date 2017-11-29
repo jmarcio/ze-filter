@@ -354,24 +354,24 @@ jbt_add(jdbh, data)
   if (jdbh->chkCount && (jdbh->count >= MAX_BTNODES))
   {
     if (jdbh->nbErr < MAX_BTERR)
-      LOG_MSG_ERROR("Too much nodes in btree : %ld", (long) jdbh->count);
+      ZE_LogMsgError(0, "Too much nodes in btree : %ld", (long) jdbh->count);
     jdbh->nbErr++;
 
     goto fin;
   }
   jdbh->nbErr = 0;
 
-  MESSAGE_INFO(19, " Adding...");
+  ZE_MessageInfo(19, " Adding...");
 
   {
     bool                taller = FALSE;
 
     ok = jbt_add_node(jdbh, data, &(jdbh->root), &taller);
     if (!ok)
-      LOG_MSG_NOTICE("jbt_add_node returned NULL...");
+      ZE_LogMsgNotice(0, "jbt_add_node returned NULL...");
   }
 
-  MESSAGE_INFO(19, " OK ... %d", jdbh->count);
+  ZE_MessageInfo(19, " OK ... %d", jdbh->count);
 
  fin:
   JBT_UNLOCK(&jdbh->mutex);
@@ -491,7 +491,7 @@ jbt_get_node(jdbh, data, root)
 
   if (root->data == NULL)
   {
-    LOG_MSG_WARNING("root not NULL but root->data is NULL...");
+    ZE_LogMsgWarning(0, "root not NULL but root->data is NULL...");
     return NULL;
   }
 
@@ -695,7 +695,7 @@ jbt_right_balance(root)
       root = jbt_rotate_left(root);
       break;
     case _DB_EH:
-      MESSAGE_WARNING(10, "jbt_right_balance x->balance == _DB_EH ???");
+      ZE_MessageWarning(10, "jbt_right_balance x->balance == _DB_EH ???");
       break;
     case _DB_LH:
       w = x->left;
@@ -744,7 +744,7 @@ jbt_left_balance(root)
       root = jbt_rotate_right(root);
       break;
     case _DB_EH:
-      MESSAGE_WARNING(10, "jbt_left_balance x->balance == _DB_EH ???");
+      ZE_MessageWarning(10, "jbt_left_balance x->balance == _DB_EH ???");
       break;
     case _DB_RH:
       w = x->right;
@@ -789,7 +789,7 @@ jbt_node_alloc(jdbh, data)
   rec = (JBTREC_T *) malloc(sizeof (JBTREC_T));
   if (rec == NULL)
   {
-    LOG_SYS_ERROR("malloc jbtrec");
+    ZE_LogSysError("malloc jbtrec");
     return NULL;
   }
 
@@ -798,7 +798,7 @@ jbt_node_alloc(jdbh, data)
   rec->data = malloc(jdbh->size);
   if (rec->data == NULL)
   {
-    LOG_SYS_ERROR("malloc data");
+    ZE_LogSysError("malloc data");
     free(rec);
     return NULL;
   }
@@ -828,7 +828,7 @@ jbt_add_node(jdbh, data, root, taller)
   {
     JBTREC_T           *node = NULL;
 
-    MESSAGE_INFO(19, "Empty tree ...");
+    ZE_MessageInfo(19, "Empty tree ...");
     node = jbt_node_alloc(jdbh, data);
     if (node != NULL)
     {
@@ -853,7 +853,7 @@ jbt_add_node(jdbh, data, root, taller)
 
     if (r == 0)
     {
-      LOG_MSG_NOTICE("Node already on the tree...");
+      ZE_LogMsgNotice(0, "Node already on the tree...");
       return FALSE;
     }
 
@@ -873,7 +873,7 @@ jbt_add_node(jdbh, data, root, taller)
               *taller = FALSE;
               if (node == NULL)
               {
-                LOG_MSG_WARNING("jbt_left_balance returned NULL...");
+                ZE_LogMsgWarning(0, "jbt_left_balance returned NULL...");
                 return FALSE;
               }
               troot = node;
@@ -920,7 +920,7 @@ jbt_add_node(jdbh, data, root, taller)
               *taller = FALSE;
               if (node == NULL)
               {
-                LOG_MSG_WARNING("jbt_right_balance returned NULL...");
+                ZE_LogMsgWarning(0, "jbt_right_balance returned NULL...");
                 return FALSE;
               }
               troot = node;

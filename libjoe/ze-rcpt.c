@@ -103,12 +103,12 @@ check_rcpt(email, ip, name, netclass)
 
   ASSERT(email != NULL && strlen(email) > 0);
 
-  MESSAGE_INFO(DBG_LEVEL, "Checking %s:%s", RCPT_PREFIX, email);
+  ZE_MessageInfo(DBG_LEVEL, "Checking %s:%s", RCPT_PREFIX, email);
 
   /* Create a copy with rcpt/domain parts */
   if ((kemail = strdup(email)) == NULL)
   {
-    LOG_SYS_ERROR("strdup(%s) error :", email);
+    ZE_LogSysError("strdup(%s) error :", email);
     goto fin;
   }
 
@@ -133,12 +133,12 @@ check_rcpt(email, ip, name, netclass)
     *q = '\0';
   }
 
-  MESSAGE_INFO(DBG_LEVEL, "Checking %s:%s", RCPT_PREFIX, kemail);
+  ZE_MessageInfo(DBG_LEVEL, "Checking %s:%s", RCPT_PREFIX, kemail);
 
   /* Create a copy with rcpt/domain parts */
   if ((kbemail = strdup(kemail)) == NULL)
   {
-    LOG_SYS_ERROR("strdup(%s) error :", kemail);
+    ZE_LogSysError("strdup(%s) error :", kemail);
     goto fin;
   }
 
@@ -155,7 +155,7 @@ check_rcpt(email, ip, name, netclass)
     domain = kbemail;
   }
 
-  MESSAGE_INFO(DBG_LEVEL, "KEY = %s, RCPT = %s, DOMAIN = %s",
+  ZE_MessageInfo(DBG_LEVEL, "KEY = %s, RCPT = %s, DOMAIN = %s",
                kemail, STRNULL(rcpt, "(null)"), STRNULL(domain, "(null)"));
 
   ASSERT(domain != NULL);
@@ -173,7 +173,7 @@ check_rcpt(email, ip, name, netclass)
   memset(buf, 0, sizeof (buf));
   if (db_rcpt_check_domain(DOMAIN_PREFIX, domain, buf, sizeof (buf), 0))
   {
-    MESSAGE_INFO(DBG_LEVEL, " -> Got : %s:%-15s %s\n", "CheckDomainRcpt",
+    ZE_MessageInfo(DBG_LEVEL, " -> Got : %s:%-15s %s\n", "CheckDomainRcpt",
                  domain, buf);
 
     found = TRUE;
@@ -185,7 +185,7 @@ check_rcpt(email, ip, name, netclass)
     /* XXX */
     if (db_rcpt_check_domain(DOMAIN_PREFIX, "default", buf, sizeof (buf), 0))
     {
-      MESSAGE_INFO(DBG_LEVEL, " -> Got : %s:%-15s %s\n", "CheckDomainRcpt",
+      ZE_MessageInfo(DBG_LEVEL, " -> Got : %s:%-15s %s\n", "CheckDomainRcpt",
                    "default", "buf");
 
       found = TRUE;
@@ -226,7 +226,7 @@ check_rcpt(email, ip, name, netclass)
   } else
     goto fin;
 
-  MESSAGE_INFO(DBG_LEVEL, "CheckRcptDomain access : %d", access);
+  ZE_MessageInfo(DBG_LEVEL, "CheckRcptDomain access : %d", access);
 
   /*
    ** Now let's check full recipient address
@@ -239,7 +239,7 @@ check_rcpt(email, ip, name, netclass)
   if (db_rcpt_check_email(RCPT_PREFIX, kemail, buf, sizeof (buf)))
   {
     if (strlen(buf) > 0)
-      MESSAGE_INFO(DBG_LEVEL, " -> Got : %s:%-15s %s\n", RCPT_PREFIX, kemail,
+      ZE_MessageInfo(DBG_LEVEL, " -> Got : %s:%-15s %s\n", RCPT_PREFIX, kemail,
                    buf);
 
     found = TRUE;
@@ -251,7 +251,7 @@ check_rcpt(email, ip, name, netclass)
   size = strlen(kemail) + 16;
   if ((kbuf = malloc(size)) == NULL)
   {
-    LOG_SYS_ERROR("malloc(%d) error :", size);
+    ZE_LogSysError("malloc(%d) error :", size);
     goto fin;
   }
 
@@ -263,7 +263,7 @@ check_rcpt(email, ip, name, netclass)
 
   if (access == CHK_DOMAIN_LOCAL)
   {
-    MESSAGE_INFO(DBG_LEVEL, "Checking local part : %s",
+    ZE_MessageInfo(DBG_LEVEL, "Checking local part : %s",
                  STRNULL(rcpt, "(null)"));
     /* let's check only rcpt part */
     if (rcpt != NULL && strlen(rcpt) > 0)
@@ -271,7 +271,7 @@ check_rcpt(email, ip, name, netclass)
       snprintf(kbuf, size, "%s@", rcpt);
       if (db_rcpt_check_email(RCPT_PREFIX, kbuf, buf, sizeof (buf)))
       {
-        MESSAGE_INFO(DBG_LEVEL, " -> Got : %s:%-15s %s\n", RCPT_PREFIX, kbuf,
+        ZE_MessageInfo(DBG_LEVEL, " -> Got : %s:%-15s %s\n", RCPT_PREFIX, kbuf,
                      buf);
         if (strlen(buf) > 0)
         {
@@ -287,7 +287,7 @@ check_rcpt(email, ip, name, netclass)
         snprintf(kbuf, size, "%s@", rcpt);
         if (db_rcpt_check_email(RCPT_PREFIX, kbuf, buf, sizeof (buf)))
         {
-          MESSAGE_INFO(DBG_LEVEL, " -> Got : %s:%-15s %s\n", RCPT_PREFIX, kbuf,
+          ZE_MessageInfo(DBG_LEVEL, " -> Got : %s:%-15s %s\n", RCPT_PREFIX, kbuf,
                        buf);
           if (strlen(buf) > 0)
           {
@@ -308,7 +308,7 @@ check_rcpt(email, ip, name, netclass)
       snprintf(kbuf, size, "%s", p);
       if (db_rcpt_check_domain(RCPT_PREFIX, kbuf, buf, sizeof (buf), 0))
       {
-        MESSAGE_INFO(DBG_LEVEL, " -> Got : %s:%-15s %s\n", RCPT_PREFIX, kbuf,
+        ZE_MessageInfo(DBG_LEVEL, " -> Got : %s:%-15s %s\n", RCPT_PREFIX, kbuf,
                      buf);
         if (strlen(buf) > 0)
         {
@@ -385,7 +385,7 @@ docheck:
       result = RCPT_USER_UNKNOWN;
       break;
     default:
-      MESSAGE_NOTICE(9, "Error ...");
+      ZE_MessageNotice(9, "Error ...");
       result = RCPT_USER_UNKNOWN;
       break;
   }

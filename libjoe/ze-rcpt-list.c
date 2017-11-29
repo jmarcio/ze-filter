@@ -77,7 +77,7 @@ rcpt_list_add(head, rcpt, access)
 
   if ((p = malloc(sizeof (rcpt_addr_T))) == NULL)
   {
-    LOG_SYS_ERROR("malloc(rcpt_addr_T)");
+    ZE_LogSysError("malloc(rcpt_addr_T)");
     res = FALSE;
     goto fin;
   }
@@ -86,14 +86,14 @@ rcpt_list_add(head, rcpt, access)
 
   if ((p->rcpt = strdup(rcpt)) == NULL)
   {
-    LOG_SYS_ERROR("strdup(rcpt)");
+    ZE_LogSysError("strdup(rcpt)");
     res = FALSE;
     goto fin;
   }
 
   if ((p->email = strdup(rcpt)) == NULL)
   {
-    LOG_SYS_ERROR("strdup(rcpt)");
+    ZE_LogSysError("strdup(rcpt)");
     res = FALSE;
     goto fin;
   }
@@ -101,7 +101,7 @@ rcpt_list_add(head, rcpt, access)
 
   if ((p->user = strdup(p->email)) == NULL)
   {
-    LOG_SYS_ERROR("strdup(p->email)");
+    ZE_LogSysError("strdup(p->email)");
     res = FALSE;
     goto fin;
   }
@@ -110,7 +110,7 @@ rcpt_list_add(head, rcpt, access)
 
   if ((p->host = strdup(p->email)) == NULL)
   {
-    LOG_SYS_ERROR("strdup(p->email)");
+    ZE_LogSysError("strdup(p->email)");
     res = FALSE;
     goto fin;
   }

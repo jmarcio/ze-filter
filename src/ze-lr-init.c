@@ -51,7 +51,7 @@ lr_data_load(background)
     int                 r;
 
     if ((r = pthread_create(&tid, NULL, lr_initialize, (void *) TRUE)) != 0) {
-      LOG_SYS_ERROR("Error launching lr_initialize_task");
+      ZE_LogSysError("Error launching lr_initialize_task");
       return FALSE;
     }
   } else
@@ -93,14 +93,14 @@ lr_initialize(arg)
   ADJUST_FILENAME(path, lrname, cdb_dir, "ze-lr.txt");
 
   lr_filter_ok = FALSE;
-  MESSAGE_INFO(9, "Opening perceptron data file : %s", path);
+  ZE_MessageInfo(9, "Opening perceptron data file : %s", path);
   (void) lr_data_close();
   if (lr_data_open(path))
   {
-    MESSAGE_INFO(9, "Perceptron data file : %s : OK !", path);
+    ZE_MessageInfo(9, "Perceptron data file : %s : OK !", path);
     lr_filter_ok = TRUE;
   } else
-    MESSAGE_WARNING(9, "Couldn't open perceptron data file : %s", path);
+    ZE_MessageWarning(9, "Couldn't open perceptron data file : %s", path);
 
   return NULL;
 }

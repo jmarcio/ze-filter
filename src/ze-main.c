@@ -82,11 +82,11 @@ main(argc, argv)
 
   int                 mkcf = MK_CF_NONE;
 
-  set_log_output(TRUE, TRUE);
+  zeLog_SetOutput(TRUE, TRUE);
 
-  log_facility = LOG_LOCAL5;
+  ze_logFacility = LOG_LOCAL5;
 
-  openlog("ze-filter", LOG_PID | LOG_NOWAIT | LOG_NDELAY, log_facility);
+  openlog("ze-filter", LOG_PID | LOG_NOWAIT | LOG_NDELAY, ze_logFacility);
 
   init_default_file_extensions();
 
@@ -121,23 +121,23 @@ main(argc, argv)
         exit(0);
         break;
       case 'x':
-        log_level = 7;
+        ze_logLevel = 7;
         hardcoded_xfiles();
         exit(0);
         break;
       case 'v':
         cf_opt.arg_v++;
-        set_log_output(TRUE, TRUE);
+        zeLog_SetOutput(TRUE, TRUE);
         break;
 
       case 'm':
         mkcf = MK_CF_RUNNING;
-        set_log_output(FALSE, TRUE);
+        zeLog_SetOutput(FALSE, TRUE);
         break;
 
       case 'n':
         mkcf = MK_CF_DEFAULT;
-        set_log_output(FALSE, TRUE);
+        zeLog_SetOutput(FALSE, TRUE);
         break;
 
       case 'M':
@@ -149,21 +149,21 @@ main(argc, argv)
           if (STRNCASEEQUAL(optarg, s, strlen(s)))
           {
             mkcf = MK_CF_NULL;
-            set_log_output(FALSE, TRUE);
+            zeLog_SetOutput(FALSE, TRUE);
             break;
           }
           s = "def";
           if (STRNCASEEQUAL(optarg, s, strlen(s)))
           {
             mkcf = MK_CF_DEFAULT;
-            set_log_output(FALSE, TRUE);
+            zeLog_SetOutput(FALSE, TRUE);
             break;
           }
           s = "run";
           if (STRNCASEEQUAL(optarg, s, strlen(s)))
           {
             mkcf = MK_CF_RUNNING;
-            set_log_output(FALSE, TRUE);
+            zeLog_SetOutput(FALSE, TRUE);
             break;
           }
         }
@@ -204,12 +204,12 @@ main(argc, argv)
         }
         if (cf_opt.arg_c != NULL)
         {
-          MESSAGE_INFO(0, "Only one c option, please");
+          ZE_MessageInfo(0, "Only one c option, please");
           exit(EX_USAGE);
         }
         if ((cf_opt.arg_c = strdup(optarg)) == NULL)
         {
-          LOG_SYS_ERROR("FATAL ERROR - memory allocation cf_opt.arg_c");
+          ZE_LogSysError("FATAL ERROR - memory allocation cf_opt.arg_c");
           exit(1);
         }
         conf_file = cf_opt.arg_c;
@@ -259,12 +259,12 @@ main(argc, argv)
         }
         if (cf_opt.arg_l != NULL)
         {
-          MESSAGE_INFO(0, "Only one l option, please");
+          ZE_MessageInfo(0, "Only one l option, please");
           exit(1);
         }
         if ((cf_opt.arg_l = strdup(optarg)) == NULL)
         {
-          LOG_SYS_ERROR("FATAL ERROR - memory allocation cf_opt.arg_l");
+          ZE_LogSysError("FATAL ERROR - memory allocation cf_opt.arg_l");
           exit(1);
         }
         break;
@@ -292,7 +292,7 @@ main(argc, argv)
             (void) fprintf(stderr, "Unknown table : %s\n", optarg);
             exit(EX_USAGE);
           }
-          log_level = 7;
+          ze_logLevel = 7;
         }
         break;
 
@@ -316,7 +316,7 @@ main(argc, argv)
 
   if (mkcf != MK_CF_NONE)
   {
-    log_level = 7;
+    ze_logLevel = 7;
     if (mkcf == MK_CF_RUNNING)
       configure("ze-filter", conf_file, TRUE);
     mk_cf_file(STDOUT_FILENO, mkcf, TRUE);
@@ -325,7 +325,7 @@ main(argc, argv)
   }
 
   if (!(cf_opt.arg_t || cf_opt.arg_v || cf_opt.arg_m))
-    MESSAGE_INFO(9, "Starting %s", PACKAGE);
+    ZE_MessageInfo(9, "Starting %s", PACKAGE);
 
   configure("ze-filter", conf_file, FALSE);
 
@@ -362,7 +362,7 @@ main(argc, argv)
     }
   }
 
-  MESSAGE_INFO(9, "... Joe's ze-filter OK !");
+  ZE_MessageInfo(9, "... Joe's ze-filter OK !");
 
   return j_survey();
 }
@@ -391,36 +391,36 @@ father_signal_handler(signo)
   signal(signo, father_signal_handler);
 #endif
 
-  MESSAGE_INFO(20, "*** Received SIGNAL %d : %s", signo, ctime(&now));
+  ZE_MessageInfo(20, "*** Received SIGNAL %d : %s", signo, ctime(&now));
 
   switch (signo)
   {
     case SIGTERM:
       if (!DONE)
-        MESSAGE_INFO(10, " *** Terminate command received");
+        ZE_MessageInfo(10, " *** Terminate command received");
       msg = MSG_TERM;
       if (pid_filter > 0)
         send_msg_channel(pipe_filter, msg, CHAN_FATHER);
-      LOG_MSG_DEBUG(20, "MSG SEND : %d", msg);
+      ZE_LogMsgDebug(20, "MSG SEND : %d", msg);
       DONE = TRUE;
       break;
     case SIGUSR1:
-      MESSAGE_INFO(10, " *** Dump counters command received");
+      ZE_MessageInfo(10, " *** Dump counters command received");
       msg = MSG_DUMP;
       if (pid_filter > 0)
         send_msg_channel(pipe_filter, msg, CHAN_FATHER);
-      LOG_MSG_DEBUG(20, "MSG SEND : %d", msg);
+      ZE_LogMsgDebug(20, "MSG SEND : %d", msg);
       break;
     case SIGUSR2:
-      MESSAGE_INFO(10, " *** Reset counters command received");
+      ZE_MessageInfo(10, " *** Reset counters command received");
       reset_state();
       msg = MSG_RESET;
       if (pid_filter > 0)
         send_msg_channel(pipe_filter, msg, CHAN_FATHER);
-      LOG_MSG_DEBUG(20, "MSG SEND : %d", msg);
+      ZE_LogMsgDebug(20, "MSG SEND : %d", msg);
       break;
     case SIGHUP:
-      MESSAGE_INFO(10, " *** Reload configuration files command received");
+      ZE_MessageInfo(10, " *** Reload configuration files command received");
       if (!sighup_group)
         need_load_conf = TRUE;
       sighup_group = FALSE;
@@ -431,7 +431,7 @@ father_signal_handler(signo)
     case SIGALRM:
       break;
     default:
-      LOG_MSG_WARNING("Undefined behavior for signal %d !", signo);
+      ZE_LogMsgWarning(0, "Undefined behavior for signal %d !", signo);
       break;
   }
 }
@@ -497,47 +497,47 @@ j_set_uid_gid(user, group)
 
   if (uid != 0)
   {
-    LOG_MSG_WARNING("Only root can set user and group");
+    ZE_LogMsgWarning(0, "Only root can set user and group");
     return 0;
   }
 
   if ((gr = getgrnam(group)) != NULL)
   {
-    LOG_MSG_DEBUG(20, "GID DE %s : %ld", group, (long) gr->gr_gid);
+    ZE_LogMsgDebug(20, "GID DE %s : %ld", group, (long) gr->gr_gid);
     if (gid == gr->gr_gid)
     {
-      LOG_MSG_WARNING("ze-filter is already running as group %s", group);
+      ZE_LogMsgWarning(0, "ze-filter is already running as group %s", group);
     } else
     {
       if ((uid == 0) && (setregid(gr->gr_gid, gr->gr_gid) < 0))
       {
-        LOG_SYS_ERROR("Can't set process gid = %ld", (long) gr->gr_gid);
+        ZE_LogSysError("Can't set process gid = %ld", (long) gr->gr_gid);
         return 1;
       }
     }
   } else
   {
-    LOG_SYS_ERROR("Error getgrnam(%s)", group);
+    ZE_LogSysError("Error getgrnam(%s)", group);
     return 1;
   }
 
   if ((pw = getpwnam(user)) != NULL)
   {
-    LOG_MSG_DEBUG(20, "UID DE %s : %ld", user, (long) pw->pw_uid);
+    ZE_LogMsgDebug(20, "UID DE %s : %ld", user, (long) pw->pw_uid);
     if (uid == pw->pw_uid)
     {
-      LOG_MSG_WARNING("ze-filter is already running as user %s", user);
+      ZE_LogMsgWarning(0, "ze-filter is already running as user %s", user);
     } else
     {
       if ((uid == 0) && (setreuid(pw->pw_uid, pw->pw_uid) < 0))
       {
-        LOG_SYS_ERROR("Can't set process uid = %ld", (long) pw->pw_uid);
+        ZE_LogSysError("Can't set process uid = %ld", (long) pw->pw_uid);
         return 1;
       }
     }
   } else
   {
-    LOG_SYS_ERROR("Error getpwnam(%s)", user);
+    ZE_LogSysError("Error getpwnam(%s)", user);
     return 1;
   }
 
@@ -573,7 +573,7 @@ daemon_init()
   }
 
   if (setpgid(0, 0) < 0)
-    LOG_SYS_ERROR("Can't set process group leader");
+    ZE_LogSysError("Can't set process group leader");
 
   if (!foreground)
   {
@@ -590,26 +590,26 @@ daemon_init()
         exit(0);
     }
 
-    set_log_output(TRUE, FALSE);
+    zeLog_SetOutput(TRUE, FALSE);
 
     umask(0000);
 
     if ((fd = open("/dev/null", O_RDONLY, 0)) < 0)
-      LOG_SYS_ERROR("Can't open /dev/null read-only");
+      ZE_LogSysError("Can't open /dev/null read-only");
 
     if (dup2(fd, STDIN_FILENO) < 0)
-      LOG_SYS_ERROR("Can't redirect stdin");
+      ZE_LogSysError("Can't redirect stdin");
 
     close(fd);
 
     if ((fd = open("/dev/null", O_WRONLY, 0)) < 0)
-      LOG_SYS_ERROR("Can't open /dev/null write-only");
+      ZE_LogSysError("Can't open /dev/null write-only");
 
     if (dup2(fd, STDOUT_FILENO) < 0)
-      LOG_SYS_ERROR("Can't redirect stdout");
+      ZE_LogSysError("Can't redirect stdout");
 
     if (dup2(fd, STDERR_FILENO) < 0)
-      LOG_SYS_ERROR("Can't redirect stderr");
+      ZE_LogSysError("Can't redirect stderr");
 
     close(fd);
   }
@@ -633,7 +633,7 @@ daemon_init()
 
     if (chdir(workdir) < 0)
     {
-      LOG_SYS_ERROR("Can't do chdir(%s) : ", workdir);
+      ZE_LogSysError("Can't do chdir(%s) : ", workdir);
       exit(EX_SOFTWARE);
     }
   }
@@ -754,11 +754,11 @@ tlaunch_register()
     int oflag;								\
     if ((oflag = fcntl(fd, F_GETFL, 0)) < 0)				\
       {									\
-      LOG_SYS_ERROR("fcntl F_GETFL error");				\
+      ZE_LogSysError("fcntl F_GETFL error");				\
     } else {								\
       /* Shall set write pipe to O_NONBLOCK mode ??? */			\
       if (fcntl(fd, F_SETFL, oflag | flag) < 0)	\
-	LOG_SYS_ERROR("fcntl F_SETFL error");				\
+	ZE_LogSysError("fcntl F_SETFL error");				\
     }									\
   } while (0)
 
@@ -785,7 +785,7 @@ j_survey()
 
   if (!setup_supervisor_signal_handler())
   {
-    LOG_MSG_ERROR("can't setup signal handler");
+    ZE_LogMsgError(0, "can't setup signal handler");
     exit(1);
   }
 
@@ -797,10 +797,10 @@ j_survey()
     {
       int                 msg = 0;
 
-      MESSAGE_INFO(15, "Father will try to receive on fd = %d", fd_pipe);
+      ZE_MessageInfo(15, "Father will try to receive on fd = %d", fd_pipe);
       while (recv_message_pipe(fd_pipe, &msg))
       {
-        MESSAGE_INFO(15, "FATHER RECEIVED %3d", msg);
+        ZE_MessageInfo(15, "FATHER RECEIVED %3d", msg);
         switch (msg)
         {
           case MSG_OK:
@@ -822,13 +822,13 @@ j_survey()
         fd_pipe = -1;
         if (open_channel(pipe_filter) < 0)
         {
-          LOG_SYS_ERROR("pipe(pipe_filter)");
+          ZE_LogSysError("pipe(pipe_filter)");
           exit(1);
         }
 
         if ((pid_filter = fork()) == -1)
         {
-          LOG_SYS_ERROR("Forking ze-filter");
+          ZE_LogSysError("Forking ze-filter");
           exit(1);
         }
 
@@ -844,15 +844,15 @@ j_survey()
 #else
           if ((flag = fcntl(pipe_filter[0], F_GETFL, 0)) < 0)
           {
-            LOG_SYS_ERROR("can't get pipe status");
+            ZE_LogSysError("can't get pipe status");
           } else
           {
             if (fcntl(pipe_filter[0], F_SETFL, flag | O_NONBLOCK) < 0)
-              LOG_SYS_ERROR("fcntl pipe_filter[0]");
+              ZE_LogSysError("fcntl pipe_filter[0]");
           }
 #endif
 
-          MESSAGE_INFO(15, "Child : pipe = %d %d", pipe_filter[0],
+          ZE_MessageInfo(15, "Child : pipe = %d %d", pipe_filter[0],
                        pipe_filter[1]);
 
           /* 
@@ -863,7 +863,7 @@ j_survey()
           return zeFilter();
         }
 
-        LOG_MSG_DEBUG(20, "pid_filter : %ld", (long) pid_filter);
+        ZE_LogMsgDebug(20, "pid_filter : %ld", (long) pid_filter);
 
         close(pipe_filter[0]);
         fd_pipe = pipe_filter[1];
@@ -873,12 +873,12 @@ j_survey()
 #else
         if ((flag = fcntl(pipe_filter[1], F_GETFL, 0)) < 0)
         {
-          LOG_SYS_ERROR("fcntl F_GETFL error");
+          ZE_LogSysError("fcntl F_GETFL error");
         } else
         {
           /* Shall set write pipe to O_NONBLOCK mode ??? */
           if (fcntl(pipe_filter[1], F_SETFL, flag | O_NONBLOCK) < 0)
-            LOG_SYS_ERROR("fcntl F_SETFL error");
+            ZE_LogSysError("fcntl F_SETFL error");
         }
 #endif
       } else
@@ -888,7 +888,7 @@ j_survey()
 
         if (lastlog + 60 < now)
         {
-          MESSAGE_WARNING(10,
+          ZE_MessageWarning(10,
                           "Spawning too fast : %d in less than %d secs (%d)",
                           tlaunch_count(TL_DT), TL_DT, n++);
           lastlog = now;
@@ -907,13 +907,13 @@ j_survey()
 
       if (pid_filter > 0)
         send_msg_channel(pipe_filter, msg, CHAN_FATHER);
-      MESSAGE_INFO(12, "%s : MSG SEND : %d", ZE_FUNCTION, msg);
+      ZE_MessageInfo(12, "%s : MSG SEND : %d", ZE_FUNCTION, msg);
     }
 
     /* Well ! My boss want to reconfigure */
     if (need_load_conf)
     {
-      MESSAGE_INFO(9, "LETS RECONFIGURE...");
+      ZE_MessageInfo(9, "LETS RECONFIGURE...");
 
       configure("ze-filter", conf_file, FALSE);
 
@@ -931,15 +931,15 @@ j_survey()
 
       res_filter = WAIT_NOHANG(-1, &status);
 
-      MESSAGE_DEBUG(20, "%s : PID FILTER : %5d - RES %5d\n", ZE_FUNCTION,
+      ZE_MessageDebug(20, "%s : PID FILTER : %5d - RES %5d\n", ZE_FUNCTION,
                     pid_filter, res_filter);
 
       if (res_filter == -1)
       {
-        LOG_SYS_ERROR("waitpid(pid_filter = %d) ", pid_filter);
+        ZE_LogSysError("waitpid(pid_filter = %d) ", pid_filter);
         if (errno == EINVAL && ++nsigerr > MAX_SIG_ERR)
         {
-          LOG_MSG_CRIT("waitpid(pid_filter = %d - Too many errors) ",
+          ZE_LogMsgError(0, "waitpid(pid_filter = %d - Too many errors) ",
                        pid_filter);
           goto fin;
         }
@@ -954,7 +954,7 @@ j_survey()
         {
           int                 sig = WTERMSIG(status);
 
-          MESSAGE_INFO(9, "Filter %d died after received signal %d", res_filter,
+          ZE_MessageInfo(9, "Filter %d died after received signal %d", res_filter,
                        sig);
         }
 
@@ -963,7 +963,7 @@ j_survey()
           int                 ret = WEXITSTATUS(status);
 
           if (ret != 0)
-            MESSAGE_INFO(9, "Filter %d died and returned code %d", res_filter,
+            ZE_MessageInfo(9, "Filter %d died and returned code %d", res_filter,
                          ret);
         }
       }
@@ -971,7 +971,7 @@ j_survey()
       /* does child died ? */
       if (res_filter == pid_filter)
       {
-        LOG_MSG_WARNING("Filter died : doing clean-up to relaunch");
+        ZE_LogMsgWarning(0, "Filter died : doing clean-up to relaunch");
         remove_milter_sock();
         pid_filter = 0;
       }

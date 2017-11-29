@@ -218,21 +218,21 @@ init_regex()
     if ((r = regcomp(&RE.re_ct, RE_CT, REGCOMP_FLAGS)) != 0)
     {
       regerror(r, &RE.re_ct, sout, sizeof (sout));
-      LOG_MSG_ERROR("regcomp error : %d %s", r, sout);
+      ZE_LogMsgError(0, "regcomp error : %d %s", r, sout);
       ok = FALSE;
     }
 
     if ((r = regcomp(&RE.re_cd, RE_CD, REGCOMP_FLAGS)) != 0)
     {
       regerror(r, &RE.re_cd, sout, sizeof (sout));
-      LOG_MSG_ERROR("regcomp error : %d %s", r, sout);
+      ZE_LogMsgError(0, "regcomp error : %d %s", r, sout);
       ok = FALSE;
     }
 
     if ((r = regcomp(&RE.re_uu, RE_UU, REGCOMP_FLAGS)) != 0)
     {
       regerror(r, &RE.re_uu, sout, sizeof (sout));
-      LOG_MSG_ERROR("regcomp error : %d %s", r, sout);
+      ZE_LogMsgError(0, "regcomp error : %d %s", r, sout);
       ok = FALSE;
     }
 
@@ -311,10 +311,10 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
 
   if (!RE.ok)
   {
-    LOG_MSG_INFO(11, "Initialising REGEX structure");
+    ZE_LogMsgInfo(11, "Initialising REGEX structure");
     if (!init_regex())
     {
-      LOG_MSG_ERROR("Unable to initialise REGEX structure");
+      ZE_LogMsgError(0, "Unable to initialise REGEX structure");
       return 9;
     }
   }
@@ -334,7 +334,7 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
 #if MALLOC_WORK == 1
   if ((work = malloc(SZ_WORK + 1)) == NULL)
   {
-    LOG_SYS_ERROR("%-12s : malloc work error", id);
+    ZE_LogSysError("%-12s : malloc work error", id);
     return 15;
   }
 #endif
@@ -478,7 +478,7 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
             content->value = strdup(fname);
             if (content->value == NULL)
             {
-              LOG_SYS_ERROR("Error strdup CT_UUFILE %s", fname);
+              ZE_LogSysError("Error strdup CT_UUFILE %s", fname);
             }
             p += pm_uu.rm_eo;
             continue;
@@ -797,7 +797,7 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
     free(work);
 #endif
 
-  LOG_MSG_INFO(12, "returning %d", result);
+  ZE_LogMsgInfo(12, "returning %d", result);
 
   return result;
 }
@@ -851,10 +851,10 @@ new_scan_block(id, old, sz_old, new, sz_new, state, content, list)
 
   if (!RE.ok)
   {
-    LOG_MSG_INFO(10, "Initialising REGEX structure");
+    ZE_LogMsgInfo(10, "Initialising REGEX structure");
     if (!init_regex())
     {
-      LOG_MSG_ERROR("Unable to initialise REGEX structure");
+      ZE_LogMsgError(0, "Unable to initialise REGEX structure");
       return 9;
     }
   }
@@ -874,7 +874,7 @@ new_scan_block(id, old, sz_old, new, sz_new, state, content, list)
 
   if ((work = malloc(SZ_WORK + 1)) == NULL)
   {
-    LOG_SYS_ERROR("%-12s : malloc work error", id);
+    ZE_LogSysError("%-12s : malloc work error", id);
     return 15;
   }
 
@@ -926,7 +926,7 @@ new_scan_block(id, old, sz_old, new, sz_new, state, content, list)
         if (regex_lookup(&RE.re_cd, wptr, &pi, &pf))
           n3 = pi;
 
-        MESSAGE_INFO(18, "N = %d %d %d (%d)", n1, n2, n3, SZ_WORK);
+        ZE_MessageInfo(18, "N = %d %d %d (%d)", n1, n2, n3, SZ_WORK);
         if ((m = MIN3(n1, n2, n3)) < SZ_WORK)
         {
           wptr += m;
@@ -993,11 +993,11 @@ new_scan_block(id, old, sz_old, new, sz_new, state, content, list)
               content->value = strdup("attachment/uuencoded");
 #endif             /* 1 */
               if (content->value == NULL)
-                LOG_SYS_ERROR("Error strdup CT_UUFILE %s", fname);
+                ZE_LogSysError("Error strdup CT_UUFILE %s", fname);
 
               if (!add_content_field_attr(content, "name", fname))
               {
-                LOG_MSG_WARNING("add_content_field_attr call error : %s", fname);
+                ZE_LogMsgWarning(0, "add_content_field_attr call error : %s", fname);
               }
 
               save_content_field(content, list);
@@ -1029,7 +1029,7 @@ new_scan_block(id, old, sz_old, new, sz_new, state, content, list)
                 /* XXX */
               }
               strncpy(str, p, len);
-              MESSAGE_INFO(19, "CT_TYPE : %s", str);
+              ZE_MessageInfo(19, "CT_TYPE : %s", str);
               content->value = strdup(str);
               if (content->value == NULL)
               {
@@ -1062,7 +1062,7 @@ new_scan_block(id, old, sz_old, new, sz_new, state, content, list)
                 /* XXX */
               }
               strncpy(str, p, len);
-              MESSAGE_INFO(19, "CT_DISP : %s", str);
+              ZE_MessageInfo(19, "CT_DISP : %s", str);
               content->value = strdup(str);
               if (content->value == NULL)
               {
@@ -1195,21 +1195,21 @@ decode_mime_content_tag(buf, content)
     ptr = line;
     ptr += strspn(ptr, " \t");
 
-    MESSAGE_INFO(19, "-> LINE : %s", ptr);
+    ZE_MessageInfo(19, "-> LINE : %s", ptr);
 
     while ((*ptr == ';') || (strlen(ptr) > 0))
     {
       bool                doublequotes = FALSE;
       size_t              valLength;
 
-      MESSAGE_INFO(19, "??? %s", ptr);
+      ZE_MessageInfo(19, "??? %s", ptr);
       rfc2047 = rfc2231 = FALSE;
       ptr += strspn(ptr, "; \t\r\n");
       if (strlen(ptr) == 0)
         continue;
 
       if (strexpr(ptr, "[a-z]*=", &pi, &pf, TRUE))
-        MESSAGE_INFO(19, "-> TAG  : %s", ptr);
+        ZE_MessageInfo(19, "-> TAG  : %s", ptr);
 
       if (strchr(TSPECIALS, *ptr) != NULL)
       {
@@ -1254,7 +1254,7 @@ decode_mime_content_tag(buf, content)
       else
         valLength = strcspn(ptr, TSPECIALS);
 
-      MESSAGE_INFO(9, "valLength %d", valLength);
+      ZE_MessageInfo(9, "valLength %d", valLength);
 
       if (rfc2047)
         decode_rfc2047(val, ptr, sizeof (val));
@@ -1288,7 +1288,7 @@ decode_mime_content_tag(buf, content)
 
       if (!add_content_field_attr(content, key, val))
       {
-        LOG_MSG_WARNING("add_content_field_attr call error : %s", key);
+        ZE_LogMsgWarning(0, "add_content_field_attr call error : %s", key);
       }
 
       /* Cases to check
@@ -1314,11 +1314,11 @@ decode_mime_content_tag(buf, content)
           if ((strchr(ptr, ' ') != NULL) && (strchr(ptr, ';') == NULL))
           {
             pname[0] = ptr;
-            MESSAGE_INFO(19, "Case 1 detected : %s", ptr);
+            ZE_MessageInfo(19, "Case 1 detected : %s", ptr);
             log_mime_attr_value(key, ptr, FALSE, FALSE);
             if (!add_content_field_attr(content, key, ptr))
             {
-              LOG_MSG_WARNING("add_content_field_attr call error : %s", key);
+              ZE_LogMsgWarning(0, "add_content_field_attr call error : %s", key);
             }
           }
 
@@ -1329,11 +1329,11 @@ decode_mime_content_tag(buf, content)
             pname[1] = ptr;
             if (!already_there)
             {
-              MESSAGE_INFO(19, "Case 2 detected : %s", ptr);
+              ZE_MessageInfo(19, "Case 2 detected : %s", ptr);
               log_mime_attr_value(key, ptr, FALSE, FALSE);
               if (!add_content_field_attr(content, key, ptr))
               {
-                LOG_MSG_WARNING("add_content_field_attr call error : %s", key);
+                ZE_LogMsgWarning(0, "add_content_field_attr call error : %s", key);
               }
             }
           }
@@ -1350,11 +1350,11 @@ decode_mime_content_tag(buf, content)
               pname[2] = ptr;
               if (!already_there)
               {
-                MESSAGE_INFO(19, "Case 3a detected : %s", ptr);
+                ZE_MessageInfo(19, "Case 3a detected : %s", ptr);
                 log_mime_attr_value(key, ptr, FALSE, FALSE);
                 if (!add_content_field_attr(content, key, ptr))
                 {
-                  LOG_MSG_WARNING("add_content_field_attr call error : %s", key);
+                  ZE_LogMsgWarning(0, "add_content_field_attr call error : %s", key);
                 }
               }
             }
@@ -1367,11 +1367,11 @@ decode_mime_content_tag(buf, content)
             pname[3] = ptr;
             if (!already_there)
             {
-              MESSAGE_INFO(19, "Case 4 detected : %s", ptr);
+              ZE_MessageInfo(19, "Case 4 detected : %s", ptr);
               log_mime_attr_value(key, ptr, FALSE, FALSE);
               if (!add_content_field_attr(content, key, ptr))
               {
-                LOG_MSG_WARNING("add_content_field_attr call error : %s", key);
+                ZE_LogMsgWarning(0, "add_content_field_attr call error : %s", key);
               }
             }
           }
@@ -1381,7 +1381,7 @@ decode_mime_content_tag(buf, content)
       ptr += valLength;
       if (doublequotes)
         ptr++;
-      MESSAGE_INFO(9, "   PTR     : %s", ptr);
+      ZE_MessageInfo(9, "   PTR     : %s", ptr);
     }
   }
 
@@ -1418,8 +1418,8 @@ log_mime_attr_value(key, value, rfc2047, rfc2231)
      bool                rfc2047;
      bool                rfc2231;
 {
-  MESSAGE_INFO(19, "   KEY     : %s", key);
-  MESSAGE_INFO(19, "   VALUE   : %s", value);
-  MESSAGE_INFO(19, "   RFC2231 : %s", STRBOOL(rfc2231, "YES", "NO"));
-  MESSAGE_INFO(19, "   RFC2047 : %s", STRBOOL(rfc2047, "YES", "NO"));
+  ZE_MessageInfo(19, "   KEY     : %s", key);
+  ZE_MessageInfo(19, "   VALUE   : %s", value);
+  ZE_MessageInfo(19, "   RFC2231 : %s", STRBOOL(rfc2231, "YES", "NO"));
+  ZE_MessageInfo(19, "   RFC2047 : %s", STRBOOL(rfc2047, "YES", "NO"));
 }

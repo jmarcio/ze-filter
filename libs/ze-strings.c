@@ -22,7 +22,7 @@
  */
 
 #include <ze-sys.h>
-#include <ze-syslog.h>
+#include <zeLibs.h>
 
 #include "ze-strings.h"
 
@@ -67,7 +67,7 @@ strduprev(s)
 
   if ((p = strdup(s)) == NULL)
   {
-    LOG_SYS_ERROR("strdup(%s)", s);
+    ZE_LogSysError("strdup(%s)", s);
     return p;
   }
 
@@ -206,7 +206,7 @@ strndup(sin, n)
   if ((p = jm_malloc(n + 1)) != NULL)
     safe_strncpy((char *) p, n + 1, (char *) sin, n);
   else
-    LOG_SYS_ERROR("malloc error");
+    ZE_LogSysError("malloc error");
 
   return p;
 }

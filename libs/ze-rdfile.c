@@ -63,7 +63,7 @@ j_rd_text_file(fname, rdtype, rdreverse, tag, func)
 
     if ((fin = fopen(fname, "r")) == NULL)
     {
-      LOG_SYS_ERROR("fopen(%s)", STRNULL(fname, "NULL"));
+      ZE_LogSysError("fopen(%s)", STRNULL(fname, "NULL"));
 
       if (tlast > 3600)
       {
@@ -214,7 +214,7 @@ j_rd_file(fname, tag, func, arg)
 
     if ((fin = fopen(fname, "r")) == NULL)
     {
-      LOG_SYS_ERROR("fopen(%s)", STRNULL(fname, "NULL"));
+      ZE_LogSysError("fopen(%s)", STRNULL(fname, "NULL"));
 
       if (tlast > 3600)
       {

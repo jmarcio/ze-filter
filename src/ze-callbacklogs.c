@@ -117,7 +117,7 @@ do_notify(ctx, ahead, answer, why, tag)
     snprintf(buf, sizeof (buf), "<%s.%04X.ze-filter@%s>", CONNID_STR(priv->id),
              priv->nb_msgs, my_hostname);
     smfi_chgheader(ctx, "Message-ID", 1, buf);
-    MESSAGE_INFO(10, "%s changing Message-ID header to %s",
+    ZE_MessageInfo(10, "%s changing Message-ID header to %s",
                  CONNID_STR(priv->id), buf);
 #endif
 
@@ -142,9 +142,9 @@ do_notify(ctx, ahead, answer, why, tag)
     read_error_msg(msg, WARN_MSG_SIZE, ahead, answer, priv->env_from, why, tag,
                    priv);
     if (smfi_replacebody(ctx, (unsigned char *) msg, strlen(msg)) != 0)
-      LOG_MSG_ERROR("Erreur replacing Body Message");
+      ZE_LogMsgError(0, "Erreur replacing Body Message");
   } else
-    LOG_SYS_ERROR("Error malloc ing msg buf");
+    ZE_LogSysError("Error malloc ing msg buf");
 
   FREE(msg);
 
@@ -367,13 +367,13 @@ read_error_msg(buf, sz, ahead, answer, from, why, tag, priv)
     fclose(fin);
     regfree(&re);
     if (state == 0)
-      LOG_MSG_ERROR("read_error_msg : msg for tag %s not found",
+      ZE_LogMsgError(0, "read_error_msg : msg for tag %s not found",
                     STRNULL(tag, ""));
   } else
   {
     char               *s = "";
 
-    LOG_SYS_ERROR("Error opening %s file", STRNULL(path, ""));
+    ZE_LogSysError("Error opening %s file", STRNULL(path, ""));
 
     s = "\n"
       " This message was verified by the filtering system of our mail server.\n"
@@ -562,7 +562,7 @@ log_msg_context(ctx, why)
       snprintf(st, sizeof (st), ", Reply=(%s)", priv->reply_code);
       strlcat(buf, st, sizeof (buf));
     }
-    MESSAGE_NOTICE(8, "%s", buf);
+    ZE_MessageNotice(8, "%s", buf);
 
     goto fin;
   }
@@ -689,7 +689,7 @@ log_msg_context(ctx, why)
         strlcat(sbuf, st, sizeof (sbuf));
       }
 
-      MESSAGE_NOTICE(8, "%s", sbuf);
+      ZE_MessageNotice(8, "%s", sbuf);
     }
   }
 
@@ -734,7 +734,7 @@ add_tag2subject(ctx, tag)
       FREE(nsubject);
     } else
     {
-      LOG_SYS_ERROR("malloc error");
+      ZE_LogSysError("malloc error");
       result = FALSE;
     }
   }
@@ -763,7 +763,7 @@ open_scores4stats_file()
     scf_fd = open(fname, O_WRONLY | O_CREAT | O_APPEND, 0644);
     if (scf_fd < 0)
     {
-      LOG_SYS_ERROR("Error opening %s", fname);
+      ZE_LogSysError("Error opening %s", fname);
       scf_nerr++;
       ret = FALSE;
     } else
@@ -788,7 +788,7 @@ reopen_scores4stats_file()
   scf_fd = open(fname, O_WRONLY | O_CREAT | O_APPEND, 0644);
   if (scf_fd < 0)
   {
-    LOG_SYS_ERROR("Error opening %s", fname);
+    ZE_LogSysError("Error opening %s", fname);
     scf_nerr++;
     ret = FALSE;
   } else
@@ -835,7 +835,7 @@ dump_msg_scores4stats(ctx)
     scf_fd = open(fname, O_WRONLY | O_CREAT | O_APPEND, 0644);
     if (scf_fd < 0)
     {
-      LOG_SYS_ERROR("Error opening %s", fname);
+      ZE_LogSysError("Error opening %s", fname);
       scf_nerr++;
     }
   }
@@ -885,7 +885,7 @@ dump_msg_scores4stats(ctx)
 
     if (write(scf_fd, buf, strlen(buf)) < strlen(buf))
     {
-      LOG_SYS_ERROR("Error writing into file %s", fname);
+      ZE_LogSysError("Error writing into file %s", fname);
       close(scf_fd);
       scf_fd = -1;
       scf_nerr++;

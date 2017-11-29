@@ -64,7 +64,7 @@ inet_client_connect(node, service, socktype, client, to)
   if (socktype != SOCK_STREAM && socktype != SOCK_DGRAM)
     socktype = SOCK_STREAM;
 
-  MESSAGE_INFO(15, "inet_client_connect : %s %s/%s",
+  ZE_MessageInfo(15, "inet_client_connect : %s %s/%s",
                STRNULL(node, "NODE???"), STRNULL(service, "SERVICE???"),
                socktype == SOCK_STREAM ? "tcp" : "udp");
 
@@ -77,7 +77,7 @@ inet_client_connect(node, service, socktype, client, to)
   s = getaddrinfo(node, service, &hints, &addrinfo);
   if (s != 0)
   {
-    LOG_SYS_ERROR("getaddrinfo: %s", gai_strerror(s));
+    ZE_LogSysError("getaddrinfo: %s", gai_strerror(s));
     goto fin;
   }
 
@@ -144,7 +144,7 @@ client_connect(client, spec, to)
 
   for (i = 0; i < sargc; i++)
   {
-    MESSAGE_INFO(15, "   INET server to connect : %s", sargv[i]);
+    ZE_MessageInfo(15, "   INET server to connect : %s", sargv[i]);
 
     if ((s = tcp_prefix(sargv[i])) != NULL)
     {
@@ -170,7 +170,7 @@ client_connect(client, spec, to)
       else
         strlcpy(shost, "127.0.0.1", sizeof (shost));
 
-      MESSAGE_INFO(10, "Connecting to inet server [%s] on port [%s/tcp]",
+      ZE_MessageInfo(10, "Connecting to inet server [%s] on port [%s/tcp]",
                    shost, sport);
 
       fd = inet_client_connect(shost, sport, SOCK_STREAM, client, to);
@@ -213,7 +213,7 @@ client_check_state(client)
     return FALSE;
 
   if (client->signature != SIGNATURE) {
-    LOG_MSG_ERROR("client structure not initialized");
+    ZE_LogMsgError(0, "client structure not initialized");
     return FALSE;
   }
 
@@ -282,7 +282,7 @@ client_send(client, buf, size)
 
     if (r == ZE_SOCK_ERROR)
     {
-      LOG_SYS_ERROR("send error");
+      ZE_LogSysError("send error");
       result = FALSE;
       break;
     }
@@ -290,7 +290,7 @@ client_send(client, buf, size)
     if (r == ZE_SOCK_TIMEOUT)
     {
       if (nto++ > MAX_TOUT) {
-	LOG_SYS_ERROR("send error");
+	ZE_LogSysError("send error");
 	break;
       }
       continue;
@@ -321,7 +321,7 @@ client_send(client, buf, size)
           continue;
 
         /* an error occured */
-        LOG_SYS_ERROR("recvfrom error");
+        ZE_LogSysError("recvfrom error");
 	client_disconnect(client, TRUE);
 	result = FALSE;
         goto fin;
@@ -330,7 +330,7 @@ client_send(client, buf, size)
       if (n == 0)
       {
         /* an error occured */
-        LOG_MSG_ERROR("greyd server performed an orderly shutdown");
+        ZE_LogMsgError(0, "greyd server performed an orderly shutdown");
 	client_disconnect(client, TRUE);
 	result = FALSE;
         goto fin;
@@ -381,7 +381,7 @@ client_recv(client, buf, size)
     if (r == ZE_SOCK_ERROR)
     {
       result = FALSE;
-      LOG_SYS_ERROR("recvfrom error 1");
+      ZE_LogSysError("recvfrom error 1");
       break;
     }
 
@@ -413,7 +413,7 @@ client_recv(client, buf, size)
           continue;
 
         /* an error occured */
-        LOG_SYS_ERROR("recvfrom error 3");
+        ZE_LogSysError("recvfrom error 3");
 	client_disconnect(client, TRUE);
 	result = FALSE;
         goto fin;
@@ -422,7 +422,7 @@ client_recv(client, buf, size)
       if (n == 0)
       {
         /* an error occured */
-        LOG_MSG_ERROR("greyd server performed an orderly shutdown");
+        ZE_LogMsgError(0, "greyd server performed an orderly shutdown");
 	client_disconnect(client, TRUE);
 	result = FALSE;
         goto fin;
@@ -473,7 +473,7 @@ client_readln(client, buf, size)
     if (r == ZE_SOCK_ERROR)
     {
       result = FALSE;
-      LOG_SYS_ERROR("recvfrom error 1");
+      ZE_LogSysError("recvfrom error 1");
       break;
     }
 
@@ -513,7 +513,7 @@ client_readln(client, buf, size)
           continue;
 #endif
         /* an error occured */
-        LOG_SYS_ERROR("recvfrom error 3");
+        ZE_LogSysError("recvfrom error 3");
 	client_disconnect(client, TRUE);
 	result = FALSE;
         goto fin;
@@ -522,7 +522,7 @@ client_readln(client, buf, size)
       if (n == 0)
       {
         /* an error occured */
-        LOG_MSG_ERROR("greyd server performed an orderly shutdown");
+        ZE_LogMsgError(0, "greyd server performed an orderly shutdown");
 	client_disconnect(client, TRUE);
 	result = FALSE;
         goto fin;
@@ -567,7 +567,7 @@ client_flush_read(client)
 
     if (r == ZE_SOCK_ERROR)
     {
-      LOG_SYS_ERROR("error");
+      ZE_LogSysError("error");
       client_disconnect(client, TRUE);
       result = FALSE;
       goto fin;
@@ -581,9 +581,9 @@ client_flush_read(client)
     if (sz > 0)
       continue;
     if (sz < 0)
-      LOG_SYS_ERROR("recvfrom error");
+      ZE_LogSysError("recvfrom error");
     if (sz == 0)
-      LOG_MSG_ERROR("connection closed by server");
+      ZE_LogMsgError(0, "connection closed by server");
     client_disconnect(client, TRUE);
     result = FALSE;
     break;
@@ -650,7 +650,7 @@ connect_timed(sockfd, sock, socklen, to)
   if ((flags = fcntl(sockfd, F_GETFL, 0)) < 0)
   {
     error = errno;
-    LOG_SYS_ERROR("fcntl getting sockfd flags error");
+    ZE_LogSysError("fcntl getting sockfd flags error");
 
     goto fin;
   }
@@ -658,7 +658,7 @@ connect_timed(sockfd, sock, socklen, to)
   if (fcntl(sockfd, F_SETFL, flags | O_NONBLOCK) < 0)
   {
     error = errno;
-    LOG_SYS_ERROR("fcntl setting sockfd flags error");
+    ZE_LogSysError("fcntl setting sockfd flags error");
 
     goto fin;
   }
@@ -668,7 +668,7 @@ connect_timed(sockfd, sock, socklen, to)
   {
     if (errno != EINPROGRESS)
     {
-      LOG_SYS_ERROR("connect error");
+      ZE_LogSysError("connect error");
       return -1;
     }
   }
@@ -686,7 +686,7 @@ connect_timed(sockfd, sock, socklen, to)
   if ((n = select(sockfd + 1, &rset, &wset, NULL, &tval)) == 0)
   {
     /* timeout */
-    LOG_MSG_ERROR("Connection establishing timed out");
+    ZE_LogMsgError(0, "Connection establishing timed out");
     close(sockfd);
     errno = ETIMEDOUT;
     return -1;
@@ -697,12 +697,12 @@ connect_timed(sockfd, sock, socklen, to)
     len = sizeof (error);
     if (getsockopt(sockfd, SOL_SOCKET, SO_ERROR, &error, &len) < 0)
     {
-      LOG_SYS_ERROR("getsockopt error");
+      ZE_LogSysError("getsockopt error");
       return -1;                /* Solaris pending error */
     }
   } else
   {
-    LOG_SYS_ERROR("select error");
+    ZE_LogSysError("select error");
     return -1;
   }
 
@@ -710,7 +710,7 @@ fin:
   if (fcntl(sockfd, F_SETFL, flags) < 0)
   {
     error = errno;
-    LOG_SYS_ERROR("fcntl setting sockfd flags error");
+    ZE_LogSysError("fcntl setting sockfd flags error");
   }
 
   if (error != 0)

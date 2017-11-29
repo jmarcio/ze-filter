@@ -57,7 +57,7 @@ log_regex_reopen()
 
   ADJUST_LOG_NAME(path, logname, wkdir, "none:");
 
-  MESSAGE_INFO(12, "Reopening regex log file...");
+  ZE_MessageInfo(12, "Reopening regex log file...");
   MUTEX_LOCK(&mutex);
 
   if (!log_ready(&logt))
@@ -119,7 +119,7 @@ log_found_regex(id, ip, tag, nb, score, expr)
       {
         if ((logname == NULL) || (strlen(logname) == 0))
         {
-          LOG_MSG_ERROR("CF_REGEX_LOG : bad filename");
+          ZE_LogMsgError(0, "CF_REGEX_LOG : bad filename");
           nberr++;
 
           res = FALSE;
@@ -141,7 +141,7 @@ log_found_regex(id, ip, tag, nb, score, expr)
       nberr = 0;
   } else
   {
-    MESSAGE_INFO(9, "%12s %-12s  - %3d %3d %s",
+    ZE_MessageInfo(9, "%12s %-12s  - %3d %3d %s",
                  id, STRNULL(tag, "NOTAG"), nb, score, expr);
     nberr = 0;
   }

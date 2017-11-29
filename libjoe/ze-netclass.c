@@ -90,7 +90,7 @@ GetClientNetClass(ip, name, class, label, sz)
 
   SET_LABEL(label, sz, bClass);
 
-  MESSAGE_INFO(12, " NetClass      : %s %s %s", ip, STRNULL(name, "-"), bClass);
+  ZE_MessageInfo(12, " NetClass      : %s %s %s", ip, STRNULL(name, "-"), bClass);
 
   ret = DecodeNetClass(bClass, NULL, 0);
   if (ret != NET_UNKNOWN)
@@ -106,7 +106,7 @@ GetClientNetClass(ip, name, class, label, sz)
     return NET_UNKNOWN;
 
   ret = DecodeNetClass(bEquiv, NULL, 0);
-  MESSAGE_INFO(12, " NetClassEquiv : %s %s 0x%04x %s %s", ip, STRNULL(name, "-"), ret, bClass, bEquiv);
+  ZE_MessageInfo(12, " NetClassEquiv : %s %s 0x%04x %s %s", ip, STRNULL(name, "-"), ret, bClass, bEquiv);
   if (ret != NET_UNKNOWN)
     return ret;
 
@@ -138,7 +138,7 @@ DecodeNetClass(class, label, sz)
   tclass = strdup(class);
   if (tclass == NULL)
   {
-    LOG_SYS_ERROR("Can't strdup(class = %s) error");
+    ZE_LogSysError("Can't strdup(class = %s) error");
     return NET_UNKNOWN;
   }
 

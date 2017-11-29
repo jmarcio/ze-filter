@@ -48,7 +48,7 @@ mlfi_unknown(ctx, cmd)
 
   ip_class = priv->netclass.class;
   sm_macro_update(ctx, priv->sm);
-  MESSAGE_INFO(9, "%s : %s Unknown command : %s", CONNID_STR(priv->id),
+  ZE_MessageInfo(9, "%s : %s Unknown command : %s", CONNID_STR(priv->id),
                priv->peer_addr, STRNULL(cmd, "NULL"));
 
   priv->nb_unknown_cmd++;

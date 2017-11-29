@@ -40,7 +40,7 @@ mlfi_header(ctx, headerf, headerv)
 
   if (priv == NULL)
   {
-    LOG_MSG_WARNING("%s priv is NULL ", CONNID_STR(priv->id));
+    ZE_LogMsgWarning(0, "%s priv is NULL ", CONNID_STR(priv->id));
     return SMFIS_TEMPFAIL;
   }
 
@@ -50,14 +50,14 @@ mlfi_header(ctx, headerf, headerv)
 
   if (headerf == NULL)
   {
-    MESSAGE_WARNING(9, "%-12s : headerf NULL", CONNID_STR(priv->id));
+    ZE_MessageWarning(9, "%-12s : headerf NULL", CONNID_STR(priv->id));
     result = SMFIS_TEMPFAIL;
 
     goto fin;
   }
   if (headerv == NULL)
   {
-    MESSAGE_WARNING(9, "%-12s : headerv NULL", CONNID_STR(priv->id));
+    ZE_MessageWarning(9, "%-12s : headerv NULL", CONNID_STR(priv->id));
     result = SMFIS_TEMPFAIL;
 
     goto fin;
@@ -71,7 +71,7 @@ mlfi_header(ctx, headerf, headerv)
     /* open a file to store this message */
     if (!spool_file_create(priv))
     {
-      LOG_MSG_WARNING("%s : can't create spool file ", CONNID_STR(priv->id));
+      ZE_LogMsgWarning(0, "%s : can't create spool file ", CONNID_STR(priv->id));
       result = SMFIS_TEMPFAIL;
     }
   }
@@ -93,7 +93,7 @@ mlfi_header(ctx, headerf, headerv)
 
   if (strlen(headerf) == 0)
   {
-    MESSAGE_INFO(9, "%-12s : headerf empty", CONNID_STR(priv->id));
+    ZE_MessageInfo(9, "%-12s : headerf empty", CONNID_STR(priv->id));
   }
   if (result != SMFIS_CONTINUE)
     goto fin;
@@ -107,7 +107,7 @@ mlfi_header(ctx, headerf, headerv)
    */
   if ((hf = strdup(headerf)) == NULL)
   {
-    LOG_SYS_ERROR("strdup(headerf) error");
+    ZE_LogSysError("strdup(headerf) error");
     result = SMFIS_TEMPFAIL;
   }
   if (result != SMFIS_CONTINUE)
@@ -121,13 +121,13 @@ mlfi_header(ctx, headerf, headerv)
       *p = '\0';
   }
 
-  MESSAGE_INFO(12, "HEADER Key   : %s", hf);
-  MESSAGE_INFO(12, "HEADER Value : %s", headerv);
+  ZE_MessageInfo(12, "HEADER Key   : %s", hf);
+  ZE_MessageInfo(12, "HEADER Value : %s", headerv);
   (void) add_to_msgheader_list(&priv->headers, hf, headerv);
 
   if (strlen(headerv) == 0)
   {
-    MESSAGE_INFO(9, "%-12s : %s header empty", CONNID_STR(priv->id), headerf);
+    ZE_MessageInfo(9, "%-12s : %s header empty", CONNID_STR(priv->id), headerf);
 
     goto fin;
   }
@@ -169,7 +169,7 @@ mlfi_header(ctx, headerf, headerv)
     FREE(priv->hdr_mailer);
     if ((priv->hdr_mailer = strdup(headerv)) == NULL)
     {
-      LOG_SYS_ERROR("%-12s : strdup hdr_mailer", CONNID_STR(priv->id));
+      ZE_LogSysError("%-12s : strdup hdr_mailer", CONNID_STR(priv->id));
       result = SMFIS_TEMPFAIL;
     }
   }
@@ -179,13 +179,13 @@ mlfi_header(ctx, headerf, headerv)
   if (STRCASEEQUAL(hf, "from"))
   {
     if (priv->hdr_from != NULL)
-      MESSAGE_INFO(10, "%s : More than one From Header...",
+      ZE_MessageInfo(10, "%s : More than one From Header...",
                    CONNID_STR(priv->id));
 
     FREE(priv->hdr_from);
     if ((priv->hdr_from = strdup(headerv)) == NULL)
     {
-      LOG_SYS_ERROR("%-12s : strdup hdr_from", CONNID_STR(priv->id));
+      ZE_LogSysError("%-12s : strdup hdr_from", CONNID_STR(priv->id));
       result = SMFIS_TEMPFAIL;
     }
   }
@@ -195,13 +195,13 @@ mlfi_header(ctx, headerf, headerv)
   if (STRCASEEQUAL(hf, "subject"))
   {
     if (priv->hdr_subject != NULL)
-      MESSAGE_INFO(10, "%s : More than one Subject Header...",
+      ZE_MessageInfo(10, "%s : More than one Subject Header...",
                    CONNID_STR(priv->id));
 
     FREE(priv->hdr_subject);
     if ((priv->hdr_subject = strdup(headerv)) == NULL)
     {
-      LOG_SYS_ERROR("%-12s : strdup hdr_subject", CONNID_STR(priv->id));
+      ZE_LogSysError("%-12s : strdup hdr_subject", CONNID_STR(priv->id));
       result = SMFIS_TEMPFAIL;
     }
   }

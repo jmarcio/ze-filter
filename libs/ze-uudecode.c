@@ -117,7 +117,7 @@ uu_line_decode(b, line)
   pi = line + 1;
   po = b->buf;
 
-  MESSAGE_INFO(DBG_LEVEL, "LINE : %s", pi);
+  ZE_MessageInfo(DBG_LEVEL, "LINE : %s", pi);
 
   for (; lc > 0; lc -= 4)
   {
@@ -162,7 +162,7 @@ uudecode_buffer(bufin, uublk)
     char                sout[256];
 
     regerror(r, &re_beg, sout, sizeof (sout));
-    LOG_MSG_ERROR("regcomp error : %s", sout);
+    ZE_LogMsgError(0, "regcomp error : %s", sout);
     ok = FALSE;
   }
   if ((r = regcomp(&re_end, RE_END, REGCOMP_FLAGS)) != 0)
@@ -170,7 +170,7 @@ uudecode_buffer(bufin, uublk)
     char                sout[256];
 
     regerror(r, &re_end, sout, sizeof (sout));
-    LOG_MSG_ERROR("regcomp error : %s", sout);
+    ZE_LogMsgError(0, "regcomp error : %s", sout);
     ok = FALSE;
   }
   if (ok)
@@ -181,14 +181,14 @@ uudecode_buffer(bufin, uublk)
 
     if (regexec(&re_beg, bufin, 1, &rm_beg, REGEXEC_FLAGS) == 0)
     {
-      MESSAGE_INFO(DBG_LEVEL, "BEGIN FOUND : %4d %4d", rm_beg.rm_so,
+      ZE_MessageInfo(DBG_LEVEL, "BEGIN FOUND : %4d %4d", rm_beg.rm_so,
                    rm_beg.rm_eo);
     } else
       ok = FALSE;
 
     if (regexec(&re_end, bufin, 1, &rm_end, REGEXEC_FLAGS) == 0)
     {
-      MESSAGE_INFO(DBG_LEVEL, "END   FOUND : %4d %4d", rm_end.rm_so,
+      ZE_MessageInfo(DBG_LEVEL, "END   FOUND : %4d %4d", rm_end.rm_so,
                    rm_end.rm_eo);
     } else
       ok = FALSE;
@@ -223,7 +223,7 @@ uudecode_buffer(bufin, uublk)
           l = strtol(s, (char **) NULL, 8);
           if ((errno == EINVAL) || (errno == ERANGE))
           {
-            LOG_SYS_ERROR("strtol : getting file mode");
+            ZE_LogSysError("strtol : getting file mode");
           } else
             mode = l;
         }
@@ -234,7 +234,7 @@ uudecode_buffer(bufin, uublk)
         if (n > 0)
         {
           if ((name = strdup(p)) == NULL)
-            LOG_SYS_ERROR("strdup : getting file name");
+            ZE_LogSysError("strdup : getting file name");
         }
       }
 
@@ -273,7 +273,7 @@ uudecode_buffer(bufin, uublk)
             nbad++;
             if (nbad > 1)
             {
-              LOG_MSG_ERROR("strange : more than one bad uu line");
+              ZE_LogMsgError(0, "strange : more than one bad uu line");
               break;
             }
           }
@@ -281,7 +281,7 @@ uudecode_buffer(bufin, uublk)
         *q = '\0';
       } else
       {
-        LOG_SYS_ERROR("malloc buffer uuencoded");
+        ZE_LogSysError("malloc buffer uuencoded");
         if (bufout != NULL)
           free(bufout);
         bufout = NULL;
@@ -321,7 +321,7 @@ uudecode_file(fname, uublk)
 
   if ((fname == NULL) || (strlen(fname) == 0))
   {
-    LOG_MSG_ERROR("fname NULL or empty string");
+    ZE_LogMsgError(0, "fname NULL or empty string");
     return FALSE;
   }
 

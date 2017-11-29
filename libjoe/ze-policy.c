@@ -64,13 +64,13 @@ lookup_policy(prefix, key, buf, szbuf, chkdefault)
       return FALSE;
   }
 
-  MESSAGE_INFO(15, "Checking %s:%s", prefix, key);
+  ZE_MessageInfo(15, "Checking %s:%s", prefix, key);
 
   memset(bufout, 0, sizeof (bufout));
   if (db_policy_check(prefix, key, bufout, sizeof (bufout)))
   {
     if (strlen(bufout) > 0)
-      MESSAGE_INFO(15, " -> Got : %s:%-15s %s\n", prefix, key, bufout);
+      ZE_MessageInfo(15, " -> Got : %s:%-15s %s\n", prefix, key, bufout);
     strlcpy(buf, bufout, szbuf);
 
     ok = TRUE;
@@ -83,7 +83,7 @@ lookup_policy(prefix, key, buf, szbuf, chkdefault)
     if (db_policy_check(prefix, "default", bufout, sizeof (bufout)))
     {
       if (strlen(buf) > 0)
-        MESSAGE_INFO(15, " -> Got : %s:%-15s %s\n", prefix, "DEFAULT", buf);
+        ZE_MessageInfo(15, " -> Got : %s:%-15s %s\n", prefix, "DEFAULT", buf);
       strlcpy(buf, bufout, szbuf);
 
       ok = TRUE;
@@ -93,7 +93,7 @@ lookup_policy(prefix, key, buf, szbuf, chkdefault)
     if (db_policy_check(prefix, "*", bufout, sizeof (bufout)))
     {
       if (strlen(buf) > 0)
-        MESSAGE_INFO(15, " -> Got : %s:%-15s %s\n", prefix, "*", buf);
+        ZE_MessageInfo(15, " -> Got : %s:%-15s %s\n", prefix, "*", buf);
       strlcpy(buf, bufout, szbuf);
 
       ok = TRUE;
@@ -137,13 +137,13 @@ check_policy(prefix, key, buf, szbuf, chkdefault)
       return FALSE;
   }
 
-  MESSAGE_INFO(15, "Checking %s:%s", prefix, key);
+  ZE_MessageInfo(15, "Checking %s:%s", prefix, key);
 
   memset(bufout, 0, sizeof (bufout));
   if (db_policy_check(prefix, key, bufout, sizeof (bufout)))
   {
     if (strlen(bufout) > 0)
-      MESSAGE_INFO(15, " -> Got : %s:%-15s %s\n", prefix, key, bufout);
+      ZE_MessageInfo(15, " -> Got : %s:%-15s %s\n", prefix, key, bufout);
     strlcpy(buf, bufout, szbuf);
 
     ok = TRUE;
@@ -157,24 +157,24 @@ check_policy(prefix, key, buf, szbuf, chkdefault)
   {
     char                tb[256];
 
-    if (log_level > 10)
+    if (ze_logLevel > 10)
     {
       if (strexpr(key, IPV4_ADDR_REGEX, NULL, NULL, TRUE))
-        MESSAGE_INFO(15, " -> IP     : %s", key);
+        ZE_MessageInfo(15, " -> IP     : %s", key);
       if (strexpr(key, IPV6_ADDR_REGEX, NULL, NULL, TRUE))
-        MESSAGE_INFO(15, " -> IP     : %s", key);
+        ZE_MessageInfo(15, " -> IP     : %s", key);
       if (strexpr(key, DOMAINNAME_REGEX, NULL, NULL, TRUE))
-        MESSAGE_INFO(15, " -> DOMAIN : %s", key);
+        ZE_MessageInfo(15, " -> DOMAIN : %s", key);
     }
 
     if (db_policy_check("NetClass", key, tb, sizeof (tb)))
     {
       if (strlen(tb) > 0)
-        MESSAGE_INFO(15, " -> Got : %s:%-15s %s\n", "NetClass", key, tb);
+        ZE_MessageInfo(15, " -> Got : %s:%-15s %s\n", "NetClass", key, tb);
       if (db_policy_check(prefix, tb, bufout, sizeof (bufout)))
       {
         if (strlen(bufout) > 0)
-          MESSAGE_INFO(15, " -> Got : %s:%-15s %s\n", prefix, tb, bufout);
+          ZE_MessageInfo(15, " -> Got : %s:%-15s %s\n", prefix, tb, bufout);
         strlcpy(buf, bufout, szbuf);
         ok = TRUE;
 
@@ -188,7 +188,7 @@ check_policy(prefix, key, buf, szbuf, chkdefault)
     if (db_policy_check(prefix, "default", bufout, sizeof (bufout)))
     {
       if (strlen(bufout) > 0)
-        MESSAGE_INFO(15, " -> Got : %s:%-15s %s\n", prefix, "DEFAULT", buf);
+        ZE_MessageInfo(15, " -> Got : %s:%-15s %s\n", prefix, "DEFAULT", buf);
       strlcpy(buf, bufout, szbuf);
       ok = TRUE;
 
@@ -197,7 +197,7 @@ check_policy(prefix, key, buf, szbuf, chkdefault)
     if (db_policy_check(prefix, "*", bufout, sizeof (bufout)))
     {
       if (strlen(bufout) > 0)
-        MESSAGE_INFO(15, " -> Got : %s:%-15s %s\n", prefix, "*", buf);
+        ZE_MessageInfo(15, " -> Got : %s:%-15s %s\n", prefix, "*", buf);
       strlcpy(buf, bufout, szbuf);
       ok = TRUE;
 
@@ -229,14 +229,14 @@ check_host_policy(prefix, addr, name, class, buf, size, cdef)
   memset(buf, 0, size);
   if (addr != NULL)
     ok = lookup_policy(prefix, addr, buf, size, FALSE);
-  MESSAGE_INFO(11, "Prefix : %s; Addr  : %s; Buf : %s",
+  ZE_MessageInfo(11, "Prefix : %s; Addr  : %s; Buf : %s",
                prefix, STRNULL(addr, "???"), buf);
   if (ok)
     goto fin;
 
   if (name != NULL)
     ok = lookup_policy(prefix, name, buf, size, FALSE);
-  MESSAGE_INFO(11, "Prefix : %s; Name  : %s; Buf : %s",
+  ZE_MessageInfo(11, "Prefix : %s; Name  : %s; Buf : %s",
                prefix, STRNULL(name, "???"), buf);
   if (ok)
     goto fin;
@@ -255,7 +255,7 @@ check_host_policy(prefix, addr, name, class, buf, size, cdef)
     goto fin;
 
   ok = lookup_policy(prefix, lclass, buf, size, cdef);
-  MESSAGE_INFO(11, "Prefix : %s; Class : %s; Buf : %s",
+  ZE_MessageInfo(11, "Prefix : %s; Class : %s; Buf : %s",
                prefix, STRNULL(class, "???"), buf);
 
 fin:
@@ -318,7 +318,7 @@ check_policy_tuple(prefix, ip, name, netclass, from, to, result)
   memset(key, 0, sizeof (key));
   memset(value, 0, sizeof (value));
 
-  MESSAGE_INFO(15, "TUPLE %s %s %s %s", ip, name, from, to);
+  ZE_MessageInfo(15, "TUPLE %s %s %s %s", ip, name, from, to);
 
   /*
    ** Checking CONNECT
@@ -361,13 +361,13 @@ check_policy_tuple(prefix, ip, name, netclass, from, to, result)
       int                 i;
       char               *p;
 
-      MESSAGE_INFO(11, " Checking FROM_TOKENS %s", token);
+      ZE_MessageInfo(11, " Checking FROM_TOKENS %s", token);
 
       snprintf(tag, sizeof (tag), "%sFrom", prefix);
       argc = str2tokens(token, MAX_TOKENS, argv, " ");
       for (i = 0; i < argc; i++)
       {
-        MESSAGE_INFO(11, " Checking %s:%s", tag, argv[i]);
+        ZE_MessageInfo(11, " Checking %s:%s", tag, argv[i]);
         if ((p = strstr(from, argv[i])) != NULL)
         {
           if (check_policy(tag, p, value, sizeof (value), FALSE))
@@ -431,13 +431,13 @@ check_policy_tuple(prefix, ip, name, netclass, from, to, result)
       int                 i;
       char               *p;
 
-      MESSAGE_INFO(11, " Checking TO_TOKENS %s", token);
+      ZE_MessageInfo(11, " Checking TO_TOKENS %s", token);
 
       snprintf(tag, sizeof (tag), "%sTo", prefix);
       argc = str2tokens(token, MAX_TOKENS, argv, " ,");
       for (i = 0; i < argc; i++)
       {
-        MESSAGE_INFO(11, " Checking %s:%s", tag, argv[i]);
+        ZE_MessageInfo(11, " Checking %s:%s", tag, argv[i]);
         if ((p = strstr(from, argv[i])) != NULL)
         {
           if (check_policy(tag, p, value, sizeof (value), FALSE))
@@ -464,7 +464,7 @@ check_policy_tuple(prefix, ip, name, netclass, from, to, result)
   }
 
   snprintf(tag, sizeof (tag), "%sTo", prefix);
-  MESSAGE_INFO(20, "TAG : %s %s", tag, to);
+  ZE_MessageInfo(20, "TAG : %s %s", tag, to);
   if (check_policy(tag, to, value, sizeof (value), TRUE))
   {
     switch (access_decode(value))
@@ -485,7 +485,7 @@ check_policy_tuple(prefix, ip, name, netclass, from, to, result)
   }
 
 fin:
-  MESSAGE_INFO(15, "TUPLE %s %s %s %s : %s", ip, name, send, rcpt,
+  ZE_MessageInfo(15, "TUPLE %s %s %s %s : %s", ip, name, send, rcpt,
                STRBOOL(result, "YES", "NO"));
   return result;
 }
@@ -591,7 +591,7 @@ check_limit_tuple(prefix, ip, name, netclass, from, to, result)
   memset(key, 0, sizeof (key));
   memset(buffer, 0, sizeof (buffer));
 
-  MESSAGE_INFO(15, "TUPLE %s %s %s %s", ip, name, from, to);
+  ZE_MessageInfo(15, "TUPLE %s %s %s %s", ip, name, from, to);
 
   result = MAX(result, 0);
   /*
@@ -622,13 +622,13 @@ check_limit_tuple(prefix, ip, name, netclass, from, to, result)
       int                 i;
       char               *p;
 
-      MESSAGE_INFO(11, " Checking FROM_TOKENS %s", token);
+      ZE_MessageInfo(11, " Checking FROM_TOKENS %s", token);
 
       snprintf(tag, sizeof (tag), "%sFrom", prefix);
       argc = str2tokens(token, MAX_TOKENS, argv, " ");
       for (i = 0; i < argc; i++)
       {
-        MESSAGE_INFO(11, " Checking %s:%s", tag, argv[i]);
+        ZE_MessageInfo(11, " Checking %s:%s", tag, argv[i]);
         if ((p = strstr(from, argv[i])) != NULL)
         {
           if (check_policy(tag, p, buffer, sizeof (buffer), FALSE))
@@ -664,13 +664,13 @@ check_limit_tuple(prefix, ip, name, netclass, from, to, result)
       int                 i;
       char               *p;
 
-      MESSAGE_INFO(11, " Checking TO_TOKENS %s", token);
+      ZE_MessageInfo(11, " Checking TO_TOKENS %s", token);
 
       snprintf(tag, sizeof (tag), "%sTo", prefix);
       argc = str2tokens(token, MAX_TOKENS, argv, " ,");
       for (i = 0; i < argc; i++)
       {
-        MESSAGE_INFO(11, " Checking %s:%s", tag, argv[i]);
+        ZE_MessageInfo(11, " Checking %s:%s", tag, argv[i]);
         if ((p = strstr(from, argv[i])) != NULL)
         {
           if (check_policy(tag, p, buffer, sizeof (buffer), FALSE))
@@ -683,14 +683,14 @@ check_limit_tuple(prefix, ip, name, netclass, from, to, result)
   }
 
   snprintf(tag, sizeof (tag), "%sTo", prefix);
-  MESSAGE_INFO(20, "TAG : %s %s", tag, to);
+  ZE_MessageInfo(20, "TAG : %s %s", tag, to);
   if (check_policy(tag, to, buffer, sizeof (buffer), TRUE))
   {
     VAL2LIMIT(result, buffer);
   }
 
 fin:
-  MESSAGE_INFO(20, "TUPLE %s %s %s %s : %ld", ip, name, send, rcpt, result);
+  ZE_MessageInfo(20, "TUPLE %s %s %s %s : %ld", ip, name, send, rcpt, result);
   return result;
 }
 

@@ -27,7 +27,7 @@
 
 #include "ze-filter.h"
 
-extern int          log_level;
+extern int          ze_logLevel;
 
 static void         usage();
 
@@ -95,10 +95,10 @@ main(int argc, char **argv)
   double              spam_threshold = 0.75;
   bool                spam_judgement = FALSE;
 
-  set_log_output(FALSE, TRUE);
+  zeLog_SetOutput(FALSE, TRUE);
 
   mailregexlog2file = FALSE;
-  log_level = 0;
+  ze_logLevel = 0;
   memset(fname, 0, sizeof (fname));
 
   while ((c = getopt(argc, argv, args)) != -1)
@@ -198,9 +198,9 @@ main(int argc, char **argv)
 
   configure("ze-message-toolbox", conf_file, FALSE);
 
-  log_level = level + verbose;
+  ze_logLevel = level + verbose;
 
-  log_level = level;
+  ze_logLevel = level;
 
   while (optind < argc && *argv[optind] == '-')
     optind++;
@@ -268,14 +268,14 @@ main(int argc, char **argv)
 
     dbname = cf_get_str(CF_DB_BAYES);
     dbname = STRNULL(bayesdb, dbname);
-    MESSAGE_INFO(1, " Will open bayes database %s", dbname);
+    ZE_MessageInfo(1, " Will open bayes database %s", dbname);
     memset(path, 0, sizeof (path));
     cfdir = cf_get_str(CF_CDBDIR);
     ADJUST_FILENAME(path, dbname, cfdir, "ze-bayes.db");
-    MESSAGE_INFO(1, "           database path  %s", path);
+    ZE_MessageInfo(1, "           database path  %s", path);
 
     if (strlen(path) > 0 && !bfilter_init(path))
-      MESSAGE_INFO(2, "Error while opening %s database", path);
+      ZE_MessageInfo(2, "Error while opening %s database", path);
 
     msgSize = cf_get_int(CF_BAYES_MAX_MESSAGE_SIZE);
     if (msgSize < 10000)
@@ -333,22 +333,22 @@ main(int argc, char **argv)
     int                 i, j;
     char               *p;
 
-    MESSAGE_INFO(8, "      MSG.. HTML. PLAIN (%d messages)\n", mstat.nb);
+    ZE_MessageInfo(8, "      MSG.. HTML. PLAIN (%d messages)\n", mstat.nb);
     for (i = 0; i < 32; i++)
-      MESSAGE_INFO(7, "%3d : %5ld %5ld %5ld\n", i,
+      ZE_MessageInfo(7, "%3d : %5ld %5ld %5ld\n", i,
                    mstat.msg_flags[i], mstat.html_flags[i],
                    mstat.plain_flags[i]);
 
     for (j = ORACLE_TYPE_MSG; j <= ORACLE_TYPE_PLAIN; j++)
     {
-      MESSAGE_INFO(8, "");
+      ZE_MessageInfo(8, "");
       for (i = 0; i < 32; i++)
       {
         if ((p = oracle_get_label(j, i)) != NULL && strlen(p) > 0)
         {
           double              v = oracle_get_score(j, i);
 
-          MESSAGE_INFO(8, "%3d %3d : %5.2f %s", j, i, v, p);
+          ZE_MessageInfo(8, "%3d %3d : %5.2f %s", j, i, v, p);
         }
       }
     }
@@ -377,7 +377,7 @@ add_header(h, spam)
   v++;
   v += strspn(v, " \t");
 
-  MESSAGE_INFO(20, "Header - %s", h);
+  ZE_MessageInfo(20, "Header - %s", h);
 
   (void) add_to_msgheader_list(&spam->hdrs, f, v);
 
@@ -403,7 +403,7 @@ get_msg_headers(fname, spam)
 
   if ((fin = fopen(fname, "r")) == NULL)
   {
-    LOG_SYS_ERROR("fopen(%s)", fname);
+    ZE_LogSysError("fopen(%s)", fname);
     return FALSE;
   }
 
@@ -436,7 +436,7 @@ get_msg_headers(fname, spam)
   }
   nh += add_header(header, spam);
 
-  MESSAGE_INFO(19, "Header has %d lines and %d headers", nl, nh);
+  ZE_MessageInfo(19, "Header has %d lines and %d headers", nl, nh);
 
   fclose(fin);
 
@@ -520,9 +520,9 @@ cli_handle_message(fname, msgNb, arg)
     rScores.bayes = sfilter_check_message(id, fname, &bcheck);
 
     if (rScores.bayes >= 0.)
-      MESSAGE_INFO(9, "%s Bayes filter score : %6.3f", id, rScores.bayes);
+      ZE_MessageInfo(9, "%s Bayes filter score : %6.3f", id, rScores.bayes);
     else
-      MESSAGE_INFO(9, "%s Bayes filter score : Unchecked", id);
+      ZE_MessageInfo(9, "%s Bayes filter score : Unchecked", id);
   }
 
   if (!get_msg_headers(fname, &spam))
@@ -570,22 +570,22 @@ cli_handle_message(fname, msgNb, arg)
 
     score = compute_msg_score(&rScores);
     (void) create_msg_score_header(sout, sizeof (sout), fname, NULL, &rScores);
-    MESSAGE_INFO(8, "%s", sout);
+    ZE_MessageInfo(8, "%s", sout);
 
     strlcpy(mstat->header, sout, sizeof(mstat->header));
 
     if ((h = get_msgheader(spam.hdrs, "Subject")) != NULL)
     {
       snprintf(sout, 80, "%s", h->value);
-      MESSAGE_INFO(9, "MSGID : %s SUBJECT : %s", id, sout);
+      ZE_MessageInfo(9, "MSGID : %s SUBJECT : %s", id, sout);
     }
     if ((h = get_msgheader(spam.hdrs, "From")) != NULL)
     {
       snprintf(sout, 80, "%s", h->value);
-      MESSAGE_INFO(9, "MSGID : %s FROM    : %s", id, sout);
+      ZE_MessageInfo(9, "MSGID : %s FROM    : %s", id, sout);
     }
     size = get_file_size(fname);
-    MESSAGE_INFO(9, "MSGID : %s SIZE    : %7d", id, size);
+    ZE_MessageInfo(9, "MSGID : %s SIZE    : %7d", id, size);
 
     if (mstat->spam_judgement)
     {
@@ -593,7 +593,7 @@ cli_handle_message(fname, msgNb, arg)
       int     i;
       double lscore = 0.0;
 
-      MESSAGE_INFO(8, "MSGID : %s CLASS   : %-5s %7.3f %s", id,
+      ZE_MessageInfo(8, "MSGID : %s CLASS   : %-5s %7.3f %s", id,
                    STRBOOL(score > mstat->spam_threshold, "SPAM", "HAM"),
                    score, fname);
 
@@ -602,7 +602,7 @@ cli_handle_message(fname, msgNb, arg)
 	strlcat(buf, mstat->argv[i], sizeof (buf));
       }
       lscore = rScores.bayes;
-      MESSAGE_INFO(8, "%s %s score=%-9.6f prob=%-9.6f class=%-5s",
+      ZE_MessageInfo(8, "%s %s score=%-9.6f prob=%-9.6f class=%-5s",
 		   fname, buf, logit(lscore), lscore, 
 		   STRBOOL(lscore > mstat->spam_threshold, "spam", "ham"));
     }
@@ -612,7 +612,7 @@ cli_handle_message(fname, msgNb, arg)
     */
   }
 
-  MESSAGE_INFO(10, "");
+  ZE_MessageInfo(10, "");
 
   free_msg_headers(&spam);
 
@@ -695,7 +695,7 @@ launch_workers(n, fname, mstatp)
 
   if ((fin = fopen(fname, "r")) == NULL)
   {
-    LOG_SYS_ERROR("Error opening %s file", fname);
+    ZE_LogSysError("Error opening %s file", fname);
     return FALSE;
   }
 
@@ -714,7 +714,7 @@ launch_workers(n, fname, mstatp)
     if (r != 0)
     {
       worker[i].tid = (pthread_t) - 1;
-      LOG_SYS_ERROR("Error launching worker");
+      ZE_LogSysError("Error launching worker");
       break;
     }
   }
@@ -725,13 +725,13 @@ launch_workers(n, fname, mstatp)
     if (worker[i].tid < 0)
       continue;
 
-    MESSAGE_INFO(10, "Waiting thread %d", i);
+    ZE_MessageInfo(10, "Waiting thread %d", i);
 
     r = pthread_join(worker[i].tid, NULL);
     worker[i].tid = (pthread_t) - 1;
     if (r != 0)
     {
-      LOG_SYS_ERROR("Error launching worker");
+      ZE_LogSysError("Error launching worker");
     }
   }
   return TRUE;
@@ -749,15 +749,15 @@ cli_toolbox(mstat)
   char                line[1024];
   int                 nb = 0;
 
-  log_level = 8;
-  MESSAGE_INFO(7, "Beginning...");
+  ze_logLevel = 8;
+  ZE_MessageInfo(7, "Beginning...");
   while (fgets(line, sizeof (line), stdin) != NULL)
   {
     int                 argc;
     char               *argv[NARG];
 
     strchomp(line);
-    MESSAGE_INFO(12, "Read : %s !", line);
+    ZE_MessageInfo(12, "Read : %s !", line);
 
     argc = str2tokens(line, NARG, argv, " ");
     if (argc == 0)
@@ -765,7 +765,7 @@ cli_toolbox(mstat)
 
     if (STRCASEEQUAL(argv[0], "QUIT"))
     {
-      MESSAGE_INFO(7, "200 Exiting...");
+      ZE_MessageInfo(7, "200 Exiting...");
       break;
     }
 
@@ -775,7 +775,7 @@ cli_toolbox(mstat)
 
       ok = bfilter_db_reopen();
 
-      MESSAGE_INFO(7, "200 Database reopened : %s", STRBOOL(ok, "OK", "KO"));
+      ZE_MessageInfo(7, "200 Database reopened : %s", STRBOOL(ok, "OK", "KO"));
       continue;
     }
 
@@ -783,7 +783,7 @@ cli_toolbox(mstat)
     {
       if (argc < 2)
       {
-        MESSAGE_INFO(7, "%s : Error...", argv[0]);
+        ZE_MessageInfo(7, "%s : Error...", argv[0]);
         continue;
       }
 
@@ -798,7 +798,7 @@ cli_toolbox(mstat)
     {
       if (argc < 2)
       {
-        MESSAGE_INFO(7, "%s : Error...", argv[0]);
+        ZE_MessageInfo(7, "%s : Error...", argv[0]);
         continue;
       }
 
@@ -819,7 +819,7 @@ cli_toolbox(mstat)
 
       if (argc < 2)
       {
-        MESSAGE_INFO(7, "%s : Error...", argv[0]);
+        ZE_MessageInfo(7, "%s : Error...", argv[0]);
         continue;
       }
 
@@ -829,10 +829,10 @@ cli_toolbox(mstat)
         l = atoi(argv[1]);
         if (l < 0 || l > 15)
         {
-          MESSAGE_INFO(7, "%s %s : Error...", argv[0], argv[1]);
+          ZE_MessageInfo(7, "%s %s : Error...", argv[0], argv[1]);
           continue;
         }
-        log_level = l;
+        ze_logLevel = l;
       }
 
       continue;
@@ -840,7 +840,7 @@ cli_toolbox(mstat)
 
     if (STRCASEEQUAL(argv[0], "TRAIN"))
     {
-      MESSAGE_INFO(7, "%s not yet implemented...", argv[0]);
+      ZE_MessageInfo(7, "%s not yet implemented...", argv[0]);
       continue;
     }
 
@@ -850,14 +850,14 @@ cli_toolbox(mstat)
 
       if (argc < 2)
       {
-        MESSAGE_INFO(7, "%s : Error...", argv[0]);
+        ZE_MessageInfo(7, "%s : Error...", argv[0]);
         continue;
       }
 
       size = get_file_size(argv[1]);
       if (size == 0)
       {
-        MESSAGE_INFO(8, "%s File %s not found", argv[0], argv[1]);
+        ZE_MessageInfo(8, "%s File %s not found", argv[0], argv[1]);
         continue;
       }
 
@@ -891,7 +891,7 @@ usage()
          " -m checks\n"
          "    where checks is a list of comma separated checks :\n"
          "       oracle, regex, urlbl, bayes or all\n"
-         " -l log_level\n"
+         " -l ze_logLevel\n"
          " -t file type\n"
          "    where file type tells how messages are arranged inside args\n"
          "       mbox    - each argument is a mailbox file with many messages\n"

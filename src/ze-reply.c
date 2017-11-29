@@ -124,7 +124,7 @@ get_reply_msg(ctx, code, msg, sz, attr, value)
     sin = reply_code2msg(code);
 
   if (sin == NULL)
-    LOG_MSG_WARNING("Can't get message for code : %s", code);
+    ZE_LogMsgWarning(0, "Can't get message for code : %s", code);
 
   if ((sin != NULL) && rule2reply(ctx, b_out, b_in, sizeof (b_out), attr, value))
   {

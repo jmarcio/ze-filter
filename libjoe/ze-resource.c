@@ -176,7 +176,7 @@ count_file_descriptors()
   MUTEX_UNLOCK(&st_mutex);
 
 #if 0
-  MESSAGE_INFO(10, " FD : open=[%d] idle=[%d] now=[%ld]", fd_open, fd_idle,
+  ZE_MessageInfo(10, " FD : open=[%d] idle=[%d] now=[%ld]", fd_open, fd_idle,
                now % 17);
 #endif
 
@@ -210,27 +210,27 @@ check_file_descriptors()
 #if 1
   if (nb_idle < lhard)
   {
-    LOG_MSG_WARNING("file descriptors being short... (hard limit) %ld/%ld",
+    ZE_LogMsgWarning(0, "file descriptors being short... (hard limit) %ld/%ld",
                     (long) fd_open, (long) fd_max);
     return FD_LEVEL_HI;
   }
   if (nb_idle < lsoft)
   {
-    LOG_MSG_WARNING("file descriptors being short... (soft limit) %ld/%ld",
+    ZE_LogMsgWarning(0, "file descriptors being short... (soft limit) %ld/%ld",
                     (long) fd_open, (long) fd_max);
     return FD_LEVEL_SHORT;
   }
 #else
   if (nb_open + lhard > fd_max)
   {
-    LOG_MSG_WARNING("file descriptors being short... (hard limit) %ld/%ld",
+    ZE_LogMsgWarning(0, "file descriptors being short... (hard limit) %ld/%ld",
                     (long) fd_open, (long) fd_max);
     return FD_LEVEL_HI;
   }
 
   if (nb_open + lsoft > fd_max)
   {
-    LOG_MSG_WARNING("file descriptors being short... (soft limit) %ld/%ld",
+    ZE_LogMsgWarning(0, "file descriptors being short... (soft limit) %ld/%ld",
                     (long) fd_open, (long) fd_max);
     return FD_LEVEL_SHORT;
   }
@@ -255,7 +255,7 @@ setup_file_descriptors()
   lhard = cf_get_int(CF_FD_FREE_HARD_LIMIT);
 
   if (strlim != NULL)
-    MESSAGE_INFO(11, "CF_FILE_DESCRIPTORS = %s", strlim);
+    ZE_MessageInfo(11, "CF_FILE_DESCRIPTORS = %s", strlim);
 
   if (getrlimit(RLIMIT_NOFILE, &rlp) == 0)
   {
@@ -265,7 +265,7 @@ setup_file_descriptors()
       fd_hard = rlp.rlim_max;
   } else
   {
-    LOG_SYS_ERROR("getrlimit(RLIMIT_NOFILES) error");
+    ZE_LogSysError("getrlimit(RLIMIT_NOFILES) error");
     return 0;
   }
 
@@ -296,7 +296,7 @@ setup_file_descriptors()
 
   if (fd_conf > fd_hard)
   {
-    MESSAGE_INFO(0, "Can't set file descriptor limit greater than %ld",
+    ZE_MessageInfo(0, "Can't set file descriptor limit greater than %ld",
                  (long) fd_hard);
     fd_conf = fd_hard;
   }
@@ -319,12 +319,12 @@ setup_file_descriptors()
       break;
   }
 
-  MESSAGE_INFO(11, "Will set file descriptor limit to %ld [%ld,%ld]",
+  ZE_MessageInfo(11, "Will set file descriptor limit to %ld [%ld,%ld]",
                (long) fd_cur, (long) fd_soft, (long) fd_hard);
 
   if ((cf_get_int(CF_USE_SELECT_LIMIT) == OPT_YES) && (fd_cur > FD_SETSIZE))
   {
-    MESSAGE_INFO(11,
+    ZE_MessageInfo(11,
                  "May not set file descriptor limit to more than FD_SETSIZE");
     fd_cur = FD_SETSIZE;
   }
@@ -332,11 +332,11 @@ setup_file_descriptors()
   rlp.rlim_cur = fd_cur;
   if (setrlimit(RLIMIT_NOFILE, &rlp) != 0)
   {
-    LOG_SYS_ERROR("setrlimit(RLIMIT_NOFILE) error");
+    ZE_LogSysError("setrlimit(RLIMIT_NOFILE) error");
   } else
-    MESSAGE_INFO(11, "RLIMIT_NOFILE set to %ld files", (long) rlp.rlim_cur);
+    ZE_MessageInfo(11, "RLIMIT_NOFILE set to %ld files", (long) rlp.rlim_cur);
 
-  MESSAGE_INFO(9,
+  ZE_MessageInfo(9,
                "File descriptors thresholds set to : soft=[%ld] - hard=[%ld]",
                (long) (fd_cur - lsoft), (long) (fd_cur - lhard));
 #endif
@@ -364,13 +364,13 @@ enable_coredump(enable)
 
     if (setrlimit(RLIMIT_CORE, &rlp) != 0)
     {
-      LOG_SYS_ERROR("setrlimit(RLIMIT_CORE) error");
+      ZE_LogSysError("setrlimit(RLIMIT_CORE) error");
       return FALSE;
     } else
-      MESSAGE_INFO(9, "RLIMIT_CORE set to %ld bytes", (long) rlp.rlim_cur);
+      ZE_MessageInfo(9, "RLIMIT_CORE set to %ld bytes", (long) rlp.rlim_cur);
   } else
   {
-    LOG_SYS_ERROR("getrlimit(RLIMIT_CORE) error");
+    ZE_LogSysError("getrlimit(RLIMIT_CORE) error");
     return FALSE;
   }
 
@@ -393,7 +393,7 @@ check_rusage()
   struct rusage       usage;
   int                 r;
 
-  MESSAGE_INFO(9, "Checking rusage...");
+  ZE_MessageInfo(9, "Checking rusage...");
   memset(&usage, 0, sizeof (usage));
   r = getrusage(RUSAGE_SELF, &usage);
   if (r == 0)
@@ -408,10 +408,10 @@ check_rusage()
     ru_idrss = usage.ru_idrss;
     ru_isrss = usage.ru_isrss;
 
-    MESSAGE_INFO(9, "* RESOURCE CHECK : ru_maxrss = %10ld", ru_maxrss);
-    MESSAGE_INFO(9, "* RESOURCE CHECK : ru_ixrss  = %10ld", ru_ixrss);
-    MESSAGE_INFO(9, "* RESOURCE CHECK : ru_idrss  = %10ld", ru_idrss);
-    MESSAGE_INFO(9, "* RESOURCE CHECK : ru_isrss  = %10ld", ru_isrss);
+    ZE_MessageInfo(9, "* RESOURCE CHECK : ru_maxrss = %10ld", ru_maxrss);
+    ZE_MessageInfo(9, "* RESOURCE CHECK : ru_ixrss  = %10ld", ru_ixrss);
+    ZE_MessageInfo(9, "* RESOURCE CHECK : ru_idrss  = %10ld", ru_idrss);
+    ZE_MessageInfo(9, "* RESOURCE CHECK : ru_isrss  = %10ld", ru_isrss);
   }
 #endif
 

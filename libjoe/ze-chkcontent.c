@@ -91,19 +91,19 @@ check_mime_part(buf, size, id, level, type, arg, mime_part)
   id = STRNULL(id, "00000000.000");
   if (mime_part == NULL)
   {
-    LOG_MSG_WARNING("mime_part NULL");
+    ZE_LogMsgWarning(0, "mime_part NULL");
     return FALSE;
   }
 
   if (data == NULL)
   {
-    LOG_MSG_WARNING("data NULL");
+    ZE_LogMsgWarning(0, "data NULL");
     return FALSE;
   }
 
   if (arg == NULL)
   {
-    LOG_MSG_WARNING("arg NULL");
+    ZE_LogMsgWarning(0, "arg NULL");
     return FALSE;
   }
 
@@ -158,7 +158,7 @@ check_mime_part(buf, size, id, level, type, arg, mime_part)
       {
         SET_BIT(data->flags.msg, SPAM_MSG_CONTENT_ID);
         if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-          MESSAGE_INFO(LOG_LEVEL,
+          ZE_MessageInfo(LOG_LEVEL,
                        "%s SPAM CHECK - M%02d unwanted Content-ID for %s", id,
                        SPAM_MSG_CONTENT_ID, STRNULL(name, "???"));
       }
@@ -189,7 +189,7 @@ check_mime_part(buf, size, id, level, type, arg, mime_part)
 
           p = strrchr(name, '.');
 
-          MESSAGE_INFO(11, "    CTYPE : %-8s %4d %6d %s", STRNULL(p, ".---"),
+          ZE_MessageInfo(11, "    CTYPE : %-8s %4d %6d %s", STRNULL(p, ".---"),
                        type, size, name);
           if (size == 0)
           {
@@ -203,7 +203,7 @@ check_mime_part(buf, size, id, level, type, arg, mime_part)
               case MIME_TYPE_MESSAGE:
                 SET_BIT(data->flags.msg, SPAM_MSG_EMPTY_ATTACHMENT);
                 if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-                  MESSAGE_INFO(LOG_LEVEL,
+                  ZE_MessageInfo(LOG_LEVEL,
                                "%s SPAM CHECK - M%02d empty attachment %s", id,
                                SPAM_MSG_EMPTY_ATTACHMENT, STRNULL(name, "???"));
                 break;
@@ -233,7 +233,7 @@ check_mime_part(buf, size, id, level, type, arg, mime_part)
 
           p = strrchr(name, '.');
 
-          MESSAGE_INFO(11, "    CDISP : %-8s %4d %6d %s", STRNULL(p, ".---"),
+          ZE_MessageInfo(11, "    CDISP : %-8s %4d %6d %s", STRNULL(p, ".---"),
                        type, size, name);
           if (size == 0)
           {
@@ -247,7 +247,7 @@ check_mime_part(buf, size, id, level, type, arg, mime_part)
               case MIME_TYPE_MESSAGE:
                 SET_BIT(data->flags.msg, SPAM_MSG_EMPTY_ATTACHMENT);
                 if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-                  MESSAGE_INFO(LOG_LEVEL,
+                  ZE_MessageInfo(LOG_LEVEL,
                                "%s SPAM CHECK - M%02d empty attachment %s", id,
                                SPAM_MSG_EMPTY_ATTACHMENT, STRNULL(name, "???"));
                 break;
@@ -325,7 +325,7 @@ check_mime_part(buf, size, id, level, type, arg, mime_part)
   }
 #endif
 
-  MESSAGE_INFO(19, "TYPE (%d) (%ld) (%s)", type, (long) size, mime_part->mime);
+  ZE_MessageInfo(19, "TYPE (%d) (%ld) (%s)", type, (long) size, mime_part->mime);
 
   /*
    **
@@ -365,7 +365,7 @@ check_mime_part(buf, size, id, level, type, arg, mime_part)
       {
         real_size = strlen(html_clean);
 
-        MESSAGE_INFO(19, "Checking HTML clean");
+        ZE_MessageInfo(19, "Checking HTML clean");
         if (data->scores.do_regex
             && (CURRENT_SCORE() < data->content_max_score))
         {
@@ -467,12 +467,12 @@ check_mime_part(buf, size, id, level, type, arg, mime_part)
             sz++;
 
         /* check cleaned up html part size */
-        MESSAGE_INFO(19, "PLAIN TEXT size %d", size);
+        ZE_MessageInfo(19, "PLAIN TEXT size %d", size);
         if (sz >= 0 && sz < 80)
         {
           SET_BIT(data->flags.plain, SPAM_PLAIN_TOO_SHORT);
           if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-            MESSAGE_INFO(LOG_LEVEL,
+            ZE_MessageInfo(LOG_LEVEL,
                          "%s SPAM CHECK - P%02d text/plain part too short : %d",
                          id, SPAM_PLAIN_TOO_SHORT, sz);
         }
@@ -482,7 +482,7 @@ check_mime_part(buf, size, id, level, type, arg, mime_part)
       {
         SET_BIT(data->flags.plain, SPAM_PLAIN_NO_CHARSET);
         if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-          MESSAGE_INFO(LOG_LEVEL,
+          ZE_MessageInfo(LOG_LEVEL,
                        "%s SPAM CHECK - P%02d text/plain w/o charset", id,
                        SPAM_PLAIN_NO_CHARSET);
       }
@@ -527,7 +527,7 @@ check_mime_part(buf, size, id, level, type, arg, mime_part)
 
       if (x != NULL)
       {
-        MESSAGE_INFO(30, "BUF ...%s", x);
+        ZE_MessageInfo(30, "BUF ...%s", x);
         clean_score = check_regex(id, data->ip, x, MAIL_BODY);
         FREE(x);
       }
@@ -581,7 +581,7 @@ check_mime_part(buf, size, id, level, type, arg, mime_part)
 
       if (x != NULL)
       {
-        MESSAGE_INFO(30, "BUF ...%s", x);
+        ZE_MessageInfo(30, "BUF ...%s", x);
         clean_score = check_regex(id, data->ip, x, MAIL_BODY);
         FREE(x);
       }
@@ -591,7 +591,7 @@ check_mime_part(buf, size, id, level, type, arg, mime_part)
   /* Checking special usual spam expressions */
   data->msg_bad_expressions += check_unwanted_expressions(id, buf, &data->best);
 
-  MESSAGE_INFO(19, "Checking HTML raw and TEXT");
+  ZE_MessageInfo(19, "Checking HTML raw and TEXT");
   if (data->scores.do_regex && (CURRENT_SCORE() < data->content_max_score))
   {
     raw_score = check_regex(id, data->ip, buf, MAIL_BODY);
@@ -669,7 +669,7 @@ scan_body_contents(id, ip, fname, maxsize, data, flags, scores)
     {
       char                value[256];
 
-      MESSAGE_INFO(15, "%s : got content-type header", id);
+      ZE_MessageInfo(15, "%s : got content-type header", id);
 
       memset(value, 0, sizeof (value));
       if (get_msgheader_attribute(h, "charset", value, sizeof (value))
@@ -679,7 +679,7 @@ scan_body_contents(id, ip, fname, maxsize, data, flags, scores)
         {
           SET_BIT(data->flags.msg, SPAM_MSG_UNWANTED_CHARSET);
           if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-            MESSAGE_INFO(LOG_LEVEL,
+            ZE_MessageInfo(LOG_LEVEL,
                          "%s SPAM CHECK - M%02d unwanted charset : %s", id,
                          SPAM_MSG_UNWANTED_CHARSET, value);
         }
@@ -691,13 +691,13 @@ scan_body_contents(id, ip, fname, maxsize, data, flags, scores)
       {
         if (get_msgheader_attribute(h, "boundary", value, sizeof (value)))
         {
-          MESSAGE_INFO(19, "Boundary : %s", value);
+          ZE_MessageInfo(19, "Boundary : %s", value);
           if (check_unwanted_boundary(id, value, &data->best))
           {
             SET_BIT(data->flags.msg, SPAM_MSG_UNWANTED_BOUNDARY);
 
             if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-              MESSAGE_INFO(LOG_LEVEL,
+              ZE_MessageInfo(LOG_LEVEL,
                            "%s SPAM CHECK - M%02d unwanted boundary (%s)",
                            id, SPAM_MSG_UNWANTED_BOUNDARY, value);
           }
@@ -705,7 +705,7 @@ scan_body_contents(id, ip, fname, maxsize, data, flags, scores)
         {
           SET_BIT(data->flags.msg, SPAM_MSG_UNWANTED_BOUNDARY);
           if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-            MESSAGE_INFO(LOG_LEVEL,
+            ZE_MessageInfo(LOG_LEVEL,
                          "%s SPAM CHECK - M%02d short boundary boundary=(%s) len=(%d)",
                          id, SPAM_MSG_UNWANTED_BOUNDARY, "(NULL)", 0);
         }
@@ -721,7 +721,7 @@ scan_body_contents(id, ip, fname, maxsize, data, flags, scores)
       {
         SET_BIT(data->flags.msg, SPAM_MSG_UNWANTED_MAILER);
         if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-          MESSAGE_INFO(LOG_LEVEL,
+          ZE_MessageInfo(LOG_LEVEL,
                        "%s SPAM CHECK - M%02d unwanted mailer (%s)",
                        id, SPAM_MSG_UNWANTED_MAILER, mailer);
       }
@@ -734,7 +734,7 @@ scan_body_contents(id, ip, fname, maxsize, data, flags, scores)
       {
         SET_BIT(data->flags.msg, SPAM_MSG_UNWANTED_MAILER);
         if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-          MESSAGE_INFO(LOG_LEVEL,
+          ZE_MessageInfo(LOG_LEVEL,
                        "%s SPAM CHECK - M%02d unwanted mailer (%s)",
                        id, SPAM_MSG_UNWANTED_MAILER, mailer);
       }
@@ -762,7 +762,7 @@ scan_body_contents(id, ip, fname, maxsize, data, flags, scores)
       {
         SET_BIT(data->flags.msg, SPAM_MSG_SUBJECT_HI_CAPS);
         if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-          MESSAGE_INFO(LOG_LEVEL,
+          ZE_MessageInfo(LOG_LEVEL,
                        "%s SPAM CHECK - M%02d Subject doesn't contains lower case chars : %s",
                        id, SPAM_MSG_SUBJECT_HI_CAPS, h->value);
       }
@@ -770,7 +770,7 @@ scan_body_contents(id, ip, fname, maxsize, data, flags, scores)
       {
         SET_BIT(data->flags.msg, SPAM_MSG_SUBJECT_NO_ALPHA);
         if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-          MESSAGE_INFO(LOG_LEVEL,
+          ZE_MessageInfo(LOG_LEVEL,
                        "%s SPAM CHECK - M%02d Subject doesn't contains alpha chars : %s",
                        id, SPAM_MSG_SUBJECT_NO_ALPHA, h->value);
       }
@@ -784,7 +784,7 @@ scan_body_contents(id, ip, fname, maxsize, data, flags, scores)
     {
       SET_BIT(data->flags.msg, SPAM_MSG_RFC2822_HEADERS);
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-        MESSAGE_INFO(LOG_LEVEL, "%s SPAM CHECK - M%02d RFC2822 headers", id,
+        ZE_MessageInfo(LOG_LEVEL, "%s SPAM CHECK - M%02d RFC2822 headers", id,
                      SPAM_MSG_RFC2822_HEADERS);
     }
 
@@ -797,7 +797,7 @@ scan_body_contents(id, ip, fname, maxsize, data, flags, scores)
       {
         SET_BIT(data->flags.msg, SPAM_MSG_HEADERS_SYNTAX);
         if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-          MESSAGE_INFO(LOG_LEVEL, "%s SPAM CHECK - M%02d Headers syntax :",
+          ZE_MessageInfo(LOG_LEVEL, "%s SPAM CHECK - M%02d Headers syntax :",
                        id, SPAM_MSG_HEADERS_SYNTAX);
       }
       data->headers_syntax_errors = n;
@@ -812,7 +812,7 @@ scan_body_contents(id, ip, fname, maxsize, data, flags, scores)
       {
         SET_BIT(data->flags.msg, SPAM_MSG_BASE64);
         if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-          MESSAGE_INFO(LOG_LEVEL, "%s SPAM CHECK - M%02d B64 encoded message",
+          ZE_MessageInfo(LOG_LEVEL, "%s SPAM CHECK - M%02d B64 encoded message",
                        id, SPAM_MSG_BASE64);
       }
     }
@@ -827,7 +827,7 @@ scan_body_contents(id, ip, fname, maxsize, data, flags, scores)
       {
         SET_BIT(data->flags.msg, SPAM_MSG_BASE64_SUBJECT);
         if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-          MESSAGE_INFO(LOG_LEVEL, "%s SPAM CHECK - M%02d B64 encoded Subject",
+          ZE_MessageInfo(LOG_LEVEL, "%s SPAM CHECK - M%02d B64 encoded Subject",
                        id, SPAM_MSG_BASE64_SUBJECT);
       }
     }
@@ -858,7 +858,7 @@ scan_body_contents(id, ip, fname, maxsize, data, flags, scores)
     {
       SET_BIT(data->flags.msg, SPAM_MSG_NO_TEXT_PART);
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-        MESSAGE_INFO(LOG_LEVEL,
+        ZE_MessageInfo(LOG_LEVEL,
                      "%s SPAM CHECK - M%02d No HTML nor TEXT parts : Total = %d",
                      id, SPAM_MSG_NO_TEXT_PART, data->nb_part);
     }
@@ -875,7 +875,7 @@ scan_body_contents(id, ip, fname, maxsize, data, flags, scores)
     {
       SET_BIT(data->flags.msg, SPAM_MSG_BAD_EXPRESSIONS);
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-        MESSAGE_INFO(LOG_LEVEL,
+        ZE_MessageInfo(LOG_LEVEL,
                      "%s SPAM CHECK - M%02d BAD EXPRESSIONS : %d", id,
                      SPAM_MSG_BAD_EXPRESSIONS, data->msg_bad_expressions);
     }
@@ -884,7 +884,7 @@ scan_body_contents(id, ip, fname, maxsize, data, flags, scores)
     {
       SET_BIT(data->flags.msg, SPAM_MSG_TOO_MUCH_HTML);
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-        MESSAGE_INFO(LOG_LEVEL,
+        ZE_MessageInfo(LOG_LEVEL,
                      "%s SPAM CHECK - M%02d NB HTML > PLAIN : %d %d", id,
                      SPAM_MSG_TOO_MUCH_HTML, data->nb_text_html,
                      data->nb_text_plain);
@@ -942,7 +942,7 @@ scan_body_contents(id, ip, fname, maxsize, data, flags, scores)
 
           SET_BIT(data->flags.msg, SPAM_MSG_MATCH_MIME_PARTS);
           if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-            MESSAGE_INFO(LOG_LEVEL,
+            ZE_MessageInfo(LOG_LEVEL,
                          "%s SPAM CHECK - M%02d HTML/PLAIN parts don't match vcoef=(%7.3f) lcoef=(%7.3f) (vcoef)",
                          id, SPAM_MSG_MATCH_MIME_PARTS, vcoef, lcoef);
         }
@@ -953,7 +953,7 @@ scan_body_contents(id, ip, fname, maxsize, data, flags, scores)
 
           SET_BIT(data->flags.msg, SPAM_MSG_MATCH_MIME_PARTS);
           if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-            MESSAGE_INFO(LOG_LEVEL,
+            ZE_MessageInfo(LOG_LEVEL,
                          "%s SPAM CHECK - M%02d HTML/PLAIN parts don't match vcoef=(%7.3f) lcoef=(%7.3f) (lcoef)",
                          id, SPAM_MSG_MATCH_MIME_PARTS, vcoef, lcoef);
         }
@@ -966,7 +966,7 @@ scan_body_contents(id, ip, fname, maxsize, data, flags, scores)
           SET_BIT(data->flags.msg, SPAM_MSG_MATCH_MIME_PARTS);
 #endif
           if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-            MESSAGE_INFO(LOG_LEVEL,
+            ZE_MessageInfo(LOG_LEVEL,
                          "%s SPAM CHECK - M%02d HTML/PLAIN parts don't match HTML(%6d)/PLAIN(%6d) (ldiff)",
                          id, SPAM_MSG_MATCH_MIME_PARTS,
                          data->html.len_clean, data->plain.len_clean);
@@ -1005,7 +1005,7 @@ scan_body_contents(id, ip, fname, maxsize, data, flags, scores)
 
       SET_BIT(data->flags.msg, SPAM_MSG_MIME_ERRORS);
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-        MESSAGE_INFO(LOG_LEVEL,
+        ZE_MessageInfo(LOG_LEVEL,
                      "%s SPAM CHECK - M%02d MIME decode errors : %d",
                      id, SPAM_MSG_MIME_ERRORS, data->mime_errors);
       memset(sout, 0, sizeof (sout));
@@ -1014,7 +1014,7 @@ scan_body_contents(id, ip, fname, maxsize, data, flags, scores)
         sout[i] = GET_BIT(mime_flags, i) ? ('0' + (i % 10)) : '.';
 
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-        MESSAGE_INFO(LOG_LEVEL,
+        ZE_MessageInfo(LOG_LEVEL,
                      "%s SPAM CHECK - M%02d MIME errors %s",
                      id, SPAM_MSG_MIME_ERRORS, sout);
     }
@@ -1026,7 +1026,7 @@ scan_body_contents(id, ip, fname, maxsize, data, flags, scores)
     {
       SET_BIT(data->flags.plain, SPAM_PLAIN_BASE64);
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-        MESSAGE_INFO(LOG_LEVEL,
+        ZE_MessageInfo(LOG_LEVEL,
                      "%s SPAM CHECK - P%02d text/plain encoded base64 : %d",
                      id, SPAM_PLAIN_BASE64, data->nb_text_plain_base64);
     }
@@ -1036,7 +1036,7 @@ scan_body_contents(id, ip, fname, maxsize, data, flags, scores)
     {
       SET_BIT(data->flags.plain, SPAM_PLAIN_EMPTY);
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-        MESSAGE_INFO(LOG_LEVEL,
+        ZE_MessageInfo(LOG_LEVEL,
                      "%s SPAM CHECK - P%02d text/plain empty : %d", id,
                      SPAM_PLAIN_EMPTY, data->nb_text_plain_empty);
     }
@@ -1048,7 +1048,7 @@ scan_body_contents(id, ip, fname, maxsize, data, flags, scores)
     {
       SET_BIT(data->flags.html, SPAM_HTML_BASE64);
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-        MESSAGE_INFO(LOG_LEVEL,
+        ZE_MessageInfo(LOG_LEVEL,
                      "%s SPAM CHECK - H%02d text/html  encoded base64 : %d",
                      id, SPAM_HTML_BASE64, data->nb_text_html_base64);
     }
@@ -1074,7 +1074,7 @@ scan_body_contents(id, ip, fname, maxsize, data, flags, scores)
       {
         SET_BIT(data->flags.html, SPAM_HTML_CLEAN_TOO_SHORT);
         if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-          MESSAGE_INFO(LOG_LEVEL,
+          ZE_MessageInfo(LOG_LEVEL,
                        "%s SPAM CHECK - H%02d HTML cleaned up too short : %d",
                        id, SPAM_HTML_CLEAN_TOO_SHORT, data->html.len_clean);
       }
@@ -1084,7 +1084,7 @@ scan_body_contents(id, ip, fname, maxsize, data, flags, scores)
     {
       SET_BIT(data->flags.html, SPAM_HTML_TAGS_RATIO);
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-        MESSAGE_INFO(LOG_LEVEL,
+        ZE_MessageInfo(LOG_LEVEL,
                      "%s SPAM CHECK - H%02d HTML tag/text ratio : %d", id,
                      SPAM_HTML_TAGS_RATIO, data->html_high_tag_ratio);
     }
@@ -1093,7 +1093,7 @@ scan_body_contents(id, ip, fname, maxsize, data, flags, scores)
     {
       SET_BIT(data->flags.html, SPAM_HTML_UNWANTED_TAGS);
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-        MESSAGE_INFO(LOG_LEVEL,
+        ZE_MessageInfo(LOG_LEVEL,
                      "%s SPAM CHECK - H%02d HTML with unwanted tags : %d", id,
                      SPAM_HTML_UNWANTED_TAGS, data->html_unwanted_tags);
     }
@@ -1102,7 +1102,7 @@ scan_body_contents(id, ip, fname, maxsize, data, flags, scores)
     {
       SET_BIT(data->flags.html, SPAM_HTML_INVALID_TAGS);
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-        MESSAGE_INFO(LOG_LEVEL,
+        ZE_MessageInfo(LOG_LEVEL,
                      "%s SPAM CHECK - H%02d HTML with invalid tags : %d", id,
                      SPAM_HTML_INVALID_TAGS, data->html_invalid_tags);
     }
@@ -1114,9 +1114,9 @@ scan_body_contents(id, ip, fname, maxsize, data, flags, scores)
    */
   if (data->scores.do_oracle)
   {
-    MESSAGE_INFO(12, "Avant oracle_compute_score");
+    ZE_MessageInfo(12, "Avant oracle_compute_score");
     data->scores.oracle = oracle_compute_score(id, ip, data);
-    MESSAGE_INFO(12, "Apres oracle_compute_score");
+    ZE_MessageInfo(12, "Apres oracle_compute_score");
   }
 
   if (scores != NULL)
@@ -1147,7 +1147,7 @@ check_rfc2822_headers_count(id, head)
   if ((r = count_msgheader_attr(head, s)) != 1)
   {
     if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-      MESSAGE_INFO(10,
+      ZE_MessageInfo(10,
                    "%s SPAM CHECK - MSG RFC2822 HDRS count : %-12s : %d (1,1)",
                    id, s, r);
     nerr++;
@@ -1157,7 +1157,7 @@ check_rfc2822_headers_count(id, head)
   if ((r = count_msgheader_attr(head, s)) != 1)
   {
     if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-      MESSAGE_INFO(10,
+      ZE_MessageInfo(10,
                    "%s SPAM CHECK - MSG RFC2822 HDRS count : %-12s : %d (1,1)",
                    id, s, r);
     nerr++;
@@ -1167,7 +1167,7 @@ check_rfc2822_headers_count(id, head)
   if ((r = count_msgheader_attr(head, s)) > 1)
   {
     if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-      MESSAGE_INFO(10,
+      ZE_MessageInfo(10,
                    "%s SPAM CHECK - MSG RFC2822 HDRS count : %-12s : %d (0,1)",
                    id, s, r);
     nerr++;
@@ -1177,7 +1177,7 @@ check_rfc2822_headers_count(id, head)
   if ((r = count_msgheader_attr(head, s)) > 1)
   {
     if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-      MESSAGE_INFO(10,
+      ZE_MessageInfo(10,
                    "%s SPAM CHECK - MSG RFC2822 HDRS count : %-12s : %d (0,1)",
                    id, s, r);
     nerr++;
@@ -1187,7 +1187,7 @@ check_rfc2822_headers_count(id, head)
   if ((r = count_msgheader_attr(head, s)) > 1)
   {
     if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-      MESSAGE_INFO(10,
+      ZE_MessageInfo(10,
                    "%s SPAM CHECK - MSG RFC2822 HDRS count : %-12s : %d (0,1)",
                    id, s, r);
     nerr++;
@@ -1198,7 +1198,7 @@ check_rfc2822_headers_count(id, head)
   if ((r = count_msgheader_attr(head, s)) > 1)
   {
     if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-      MESSAGE_INFO(10,
+      ZE_MessageInfo(10,
                    "%s SPAM CHECK - MSG RFC2822 HDRS count : %-12s : %d (0,1)",
                    id, s, r);
     nerr++;
@@ -1209,7 +1209,7 @@ check_rfc2822_headers_count(id, head)
   if ((r = count_msgheader_attr(head, s)) > 1)
   {
     if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-      MESSAGE_INFO(10,
+      ZE_MessageInfo(10,
                    "%s SPAM CHECK - MSG RFC2822 HDRS count : %-12s : %d (0,1)",
                    id, s, r);
     nerr++;
@@ -1219,7 +1219,7 @@ check_rfc2822_headers_count(id, head)
   if (nb == 0)
   {
     if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-      MESSAGE_INFO(10,
+      ZE_MessageInfo(10,
                    "%s SPAM CHECK - MSG RFC2822 HDRS count : No To nor Cc nor Bcc",
                    id);
     nerr++;
@@ -1229,7 +1229,7 @@ check_rfc2822_headers_count(id, head)
   if ((r = count_msgheader_attr(head, s)) > 1)
   {
     if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-      MESSAGE_INFO(10,
+      ZE_MessageInfo(10,
                    "%s SPAM CHECK - MSG RFC2822 HDRS count : %-12s : %d (0,1)",
                    id, s, r);
     nerr++;
@@ -1237,7 +1237,7 @@ check_rfc2822_headers_count(id, head)
   if (r == 0)
   {
     if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-      MESSAGE_INFO(10,
+      ZE_MessageInfo(10,
                    "%s SPAM CHECK - MSG RFC2822 HDRS count : %-12s : %d (0,1)",
                    id, s, r);
     nerr++;
@@ -1247,7 +1247,7 @@ check_rfc2822_headers_count(id, head)
   if ((r = count_msgheader_attr(head, s)) > 1)
   {
     if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-      MESSAGE_INFO(10,
+      ZE_MessageInfo(10,
                    "%s SPAM CHECK - MSG RFC2822 HDRS count : %-12s : %d (0,1)",
                    id, s, r);
     nerr++;
@@ -1257,7 +1257,7 @@ check_rfc2822_headers_count(id, head)
   if ((r = count_msgheader_attr(head, s)) > 1)
   {
     if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-      MESSAGE_INFO(10,
+      ZE_MessageInfo(10,
                    "%s SPAM CHECK - MSG RFC2822 HDRS count : %-12s : %d (0,1)",
                    id, s, r);
     nerr++;
@@ -1267,7 +1267,7 @@ check_rfc2822_headers_count(id, head)
   if ((r = count_msgheader_attr(head, s)) > 1)
   {
     if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-      MESSAGE_INFO(10,
+      ZE_MessageInfo(10,
                    "%s SPAM CHECK - MSG RFC2822 HDRS count : %-12s : %d (0,1)",
                    id, s, r);
     nerr++;
@@ -1276,7 +1276,7 @@ check_rfc2822_headers_count(id, head)
   if (nb == 0)
   {
     if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-      MESSAGE_INFO(10, "%s SPAM CHECK - MSG RFC2822 HDRS count : No Subject",
+      ZE_MessageInfo(10, "%s SPAM CHECK - MSG RFC2822 HDRS count : No Subject",
                    id);
     nerr++;
   }
@@ -1285,7 +1285,7 @@ check_rfc2822_headers_count(id, head)
   if ((r = count_msgheader_attr(head, s)) > 1)
   {
     if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-      MESSAGE_INFO(10,
+      ZE_MessageInfo(10,
                    "%s SPAM CHECK - MSG RFC2822 HDRS count : %-12s : %d (0,1)",
                    id, s, r);
     nerr++;
@@ -1296,7 +1296,7 @@ check_rfc2822_headers_count(id, head)
   if ((r = count_msgheader_attr(head, s)) > 1)
   {
     if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-      MESSAGE_INFO(10,
+      ZE_MessageInfo(10,
                    "%s SPAM CHECK - MSG RFC2822 HDRS count : %-12s : %d (0,1)",
                    id, s, r);
     nerr++;
@@ -1307,7 +1307,7 @@ check_rfc2822_headers_count(id, head)
   if ((r = count_msgheader_attr(head, s)) > 1)
   {
     if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-      MESSAGE_INFO(10,
+      ZE_MessageInfo(10,
                    "%s SPAM CHECK - MSG RFC2822 HDRS count : %-12s : %d (0,1)",
                    id, s, r);
     nerr++;
@@ -1319,7 +1319,7 @@ check_rfc2822_headers_count(id, head)
   {
 #if 0
     if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-      MESSAGE_INFO(10,
+      ZE_MessageInfo(10,
                    "%s SPAM CHECK - MSG RFC2822 HDRS count : %-12s : %d (0,1)",
                    id, s, r);
     nerr++;
@@ -1332,7 +1332,7 @@ check_rfc2822_headers_count(id, head)
       || (mime_cte && !mime_vers))
   {
     if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-      MESSAGE_INFO(10,
+      ZE_MessageInfo(10,
                    "%s SPAM CHECK - MSG RFC2045 HDRS : MIME=(%d) CT=(%d) CD=(%d) CTE=(%d)",
                    id, mime_vers, mime_ct, mime_cd, mime_cte, r);
     nerr++;
@@ -1342,7 +1342,7 @@ check_rfc2822_headers_count(id, head)
   if ((r = count_msgheader_attr(head, s)) > 1)
   {
     if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-      MESSAGE_INFO(10,
+      ZE_MessageInfo(10,
                    "%s SPAM CHECK - MSG RFC2822 HDRS count : %-12s : %d (0,1)",
                    id, s, r);
     nerr++;
@@ -1352,7 +1352,7 @@ check_rfc2822_headers_count(id, head)
   if ((r = count_msgheader_attr(head, s)) > 1)
   {
     if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-      MESSAGE_INFO(10,
+      ZE_MessageInfo(10,
                    "%s SPAM CHECK - MSG RFC2822 HDRS count : %-12s : %d (0,1)",
                    id, s, r);
     nerr++;
@@ -1392,7 +1392,7 @@ check_rfc2822_headers_syntax(id, head)
         || (strspn(h->value, " \t") == strlen(h->value)))
     {
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-        MESSAGE_INFO(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %s empty", id, s);
+        ZE_MessageInfo(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %s empty", id, s);
       nerr++;
       continue;
     }
@@ -1407,7 +1407,7 @@ check_rfc2822_headers_syntax(id, head)
     if (!strexpr(p, s, &pi, &pf, TRUE))
     {
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-        MESSAGE_INFO(10,
+        ZE_MessageInfo(10,
                      "%s SPAM CHECK - MSG HDRS SYNTAX : Date : dd Mmm Yyyy : %s",
                      id, h->value);
       ok = FALSE;
@@ -1418,7 +1418,7 @@ check_rfc2822_headers_syntax(id, head)
     if (!strexpr(p, s, &pi, &pf, TRUE))
     {
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-        MESSAGE_INFO(10,
+        ZE_MessageInfo(10,
                      "%s SPAM CHECK - MSG HDRS SYNTAX : Date : HH:MM:SS : %s",
                      id, h->value);
       ok = FALSE;
@@ -1441,7 +1441,7 @@ check_rfc2822_headers_syntax(id, head)
         || (strspn(h->value, " \t") == strlen(h->value)))
     {
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-        MESSAGE_INFO(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %s empty", id, s);
+        ZE_MessageInfo(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %s empty", id, s);
       nerr++;
     }
   }
@@ -1456,7 +1456,7 @@ check_rfc2822_headers_syntax(id, head)
         || (strspn(h->value, " \t") == strlen(h->value)))
     {
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-        MESSAGE_INFO(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %s empty", id, s);
+        ZE_MessageInfo(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %s empty", id, s);
 #if 0
       nerr++;
 #endif
@@ -1473,7 +1473,7 @@ check_rfc2822_headers_syntax(id, head)
         || (strspn(h->value, " \t") == strlen(h->value)))
     {
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-        MESSAGE_INFO(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %s empty", id, s);
+        ZE_MessageInfo(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %s empty", id, s);
 #if 0
       nerr++;
 #endif
@@ -1490,7 +1490,7 @@ check_rfc2822_headers_syntax(id, head)
         || (strspn(h->value, " \t") == strlen(h->value)))
     {
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-        MESSAGE_INFO(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %s empty", id, s);
+        ZE_MessageInfo(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %s empty", id, s);
       nerr++;
     }
   }
@@ -1505,7 +1505,7 @@ check_rfc2822_headers_syntax(id, head)
         || (strspn(h->value, " \t") == strlen(h->value)))
     {
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-        MESSAGE_INFO(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %s empty", id, s);
+        ZE_MessageInfo(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %s empty", id, s);
 #if 0
       nerr++;
 #endif
@@ -1522,7 +1522,7 @@ check_rfc2822_headers_syntax(id, head)
         || (strspn(h->value, " \t") == strlen(h->value)))
     {
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-        MESSAGE_INFO(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %s empty", id, s);
+        ZE_MessageInfo(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %s empty", id, s);
       nerr++;
     }
   }
@@ -1536,7 +1536,7 @@ check_rfc2822_headers_syntax(id, head)
     if (!strexpr(h->value, "<[^>@]+@[^>]+>", NULL, NULL, TRUE))
     {
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-        MESSAGE_INFO(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %-12s", id, s);
+        ZE_MessageInfo(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %-12s", id, s);
       nerr++;
     }
   }
@@ -1550,7 +1550,7 @@ check_rfc2822_headers_syntax(id, head)
     if (!strexpr(h->value, "<[^>@]+@[^>]+>", NULL, NULL, TRUE))
     {
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-        MESSAGE_INFO(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %s empty", id, s);
+        ZE_MessageInfo(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %s empty", id, s);
 #if 0
       nerr++;
 #endif
@@ -1566,7 +1566,7 @@ check_rfc2822_headers_syntax(id, head)
     if (!strexpr(h->value, "<[^>@]+@[^>]+>", NULL, NULL, TRUE))
     {
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-        MESSAGE_INFO(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %s empty", id, s);
+        ZE_MessageInfo(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %s empty", id, s);
       nerr++;
     }
   }
@@ -1581,7 +1581,7 @@ check_rfc2822_headers_syntax(id, head)
         || (strspn(h->value, " \t") == strlen(h->value)))
     {
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-        MESSAGE_INFO(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %s empty", id, s);
+        ZE_MessageInfo(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %s empty", id, s);
 #if 0
       nerr++;
 #endif
@@ -1597,7 +1597,7 @@ check_rfc2822_headers_syntax(id, head)
     if (strstr(h->value, "1.0") == NULL)
     {
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-        MESSAGE_INFO(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %-12s : %s", id,
+        ZE_MessageInfo(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %-12s : %s", id,
                      s, h->value);
       nerr++;
     }
@@ -1613,7 +1613,7 @@ check_rfc2822_headers_syntax(id, head)
         || (strspn(h->value, " \t") == strlen(h->value)))
     {
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-        MESSAGE_INFO(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %s empty", id, s);
+        ZE_MessageInfo(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %s empty", id, s);
       nerr++;
     }
   }
@@ -1628,7 +1628,7 @@ check_rfc2822_headers_syntax(id, head)
         || (strspn(h->value, " \t") == strlen(h->value)))
     {
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-        MESSAGE_INFO(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %s empty", id, s);
+        ZE_MessageInfo(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %s empty", id, s);
       nerr++;
     }
   }
@@ -1643,7 +1643,7 @@ check_rfc2822_headers_syntax(id, head)
         || (strspn(h->value, " \t") == strlen(h->value)))
     {
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-        MESSAGE_INFO(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %s empty", id, s);
+        ZE_MessageInfo(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %s empty", id, s);
       nerr++;
     }
   }
@@ -1658,7 +1658,7 @@ check_rfc2822_headers_syntax(id, head)
         || (strspn(h->value, " \t") == strlen(h->value)))
     {
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-        MESSAGE_INFO(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %s empty", id, s);
+        ZE_MessageInfo(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %s empty", id, s);
       nerr++;
     }
   }
@@ -1673,7 +1673,7 @@ check_rfc2822_headers_syntax(id, head)
         || (strspn(h->value, " \t") == strlen(h->value)))
     {
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-        MESSAGE_INFO(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %s empty", id, s);
+        ZE_MessageInfo(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %s empty", id, s);
       nerr++;
     }
   }
@@ -1698,7 +1698,7 @@ check_header_date(id, headers)
   time_t              now = time(NULL);
   uint32_t            flags = 0;
 
-  MESSAGE_INFO(11, "Checking date : %s", id);
+  ZE_MessageInfo(11, "Checking date : %s", id);
 
   if (headers == NULL)
     return 0;
@@ -1712,11 +1712,11 @@ check_header_date(id, headers)
 
     date_secs = header_date2secs(h->value);
 
-    MESSAGE_INFO(11, "%s : Checking date : %ld %s", id, date_secs, h->value);
+    ZE_MessageInfo(11, "%s : Checking date : %ld %s", id, date_secs, h->value);
     if (date_secs == 0)
     {
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-        MESSAGE_INFO(10, "%s SPAM CHECK - INVALID DATE : %s", id, h->value);
+        ZE_MessageInfo(10, "%s SPAM CHECK - INVALID DATE : %s", id, h->value);
       SET_BIT(flags, SPAM_MSG_BAD_DATE);
       nerr++;
       continue;
@@ -1725,7 +1725,7 @@ check_header_date(id, headers)
     if (date_secs > now && date_secs - now > 48 HOURS)
     {
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-        MESSAGE_INFO(10, "%s SPAM CHECK - DATE IN THE FUTUR : %s", id,
+        ZE_MessageInfo(10, "%s SPAM CHECK - DATE IN THE FUTUR : %s", id,
                      h->value);
       nerr++;
       SET_BIT(flags, SPAM_MSG_FUTURE_DATE);
@@ -1735,7 +1735,7 @@ check_header_date(id, headers)
     if (date_secs + 1 YEARS < now)
     {
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-        MESSAGE_INFO(10, "%s SPAM CHECK - DATE IN THE PASR : %s", id, h->value);
+        ZE_MessageInfo(10, "%s SPAM CHECK - DATE IN THE PASR : %s", id, h->value);
       nerr++;
       SET_BIT(flags, SPAM_MSG_TOO_OLD_DATE);
       continue;
@@ -1812,7 +1812,7 @@ check_unwanted_html_tags(id, buf, best)
   if (n > 0)
     bestof_add(best, odds);
 
-  MESSAGE_INFO(12, " BAD %s %7.3f", "HTML-TAG", odds);
+  ZE_MessageInfo(12, " BAD %s %7.3f", "HTML-TAG", odds);
   return MIN(n, 3);
 }
 
@@ -1833,7 +1833,7 @@ check_unwanted_boundary(id, boundary, best)
   if (n > 0)
     bestof_add(best, odds);
 
-  MESSAGE_INFO(12, " BAD %s %7.3f", "BOUNDARY", odds);
+  ZE_MessageInfo(12, " BAD %s %7.3f", "BOUNDARY", odds);
   return (n > 0);
 }
 
@@ -1860,7 +1860,7 @@ check_unwanted_mailer(id, mailer, best)
   if (n > 0)
     bestof_add(best, odds);
 
-  MESSAGE_INFO(12, " BAD %s %7.3f", "MAILER  ", odds);
+  ZE_MessageInfo(12, " BAD %s %7.3f", "MAILER  ", odds);
   return (n > 0);
 }
 
@@ -1883,7 +1883,7 @@ check_unwanted_charset(id, charset, best)
   if (n > 0)
     bestof_add(best, odds);
 
-  MESSAGE_INFO(12, " BAD %s %7.3f", "CHARSET ", odds);
+  ZE_MessageInfo(12, " BAD %s %7.3f", "CHARSET ", odds);
   return (n > 0);
 }
 
@@ -1904,7 +1904,7 @@ check_unwanted_expressions(id, buf, best)
   if (n > 0)
     bestof_add(best, odds);
 
-  MESSAGE_INFO(12, " BAD %s %7.3f", "BAD-EXPR", odds);
+  ZE_MessageInfo(12, " BAD %s %7.3f", "BAD-EXPR", odds);
 
   return n;
 }

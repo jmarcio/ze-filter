@@ -24,10 +24,10 @@
 
 #include <ze-sys.h>
 
-#include "zelibs.h"
+#include "zeLibs.h"
 
 
-int                 j_rd_text_file(char *, int, int, char *,
+int                 zm_RdTextFile(char *, int, int, char *,
                                    int (*)(void *, void *));
 
 static void         strClearBlanks(char *);
@@ -40,7 +40,7 @@ static void         strClearBlanks(char *);
  ******************************************************************************/
 
 int
-j_rd_text_file(fname, rdtype, rdreverse, tag, func)
+zm_RdTextFile(fname, rdtype, rdreverse, tag, func)
      char               *fname;
      int                 rdtype;
      int                 rdreverse;
@@ -62,7 +62,7 @@ j_rd_text_file(fname, rdtype, rdreverse, tag, func)
     static time_t       tlast = (time_t) 0;
 
     if ((fin = fopen(fname, "r")) == NULL) {
-      LOG_SYS_ERROR("fopen(%s)", STRNULL(fname, "NULL"));
+      ZE_LogSysError("fopen(%s)", STRNULL(fname, "NULL"));
 
       if (tlast > 3600) {
         tlast = time(NULL);
@@ -182,7 +182,7 @@ fin:
  *                                                                            *
  ******************************************************************************/
 int
-j_rd_file(fname, tag, func, arg)
+zm_RdFile(fname, tag, func, arg)
      char               *fname;
      char               *tag;
      RDFILE_F            func;
@@ -203,7 +203,7 @@ j_rd_file(fname, tag, func, arg)
     static time_t       tlast = (time_t) 0;
 
     if ((fin = fopen(fname, "r")) == NULL) {
-      LOG_SYS_ERROR("fopen(%s)", STRNULL(fname, "NULL"));
+      ZE_LogSysError("fopen(%s)", STRNULL(fname, "NULL"));
 
       if (tlast > 3600) {
         tlast = time(NULL);
@@ -249,18 +249,18 @@ j_rd_file(fname, tag, func, arg)
     if (strlen(s) == 0)
       continue;
 
-    if (strexpr(s, "^[ \t]*$", NULL, NULL, FALSE))
+    if (zeStrRegex(s, "^[ \t]*$", NULL, NULL, FALSE))
       continue;
-    if (strexpr(s, "^[ \t]*#", NULL, NULL, FALSE))
+    if (zeStrRegex(s, "^[ \t]*#", NULL, NULL, FALSE))
       continue;
 
     if (chktag) {
       if (!rdstate) {
-        if (strexpr(s, beg_tag, NULL, NULL, TRUE))
+        if (zeStrRegex(s, beg_tag, NULL, NULL, TRUE))
           rdstate = TRUE;
         continue;
       } else {
-        if (strexpr(s, end_tag, NULL, NULL, TRUE)) {
+        if (zeStrRegex(s, end_tag, NULL, NULL, TRUE)) {
           rdstate = FALSE;
           continue;
         }

@@ -105,12 +105,12 @@ FALSE, (time_t) 0, 0, PTHREAD_MUTEX_INITIALIZER, JBT_INITIALIZER};
 
 #define DATA_LOCK() \
   if (pthread_mutex_lock(&hdata.mutex) != 0) { \
-    LOG_SYS_ERROR("pthread_mutex_lock"); \
+    ZE_LogSysError("pthread_mutex_lock"); \
   }
 
 #define DATA_UNLOCK() \
   if (pthread_mutex_unlock(&hdata.mutex) != 0) { \
-    LOG_SYS_ERROR("pthread_mutex_unlock"); \
+    ZE_LogSysError("pthread_mutex_unlock"); \
   }
 
 /* ****************************************************************************
@@ -149,7 +149,7 @@ livehistory_init()
   if (!hdata.ok)
   {
     if (!jbt_init(&hdata.db_empty, sizeof (ShortHist_T), livehistory_cmp))
-      LOG_MSG_ERROR("Can't initialize db_empty");
+      ZE_LogMsgError(0, "Can't initialize db_empty");
 
     hdata.ok = TRUE;
     hdata.last = time(NULL);
@@ -241,9 +241,9 @@ livehistory_clean_table()
         jbt_destroy(&hdata.db_empty);
         hdata.db_empty = tmp;
       } else
-        LOG_MSG_ERROR("Can't copy btrees...");
+        ZE_LogMsgError(0, "Can't copy btrees...");
     } else
-      LOG_MSG_ERROR("Can't initialize temporary btree");
+      ZE_LogMsgError(0, "Can't initialize temporary btree");
 
     hdata.last = now;
   }
@@ -321,7 +321,7 @@ livehistory_add_entry(ip, now, n, what)
     p.bucket[ti].count[what] = n;
 
     if (!jbt_add(&hdata.db_empty, &p))
-      LOG_MSG_ERROR("Error adding new leaf to db");
+      ZE_LogMsgError(0, "Error adding new leaf to db");
 
     res = n;
   }

@@ -32,14 +32,14 @@ main(argc, argv)
      char              **argv;
 {
   int                 res = 0;
-  extern int          log_level;
+  extern int          ze_logLevel;
 
   bool                r;
 
   configure("ze-module-test", conf_file, FALSE);
 
-  set_log_output(FALSE, TRUE);
-  log_level = 10;
+  zeLog_SetOutput(FALSE, TRUE);
+  ze_logLevel = 10;
 
   printf("Hello, world\n");
 

@@ -115,7 +115,7 @@ sm_macro_new()
 {
   sm_mac_T           *p;
 
-  MESSAGE_INFO(19, "sizeof smmac : %d", sizeof smmac);
+  ZE_MessageInfo(19, "sizeof smmac : %d", sizeof smmac);
 
   if ((p = malloc(sizeof smmac)) != NULL)
   {
@@ -176,13 +176,13 @@ sm_macro_update(ctx, sm)
       {
         p->value = strdup(s);
         if (p->value == NULL)
-          LOG_SYS_ERROR("strdup(%s)", s);
+          ZE_LogSysError("strdup(%s)", s);
       }
     }
 
     if (log_sm_macros && p->value != NULL)
     {
-      MESSAGE_INFO(9, "%s : %-9s : SM Macro %-15s %s", CONNID_STR(priv->id),
+      ZE_MessageInfo(9, "%s : %-9s : SM Macro %-15s %s", CONNID_STR(priv->id),
                    callback, p->name, STRNULL(p->value, "(null)"));
     }
   }
@@ -245,7 +245,7 @@ sm_macro_log_all(id, sm)
   for (p = sm; p != NULL && p->name != NULL; p++)
   {
     if (strlen(p->name) > 0)
-      MESSAGE_INFO(9, "%s : %-15s - %s", id, p->name,
+      ZE_MessageInfo(9, "%s : %-15s - %s", id, p->name,
                    STRNULL(p->value, "(null)"));
   }
 }

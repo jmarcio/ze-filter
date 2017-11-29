@@ -165,7 +165,7 @@ extract_extensions(str)
 
   memset(env_ext, 0, sizeof (env_ext));
   if ((ts = strdup(str)) == NULL) {
-    LOG_SYS_ERROR("strdup(%s) error", str);
+    ZE_LogSysError("strdup(%s) error", str);
     return n;
   }
 
@@ -181,9 +181,9 @@ extract_extensions(str)
   if (n > 0) {
     int                 i;
 
-    MESSAGE_INFO(19, "** Environnement defined X-Files file extensions");
+    ZE_MessageInfo(19, "** Environnement defined X-Files file extensions");
     for (i = 0; i < n; i++)
-      MESSAGE_INFO(19, " %s", env_ext[i]);
+      ZE_MessageInfo(19, " %s", env_ext[i]);
   }
 
   FREE(ts);
@@ -203,7 +203,7 @@ init_default_file_extensions()
     if ((envext = getenv("FILE_EXT")) != NULL) {
       int                 n = 0;
 
-      MESSAGE_INFO(11, "Using environnement FILE_EXT (%s) to define X-FILES",
+      ZE_MessageInfo(11, "Using environnement FILE_EXT (%s) to define X-FILES",
                    envext);
       n = extract_extensions(envext);
 
@@ -216,7 +216,7 @@ init_default_file_extensions()
     if (sorted_ext == NULL) {
       int                 n = 0;
 
-      MESSAGE_INFO(11, "Using default FILE_EXT (%s) to define X-FILES",
+      ZE_MessageInfo(11, "Using default FILE_EXT (%s) to define X-FILES",
                    default_xfiles);
       n = extract_extensions(default_xfiles);
 
@@ -281,8 +281,8 @@ init_file_extension_regex()
 
     ZE_FILE_EXT = strdup(sout);
     if (debug) {
-      LOG_MSG_WARNING(" nb_fext = %d", nb_fext);
-      LOG_MSG_WARNING(" EXTENSIONS = %s", STRNULL(ZE_FILE_EXT, ""));
+      ZE_LogMsgWarning(0, " nb_fext = %d", nb_fext);
+      ZE_LogMsgWarning(0, " EXTENSIONS = %s", STRNULL(ZE_FILE_EXT, ""));
     }
   } else {
     ZE_FILE_EXT = ZE_DEFAULT_EXT;
@@ -357,7 +357,7 @@ check_filename_xfile(fname)
   }
   FEXT_UNLOCK();
 
-  MESSAGE_INFO(15, " %-20s -> %d (%s)", fname, res, ZE_FILE_EXT);
+  ZE_MessageInfo(15, " %-20s -> %d (%s)", fname, res, ZE_FILE_EXT);
 
   return res;
 }
@@ -563,7 +563,7 @@ read_it(path, tag)
 {
   int                 r;
 
-  r = j_rd_text_file(path, RD_TWO_COLUMN, RD_REVERSE, tag, add_xfiles);
+  r = zm_RdTextFile(path, RD_TWO_COLUMN, RD_REVERSE, tag, add_xfiles);
 
   return r >= 0;
 }
@@ -673,7 +673,7 @@ check_xfiles(fname, mime, msgsize, saction, bufsize)
           si = q->min;
           sf = (q->max != 0 ? q->max : LONG_MAX);
 
-          MESSAGE_INFO(11, "SIZE=%d MIN=%d MAX=%d", msgsize, si, sf);
+          ZE_MessageInfo(11, "SIZE=%d MIN=%d MAX=%d", msgsize, si, sf);
 
           if (sf > si) {
             if (msgsize < si || msgsize > sf)

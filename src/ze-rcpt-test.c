@@ -40,22 +40,22 @@ main(argc, argv)
      char              **argv;
 {
   int                 res = 0;
-  extern int          log_level;
+  extern int          ze_logLevel;
 
   configure("ze-rcpt-test", conf_file, FALSE);
 
-  set_log_output(FALSE, TRUE);
-  log_level = 10;
+  zeLog_SetOutput(FALSE, TRUE);
+  ze_logLevel = 10;
 
   if (!policy_init())
   {
-    MESSAGE_INFO(0, "Error opening policy database !");
+    ZE_MessageInfo(0, "Error opening policy database !");
     exit(1);
   }
 
   if (!rcpt_init())
   {
-    MESSAGE_INFO(0, "Error opening rcpt database !");
+    ZE_MessageInfo(0, "Error opening rcpt database !");
     exit(1);
   }
 
@@ -87,10 +87,10 @@ main(argc, argv)
           to = optarg;
           break;
         case 'v':
-          log_level++;
+          ze_logLevel++;
           break;
         case 'l':
-          log_level = atoi(optarg);
+          ze_logLevel = atoi(optarg);
           break;
         default:
           (void) fprintf(stderr, "-> Unknown command line option : %c\n", c);
@@ -100,10 +100,10 @@ main(argc, argv)
 
     netclass = GetClientNetClass(ip, name, NULL, NULL, 0);
 
-    MESSAGE_INFO(0, "Client IP address : %s", ip);
-    MESSAGE_INFO(0, "Client hostname   : %s", name);
-    MESSAGE_INFO(0, "Recipient         : %s", to);
-    MESSAGE_INFO(0, "Client NET class  : %02X %s", netclass,
+    ZE_MessageInfo(0, "Client IP address : %s", ip);
+    ZE_MessageInfo(0, "Client hostname   : %s", name);
+    ZE_MessageInfo(0, "Recipient         : %s", to);
+    ZE_MessageInfo(0, "Client NET class  : %02X %s", netclass,
                  NET_CLASS_LABEL(netclass));
 
     flag = check_rcpt(to, ip, name, netclass);
@@ -111,7 +111,7 @@ main(argc, argv)
     result = get_name_by_id(names, flag);
     result = STRNULL(result, "???");
 
-    MESSAGE_INFO(0, "RESULT            = %2d %s", flag, result);
+    ZE_MessageInfo(0, "RESULT            = %2d %s", flag, result);
   }
 
   policy_close();

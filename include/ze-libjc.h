@@ -54,7 +54,6 @@
 #include "ze-ipv6.h"
 #include "ze-ip.h"
 #include "ze-inet.h"
-#include "ze-syslog.h"
 #include "ze-txtlog.h"
 #include "ze-server.h"
 #include "ze-client.h"
@@ -72,7 +71,6 @@
 
 #include "ze-resolve-cache.h"
 #include "ze-btree.h"
-#include "ze-rdfile.h"
 #include "ze-shmem.h"
 #include "ze-table.h"
 #include "ze-uudecode.h"

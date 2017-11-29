@@ -98,7 +98,7 @@ log_quarantine(ctx, files)
   if (strcasecmp(logname, "NONE") == 0)
     return;
 
-  MESSAGE_INFO(19, "%s Logging quarantine message...", id);
+  ZE_MessageInfo(19, "%s Logging quarantine message...", id);
 
   snprintf(ipbuf, sizeof (ipbuf), "IP=(%s)", STRNULL(ip, "0.0.0.0"));
 

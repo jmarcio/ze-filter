@@ -115,7 +115,7 @@ decode_rfc1521(out, in, sz)
 
     if (pi != 0)
     {
-      LOG_MSG_WARNING("error strexpr...");
+      ZE_LogMsgWarning(0, "error strexpr...");
       sz = 0;
       continue;
     }
@@ -185,7 +185,7 @@ is_rfc2231_encoded(s)
   {
     snprintf(rexp, sizeof (rexp), "[%s]*'.*'[%s]*", attr_chars, ext_attr_chars);
 
-    MESSAGE_INFO(19, "RFC2231 regex : %s", rexp);
+    ZE_MessageInfo(19, "RFC2231 regex : %s", rexp);
 
     res = strexpr(s, rexp, NULL, NULL, TRUE);
   }

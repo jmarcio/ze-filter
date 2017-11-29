@@ -508,7 +508,7 @@ configure_msg_eval_function(val)
   {
     if (!decode_msg_eval_token(q, argv[i]))
     {
-      MESSAGE_WARNING(9, "Hu... I didn't understand this : %s ???", argv[i]);
+      ZE_MessageWarning(9, "Hu... I didn't understand this : %s ???", argv[i]);
       goto fin;
     }
   }
@@ -553,7 +553,7 @@ configure_msg_score_scales(val)
   {
     if (!decode_msg_eval_token(q, argv[i]))
     {
-      MESSAGE_WARNING(9, "Hu... I didn't understand this : %s ???", argv[i]);
+      ZE_MessageWarning(9, "Hu... I didn't understand this : %s ???", argv[i]);
       goto fin;
     }
   }
@@ -582,59 +582,59 @@ display_msg_eval()
   switch (q->func)
   {
     case EVAL_UNDEF:
-      MESSAGE_INFO(10, "* UNDEFINED  : %s", q->buf_eval);
-      MESSAGE_INFO(10, "");
+      ZE_MessageInfo(10, "* UNDEFINED  : %s", q->buf_eval);
+      ZE_MessageInfo(10, "");
       break;
     case EVAL_VECTOR:
-      MESSAGE_INFO(10, "* VECTOR       : %s", q->buf_eval);
-      MESSAGE_INFO(10, "               : %s", q->buf_scale);
-      MESSAGE_INFO(10, "  * SCALES");
-      MESSAGE_INFO(10, "    SSCORE1    : %6.3f", q->scale.kf1);
-      MESSAGE_INFO(10, "    SSCORE0    : %6.3f", q->scale.kf0);
-      MESSAGE_INFO(10, "    SBAYES     : %6.3f", q->scale.bayes);
-      MESSAGE_INFO(10, "    SURLBL     : %6.3f", q->scale.urlbl);
-      MESSAGE_INFO(10, "    SREGEX     : %6.3f", q->scale.regex);
-      MESSAGE_INFO(10, "    SORACLE    : %6.3f", q->scale.oracle);
-      MESSAGE_INFO(10, "  * COEFFICIENTS");
-      MESSAGE_INFO(10, "    KBAYES     : %6.3f", q->function.vector.kbayes);
-      MESSAGE_INFO(10, "    KREGEX     : %6.3f", q->function.vector.kregex);
-      MESSAGE_INFO(10, "    KURLBL     : %6.3f", q->function.vector.kurlbl);
-      MESSAGE_INFO(10, "    KORACLE    : %6.3f", q->function.vector.koracle);
-      MESSAGE_INFO(10, "");
+      ZE_MessageInfo(10, "* VECTOR       : %s", q->buf_eval);
+      ZE_MessageInfo(10, "               : %s", q->buf_scale);
+      ZE_MessageInfo(10, "  * SCALES");
+      ZE_MessageInfo(10, "    SSCORE1    : %6.3f", q->scale.kf1);
+      ZE_MessageInfo(10, "    SSCORE0    : %6.3f", q->scale.kf0);
+      ZE_MessageInfo(10, "    SBAYES     : %6.3f", q->scale.bayes);
+      ZE_MessageInfo(10, "    SURLBL     : %6.3f", q->scale.urlbl);
+      ZE_MessageInfo(10, "    SREGEX     : %6.3f", q->scale.regex);
+      ZE_MessageInfo(10, "    SORACLE    : %6.3f", q->scale.oracle);
+      ZE_MessageInfo(10, "  * COEFFICIENTS");
+      ZE_MessageInfo(10, "    KBAYES     : %6.3f", q->function.vector.kbayes);
+      ZE_MessageInfo(10, "    KREGEX     : %6.3f", q->function.vector.kregex);
+      ZE_MessageInfo(10, "    KURLBL     : %6.3f", q->function.vector.kurlbl);
+      ZE_MessageInfo(10, "    KORACLE    : %6.3f", q->function.vector.koracle);
+      ZE_MessageInfo(10, "");
       break;
     case EVAL_LOGIT:
-      MESSAGE_INFO(10, "* LOGIT        : %s", q->buf_eval);
-      MESSAGE_INFO(10, "               : %s", q->buf_scale);
-      MESSAGE_INFO(10, "  * SCALES");
-      MESSAGE_INFO(10, "    SSCORE1    : %6.3f", q->scale.kf1);
-      MESSAGE_INFO(10, "    SSCORE0    : %6.3f", q->scale.kf0);
-      MESSAGE_INFO(10, "    SBAYES     : %6.3f", q->scale.bayes);
-      MESSAGE_INFO(10, "    SURLBL     : %6.3f", q->scale.urlbl);
-      MESSAGE_INFO(10, "    SREGEX     : %6.3f", q->scale.regex);
-      MESSAGE_INFO(10, "    SORACLE    : %6.3f", q->scale.oracle);
-      MESSAGE_INFO(10, "  * COEFFICIENTS");
-      MESSAGE_INFO(10, "    KBAYES     : %6.3f", q->function.logit.kbayes);
-      MESSAGE_INFO(10, "    KREGEX     : %6.3f", q->function.logit.kregex);
-      MESSAGE_INFO(10, "    KURLBL     : %6.3f", q->function.logit.kurlbl);
-      MESSAGE_INFO(10, "    KORACLE    : %6.3f", q->function.logit.koracle);
-      MESSAGE_INFO(10, "");
+      ZE_MessageInfo(10, "* LOGIT        : %s", q->buf_eval);
+      ZE_MessageInfo(10, "               : %s", q->buf_scale);
+      ZE_MessageInfo(10, "  * SCALES");
+      ZE_MessageInfo(10, "    SSCORE1    : %6.3f", q->scale.kf1);
+      ZE_MessageInfo(10, "    SSCORE0    : %6.3f", q->scale.kf0);
+      ZE_MessageInfo(10, "    SBAYES     : %6.3f", q->scale.bayes);
+      ZE_MessageInfo(10, "    SURLBL     : %6.3f", q->scale.urlbl);
+      ZE_MessageInfo(10, "    SREGEX     : %6.3f", q->scale.regex);
+      ZE_MessageInfo(10, "    SORACLE    : %6.3f", q->scale.oracle);
+      ZE_MessageInfo(10, "  * COEFFICIENTS");
+      ZE_MessageInfo(10, "    KBAYES     : %6.3f", q->function.logit.kbayes);
+      ZE_MessageInfo(10, "    KREGEX     : %6.3f", q->function.logit.kregex);
+      ZE_MessageInfo(10, "    KURLBL     : %6.3f", q->function.logit.kurlbl);
+      ZE_MessageInfo(10, "    KORACLE    : %6.3f", q->function.logit.koracle);
+      ZE_MessageInfo(10, "");
       break;
     case EVAL_SUM:
-      MESSAGE_INFO(10, "* SUM        : %s", q->buf_eval);
-      MESSAGE_INFO(10, "             : %s", q->buf_scale);
-      MESSAGE_INFO(10, "  * SCALES");
-      MESSAGE_INFO(10, "    SSCORE1    : %6.3f", q->scale.kf1);
-      MESSAGE_INFO(10, "    SSCORE0    : %6.3f", q->scale.kf0);
-      MESSAGE_INFO(10, "    SBAYES     : %6.3f", q->scale.bayes);
-      MESSAGE_INFO(10, "    SURLBL     : %6.3f", q->scale.urlbl);
-      MESSAGE_INFO(10, "    SREGEX     : %6.3f", q->scale.regex);
-      MESSAGE_INFO(10, "    SORACLE    : %6.3f", q->scale.oracle);
-      MESSAGE_INFO(10, "  * COEFFICIENTS");
-      MESSAGE_INFO(10, "    KBAYES     : %6.3f", q->function.sum.kbayes);
-      MESSAGE_INFO(10, "    KREGEX     : %6.3f", q->function.sum.kregex);
-      MESSAGE_INFO(10, "    KURLBL     : %6.3f", q->function.sum.kurlbl);
-      MESSAGE_INFO(10, "    KORACLE    : %6.3f", q->function.sum.koracle);
-      MESSAGE_INFO(10, "");
+      ZE_MessageInfo(10, "* SUM        : %s", q->buf_eval);
+      ZE_MessageInfo(10, "             : %s", q->buf_scale);
+      ZE_MessageInfo(10, "  * SCALES");
+      ZE_MessageInfo(10, "    SSCORE1    : %6.3f", q->scale.kf1);
+      ZE_MessageInfo(10, "    SSCORE0    : %6.3f", q->scale.kf0);
+      ZE_MessageInfo(10, "    SBAYES     : %6.3f", q->scale.bayes);
+      ZE_MessageInfo(10, "    SURLBL     : %6.3f", q->scale.urlbl);
+      ZE_MessageInfo(10, "    SREGEX     : %6.3f", q->scale.regex);
+      ZE_MessageInfo(10, "    SORACLE    : %6.3f", q->scale.oracle);
+      ZE_MessageInfo(10, "  * COEFFICIENTS");
+      ZE_MessageInfo(10, "    KBAYES     : %6.3f", q->function.sum.kbayes);
+      ZE_MessageInfo(10, "    KREGEX     : %6.3f", q->function.sum.kregex);
+      ZE_MessageInfo(10, "    KURLBL     : %6.3f", q->function.sum.kurlbl);
+      ZE_MessageInfo(10, "    KORACLE    : %6.3f", q->function.sum.koracle);
+      ZE_MessageInfo(10, "");
       break;
     default:
       break;
@@ -673,13 +673,13 @@ compute_msg_score(scp)
   switch (q->func)
   {
     case EVAL_UNDEF:
-      MESSAGE_INFO(11, "* UNDEFINED  : %s", q->buf_eval);
+      ZE_MessageInfo(11, "* UNDEFINED  : %s", q->buf_eval);
       break;
     case EVAL_VECTOR:
       {
         double              k = 0.;
 
-        MESSAGE_INFO(11, "* VECTOR     : %s", q->buf_eval);
+        ZE_MessageInfo(11, "* VECTOR     : %s", q->buf_eval);
         k = regex * q->function.vector.kregex;
         score += SQR(k);
         k = scp->urlbl * q->function.vector.kurlbl;
@@ -706,7 +706,7 @@ compute_msg_score(scp)
       {
         double              k = 0.;
 
-        MESSAGE_INFO(11, "* LOGIT      : %s", q->buf_eval);
+        ZE_MessageInfo(11, "* LOGIT      : %s", q->buf_eval);
         k = regex * q->function.logit.kregex;
         score += k;
         k = scp->urlbl * q->function.logit.kurlbl;
@@ -725,7 +725,7 @@ compute_msg_score(scp)
       {
         double              k = 0.;
 
-        MESSAGE_INFO(11, "* SUM        : %s", q->buf_eval);
+        ZE_MessageInfo(11, "* SUM        : %s", q->buf_eval);
         k = regex * q->function.sum.kregex;
         score += k;
         k = scp->urlbl * q->function.sum.kurlbl;
@@ -744,7 +744,7 @@ compute_msg_score(scp)
   MUTEX_UNLOCK(&fmutex);
 
 #if 0
-  MESSAGE_INFO(10, "  R=%.3f O=%.3f U=%.3f B=%.3f S=%.3f",
+  ZE_MessageInfo(10, "  R=%.3f O=%.3f U=%.3f B=%.3f S=%.3f",
                (double) regex, (double) scp->oracle, (double) scp->urlbl,
                scp->bayes, score);
 #endif
@@ -983,7 +983,7 @@ set_message_action(q, which, val)
     goto fin;
   }
 
-  MESSAGE_WARNING(0, "Hu... I didn't understand this : %s ???", p);
+  ZE_MessageWarning(0, "Hu... I didn't understand this : %s ???", p);
   goto fin;
 
 fin:
@@ -1065,7 +1065,7 @@ evaluate_msg_action(action, scp, score, str)
           if (str != NULL)
             result = strexpr(str, q->value.regex, NULL, NULL, TRUE);
           else
-            LOG_MSG_ERROR("str : NULL pointer");
+            ZE_LogMsgError(0, "str : NULL pointer");
           break;
         default:
           break;

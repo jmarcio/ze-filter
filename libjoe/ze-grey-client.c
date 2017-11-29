@@ -125,7 +125,7 @@ grey_server_error_inc_and_check(inc)
     {
       dt_error *= 2;
       dt_error = MIN(dt_error, SRV_MAX_ERR_DELAY);
-      MESSAGE_WARNING(9, "Too many errors (%d) - "
+      ZE_MessageWarning(9, "Too many errors (%d) - "
                       "disabling remote check for %d seconds", SRV_ERR_MAX,
                       dt_error);
 
@@ -178,7 +178,7 @@ grey_socket_check(sd)
   pfd.events = POLLIN | POLLOUT;
 
   if ((res = poll(&pfd, 1, 0)) < 0)
-    LOG_SYS_ERROR("poll error");
+    ZE_LogSysError("poll error");
 
   return (res >= 0);
 }
@@ -206,7 +206,7 @@ grey_socket_decode(arg)
     {
       if ((gChan.sockname = strdup(p)) == NULL)
       {
-        LOG_SYS_ERROR("strdup(sockname) error");
+        ZE_LogSysError("strdup(sockname) error");
         return FALSE;
       }
     }
@@ -222,7 +222,7 @@ grey_socket_decode(arg)
     {
       if ((gChan.sockname = strdup(p)) == NULL)
       {
-        LOG_SYS_ERROR("strdup(sockname) error");
+        ZE_LogSysError("strdup(sockname) error");
         return FALSE;
       }
     }
@@ -253,7 +253,7 @@ grey_socket_decode(arg)
       else
         gChan.inethost = strdup("localhost");
       if (gChan.inethost == NULL)
-        LOG_SYS_ERROR("strdup(inethost) error");
+        ZE_LogSysError("strdup(inethost) error");
     }
 
     if ((gChan.inethost == NULL) || (gChan.inetport < 0))
@@ -333,14 +333,14 @@ grey_server_connect()
 
     if ((sd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
     {
-      LOG_SYS_ERROR("AF_INET : socket");
+      ZE_LogSysError("AF_INET : socket");
       return -1;
     }
 
     /* adresse destinataire XXX */
     if ((hp = gethostbyname(gChan.inethost)) == NULL)
     {
-      LOG_SYS_ERROR("gethostbyname(%s)", STRNULL(gChan.inethost, "NULL"));
+      ZE_LogSysError("gethostbyname(%s)", STRNULL(gChan.inethost, "NULL"));
       return -1;
     }
 
@@ -348,14 +348,16 @@ grey_server_connect()
     his_sock.sin_family = AF_INET;
     his_sock.sin_port = htons(gChan.inetport);
 
-    if (log_level >= DEBUG_LEVEL)
+#if 0
+    if (ze_logLevel >= DEBUG_LEVEL)
       log_sock_addr(&his_sock);
+#endif
 
     /* emission sur sd vers his_sock d'un message de taille size */
     if (connect_timed(sd, (struct sockaddr *) &his_sock, sizeof (his_sock), to)
         != 0)
     {
-      LOG_SYS_ERROR("connect error (%s:%d)", STRNULL(gChan.inethost, "NULL"),
+      ZE_LogSysError("connect error (%s:%d)", STRNULL(gChan.inethost, "NULL"),
                     gChan.inetport);
       shutdown(sd, SHUT_RDWR);
       close(sd);
@@ -374,13 +376,13 @@ grey_server_connect()
 
     if ((gChan.sockname != NULL) && (strlen(gChan.sockname) == 0))
     {
-      LOG_SYS_ERROR("AF_UNIX : No sockname given...");
+      ZE_LogSysError("AF_UNIX : No sockname given...");
       return -1;
     }
 
     if ((sd = socket(AF_UNIX, SOCK_STREAM, 0)) < 0)
     {
-      LOG_SYS_ERROR("AF_UNIX : socket");
+      ZE_LogSysError("AF_UNIX : socket");
       return -1;
     }
 
@@ -393,7 +395,7 @@ grey_server_connect()
     /* emission sur sd vers his_sock d'un message de taille size */
     if (connect(sd, (struct sockaddr *) &his_sock, sizeof (his_sock)) != 0)
     {
-      LOG_SYS_ERROR("connect error (%s)", STRNULL(gChan.sockname, "NULL"));
+      ZE_LogSysError("connect error (%s)", STRNULL(gChan.sockname, "NULL"));
       shutdown(sd, SHUT_RDWR);
       close(sd);
       sd = -1;
@@ -405,7 +407,7 @@ grey_server_connect()
     return sd;
   }
 
-  MESSAGE_ERROR(8, "Family socket unknown... %d", gChan.socktype);
+  ZE_MessageError(8, "Family socket unknown... %d", gChan.socktype);
 
   return -1;
 }
@@ -443,15 +445,15 @@ grey_channel_check()
 
     gChan.ok = grey_socket_decode(greysock);
 
-    MESSAGE_INFO(DEBUG_LEVEL, "SOCK            : %s",
+    ZE_MessageInfo(DEBUG_LEVEL, "SOCK            : %s",
                  STRNULL(greysock, "NULL"));
-    MESSAGE_INFO(DEBUG_LEVEL, "SOCKTYPE        : %d", gChan.socktype);
-    MESSAGE_INFO(DEBUG_LEVEL, "SOCKNAME        : %s",
+    ZE_MessageInfo(DEBUG_LEVEL, "SOCKTYPE        : %d", gChan.socktype);
+    ZE_MessageInfo(DEBUG_LEVEL, "SOCKNAME        : %s",
                  STRNULL(gChan.sockname, "NULL"));
-    MESSAGE_INFO(DEBUG_LEVEL, "INETHOST        : %s",
+    ZE_MessageInfo(DEBUG_LEVEL, "INETHOST        : %s",
                  STRNULL(gChan.inethost, "NULL"));
-    MESSAGE_INFO(DEBUG_LEVEL, "INETPORT        : %d", gChan.inetport);
-    MESSAGE_INFO(DEBUG_LEVEL, "INIT OK         : %d %s", gChan.ok,
+    ZE_MessageInfo(DEBUG_LEVEL, "INETPORT        : %d", gChan.inetport);
+    ZE_MessageInfo(DEBUG_LEVEL, "INIT OK         : %d %s", gChan.ok,
                  STRBOOL(gChan.ok, "TRUE", "FALSE"));
   }
 
@@ -482,7 +484,7 @@ grey_channel_check()
         sz = recvfrom(gChan.sd, buf, sizeof (buf), 0, NULL, NULL);
         buf[sz] = '\0';
         if (sz > 0)
-          MESSAGE_INFO(DEBUG_LEVEL, "Connected to ze-greyd : %5d %s", sz, buf);
+          ZE_MessageInfo(DEBUG_LEVEL, "Connected to ze-greyd : %5d %s", sz, buf);
         else
           break;
       }
@@ -523,7 +525,7 @@ remote_grey_check(ip, from, to, hostname)
   if (ISSTREMPTY(ip) || ISSTREMPTY(from) || ISSTREMPTY(to)
       || ISSTREMPTY(hostname))
   {
-    MESSAGE_WARNING(9, "Calling %s with invalid parameters : %s %s %s %s",
+    ZE_MessageWarning(9, "Calling %s with invalid parameters : %s %s %s %s",
                     __FILE__, STREMPTY(ip, "--"), STREMPTY(from, "--"),
                     STREMPTY(to, "--"), STREMPTY(hostname, "--"));
     return GREY_DUNNO;
@@ -531,7 +533,7 @@ remote_grey_check(ip, from, to, hostname)
 
   if (!GREY_CONN_CHECK())
   {
-    MESSAGE_WARNING(9,
+    ZE_MessageWarning(9,
                     "Not checking ze-greyd server - too many open connections (%d/%d)",
                     grey_connections, MAX_OPEN_CONN);
     return GREY_DUNNO;
@@ -545,7 +547,7 @@ remote_grey_check(ip, from, to, hostname)
   if (!grey_channel_check())
     goto fin;
 
-  MESSAGE_INFO(DEBUG_LEVEL, "Checking %s %s %s %s", ip, from, to, hostname);
+  ZE_MessageInfo(DEBUG_LEVEL, "Checking %s %s %s %s", ip, from, to, hostname);
 
 #if _FFR_FLUSH_GREYD
   /* empty input buffer before asking something */
@@ -590,7 +592,7 @@ remote_grey_check(ip, from, to, hostname)
       if (rfd == ZE_SOCK_ERROR)
       {
         /* an error occured */
-        LOG_MSG_ERROR("greyd server sent no data or time out exceeded");
+        ZE_LogMsgError(0, "greyd server sent no data or time out exceeded");
         grey_server_error_inc_and_check(TRUE);
         goto fin;
       }
@@ -619,7 +621,7 @@ remote_grey_check(ip, from, to, hostname)
             continue;
 
           /* an error occured */
-          LOG_SYS_ERROR("recvfrom error");
+          ZE_LogSysError("recvfrom error");
           grey_server_error_inc_and_check(TRUE);
           goto fin;
         }
@@ -627,7 +629,7 @@ remote_grey_check(ip, from, to, hostname)
         if (n == 0)
         {
           /* an error occured */
-          LOG_MSG_WARNING("greyd server performed an orderly shutdown");
+          ZE_LogMsgWarning(0, "greyd server performed an orderly shutdown");
           grey_server_disconnect();
           goto fin;
         }
@@ -648,7 +650,7 @@ remote_grey_check(ip, from, to, hostname)
           int                 argc, code = GREY_ERROR;
           char               *argv[16];
 
-          MESSAGE_INFO(DEBUG_LEVEL, "LINE IN : %s", line);
+          ZE_MessageInfo(DEBUG_LEVEL, "LINE IN : %s", line);
 
           p += sz;
           if (!strexpr(line, "([0-9]+) .*GREYCHECK ANSWER", NULL, NULL, TRUE))
@@ -688,7 +690,7 @@ fin:
 
     if (dts >= 15 || dtw >= 15 || dts + dtw >= 15)
     {
-      MESSAGE_WARNING(9, "grey_client : too long wait time : dtw/dts = %d/%d",
+      ZE_MessageWarning(9, "grey_client : too long wait time : dtw/dts = %d/%d",
                       dtw, dts);
       grey_server_disconnect();
     }
@@ -725,7 +727,7 @@ remote_grey_validate(ip, from, to, hostname)
   if (ISSTREMPTY(ip) || ISSTREMPTY(from) || ISSTREMPTY(to)
       || ISSTREMPTY(hostname))
   {
-    MESSAGE_WARNING(9, "Calling %s with invalid parameters : %s %s %s %s",
+    ZE_MessageWarning(9, "Calling %s with invalid parameters : %s %s %s %s",
                     __FILE__, STREMPTY(ip, "--"), STREMPTY(from, "--"),
                     STREMPTY(to, "--"), STREMPTY(hostname, "--"));
     return GREY_DUNNO;
@@ -734,7 +736,7 @@ remote_grey_validate(ip, from, to, hostname)
   /* INC XXX */
   if (!GREY_CONN_CHECK())
   {
-    MESSAGE_WARNING(9,
+    ZE_MessageWarning(9,
                     "Not checking ze-greyd server - too many open connections (%d/%d)",
                     grey_connections, MAX_OPEN_CONN);
     return GREY_DUNNO;
@@ -791,7 +793,7 @@ remote_grey_validate(ip, from, to, hostname)
       if (rfd == ZE_SOCK_ERROR)
       {
         /* an error occured */
-        LOG_MSG_ERROR("greyd server sent no data or time out exceeded");
+        ZE_LogMsgError(0, "greyd server sent no data or time out exceeded");
         grey_server_error_inc_and_check(TRUE);
         goto fin;
       }
@@ -820,7 +822,7 @@ remote_grey_validate(ip, from, to, hostname)
             continue;
 
           /* an error occured */
-          LOG_SYS_ERROR("recvfrom error");
+          ZE_LogSysError("recvfrom error");
           grey_server_error_inc_and_check(TRUE);
           goto fin;
         }
@@ -828,7 +830,7 @@ remote_grey_validate(ip, from, to, hostname)
         if (n == 0)
         {
           /* an error occured */
-          LOG_MSG_WARNING("greyd server performed an orderly shutdown");
+          ZE_LogMsgWarning(0, "greyd server performed an orderly shutdown");
           grey_server_disconnect();
           goto fin;
         }
@@ -837,7 +839,7 @@ remote_grey_validate(ip, from, to, hostname)
       if (strlen(buf) <= 0)
       {
         /* an error occured */
-        LOG_MSG_ERROR("greyd server sent no data or time out exceeded");
+        ZE_LogMsgError(0, "greyd server sent no data or time out exceeded");
         grey_server_error_inc_and_check(TRUE);
         goto fin;
       }
@@ -857,7 +859,7 @@ remote_grey_validate(ip, from, to, hostname)
           int                 argc, code = GREY_ERROR;
           char               *argv[16];
 
-          MESSAGE_INFO(DEBUG_LEVEL, "LINE IN : %s", line);
+          ZE_MessageInfo(DEBUG_LEVEL, "LINE IN : %s", line);
 
           p += sz;
           if (!strexpr(line, "([0-9]+) .*GREYVALID ANSWER", NULL, NULL, TRUE))
@@ -896,7 +898,7 @@ fin:
 
     if (dts >= 15 || dtw >= 15 || dts + dtw >= 15)
     {
-      MESSAGE_WARNING(9, "grey_client : too long wait time : dtw/dts = %d/%d",
+      ZE_MessageWarning(9, "grey_client : too long wait time : dtw/dts = %d/%d",
                       dtw, dts);
       grey_server_disconnect();
     }
@@ -957,7 +959,7 @@ grey_socket_flush_read()
         continue;
 
       /* an error occured */
-      LOG_SYS_ERROR("recvfrom error");
+      ZE_LogSysError("recvfrom error");
       grey_server_error_inc_and_check(TRUE);
       goto fin;
     }
@@ -965,7 +967,7 @@ grey_socket_flush_read()
     if (n == 0)
     {
       /* an error occured */
-      LOG_MSG_ERROR("greyd server performed an orderly shutdown");
+      ZE_LogMsgError(0, "greyd server performed an orderly shutdown");
       grey_server_disconnect(gChan.sd);
       goto fin;
     }

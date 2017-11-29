@@ -143,7 +143,7 @@ buf_get_line (dst, szdst, org, szorg)
       strncpy (dst, org, i);
       dst[i] = '\0';
     } else {
-      LOG_MSG_WARNING("line length > dest buf size");
+      ZE_LogMsgWarning(0, "line length > dest buf size");
     }
   }
   szorg -= i;
@@ -201,13 +201,13 @@ read_text_file (fname, sz)
       return NULL;
 
     if ((fd = open (fname, O_RDONLY)) < 0) {
-      LOG_SYS_WARNING("open(%s) error", STRNULL(fname, "(NULL)"));
+      ZE_LogSysWarning("open(%s) error", STRNULL(fname, "(NULL)"));
       free (buf);
       return NULL;
     }
 
     if ((fsize = read (fd, buf, fsize)) < 0) {
-      LOG_SYS_WARNING("read error");
+      ZE_LogSysWarning("read error");
       free (buf);
       return NULL;
     }

@@ -160,9 +160,9 @@ main(argc, argv)
   if (access("ze-bayes.db", R_OK) == 0)
     data.dbname = "ze-bayes.db";
 
-  set_log_output(FALSE, TRUE);
+  zeLog_SetOutput(FALSE, TRUE);
 
-  log_level = 5;
+  ze_logLevel = 5;
 
   SET_STATE(OPT_INIT);
   {
@@ -287,7 +287,7 @@ main(argc, argv)
           /* general options */
         case 'v':
           data.verbose = TRUE;
-          log_level++;
+          ze_logLevel++;
           break;
         case 'p':
           data.progress = !data.progress;
@@ -687,7 +687,7 @@ group_token_files(argc, argv, msgMin, scli_crypt)
           {
             if (icli_crypt == HASH_PLAIN && file_crypt != HASH_PLAIN)
             {
-              MESSAGE_INFO(8, "# Changing global crypt option %s -> %s %d\n",
+              ZE_MessageInfo(8, "# Changing global crypt option %s -> %s %d\n",
                            scli_crypt, hash_code2label(file_crypt));
               icli_crypt = file_crypt;
               scli_crypt = hash_code2label(icli_crypt);
@@ -697,7 +697,7 @@ group_token_files(argc, argv, msgMin, scli_crypt)
           if (icli_crypt != HASH_PLAIN &&
               file_crypt != HASH_PLAIN && icli_crypt != file_crypt)
           {
-            MESSAGE_WARNING(9,
+            ZE_MessageWarning(9,
                             "Warning : skipping file %s : encoding incompatibility",
                             fname);
             break;
@@ -732,7 +732,7 @@ group_token_files(argc, argv, msgMin, scli_crypt)
 
           if (sscanf(v, "%d %d", &ns, &nh) < 2)
           {
-            LOG_MSG_WARNING("Error : %s %s", k, v);
+            ZE_LogMsgWarning(0, "Error : %s %s", k, v);
 
             continue;
           }
@@ -764,7 +764,7 @@ group_token_files(argc, argv, msgMin, scli_crypt)
           {
             if (!jbt_add(&bt, &tok))
             {
-              LOG_MSG_ERROR("ERROR inserting new token");
+              ZE_LogMsgError(0, "ERROR inserting new token");
               continue;
             }
           } else
@@ -804,7 +804,7 @@ group_token_files(argc, argv, msgMin, scli_crypt)
 
         if (sscanf(v, "%d %d", &ns, &nh) < 2)
         {
-          LOG_MSG_WARNING("Error : %s", v);
+          ZE_LogMsgWarning(0, "Error : %s", v);
 
           continue;
         }
@@ -992,7 +992,7 @@ agregate_tokens(argc, argv, multinomial)
           {
             if (!jbt_add(&bt, &tok))
             {
-              LOG_MSG_ERROR("ERROR inserting new token");
+              ZE_LogMsgError(0, "ERROR inserting new token");
               continue;
             }
           } else

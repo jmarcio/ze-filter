@@ -101,7 +101,7 @@ do_module_callback(ctx, step, result)
   if (MOD_QUARANTINE(mctx.flags))
     DO_QUARANTINE_MESSAGE(priv, WHY_QUARANTINE, SUFFIX_QUARANTINE);
 
-  MESSAGE_INFO(12, "RESULT : %08x %08x", mctx.result, mctx.flags);
+  ZE_MessageInfo(12, "RESULT : %08x %08x", mctx.result, mctx.flags);
 
   if (*result != SMFIS_CONTINUE)
   {

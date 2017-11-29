@@ -174,7 +174,7 @@ check_connrate(ctx)
       smtprate_check(RATE_CONN, priv->peer_addr, DEFAULT_WINDOW);
     n = priv->conn_rate;
 
-    MESSAGE_INFO(RATE_LOG_LEVEL,
+    ZE_MessageInfo(RATE_LOG_LEVEL,
                  "%-12s ConnRate         : %-20s %4d ip_class=[%02X - %s]",
                  CONNID_STR(priv->id), priv->peer_addr, n, ip_class,
                  CTX_NETCLASS_LABEL(priv));
@@ -235,7 +235,7 @@ check_msgrate(ctx)
     priv->msg_rate = smtprate_check(RATE_MSGS, priv->peer_addr, DEFAULT_WINDOW);
     n = priv->msg_rate;
 
-    MESSAGE_INFO(RATE_LOG_LEVEL,
+    ZE_MessageInfo(RATE_LOG_LEVEL,
                  "%-12s MsgsRate         : %-20s %4d ip_class=[%02X - %s]",
                  CONNID_STR(priv->id), priv->peer_addr, n, ip_class,
                  CTX_NETCLASS_LABEL(priv));
@@ -289,7 +289,7 @@ check_msgrate(ctx)
           smtprate_check(RATE_FROM_MSGS, priv->env_from, DEFAULT_WINDOW);
       }
 
-      MESSAGE_INFO(RATE_LOG_LEVEL,
+      ZE_MessageInfo(RATE_LOG_LEVEL,
                    "%-12s MsgsRateFrom     : %-20s %4d %s ip_class=[%02X - %s]",
                    CONNID_STR(priv->id), priv->peer_addr, fromRate,
                    priv->env_from, ip_class, CTX_NETCLASS_LABEL(priv));
@@ -331,7 +331,7 @@ check_msgrate(ctx)
       authRate =
           smtprate_check(RATE_AUTH_MSGS, priv->env_from, DEFAULT_WINDOW);
 
-      MESSAGE_INFO(RATE_LOG_LEVEL,
+      ZE_MessageInfo(RATE_LOG_LEVEL,
                    "%-12s MsgsRateAuth     : %-20s %4d %s ip_class=[%02X - %s]",
                    CONNID_STR(priv->id), priv->peer_addr, authRate,
                    priv->env_from, ip_class, CTX_NETCLASS_LABEL(priv));
@@ -390,7 +390,7 @@ check_msgcount(ctx)
 
     nb_from = priv->nb_from;
 
-    MESSAGE_INFO(RATE_LOG_LEVEL,
+    ZE_MessageInfo(RATE_LOG_LEVEL,
                  "%-12s MsgCount         : %-20s %4d ip_class=[%02X - %s]",
                  CONNID_STR(priv->id), priv->peer_addr, nb_from, ip_class,
                  CTX_NETCLASS_LABEL(priv));
@@ -459,7 +459,7 @@ check_rcptrate(ctx)
      * XXX\A0shall n be saved on some priv member ??? 
      */
 
-    MESSAGE_INFO(RATE_LOG_LEVEL,
+    ZE_MessageInfo(RATE_LOG_LEVEL,
                  "%-12s RcptRate         : %-20s %4d ip_class=[%02X - %s]",
                  CONNID_STR(priv->id), priv->peer_addr, rate, ip_class,
                  CTX_NETCLASS_LABEL(priv));
@@ -519,7 +519,7 @@ check_rcptrate(ctx)
      * XXX\A0shall n be saved on some priv member ??? 
      */
 
-    MESSAGE_INFO(RATE_LOG_LEVEL,
+    ZE_MessageInfo(RATE_LOG_LEVEL,
                  "%-12s RcptRateFrom     : %-20s %4d %s ip_class=[%02X - %s]",
                  CONNID_STR(priv->id), priv->peer_addr, rate, priv->env_from,
                  ip_class, CTX_NETCLASS_LABEL(priv));
@@ -567,7 +567,7 @@ check_rcptrate(ctx)
      * XXX shall n be saved on some priv member ??? 
      */
 
-    MESSAGE_INFO(RATE_LOG_LEVEL,
+    ZE_MessageInfo(RATE_LOG_LEVEL,
                  "%-12s RcptRateAuth     : %-20s %4d %s ip_class=[%02X - %s]",
                  CONNID_STR(priv->id), priv->peer_addr, rate, priv->env_from,
                  ip_class, CTX_NETCLASS_LABEL(priv));
@@ -632,7 +632,7 @@ check_rcptcount(ctx)
 
     nb_rcpt = priv->env_nb_rcpt;
 
-    MESSAGE_INFO(RATE_LOG_LEVEL,
+    ZE_MessageInfo(RATE_LOG_LEVEL,
                  "%-12s RcptCount        : %-20s %4d ip_class=[%02X - %s]",
                  CONNID_STR(priv->id), priv->peer_addr, nb_rcpt, ip_class,
                  CTX_NETCLASS_LABEL(priv));
@@ -730,12 +730,12 @@ check_open_connections(ctx)
     nb *= COEF;
 
     if (nb > 5) {
-      MESSAGE_INFO(RATE_LOG_LEVEL,
+      ZE_MessageInfo(RATE_LOG_LEVEL,
                    "%-12s Open Connections : %-20s %4d ip_class=[%02X - %s]",
                    CONNID_STR(priv->id), priv->peer_addr, nb, ip_class,
                    CTX_NETCLASS_LABEL(priv));
     } else {
-      MESSAGE_INFO(RATE_LOG_LEVEL,
+      ZE_MessageInfo(RATE_LOG_LEVEL,
                    "%-12s Open Connections : %-20s %4d ip_class=[%02X - %s]",
                    CONNID_STR(priv->id), priv->peer_addr, nb, ip_class,
                    CTX_NETCLASS_LABEL(priv));
@@ -805,12 +805,12 @@ check_empty_connections(ctx)
 #endif
 
     if (nb > 15) {
-      MESSAGE_INFO(RATE_LOG_LEVEL,
+      ZE_MessageInfo(RATE_LOG_LEVEL,
                    "%-12s Empty Connections : %-20s %4d ip_class=[%02X - %s]",
                    CONNID_STR(priv->id), priv->peer_addr, nb, ip_class,
                    CTX_NETCLASS_LABEL(priv));
     } else {
-      MESSAGE_INFO(RATE_LOG_LEVEL,
+      ZE_MessageInfo(RATE_LOG_LEVEL,
                    "%-12s Empty Connections : %-20s %4d ip_class=[%02X - %s]",
                    CONNID_STR(priv->id), priv->peer_addr, nb, ip_class,
                    CTX_NETCLASS_LABEL(priv));
@@ -863,12 +863,12 @@ check_spamtrap(ctx)
 #endif
 
     if (nb > 5) {
-      MESSAGE_INFO(RATE_LOG_LEVEL,
+      ZE_MessageInfo(RATE_LOG_LEVEL,
                    "%-12s Bad Recipients   : %-20s %4d ip_class=[%02X - %s]",
                    CONNID_STR(priv->id), priv->peer_addr, nb, ip_class,
                    CTX_NETCLASS_LABEL(priv));
     } else {
-      MESSAGE_INFO(RATE_LOG_LEVEL,
+      ZE_MessageInfo(RATE_LOG_LEVEL,
                    "%-12s Bad Recipients   : %-20s %4d ip_class=[%02X - %s]",
                    CONNID_STR(priv->id), priv->peer_addr, nb, ip_class,
                    CTX_NETCLASS_LABEL(priv));
@@ -928,12 +928,12 @@ check_nb_badrcpts(ctx)
     nb *= COEF;
 
     if (nb > 5) {
-      MESSAGE_INFO(RATE_LOG_LEVEL,
+      ZE_MessageInfo(RATE_LOG_LEVEL,
                    "%-12s Bad Recipients   : %-20s %4d ip_class=[%02X - %s]",
                    CONNID_STR(priv->id), priv->peer_addr, nb, ip_class,
                    CTX_NETCLASS_LABEL(priv));
     } else {
-      MESSAGE_INFO(RATE_LOG_LEVEL,
+      ZE_MessageInfo(RATE_LOG_LEVEL,
                    "%-12s Bad Recipients   : %-20s %4d ip_class=[%02X - %s]",
                    CONNID_STR(priv->id), priv->peer_addr, nb, ip_class,
                    CTX_NETCLASS_LABEL(priv));
@@ -1017,7 +1017,7 @@ check_single_message(ctx)
     goto fin;
   }
 #if 0
-  MESSAGE_INFO(RATE_LOG_LEVEL,
+  ZE_MessageInfo(RATE_LOG_LEVEL,
                "%-12s Bad Recipients   : %-20s %4d ip_class=[%02X - %s]",
                CONNID_STR(priv->id), priv->peer_addr, nb, ip_class,
                CTX_NETCLASS_LABEL(priv));

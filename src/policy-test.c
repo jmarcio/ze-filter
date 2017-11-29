@@ -62,14 +62,14 @@ main(argc, argv)
   char                msg[2048];
   int                 avres;
 
-  extern int          log_level;
+  extern int          ze_logLevel;
 
   configure("ze-policy-test", conf_file, FALSE);
 
   memset(answer, 0, sizeof (answer));
 
-  set_log_output(TRUE, TRUE);
-  log_level = 10;
+  zeLog_SetOutput(TRUE, TRUE);
+  ze_logLevel = 10;
 
   {
     char               *ip;
@@ -94,17 +94,17 @@ main(argc, argv)
     from = STRBOOL(argc > 4, argv[4], "-");
     to = STRBOOL(argc > 5, argv[5], "-");
 
-    MESSAGE_INFO(0, "Checking = %s %s %s %s", ip, name, from, to);
+    ZE_MessageInfo(0, "Checking = %s %s %s %s", ip, name, from, to);
 
     if (db_policy_open(TRUE))
     {
       flag = check_policy_tuple(prefix, ip, name, NULL, from, to, FALSE);
 
-      MESSAGE_INFO(0, "RESULT = %s", STRBOOL(flag, "YES", "NO"));
+      ZE_MessageInfo(0, "RESULT = %s", STRBOOL(flag, "YES", "NO"));
 
       db_policy_close();
     } else
-      MESSAGE_INFO(0, "Error opening policy database !");
+      ZE_MessageInfo(0, "Error opening policy database !");
 
     return 0;
 
@@ -124,7 +124,7 @@ main(argc, argv)
     to = STRBOOL(argc > 3, argv[3], "joe@ensmp.fr");
 
     res = grey_init(FALSE);
-    MESSAGE_INFO(0, "GREY_INIT : %s %s %s %s : %s",
+    ZE_MessageInfo(0, "GREY_INIT : %s %s %s %s : %s",
                  STRNULL(ip, "IP"),
                  STRNULL(from, "FROM"),
                  STRNULL(to, "TO"),
@@ -132,12 +132,12 @@ main(argc, argv)
 
     res = grey_check(ip, from, to, hostname);
 
-    MESSAGE_INFO(0, "GREY_CHECK : %s %s %s : %s",
+    ZE_MessageInfo(0, "GREY_CHECK : %s %s %s : %s",
                  STRNULL(ip, "IP"),
                  STRNULL(from, "FROM"),
                  STRNULL(to, "TO"), STRBOOL(res, "TRUE", "FALSE"));
 
-    MESSAGE_INFO(0, "TIME %ld", time(NULL));
+    ZE_MessageInfo(0, "TIME %ld", time(NULL));
     grey_close();
 
     return 0;

@@ -53,14 +53,14 @@ control_handler(name)
   tid = pthread_self();
   (void) pthread_detach(tid);
 
-  MESSAGE_INFO(9, "*** Starting %s ...", ZE_FUNCTION);
+  ZE_MessageInfo(9, "*** Starting %s ...", ZE_FUNCTION);
 
   p = cf_get_str(CF_CTRL_SOCKET);
 
   memset(&server, 0, sizeof (server));
   if ((listenfd = server_listen(p, &server)) < 0)
   {
-    MESSAGE_ERROR(10, "Error setting up control channel");
+    ZE_MessageError(10, "Error setting up control channel");
     return NULL;
   }
 
@@ -69,11 +69,11 @@ control_handler(name)
 
   errs = 0;
 
-  MESSAGE_INFO(12, "sd : %d len : %d domain %d", listenfd, addrlen, sockdomain);
+  ZE_MessageInfo(12, "sd : %d len : %d domain %d", listenfd, addrlen, sockdomain);
 
   if ((clisock = (struct sockaddr *) malloc(addrlen)) == NULL)
   {
-    LOG_SYS_ERROR("malloc(addrlen) error");
+    ZE_LogSysError("malloc(addrlen) error");
     return NULL;
   }
 
@@ -89,10 +89,10 @@ control_handler(name)
 
     if (connfd < 0)
     {
-      LOG_SYS_ERROR("accept error");
+      ZE_LogSysError("accept error");
       if (nerr > 256)
       {
-        MESSAGE_ERROR(6, "Control channel thread exiting - too many errors");
+        ZE_MessageError(6, "Control channel thread exiting - too many errors");
         break;
       }
       continue;
@@ -122,12 +122,12 @@ control_handler(name)
         name = client_name;
 #endif
 
-      MESSAGE_INFO(9, "Connect from %s (%s) on control channel",
+      ZE_MessageInfo(9, "Connect from %s (%s) on control channel",
                    STRNULL(addr, ""), STRNULL(name, ""));
 
       if (!check_control_access(addr, name, user))
       {
-        MESSAGE_INFO(9, "Access denied to %s (%s) on control channel",
+        ZE_MessageInfo(9, "Access denied to %s (%s) on control channel",
                      STRNULL(addr, ""), STRNULL(name, ""));
         FD_PRINTF(connfd, "500 Access denied\n");
         shutdown(connfd, SHUT_RDWR);
@@ -154,7 +154,7 @@ control_handler(name)
         strtoupper(buf);
         strtolower(buf);
 
-        MESSAGE_INFO(9, "CTRL CHAN CMD : %s", buf);
+        ZE_MessageInfo(9, "CTRL CHAN CMD : %s", buf);
 
         argc = 0;
         memset(argv, 0, sizeof (argv));
@@ -165,11 +165,11 @@ control_handler(name)
         }
 
         if (do_control(connfd, argc, argv))
-          MESSAGE_INFO(9, "Command accepted on control channel");
+          ZE_MessageInfo(9, "Command accepted on control channel");
       }
     } else
     {
-      MESSAGE_WARNING(9, "Read timeout on control channel");
+      ZE_MessageWarning(9, "Read timeout on control channel");
       FD_PRINTF(connfd, "500 Read timeout on control channel\r\n");
     }
     shutdown(connfd, SHUT_RDWR);
@@ -192,13 +192,13 @@ setup_control_handler()
   pthread_t           tid;
   int                 r;
 
-  MESSAGE_INFO(10, "*** Starting %s ...", ZE_FUNCTION);
+  ZE_MessageInfo(10, "*** Starting %s ...", ZE_FUNCTION);
 
   if (cf_get_int(CF_CTRL_CHANNEL_ENABLE) == OPT_NO)
     return TRUE;
 
   if ((r = pthread_create(&tid, NULL, control_handler, NULL)) != 0)
-    LOG_SYS_ERROR("Error launching control_handler");
+    ZE_LogSysError("Error launching control_handler");
 
   return TRUE;
 }
@@ -350,7 +350,7 @@ do_control(sd, argc, argv)
         switch (id)
         {
           case CF_LOG_LEVEL:
-            log_level = atoi(prmt);
+            ze_logLevel = atoi(prmt);
             break;
           case CF_GREY_DEWHITE_FLAGS:
             (void) grey_set_dewhite_flags(prmt, TRUE);
@@ -468,7 +468,7 @@ do_control(sd, argc, argv)
       FD_PRINTF(sd, "200 OK for %s %s %ld s !\r\n", cmd, arg, pi);
 
       if (pi >= 0)
-        log_level = pi;
+        ze_logLevel = pi;
 
       FD_PRINTF(sd, "200 %s %s done !\r\n", cmd, arg);
       return TRUE;
@@ -1027,8 +1027,8 @@ check_control_access(addr, name, user)
         }
         if (!res)
         {
-          MESSAGE_INFO(9, "addr=(%s)", addr);
-          MESSAGE_WARNING(8,
+          ZE_MessageInfo(9, "addr=(%s)", addr);
+          ZE_MessageWarning(8,
                           "Control access denied for %s (%s) by access rules",
                           STRNULL(addr, "UNKNOWN"), STRNULL(name, "UNKNOWN"));
         }

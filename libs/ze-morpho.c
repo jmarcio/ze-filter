@@ -50,7 +50,7 @@ morpho_bin_erosion(p, size)
     return FALSE;
 
   if ((q = (uint8_t *) malloc(size)) == NULL) {
-    LOG_SYS_ERROR("malloc(%ld) error", (long) size);
+    ZE_LogSysError("malloc(%ld) error", (long) size);
     return FALSE;
   }
 
@@ -89,7 +89,7 @@ morpho_bin_dilation(p, size)
     return FALSE;
 
   if ((q = (uint8_t *) malloc(size)) == NULL) {
-    LOG_SYS_ERROR("malloc(%ld) error", (long) size);
+    ZE_LogSysError("malloc(%ld) error", (long) size);
     return FALSE;
   }
 

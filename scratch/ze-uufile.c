@@ -48,7 +48,7 @@ main(argc, argv)
     printf("BUF MODE  : %6lo\n", (long) uublk.mode);
     printf("SIGNATURE : %08lX\n", (long) uublk.signature);
   } else
-    MESSAGE_INFO(0, "UU BLOCK NON VALIDE");
+    ZE_MessageInfo(0, "UU BLOCK NON VALIDE");
 
   free_uu_block(&uublk);
 
@@ -60,7 +60,7 @@ main(argc, argv)
     printf("BUF SIZE  : %8d\n", uublk.size);
     printf("SIGNATURE : %08lX\n", (long) uublk.signature);
   } else
-    MESSAGE_INFO(0, "UU BLOCK NON VALIDE");
+    ZE_MessageInfo(0, "UU BLOCK NON VALIDE");
 
   return 0;
 }

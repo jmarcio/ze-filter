@@ -74,10 +74,10 @@ mbox_handle(fname, func, arg)
         strlcpy(ofname, "/tmp/mbox-tmp.XXXXXX", sizeof (ofname));
 #endif
 
-	MESSAGE_INFO(20, "Creating %s", ofname);
+	ZE_MessageInfo(20, "Creating %s", ofname);
         if ((fd = mkstemp(ofname)) < 0)
         {
-          LOG_SYS_ERROR("Can't create temporary file");
+          ZE_LogSysError("Can't create temporary file");
           continue;
         }
       }
@@ -101,7 +101,7 @@ mbox_handle(fname, func, arg)
         nb++;
 
       if (remove(ofname) != 0)
-        LOG_SYS_ERROR("Error removing %s file", ofname);
+        ZE_LogSysError("Error removing %s file", ofname);
 
       if (q == NULL)
         break;
@@ -152,7 +152,7 @@ maildir_handle(dirname, func, arg)
             nb++;
         }
       } else
-        LOG_MSG_WARNING("lstat(%s) error", STRNULL(fname, ""));
+        ZE_LogMsgWarning(0, "lstat(%s) error", STRNULL(fname, ""));
     }
     closedir(dir);
   }

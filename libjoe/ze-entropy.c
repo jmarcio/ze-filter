@@ -197,7 +197,7 @@ get_hash_index(k, h, sz)
     }
   }
 
-  LOG_MSG_WARNING("Hash table overflow");
+  ZE_LogMsgWarning(0, "Hash table overflow");
   return 0;
 }
 
@@ -454,7 +454,7 @@ entropy_punct_class(buf, sz)
       continue;
     }
 
-    MESSAGE_INFO(5, "Nor alnum, space, punct %c %3d ??? ", c, c);
+    ZE_MessageInfo(5, "Nor alnum, space, punct %c %3d ??? ", c, c);
 
     freq[0]++;
   }
@@ -546,15 +546,15 @@ entropy_mime_part(buf, size, id, level, type, arg, mime_part)
 
     n = check_valid_html_tags(NULL, buf);
 
-    LOG_MSG_INFO(9, "NOT VALID TAGS = %6d", n);
+    ZE_LogMsgInfo(9, "NOT VALID TAGS = %6d", n);
 
     cleanbuf = cleanup_html_buffer(buf, strlen(buf));
 
 #if 1
-    MESSAGE_INFO(9, "\nBUF ...\n%s\n", buf);
+    ZE_MessageInfo(9, "\nBUF ...\n%s\n", buf);
 
     if (cleanbuf != NULL)
-      MESSAGE_INFO(9, "\nBUF ...\n%s\n", cleanbuf);
+      ZE_MessageInfo(9, "\nBUF ...\n%s\n", cleanbuf);
 
     {
       char               *x = NULL;
@@ -562,7 +562,7 @@ entropy_mime_part(buf, size, id, level, type, arg, mime_part)
       x = realcleanup_text_buf(cleanbuf, strlen(cleanbuf));
       if (x != NULL)
       {
-        MESSAGE_INFO(9, "\nBUF ...\n%s\n", x);
+        ZE_MessageInfo(9, "\nBUF ...\n%s\n", x);
         buf_extract_tokens(x);
         FREE(x);
       }
@@ -578,19 +578,19 @@ entropy_mime_part(buf, size, id, level, type, arg, mime_part)
   dt = time_ms();
   text_buffer_entropy(wbuf, strlen(wbuf) + 1, &h0, &h1, &h2);
   dt = time_ms() - dt;
-  MESSAGE_INFO(9, "DT = %ld", dt);
+  ZE_MessageInfo(9, "DT = %ld", dt);
 
   h3 = entropy_token_class(wbuf, strlen(wbuf) + 1);
   h4 = entropy_punct_class(wbuf, strlen(wbuf) + 1);
 
   (void) text_word_length(wbuf, &st, strlen(wbuf));
 
-  MESSAGE_INFO(9,
+  ZE_MessageInfo(9,
                "%s ENTROPY = %7.3f %7.3f %7.3f %7.3f %7.3f - SIZE = %5d %5d %5d %7.2f",
                mtype, h0, h1, h2, h3, h4, size, strlen(buf), strlen(wbuf),
                ratio);
 
-  MESSAGE_INFO(9,
+  ZE_MessageInfo(9,
                "%s WORDS   = %7.3f %7.3f %7.3f %7.3f - SIZE = %5d %5d %5d %7.2f",
                mtype,
                kmin(&st), kmean(&st), kmax(&st), kstddev(&st),
@@ -607,7 +607,7 @@ entropy_mime_part(buf, size, id, level, type, arg, mime_part)
       for (i = 0; i < 256; i++)
       {
         if (prob[i] > 0)
-          MESSAGE_INFO(9, "%s HISTO   = %3d %6d   %c",
+          ZE_MessageInfo(9, "%s HISTO   = %3d %6d   %c",
                        mtype, i, prob[i], (isprint(i) ? i : '.'));
       }
     }
@@ -720,7 +720,7 @@ mime_extract_http_urls(buf, size, id, level, type, arg, mime_part)
         sout[xh] = '\0';
 #endif
 
-      MESSAGE_INFO(0, "HTTP : %c %s", c, sout);
+      ZE_MessageInfo(0, "HTTP : %c %s", c, sout);
 
       p += pf;
     }

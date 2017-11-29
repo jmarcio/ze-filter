@@ -77,7 +77,7 @@ token_list_add(head, token)
   p = (TLIST_T *) malloc(sizeof (TLIST_T));
   if (p == NULL)
   {
-    LOG_SYS_ERROR("malloc(TLIST_T)");
+    ZE_LogSysError("malloc(TLIST_T)");
     return NULL;
   }
   memset(p, 0, sizeof (TLIST_T));
@@ -179,10 +179,10 @@ tokens_mime_part(buf, size, id, level, type, arg, mime_part)
     wbuf = cleanbuf;
   }
 #if 1
-  MESSAGE_INFO(9, "\nBUF (buf)...\n%s\n", wbuf);
+  ZE_MessageInfo(9, "\nBUF (buf)...\n%s\n", wbuf);
 #endif
 
-  MESSAGE_INFO(9, "BUF %s %d", mtype, size);
+  ZE_MessageInfo(9, "BUF %s %d", mtype, size);
 
 #if 1
   {
@@ -197,7 +197,7 @@ tokens_mime_part(buf, size, id, level, type, arg, mime_part)
     char               *p;
     size_t              size = strlen(wbuf);
 
-    MESSAGE_INFO(9, "BUF %s %d", mtype, size);
+    ZE_MessageInfo(9, "BUF %s %d", mtype, size);
 
     for (p = wbuf; size > 2; size--, p++)
     {
@@ -231,9 +231,9 @@ main(argc, argv)
 
   bool                spam = TRUE;
 
-  set_log_output(FALSE, TRUE);
+  zeLog_SetOutput(FALSE, TRUE);
 
-  log_level = 0;
+  ze_logLevel = 0;
 
   init_default_file_extensions();
 
@@ -282,8 +282,8 @@ main(argc, argv)
   data.tlist = tlist;
 
 #if 0
-  set_log_output(FALSE, TRUE);
-  log_level = 0;
+  zeLog_SetOutput(FALSE, TRUE);
+  ze_logLevel = 0;
 
   set_mime_debug(TRUE);
 #endif
@@ -298,7 +298,7 @@ main(argc, argv)
 
     while (p != NULL)
     {
-      MESSAGE_INFO(19, "%s %08lX %5d", fname, p->token, p->n);
+      ZE_MessageInfo(19, "%s %08lX %5d", fname, p->token, p->n);
 
       {
         char                k[64];
@@ -449,7 +449,7 @@ db_add_token(token, value, spam)
 
     res = zeDb_AddRec(&hdb, key, iv, sizeof (iv));
 
-    MESSAGE_INFO(9, "     %s %5d %5d : %s", key, value, iv[0],
+    ZE_MessageInfo(9, "     %s %5d %5d : %s", key, value, iv[0],
                  STRBOOL(res, "TRUE", "FALSE"));
 
   }

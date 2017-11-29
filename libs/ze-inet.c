@@ -44,7 +44,7 @@ jinet_ntop(family, addr, cp, size)
     family = AF_INET;
 
   if ((p = (char *) inet_ntop(family, addr, cp, size)) == NULL)
-    LOG_SYS_ERROR("inet_ntop error");
+    ZE_LogSysError("inet_ntop error");
   return p;
 #else
 #if HAVE_INET_NTOA
@@ -82,15 +82,15 @@ jinet_pton(family, cp, addr)
 #if HAVE_INET_PTON
   res = inet_pton(family, cp, addr);
   if (res < 0)
-    LOG_SYS_ERROR("inet_pton");
+    ZE_LogSysError("inet_pton");
   if (res == 0)
-    LOG_MSG_ERROR("inet_pton : /%s/ isn't a valid address string",
+    ZE_LogMsgError(0, "inet_pton : /%s/ isn't a valid address string",
                   cp != NULL ? cp : "(NULL)");
 #else
 #ifdef HAVE_INET_ATON
   res = inet_aton(cp, addr) == 0 ? 0 : 1;
   if (res == 0)
-    LOG_MSG_ERROR("inet_aton : %s isn't a valid address string",
+    ZE_LogMsgError(0, "inet_aton : %s isn't a valid address string",
                   cp != NULL ? cp : "(NULL)");
 #endif
 #endif
@@ -188,11 +188,11 @@ get_hostname(host, size)
   memset(host, 0, size);
 
 #if HAVE_GETHOSTNAME
-  LOG_MSG_DEBUG(15, "Using gethostname to get host name");
+  ZE_LogMsgDebug(15, "Using gethostname to get host name");
 
   if (gethostname(host, size) < 0)
   {
-    LOG_SYS_ERROR("sysinfo(SI_HOSTNAME) error");
+    ZE_LogSysError("sysinfo(SI_HOSTNAME) error");
     return FALSE;
   }
   return TRUE;
@@ -202,10 +202,10 @@ get_hostname(host, size)
   {
     struct utsname      udata;
 
-    LOG_MSG_DEBUG(15, "Using uname to get host name");
+    ZE_LogMsgDebug(15, "Using uname to get host name");
     if (uname(&udata) < 0)
     {
-      LOG_SYS_ERROR("uname error");
+      ZE_LogSysError("uname error");
       return FALSE;
     }
     strlcpy(host, udata.nodename, size);
@@ -214,11 +214,11 @@ get_hostname(host, size)
 # else
 
 #  if SYSINFO_NODENAME
-  SYSINFO             LOG_MSG_DEBUG(15, "Using sysinfo to get host name");
+  SYSINFO             ZE_LogMsgDebug(15, "Using sysinfo to get host name");
 
   if (sysinfo(SI_HOSTNAME, host, sizeof (host)) < 0)
   {
-    LOG_SYS_ERROR("sysinfo(SI_HOSTNAME) error");
+    ZE_LogSysError("sysinfo(SI_HOSTNAME) error");
     return FALSE;
   }
   return TRUE;
@@ -275,7 +275,7 @@ convNameAddr(bout, bin, size, conv2addr)
       goto fin;
     }
 
-    LOG_SYS_ERROR("getaddrinfo(%s,%s) : %d %s",
+    ZE_LogSysError("getaddrinfo(%s,%s) : %d %s",
                   bin,
                   STRBOOL(conv2addr, "name -> addr", "addr -> name"),
                   r, gai_strerror(r));
@@ -293,7 +293,7 @@ convNameAddr(bout, bin, size, conv2addr)
 
     if (r != 0)
     {
-      LOG_SYS_ERROR("getnameinfo(%s,%s) : %d %s",
+      ZE_LogSysError("getnameinfo(%s,%s) : %d %s",
                     bin,
                     STRBOOL(conv2addr, "name -> addr", "addr -> name"),
                     r, gai_strerror(r));
@@ -301,7 +301,7 @@ convNameAddr(bout, bin, size, conv2addr)
       goto fin;
     }
 
-    MESSAGE_INFO(12, "IN : %s - OUT : %s", bin, buf);
+    ZE_MessageInfo(12, "IN : %s - OUT : %s", bin, buf);
 
     if (!conv2addr && STRCASEEQUAL(buf, bin))
       snprintf(bout, size, "[%s]", buf);
@@ -359,7 +359,7 @@ inet_n2p(family, addr, cp, size)
     family = AF_INET;
 
   if ((p = (char *) inet_ntop(family, addr, cp, size)) == NULL)
-    LOG_SYS_ERROR("inet_ntop error");
+    ZE_LogSysError("inet_ntop error");
   return p;
 #else
 #if HAVE_INET_NTOA
@@ -397,15 +397,15 @@ inet_p2n(family, cp, addr)
 #if HAVE_INET_PTON
   res = inet_pton(family, cp, addr);
   if (res < 0)
-    LOG_SYS_ERROR("inet_pton");
+    ZE_LogSysError("inet_pton");
   if (res == 0)
-    LOG_MSG_ERROR("inet_pton : /%s/ isn't a valid address string",
+    ZE_LogMsgError(0, "inet_pton : /%s/ isn't a valid address string",
                   cp != NULL ? cp : "(NULL)");
 #else
 #ifdef HAVE_INET_ATON
   res = inet_aton(cp, addr) == 0 ? 0 : 1;
   if (res == 0)
-    LOG_MSG_ERROR("inet_aton : %s isn't a valid address string",
+    ZE_LogMsgError(0, "inet_aton : %s isn't a valid address string",
                   cp != NULL ? cp : "(NULL)");
 #endif
 #endif
@@ -437,7 +437,7 @@ get_hostbysock(sock, slen, addr, alen, name, nlen)
     r = getnameinfo(sock, slen, buf, sizeof (buf), NULL, 0, NI_NUMERICHOST);
     if (r != 0)
     {
-      LOG_SYS_ERROR("getnameinfo(%s) : %d %s", "name -> addr", r,
+      ZE_LogSysError("getnameinfo(%s) : %d %s", "name -> addr", r,
                     gai_strerror(r));
       ok = FALSE;
       goto fin;
@@ -452,7 +452,7 @@ get_hostbysock(sock, slen, addr, alen, name, nlen)
     r = getnameinfo(sock, slen, buf, sizeof (buf), NULL, 0, 0);
     if (r != 0)
     {
-      LOG_SYS_ERROR("getnameinfo(%s) : %d %s", "addr -> name", r,
+      ZE_LogSysError("getnameinfo(%s) : %d %s", "addr -> name", r,
                     gai_strerror(r));
       ok = FALSE;
       goto fin;
@@ -553,7 +553,7 @@ jfd_ready(sd, fdmode, to)
 #if 0
     if ((pfd.revents & (POLLERR | POLLHUP | POLLNVAL)) != 0)
     {
-      MESSAGE_INFO(FDREADY_LOG_LEVEL, " POLL ERR/HUP/NVAL = %s/%s/%s",
+      ZE_MessageInfo(FDREADY_LOG_LEVEL, " POLL ERR/HUP/NVAL = %s/%s/%s",
                    STRBOOL((pfd.revents & POLLERR) == TRUE, "T", "F"),
                    STRBOOL((pfd.revents & POLLHUP) == TRUE, "T", "F"),
                    STRBOOL((pfd.revents & POLLNVAL) == TRUE, "T", "F"));
@@ -567,7 +567,7 @@ jfd_ready(sd, fdmode, to)
           return ZE_SOCK_ERROR;
         continue;
       }
-      LOG_SYS_ERROR("poll(%ld)", (long) pfd.fd);
+      ZE_LogSysError("poll(%ld)", (long) pfd.fd);
       return ZE_SOCK_ERROR;
     }
     nerr = 0;
@@ -581,8 +581,7 @@ jfd_ready(sd, fdmode, to)
       return ZE_SOCK_TIMEOUT;
   }
 #if 0
-  LOG_MSG_ERR
-    ("ERROR=poll:mi_rd_socket_ready, socket=%d, r=%d, errno=%d revents=%d", sd,
+  ZE_LogMsgError(0, "ERROR=poll:mi_rd_socket_ready, socket=%d, r=%d, errno=%d revents=%d", sd,
      r, errno, pfd.revents);
   return ZE_SOCK_ERROR;
 #endif
@@ -652,12 +651,12 @@ sd_printf(int sd, char *format, ...)
       if (errno == EINTR)
         continue;
 
-      LOG_SYS_ERROR("sendto error (r = %d)", r);
+      ZE_LogSysError("sendto error (r = %d)", r);
       break;
     }
     if (r == 0)
     {
-      LOG_MSG_ERROR("sendto error (r = %d)", r);
+      ZE_LogMsgError(0, "sendto error (r = %d)", r);
       break;
     }
 
@@ -694,7 +693,7 @@ sd_readln(fd, buf, size)
     {
       if (errno == EINTR || errno == EAGAIN)
         continue;
-      LOG_SYS_ERROR("read error");
+      ZE_LogSysError("read error");
       break;
     }
 

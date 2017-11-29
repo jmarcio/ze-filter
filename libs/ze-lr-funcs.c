@@ -136,7 +136,7 @@ lr_data_read(bt, fname)
   fin = fopen(fname, "r");
   if (fin == NULL)
   {
-    LOG_SYS_ERROR("fopen %s", fname);
+    ZE_LogSysError("fopen %s", fname);
     return -1;
   }
   while (fgets(buf, sizeof (buf), fin) != NULL)
@@ -221,7 +221,7 @@ lr_data_read(bt, fname)
         }
         continue;
       }
-      MESSAGE_NOTICE(10, "# error %d : %s", nl, buf);
+      ZE_MessageNotice(10, "# error %d : %s", nl, buf);
       continue;
     }
 
@@ -376,11 +376,11 @@ lr_data_show_conf()
   MUTEX_LOCK(&lr_data.mutex);
   if (lr_data.ok)
   {
-    MESSAGE_INFO(10, "Modele (fname)                 %s", lr_data.fname);
+    ZE_MessageInfo(10, "Modele (fname)                 %s", lr_data.fname);
 #if 0
 
-    MESSAGE_INFO("Token length                   %7d", lr_data.tlen);
-    MESSAGE_INFO("Token type                     %7d", lr_data.ttype);
+    ZE_MessageInfo("Token length                   %7d", lr_data.tlen);
+    ZE_MessageInfo("Token type                     %7d", lr_data.ttype);
     int                 tlen;   /* token len */
     int                 ttype;  /* token type */
 
@@ -812,7 +812,7 @@ lr_task(id, fname, cargs, margs, mscore, task, learn, spam)
     static int          nbw = 0;
 
     if (nbw++ < 5)
-      MESSAGE_WARNING(10, "lr data not yet initialized");
+      ZE_MessageWarning(10, "lr data not yet initialized");
     return FALSE;
   }
 
@@ -829,14 +829,14 @@ lr_task(id, fname, cargs, margs, mscore, task, learn, spam)
     fd = open(fname, O_RDONLY);
     if (fd < 0)
     {
-      LOG_SYS_ERROR("Error opening %s", fname);
+      ZE_LogSysError("Error opening %s", fname);
       goto fin;
     }
     memset(buf, 0, sizeof (buf));
     nc = read(fd, buf, 2500);
     if (nc < 0)
     {
-      LOG_SYS_ERROR("Error reading %s", fname);
+      ZE_LogSysError("Error reading %s", fname);
       close(fd);
       goto fin;
     }

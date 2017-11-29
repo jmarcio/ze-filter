@@ -66,9 +66,9 @@ main(argc, argv)
 
   conf_T              cargs = CONF_INITIALIZER;
 
-  set_log_output(TRUE, TRUE);
+  zeLog_SetOutput(TRUE, TRUE);
 
-  log_level = 7;
+  ze_logLevel = 7;
 
   /*
    ** 1. Read configuration parameters
@@ -94,12 +94,12 @@ main(argc, argv)
 
           /* verbose */
         case 'v':
-          log_level++;
+          ze_logLevel++;
           break;
 
           /* group */
         case 'l':
-          log_level = atoi(optarg);
+          ze_logLevel = atoi(optarg);
           break;
 
         case 'c':
@@ -227,8 +227,8 @@ do_test(conf_T * cargs)
   }
   tf = time_ms();
 
-  MESSAGE_INFO(1, "Entries checked : %5d\n", n);
-  MESSAGE_INFO(1, "Time elapsed    : %5d ms", tf - ti);
+  ZE_MessageInfo(1, "Entries checked : %5d\n", n);
+  ZE_MessageInfo(1, "Time elapsed    : %5d ms", tf - ti);
 
   return 0;
 }

@@ -35,15 +35,15 @@ configure_log(app)
 
   app = STRNULL(app, "ze-filter");
   /* Log level */
-  log_severity = cf_get_int(CF_LOG_SEVERITY) != OPT_NO;
-  log_level = cf_get_int(CF_LOG_LEVEL);
+  ze_logSeverity = cf_get_int(CF_LOG_SEVERITY) != OPT_NO;
+  ze_logLevel = cf_get_int(CF_LOG_LEVEL);
 
   if (cf_opt.arg_l != NULL)
   {
     int                 l = 0;
 
     if ((l = atoi(cf_opt.arg_l)) > 0)
-      log_level = l;
+      ze_logLevel = l;
   }
   {
     char               *envloglevel = NULL;
@@ -53,7 +53,7 @@ configure_log(app)
     {
       level = atoi(envloglevel);
       if (level > 0)
-        log_level = level;
+        ze_logLevel = level;
     }
   }
 
@@ -62,14 +62,14 @@ configure_log(app)
   {
     int                 n;
 
-    n = facility_value(p);
-    if (n != -1 && n != log_facility)
+    n = zeLog_FacilityValue(p);
+    if (n != -1 && n != ze_logFacility)
     {
-      set_log_facility(p);
+      zeLog_SetFacility(p);
       closelog();
-      openlog(app, LOG_PID | LOG_NOWAIT | LOG_NDELAY, log_facility);
-      MESSAGE_INFO(11, "NEW FACILITY : %d - %s",
-                   log_facility, facility_name(log_facility));
+      openlog(app, LOG_PID | LOG_NOWAIT | LOG_NDELAY, ze_logFacility);
+      ZE_MessageInfo(11, "NEW FACILITY : %d - %s",
+                   ze_logFacility, zeLog_FacilityName(ze_logFacility));
     }
   }
 

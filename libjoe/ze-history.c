@@ -232,15 +232,15 @@ raw_history_open(ronly)
   char                fname[256];
   int32_t             history_entries = cf_get_int(CF_HISTORY_ENTRIES);
 
-  MESSAGE_INFO(15, "sizeof RawHist_T : %d", sizeof (HistRaw_T));
+  ZE_MessageInfo(15, "sizeof RawHist_T : %d", sizeof (HistRaw_T));
 
-  MESSAGE_INFO(15, "HISTORY_ENTRIES = %6ld; cf = %6ld\n", HISTORY_ENTRIES,
+  ZE_MessageInfo(15, "HISTORY_ENTRIES = %6ld; cf = %6ld\n", HISTORY_ENTRIES,
                (long) history_entries);
 
   if (history_entries > 0)
     HISTORY_ENTRIES = history_entries * 1024;
 
-  MESSAGE_INFO(15, "HISTORY_ENTRIES = %6ld; cf = %6ld\n", HISTORY_ENTRIES,
+  ZE_MessageInfo(15, "HISTORY_ENTRIES = %6ld; cf = %6ld\n", HISTORY_ENTRIES,
                (long) history_entries);
 
   if (work_dir == NULL)
@@ -271,7 +271,7 @@ raw_history_open(ronly)
     hfile.fd = open(fname, oflag, mode);
     if (hfile.fd < 0)
     {
-      LOG_SYS_ERROR("error opening history file");
+      ZE_LogSysError("error opening history file");
       HISTORY_UNLOCK();
       return FALSE;
     }
@@ -288,7 +288,7 @@ raw_history_open(ronly)
       ind++;
     }
     if (r < 0)
-      LOG_SYS_ERROR("read error on history file");
+      ZE_LogSysError("read error on history file");
   }
   HISTORY_UNLOCK();
 
@@ -336,11 +336,11 @@ raw_history_add_entry(ctx)
     ctx2histraw(&history, priv);
 
     if (lseek(hfile.fd, hfile.ptr * sizeof (history), SEEK_SET) == (off_t) - 1)
-      LOG_SYS_ERROR("%08lX : lseek error on history file %d",
+      ZE_LogSysError("%08lX : lseek error on history file %d",
                     (long) priv->conn_id, hfile.fd);
 
     if (write(hfile.fd, &history, sizeof (history)) < 0)
-      LOG_SYS_ERROR("%08lX : write error on history file %d",
+      ZE_LogSysError("%08lX : write error on history file %d",
                     (long) priv->conn_id, hfile.fd);
 
     hfile.ptr++;
@@ -397,7 +397,7 @@ ctx2histraw(dst, src)
     static int          n = 0;
 
     if (n++ < 10)
-      MESSAGE_INFO(10, "  %-20s GREY : %d", dst->ip, src->rej_greymsgs);
+      ZE_MessageInfo(10, "  %-20s GREY : %d", dst->ip, src->rej_greymsgs);
   }
 
   dst->reject_connect = src->reject_connect;
@@ -615,7 +615,7 @@ res_history_add_noeud(c, h, verbose)
 
     if (!jbt_add(&c->jdbh, &buf))
     {
-      LOG_MSG_WARNING("Can't add record to tree...");
+      ZE_LogMsgWarning(0, "Can't add record to tree...");
     }
   }
 
@@ -672,7 +672,7 @@ res_history_update(hst, ip, tf, dt, verbose)
   if (tf <= (time_t) 0)
     tf = time(NULL);
   ti = tf - dt;
-  LOG_MSG_DEBUG(15, " ti tf dt : %ld %ld %ld\n", (long) ti, (long) tf, (long) dt);
+  ZE_LogMsgDebug(15, " ti tf dt : %ld %ld %ld\n", (long) ti, (long) tf, (long) dt);
 
   HISTORY_LOCK();
 
@@ -686,7 +686,7 @@ res_history_update(hst, ip, tf, dt, verbose)
 #else
     if (lseek(fd, ptr, SEEK_SET) == (off_t) - 1)
     {
-      LOG_SYS_ERROR("lseek error");
+      ZE_LogSysError("lseek error");
       return FALSE;
     }
     if (read(fd, &buf, sizeof (buf)) != sizeof (buf))
@@ -709,7 +709,7 @@ res_history_update(hst, ip, tf, dt, verbose)
 
   HISTORY_UNLOCK();
 
-  LOG_MSG_INFO(12, "Search ended : %d noeuds", hst->nb);
+  ZE_LogMsgInfo(12, "Search ended : %d noeuds", hst->nb);
 
   return TRUE;
 }
@@ -1212,7 +1212,7 @@ load_live_history(hst, tf, dt)
   long                p = 0;
   off_t               ptr;
 
-  MESSAGE_INFO(10, "Loading connection live history...");
+  ZE_MessageInfo(10, "Loading connection live history...");
 
   if (hst == NULL)
     hst = &history;
@@ -1231,7 +1231,7 @@ load_live_history(hst, tf, dt)
 
   ti = tf - dt;
 
-  LOG_MSG_DEBUG(15, " ti tf dt : %ld %ld %ld\n", (long) ti, (long) tf, (long) dt);
+  ZE_LogMsgDebug(15, " ti tf dt : %ld %ld %ld\n", (long) ti, (long) tf, (long) dt);
 
   HISTORY_LOCK();
 
@@ -1245,7 +1245,7 @@ load_live_history(hst, tf, dt)
 #else
     if (lseek(fd, ptr, SEEK_SET) == (off_t) - 1)
     {
-      LOG_SYS_ERROR("lseek error");
+      ZE_LogSysError("lseek error");
       return FALSE;
     }
     if (read(fd, &buf, sizeof (buf)) != sizeof (buf))
@@ -1277,7 +1277,7 @@ load_live_history(hst, tf, dt)
 
   HISTORY_UNLOCK();
 
-  LOG_MSG_INFO(12, "Search ended : %d noeuds", hst->nb);
+  ZE_LogMsgInfo(12, "Search ended : %d noeuds", hst->nb);
 
   return TRUE;
 }

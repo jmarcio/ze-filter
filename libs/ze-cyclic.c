@@ -74,7 +74,7 @@ cyclic_tasks_init(dt)
     memset(tasks, 0, sizeof (tasks));
 
     if ((r = pthread_create(&tid, NULL, cyclic_tasks, (void *) NULL)) != 0)
-      LOG_SYS_ERROR("Couldn't launch cyclic_tasks");
+      ZE_LogSysError("Couldn't launch cyclic_tasks");
 
     tsk_ok = TRUE;
   }
@@ -117,7 +117,7 @@ cyclic_tasks_register(task, arg, dt)
     return TRUE;
   }
 
-  MESSAGE_WARNING(5, "No more room available for new cyclic tasks 8-( !");
+  ZE_MessageWarning(5, "No more room available for new cyclic tasks 8-( !");
   return FALSE;
 }
 
@@ -141,7 +141,7 @@ cyclic_tasks_time_stats()
     n = tasks[i].count;
     if (tasks[i].count > 0)
       m = tasks[i].work / tasks[i].count;
-    MESSAGE_INFO(10, "Cyclic task %3d : n=%5d m=%6d", i, n, m);
+    ZE_MessageInfo(10, "Cyclic task %3d : n=%5d m=%6d", i, n, m);
   }
 }
 
@@ -166,7 +166,7 @@ cyclic_tasks(arg)
   {
     int            i;
 
-    MESSAGE_INFO(12, "*** cyclic_tasks running...");
+    ZE_MessageInfo(12, "*** cyclic_tasks running...");
 
     sleep(dt_loop);
     now = time(NULL);
@@ -210,7 +210,7 @@ cyclic_tasks(arg)
 int
 test_task(void *arg)
 {
-  MESSAGE_INFO(10, "Hi ! %s : %ld", STRNULL(arg, "(null)"), time(NULL) - t_start);
+  ZE_MessageInfo(10, "Hi ! %s : %ld", STRNULL(arg, "(null)"), time(NULL) - t_start);
 
   return 0;
 }

@@ -71,14 +71,14 @@ main(argc, argv)
   char                msg[2048];
   int                 avres;
 
-  extern int          log_level;
+  extern int          ze_logLevel;
 
   configure("av-test", conf_file, FALSE);
 
   memset(answer, 0, sizeof (answer));
 
-  set_log_output(TRUE, TRUE);
-  log_level = 10;
+  zeLog_SetOutput(TRUE, TRUE);
+  ze_logLevel = 10;
 
   printf("Let's begin with serious things...\n");
   if (0)

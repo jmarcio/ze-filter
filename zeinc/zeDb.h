@@ -168,10 +168,10 @@ bool                zeDb_Stat(ZEDB_T *, ZEDB_STAT_T **);
   {									\
     if (strcasecmp(prev_seq_key, key) > 0)				\
     {									\
-      MESSAGE_INFO(10,"Cursor error : %s\n", STRNULL(dbname,"-"));	\
-      MESSAGE_INFO(10, "   Possible loop found !\n");			\
-      MESSAGE_INFO(10, "   * Previous key : %s\n", prev_seq_key);	\
-      MESSAGE_INFO(10, "   * Current key  : %s\n", key);		\
+      ZE_MessageInfo(10,"Cursor error : %s\n", STRNULL(dbname,"-"));	\
+      ZE_MessageInfo(10, "   Possible loop found !\n");			\
+      ZE_MessageInfo(10, "   * Previous key : %s\n", prev_seq_key);	\
+      ZE_MessageInfo(10, "   * Current key  : %s\n", key);		\
       if (nb_seq_err++ > 2)						\
 	break;								\
     }									\

@@ -76,7 +76,7 @@ dns_init()
         dns_retrans = t;
     }
 
-    MESSAGE_INFO(11, "DNS retry : %d, retrans : %d", dns_retry, dns_retrans);
+    ZE_MessageInfo(11, "DNS retry : %d, retrans : %d", dns_retry, dns_retrans);
     dns_init_ok = TRUE;
   }
 }
@@ -281,7 +281,7 @@ parse_mx_answer(r, mx)
     mx->host[mx->count].name = strdup(rr->rr_u.rr_mx->mx_r_domain);
     if (mx->host[mx->count].name == NULL)
     {
-      LOG_SYS_ERROR("malloc error");
+      ZE_LogSysError("malloc error");
       continue;
     }
     mx->host[mx->count].pref = rr->rr_u.rr_mx->mx_r_preference;
@@ -365,7 +365,7 @@ dns_get_mx(domain, mx)
   if (domain == NULL || mx == NULL)
     return DNS_LOC_ERR;
 
-  MESSAGE_INFO(11, "Entering %s : %s", ZE_FUNCTION, domain);
+  ZE_MessageInfo(11, "Entering %s : %s", ZE_FUNCTION, domain);
   memset(mx, 0, sizeof (*mx));
   mx->domain = strdup(domain);
 
@@ -378,7 +378,7 @@ dns_get_mx(domain, mx)
     dns_free_data(&rt);
   }
 
-  MESSAGE_INFO(11, "%-20s : res = %d count = %d\n", domain, res, mx->count);
+  ZE_MessageInfo(11, "%-20s : res = %d count = %d\n", domain, res, mx->count);
   if (mx->count > 0)
     return mx->count;
   return res;

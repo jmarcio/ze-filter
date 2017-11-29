@@ -137,7 +137,7 @@ int            log_error(LOG_T *);
 	snprintf(path, sizeof(path), "file:%s/%s", dir, name);	\
       									\
     }									\
-    MESSAGE_INFO(12, "Adjusted path is %s", path);			\
+    zeLog_MessageInfo(12, "Adjusted path is %s", path);			\
   } while (FALSE);
 
 

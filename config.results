@@ -1,9 +1,9 @@
 
-Configuration results : Tue Nov 28 15:03:09 CET 2017
+Configuration results : Tue Nov 28 21:37:08 CET 2017
 -----------------------
   configure arguments      : 
 
-  Source directory         : /export/dev-j-chkmail/ze-filter
+  Source directory         : /data/FOSS/dev-ze-filter/ze-filter
   Package                  : ze-filter
   Version                  : ze-filter
   Host type                : x86_64-pc-linux-gnu

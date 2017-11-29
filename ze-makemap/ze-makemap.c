@@ -73,7 +73,7 @@ main(argc, argv)
   exit(1);
 #endif
 
-  set_log_output(FALSE, TRUE);
+  zeLog_SetOutput(FALSE, TRUE);
 
   while ((c = getopt(argc, argv, args)) != -1) {
     switch (c) {
@@ -99,7 +99,7 @@ main(argc, argv)
             dbtype = FALSE;
             break;
           default:
-            MESSAGE_INFO(0, "Error : optarg ...");
+            ZE_MessageInfo(0, "Error : optarg ...");
             usage();
             exit(1);
             break;
@@ -128,7 +128,7 @@ main(argc, argv)
             db_updt_mode |= MDB_SKIP;
             break;
           default:
-            MESSAGE_INFO(0, "Error : optarg ...");
+            ZE_MessageInfo(0, "Error : optarg ...");
             usage();
             exit(1);
         }
@@ -208,13 +208,13 @@ main(argc, argv)
   if ((db_updt_mode & (MDB_UPDATE | MDB_SKIP)) == 0)
     db_updt_mode |= MDB_SKIP;
 
-  log_level = 8;
+  ze_logLevel = 8;
   dbstartkey = STRNULL(dbstartkey, "");
 
   nb_t = nb_ok = nb_ko = 0;
 
   if (dbtext) {
-    j_rd_text_file(NULL, dbattrnb, dbreverse, "", NULL);
+    zm_RdTextFile(NULL, dbattrnb, dbreverse, "", NULL);
     exit(0);
   }
 
@@ -328,7 +328,7 @@ main(argc, argv)
       if ((db_updt_mode & MDB_ERASE) != 0)
         (void) zeDb_Empty(&zdbh);
 
-      (void) j_rd_text_file(NULL, dbattrnb, dbreverse, "", add_db_rec);
+      (void) zm_RdTextFile(NULL, dbattrnb, dbreverse, "", add_db_rec);
 
       zeDb_Close(&zdbh);
     }

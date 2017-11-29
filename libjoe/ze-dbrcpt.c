@@ -61,7 +61,7 @@ db_rcpt_open(rd)
   dbname = cf_get_str(CF_DB_RCPT);
   ADJUST_FILENAME(dbpath, dbname, cfdir, "ze-rcpt.db");
 
-  MESSAGE_INFO(15, "Opening Rcpt Database : %s", dbpath);
+  ZE_MessageInfo(15, "Opening Rcpt Database : %s", dbpath);
   if (zeDb_OK(&hdb))
     return TRUE;
   zeDb_Lock(&hdb);
@@ -151,7 +151,7 @@ db_rcpt_check_email(prefix, key, bufout, size)
   if (!zeDb_OK(&hdb) && !db_rcpt_open(TRUE))
   {
     if (nerr++ < MAX_ERR)
-      LOG_MSG_ERROR("Can't open rcpt database");
+      ZE_LogMsgError(0, "Can't open rcpt database");
     return FALSE;
   }
 
@@ -170,7 +170,7 @@ db_rcpt_check_email(prefix, key, bufout, size)
     if ((email = strdup(key)) != NULL)
       (void) extract_email_address(email, key, strlen(key) + 1);
     else
-      LOG_SYS_ERROR("strdup(%s) error", key);
+      ZE_LogSysError("strdup(%s) error", key);
     domain++;
   } else
     domain = key;
@@ -183,12 +183,12 @@ db_rcpt_check_email(prefix, key, bufout, size)
     /* First of all, let's check the entire key */
     snprintf(k, sizeof (k), "%s:%s", prefix, email);
     (void) strtolower(k);
-    MESSAGE_INFO(DBG_LEVEL, "KEY FULL : Looking for %s ...", k);
+    ZE_MessageInfo(DBG_LEVEL, "KEY FULL : Looking for %s ...", k);
     if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
     {
       if ((bufout != NULL) && (size > 0))
         strlcpy(bufout, v, size);
-      MESSAGE_INFO(DBG_LEVEL, "         : Found %s %s...", k, v);
+      ZE_MessageInfo(DBG_LEVEL, "         : Found %s %s...", k, v);
       found = TRUE;
       goto fin;
     }
@@ -200,12 +200,12 @@ db_rcpt_check_email(prefix, key, bufout, size)
     /* First of all, let's check the entire key */
     snprintf(k, sizeof (k), "%s:%s", prefix, domain);
     (void) strtolower(k);
-    MESSAGE_INFO(DBG_LEVEL, "KEY FULL : Looking for %s ...", k);
+    ZE_MessageInfo(DBG_LEVEL, "KEY FULL : Looking for %s ...", k);
     if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
     {
       if ((bufout != NULL) && (size > 0))
         strlcpy(bufout, v, size);
-      MESSAGE_INFO(DBG_LEVEL, "         : Found %s %s...", k, v);
+      ZE_MessageInfo(DBG_LEVEL, "         : Found %s %s...", k, v);
       found = TRUE;
       goto fin;
     }
@@ -227,12 +227,12 @@ db_rcpt_check_email(prefix, key, bufout, size)
     {
       snprintf(k, sizeof (k), "%s:%s", prefix, p);
       (void) strtolower(k);
-      MESSAGE_INFO(DBG_LEVEL, "NAME : Looking for %s", k);
+      ZE_MessageInfo(DBG_LEVEL, "NAME : Looking for %s", k);
       if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
       {
         if ((bufout != NULL) && (size > 0))
           strlcpy(bufout, v, size);
-        MESSAGE_INFO(DBG_LEVEL, "         : Found %s %s...", k, v);
+        ZE_MessageInfo(DBG_LEVEL, "         : Found %s %s...", k, v);
         found = TRUE;
         break;
       }
@@ -264,7 +264,7 @@ db_rcpt_check_email(prefix, key, bufout, size)
     domain = strchr(k, '@');
     if (domain != NULL)
       *(++domain) = '\0';
-    MESSAGE_INFO(DBG_LEVEL, "k = %s", k);
+    ZE_MessageInfo(DBG_LEVEL, "k = %s", k);
     if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
     {
       if ((bufout != NULL) && (size > 0))
@@ -306,7 +306,7 @@ db_rcpt_check_domain(prefix, key, bufout, size, flags)
   if (!zeDb_OK(&hdb) && !db_rcpt_open(TRUE))
   {
     if (nerr++ < MAX_ERR)
-      LOG_MSG_ERROR("Can't open rcpt database");
+      ZE_LogMsgError(0, "Can't open rcpt database");
     return FALSE;
   }
 
@@ -331,10 +331,10 @@ db_rcpt_check_domain(prefix, key, bufout, size, flags)
   {
     snprintf(k, sizeof (k), "%s:%s", prefix, p);
     (void) strtolower(k);
-    MESSAGE_INFO(DBG_LEVEL, "NAME : Looking for %s", k);
+    ZE_MessageInfo(DBG_LEVEL, "NAME : Looking for %s", k);
     if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
     {
-      MESSAGE_INFO(DBG_LEVEL, "         : Found %s %s...", k, v);
+      ZE_MessageInfo(DBG_LEVEL, "         : Found %s %s...", k, v);
       if ((bufout != NULL) && (size > 0))
         strlcpy(bufout, v, size);
       found = TRUE;
@@ -349,10 +349,10 @@ db_rcpt_check_domain(prefix, key, bufout, size, flags)
     {
       snprintf(k, sizeof (k), "%s:*.%s", prefix, p);
       (void) strtolower(k);
-      MESSAGE_INFO(DBG_LEVEL, "NAME : Looking for %s", k);
+      ZE_MessageInfo(DBG_LEVEL, "NAME : Looking for %s", k);
       if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
       {
-	MESSAGE_INFO(DBG_LEVEL, "         : Found %s %s...", k, v);
+	ZE_MessageInfo(DBG_LEVEL, "         : Found %s %s...", k, v);
 	if ((bufout != NULL) && (size > 0))
 	  strlcpy(bufout, v, size);
 	found = TRUE;
@@ -369,10 +369,10 @@ db_rcpt_check_domain(prefix, key, bufout, size, flags)
   {
     snprintf(k, sizeof (k), "%s:%s", prefix, "default");
     (void) strtolower(k);
-    MESSAGE_INFO(DBG_LEVEL, "NAME : Looking for %s", k);
+    ZE_MessageInfo(DBG_LEVEL, "NAME : Looking for %s", k);
     if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
     {
-      MESSAGE_INFO(DBG_LEVEL, "         : Found %s %s...", k, v);
+      ZE_MessageInfo(DBG_LEVEL, "         : Found %s %s...", k, v);
       if ((bufout != NULL) && (size > 0))
         strlcpy(bufout, v, size);
       found = TRUE;

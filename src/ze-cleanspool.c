@@ -46,11 +46,11 @@ cleanup_spool(dirname, maxage)
   if (dirname == NULL)
     return;
 
-  MESSAGE_INFO(9, "*** Cleaning up spool dir : %s", dirname);
+  ZE_MessageInfo(9, "*** Cleaning up spool dir : %s", dirname);
 
   if (maxage == 0)
   {
-    LOG_MSG_INFO(9, "MAX_AGE == 0 : no spool cleaning up");
+    ZE_LogMsgInfo(9, "MAX_AGE == 0 : no spool cleaning up");
     return;
   }
 
@@ -73,20 +73,20 @@ cleanup_spool(dirname, maxage)
           if (st.st_mtime + maxage < now)
           {
             nb++;
-            MESSAGE_INFO(11, "* Deleting file : %s", fname);
+            ZE_MessageInfo(11, "* Deleting file : %s", fname);
             unlink(fname);
           }
         }
       } else
       {
-        LOG_MSG_WARNING("lstat(%s) error", STRNULL(fname, ""));
+        ZE_LogMsgWarning(0, "lstat(%s) error", STRNULL(fname, ""));
       }
     }
     closedir(dir);
   } else
   {
-    LOG_MSG_WARNING("opendir(%s) error", STRNULL(dirname, ""));
+    ZE_LogMsgWarning(0, "opendir(%s) error", STRNULL(dirname, ""));
   }
 
-  MESSAGE_INFO(9, "*** %d files deleted", nb);
+  ZE_MessageInfo(9, "*** %d files deleted", nb);
 }

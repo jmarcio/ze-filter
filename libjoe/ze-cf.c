@@ -93,12 +93,12 @@ static pthread_mutex_t cf_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 #define CF_DATA_LOCK() \
   if (pthread_mutex_lock(&cf_mutex) != 0) { \
-    LOG_SYS_ERROR("pthread_mutex_lock(cf_mutex)"); \
+    ZE_LogSysError("pthread_mutex_lock(cf_mutex)"); \
   }
 
 #define CF_DATA_UNLOCK() \
   if (pthread_mutex_unlock(&cf_mutex) != 0) { \
-    LOG_SYS_ERROR("pthread_mutex_unlock(cf_mutex)"); \
+    ZE_LogSysError("pthread_mutex_unlock(cf_mutex)"); \
   }
 
 bool                configure_after(char *app);
@@ -531,7 +531,7 @@ cf_add_id_enum(id, name, opt, val)
     return -2;
 
   if ((cf[i].sv = malloc(len + 1)) == NULL) {
-    LOG_SYS_ERROR("malloc error");
+    ZE_LogSysError("malloc error");
     return -3;
   }
 
@@ -570,7 +570,7 @@ cf_add_id_str(id, name, len, val)
     return -2;
 
   if ((cf[i].sv = malloc(len + 1)) == NULL) {
-    LOG_SYS_ERROR("malloc error");
+    ZE_LogSysError("malloc error");
     return -3;
   }
 
@@ -790,7 +790,7 @@ cf_append_str_val(id, value)
         strlcat(cf[i].sv, "\n", cf[i].slen);
         strlcat(cf[i].sv, value, cf[i].slen);
       } else
-        LOG_MSG_WARNING("Error appending string");
+        ZE_LogMsgWarning(0, "Error appending string");
     } else
       strlcpy(cf[i].sv, value, cf[i].slen);
   }
@@ -971,13 +971,13 @@ cf_read_file(fname)
   free_fext();
 
   if ((fname == NULL) || (strlen(fname) == 0)) {
-    LOG_MSG_ERROR("Invalid fname : %s", STRNULL(fname, "(null)"));
+    ZE_LogMsgError(0, "Invalid fname : %s", STRNULL(fname, "(null)"));
     return -1;
   }
 
   if ((fin = fopen(fname, "r")) == NULL) {
-    LOG_SYS_ERROR("Error opening file : %s", STRNULL(fname, "(NULL)"));
-    LOG_MSG_ERROR("Exiting...");
+    ZE_LogSysError("Error opening file : %s", STRNULL(fname, "(NULL)"));
+    ZE_LogMsgError(0, "Exiting...");
     exit(EX_SOFTWARE);
   }
 
@@ -1007,7 +1007,7 @@ cf_read_file(fname)
     {
       char               *x;
 
-      MESSAGE_INFO(15, "KEY = %s", key);
+      ZE_MessageInfo(15, "KEY = %s", key);
       while ((x = strchr(key, (int) '.')) != NULL)
         *x = '_';
     }
@@ -1025,18 +1025,18 @@ cf_read_file(fname)
     if ((id = cf_get_id(key)) > 0) {
       int                 res;
 
-      LOG_MSG_DEBUG(20, "KEY : %-32s (%3d) --%s--\n", key, id, value);
+      ZE_LogMsgDebug(20, "KEY : %-32s (%3d) --%s--\n", key, id, value);
       switch (id) {
         default:
           res = cf_set_val(id, value);
           break;
       }
       if (res <= 0) {
-        MESSAGE_WARNING(7, "# line %4d : Error setting parameter value : %s",
+        ZE_MessageWarning(7, "# line %4d : Error setting parameter value : %s",
                         lineno, value);
       }
     } else
-      MESSAGE_WARNING(7, "# line %4d : UNKNOWN KEY : %s", lineno, key);
+      ZE_MessageWarning(7, "# line %4d : UNKNOWN KEY : %s", lineno, key);
 
   }
   fclose(fin);
@@ -1074,37 +1074,37 @@ reload_cf_tables()
   if (cfdir == NULL || strlen(cfdir) == 0)
     cfdir = ZE_CONFDIR;
 
-  MESSAGE_INFO(10, "Reloading configuration tables...");
+  ZE_MessageInfo(10, "Reloading configuration tables...");
 
   fname = cf_get_str(CF_REGEX_FILE);
-  MESSAGE_INFO(LLEVEL, "Reloading : %s ...", fname);
+  ZE_MessageInfo(LLEVEL, "Reloading : %s ...", fname);
   if (!load_regex_table(cfdir, fname))
-    LOG_MSG_ERROR("Unable to reload regex table");
+    ZE_LogMsgError(0, "Unable to reload regex table");
 
   fname = cf_get_str(CF_ORACLE_DATA_FILE);
-  MESSAGE_INFO(LLEVEL, "Reloading : %s ...", fname);
+  ZE_MessageInfo(LLEVEL, "Reloading : %s ...", fname);
   if (!load_oradata_table(cfdir, fname))
-    LOG_MSG_ERROR("Unable to reload oracle data table");
+    ZE_LogMsgError(0, "Unable to reload oracle data table");
 
   fname = cf_get_str(CF_ORACLE_SCORES_FILE);
-  MESSAGE_INFO(LLEVEL, "Reloading : %s ...", fname);
+  ZE_MessageInfo(LLEVEL, "Reloading : %s ...", fname);
   if (!load_oracle_defs(cfdir, fname))
-    LOG_MSG_ERROR("Unable to reload oracle definitions table");
+    ZE_LogMsgError(0, "Unable to reload oracle definitions table");
 
   fname = cf_get_str(CF_XFILES_FILE);
-  MESSAGE_INFO(LLEVEL, "Reloading : %s ...", fname);
+  ZE_MessageInfo(LLEVEL, "Reloading : %s ...", fname);
   if (!load_xfiles_table(cfdir, fname))
-    LOG_MSG_ERROR("Unable to reload xfiles data table");
+    ZE_LogMsgError(0, "Unable to reload xfiles data table");
 
   fname = cf_get_str(CF_DNS_IPRBWL);
-  MESSAGE_INFO(LLEVEL, "Reloading : %s ...", fname);
+  ZE_MessageInfo(LLEVEL, "Reloading : %s ...", fname);
   if (!load_iprbwl_table(cfdir, fname))
-    LOG_MSG_ERROR("Unable to reload IP RBWL data table");
+    ZE_LogMsgError(0, "Unable to reload IP RBWL data table");
 
   fname = cf_get_str(CF_DNS_URLBL);
-  MESSAGE_INFO(LLEVEL, "Reloading : %s ...", fname);
+  ZE_MessageInfo(LLEVEL, "Reloading : %s ...", fname);
   if (!load_urlbl_table(cfdir, fname))
-    LOG_MSG_ERROR("Unable to reload URL BL data table");
+    ZE_LogMsgError(0, "Unable to reload URL BL data table");
 }
 
 /* ****************************************************************************
@@ -1119,14 +1119,14 @@ configure_after(app)
 
   app = STRNULL(app, "ze-filter");
   /* Log level */
-  log_severity = cf_get_int(CF_LOG_SEVERITY) != OPT_NO;
-  log_level = cf_get_int(CF_LOG_LEVEL);
+  ze_logSeverity = cf_get_int(CF_LOG_SEVERITY) != OPT_NO;
+  ze_logLevel = cf_get_int(CF_LOG_LEVEL);
 
   if (cf_opt.arg_l != NULL) {
     int                 l = 0;
 
     if ((l = atoi(cf_opt.arg_l)) > 0)
-      log_level = l;
+      ze_logLevel = l;
   }
   {
     char               *envloglevel = NULL;
@@ -1135,7 +1135,7 @@ configure_after(app)
     if ((envloglevel = getenv("JCHKMAIL_LOG_LEVEL")) != NULL) {
       level = atoi(envloglevel);
       if (level > 0)
-        log_level = level;
+        ze_logLevel = level;
     }
   }
 
@@ -1149,13 +1149,13 @@ configure_after(app)
     if ((p = cf_get_str(opt)) != NULL) {
       int                 n;
 
-      n = facility_value(p);
-      if (n != -1 && n != log_facility) {
-        set_log_facility(p);
+      n = zeLog_FacilityValue(p);
+      if (n != -1 && n != ze_logFacility) {
+        zeLog_SetFacility(p);
         closelog();
-        openlog(app, LOG_PID | LOG_NOWAIT | LOG_NDELAY, log_facility);
-        MESSAGE_INFO(11, "NEW FACILITY : %d - %s",
-                     log_facility, facility_name(log_facility));
+        openlog(app, LOG_PID | LOG_NOWAIT | LOG_NDELAY, ze_logFacility);
+        ZE_MessageInfo(11, "NEW FACILITY : %d - %s",
+                     ze_logFacility, zeLog_FacilityName(ze_logFacility));
       }
     }
   }
@@ -1205,20 +1205,20 @@ configure(app, fname, only_cf)
 {
   static bool         init_ok = FALSE;
 
-  MESSAGE_INFO(9, "Loading ze-filter configuration");
+  ZE_MessageInfo(9, "Loading ze-filter configuration");
 
   if (!init_ok) {
     if (cf_init() != 0) {
-      MESSAGE_ERROR(5, "configure : Can't initialise");
+      ZE_MessageError(5, "configure : Can't initialise");
       exit(1);
     }
     init_ok = TRUE;
   }
 
-  MESSAGE_INFO(10, "Loading default values");
+  ZE_MessageInfo(10, "Loading default values");
   cf_defaults();
 
-  MESSAGE_INFO(9, "Reading configuration file : %s", STRNULL(fname, "(NULL)"));
+  ZE_MessageInfo(9, "Reading configuration file : %s", STRNULL(fname, "(NULL)"));
   cf_read_file(fname);
 
   configure_after(app);
@@ -1252,7 +1252,7 @@ configure(app, fname, only_cf)
       if ((envsock = getenv("JCHKMAIL_SOCKET")) != NULL)
         strlcpy(sm_sock, envsock, sizeof (sm_sock));
     }
-    MESSAGE_INFO(12, "SM_SOCK = %s", sm_sock);
+    ZE_MessageInfo(12, "SM_SOCK = %s", sm_sock);
   }
 #endif             /* CF_SOCKET */
 

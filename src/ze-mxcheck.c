@@ -65,7 +65,7 @@ FALSE, (time_t) 0, 0, PTHREAD_MUTEX_INITIALIZER, JBT_INITIALIZER};
  ******************************************************************************/
 #define MSG_BAD_MX(a,b) 						\
 	do {								\
-	      MESSAGE_INFO(9, "%s BAD MXs for domain %s : %s (%s)", 	\
+	      ZE_MessageInfo(9, "%s BAD MXs for domain %s : %s (%s)", 	\
                    CONNID_STR(priv->id), a, b, priv->peer_addr); 	\
 	} while (0)
 
@@ -86,7 +86,7 @@ check_sender_mx(ctx, mail_host)
 
   if (mail_host == NULL || strlen(mail_host) == 0)
     return SMFIS_CONTINUE;
-  MESSAGE_INFO(11, "%s Checking MXs for domain %s", CONNID_STR(priv->id),
+  ZE_MessageInfo(11, "%s Checking MXs for domain %s", CONNID_STR(priv->id),
                mail_host);
 
   if (IS_KNOWN(ip_class))
@@ -160,7 +160,7 @@ check_sender_mx(ctx, mail_host)
       {
         nchk++;
 
-        MESSAGE_INFO(11, "%s -> MX %3d %-16s %s\n",
+        ZE_MessageInfo(11, "%s -> MX %3d %-16s %s\n",
                      CONNID_STR(priv->id),
                      mx.host[i].pref,
                      STRNULL(mx.host[i].ip, ""), STRNULL(mx.host[i].name, ""));
@@ -212,7 +212,7 @@ check_sender_mx(ctx, mail_host)
         {
           nchk++;
 
-          MESSAGE_INFO(11, "%s -> A  %3d %-16s %s\n",
+          ZE_MessageInfo(11, "%s -> A  %3d %-16s %s\n",
                        CONNID_STR(priv->id),
                        mx.host[i].pref,
                        STRNULL(mx.host[i].ip, ""), STRNULL(mx.host[i].name,
@@ -245,7 +245,7 @@ check_sender_mx(ctx, mail_host)
       {
         char               *reply = NULL;
 
-        MESSAGE_INFO(10, "%s Domain %s doesn't resolve", CONNID_STR(priv->id),
+        ZE_MessageInfo(10, "%s Domain %s doesn't resolve", CONNID_STR(priv->id),
                      mail_host);
 
         reply = cf_get_str(CF_DEFAULT_BAD_MX_REPLY);
@@ -288,7 +288,7 @@ fin:
 
     if ((++ns % 1000) == 0)
     {
-      MESSAGE_INFO(10,
+      ZE_MessageInfo(10,
                    "MX CHECK delay : nb=%d min=%5.3f mean=%5.3f max=%5.3f stddev=%5.3f ",
                    ns, kmin(&st), kmean(&st), kmax(&st), kstddev(&st));
       kstats_reset(&st);

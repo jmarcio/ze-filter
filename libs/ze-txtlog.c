@@ -174,21 +174,21 @@ log_open(log, spec)
 
   if ((log->spec = strdup(spec)) == NULL)
   {
-    LOG_SYS_ERROR("strdup(%s) error", spec);
+    ZE_LogSysError("strdup(%s) error", spec);
     log->error = errno;
 
     goto fin;
   }
   if ((log->args = strdup(spec)) == NULL)
   {
-    LOG_SYS_ERROR("strdup(%s) error", spec);
+    ZE_LogSysError("strdup(%s) error", spec);
     log->error = errno;
 
     goto fin;
   }
 
   if (log->debug)
-    MESSAGE_INFO(10, "Opening spec %s", spec);
+    ZE_MessageInfo(10, "Opening spec %s", spec);
 
   log->argc = str2tokens(log->args, 4, log->argv, ":");
 
@@ -198,7 +198,7 @@ log_open(log, spec)
     /* shift right values in argv and add "file" to argv[0] */
     int                 i;
 
-    MESSAGE_NOTICE(11, "Correcting old configuration option : %s", spec);
+    ZE_MessageNotice(11, "Correcting old configuration option : %s", spec);
     for (i = ARGVM - 1; i > 0; i--)
       log->argv[i] = log->argv[i - 1];
     log->argv[0] = "file";
@@ -210,7 +210,8 @@ log_open(log, spec)
   {
     log->logtype = JC_LOG_SYSLOG;
 
-    log->log.syslog.priority = syslog_priority_value(LOG_SPEC_PRIORITY(log));
+    /* log->log.syslog.priority = syslog_priority_value(LOG_SPEC_PRIORITY(log)); */
+    log->log.syslog.priority = zeLog_PriorityValue(LOG_SPEC_PRIORITY(log));
     if (log->log.syslog.priority < 0)
       log->log.syslog.priority = LOG_INFO;
 
@@ -225,7 +226,7 @@ log_open(log, spec)
 
     log->log.file.fd = -1;
     if (log->debug)
-      MESSAGE_INFO(10, "Opening file %s", STRNULL(LOG_SPEC_FNAME(log), "NULL"));
+      ZE_MessageInfo(10, "Opening file %s", STRNULL(LOG_SPEC_FNAME(log), "NULL"));
 
     log->open = locked_log_open(log);
 
@@ -338,7 +339,7 @@ log_write(log, str)
   if (log->open)
     locked_log_write(log, str);
   else
-    LOG_MSG_WARNING("Trying to write in a closed log structure");
+    ZE_LogMsgWarning(0, "Trying to write in a closed log structure");
 
   MUTEX_UNLOCK(&log->mutex);
 
@@ -422,7 +423,7 @@ locked_log_open(log)
 
       if (log->log.file.fd >= 0)
       {
-        LOG_MSG_WARNING(" It seems that log->fname (%s) is already open",
+        ZE_LogMsgWarning(0, " It seems that log->fname (%s) is already open",
                         LOG_SPEC_FNAME(log));
         close(log->log.file.fd);
         log->log.file.fd = -1;
@@ -431,7 +432,7 @@ locked_log_open(log)
       if ((log->log.file.fd =
            open(LOG_SPEC_FNAME(log), O_WRONLY | O_CREAT | O_APPEND, 0644)) < 0)
       {
-        LOG_SYS_ERROR("error opening : %s", LOG_SPEC_FNAME(log));
+        ZE_LogSysError("error opening : %s", LOG_SPEC_FNAME(log));
         log->error = errno;
         log->nberror++;
         exit(EX_SOFTWARE);
@@ -452,7 +453,7 @@ locked_log_open(log)
         port = str2long(inet, NULL, 10001);
         addr = strchr(inet, '@');
 
-        MESSAGE_INFO(10, "Opening UDP to %s port %d",
+        ZE_MessageInfo(10, "Opening UDP to %s port %d",
                      addr != NULL ? addr + 1 : "NULL", port);
         if (addr != NULL)
         {
@@ -493,7 +494,7 @@ locked_log_open(log)
   }
 
   if (log->nberror > 0 && log->nberror < LOG_MAX_ERRORS)
-    MESSAGE_WARNING(5, "Errors...");
+    ZE_MessageWarning(5, "Errors...");
 
   return log->open;
 }
@@ -560,21 +561,21 @@ locked_log_write(log, str)
 
     case JC_LOG_SYSLOG:
       if (log->debug)
-        MESSAGE_INFO(10, "func=%s : JC_LOG_SYSLOG : %s", ZE_FUNCTION, str);
+        ZE_MessageInfo(10, "func=%s : JC_LOG_SYSLOG : %s", ZE_FUNCTION, str);
       prefix = LOG_SPEC_PREFIX(log);
       if (prefix != NULL && strlen(prefix) > 0)
-        j_syslog(log->log.syslog.priority, "%s : %s", prefix, str);
+        zeSyslog(log->log.syslog.priority, "%s : %s", prefix, str);
       else
-        j_syslog(log->log.syslog.priority, "%s", str);
+        zeSyslog(log->log.syslog.priority, "%s", str);
       break;
 
     case JC_LOG_FILE:
       ASSERT(log->log.file.fd >= 0);
       if (log->debug)
-        MESSAGE_INFO(10, "func=%s : JC_LOG_FILE : %s", ZE_FUNCTION, str);
+        ZE_MessageInfo(10, "func=%s : JC_LOG_FILE : %s", ZE_FUNCTION, str);
       if (write(log->log.file.fd, str, strlen(str)) < 0)
       {
-        LOG_SYS_ERROR("Error writing to file %s", LOG_SPEC_FNAME(log));
+        ZE_LogSysError("Error writing to file %s", LOG_SPEC_FNAME(log));
         log->error = errno;
         log->nberror++;
         log->lasterror = time(NULL);
@@ -585,7 +586,7 @@ locked_log_write(log, str)
       {
         if (write(log->log.file.fd, "\n", 1) < 0)
         {
-          LOG_SYS_ERROR("Error writing to file %s", LOG_SPEC_FNAME(log));
+          ZE_LogSysError("Error writing to file %s", LOG_SPEC_FNAME(log));
           log->error = errno;
           log->nberror++;
           log->lasterror = time(NULL);
@@ -598,7 +599,7 @@ locked_log_write(log, str)
     case JC_LOG_UDP:
       ASSERT(log->log.udp.fd >= 0);
       if (log->debug)
-        MESSAGE_INFO(10, "func=%s : JC_LOG_UDP : %s", ZE_FUNCTION, str);
+        ZE_MessageInfo(10, "func=%s : JC_LOG_UDP : %s", ZE_FUNCTION, str);
 
       if (!log->log.udp.connect)
       {
@@ -625,7 +626,7 @@ locked_log_write(log, str)
       }
       if (sendto(log->log.udp.fd, str, strlen(str), 0, NULL, 0) < 0)
       {
-        LOG_SYS_ERROR("Error writing to  %s", "udp");
+        ZE_LogSysError("Error writing to  %s", "udp");
         log->error = errno;
       } else
         log->nberror = 0;
@@ -635,7 +636,7 @@ locked_log_write(log, str)
       break;
   }
   if (log->nberror > 0 && log->nberror < LOG_MAX_ERRORS)
-    MESSAGE_WARNING(5, "Errors...");
+    ZE_MessageWarning(5, "Errors...");
 
   return TRUE;
 }

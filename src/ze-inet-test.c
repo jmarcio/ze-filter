@@ -30,12 +30,12 @@ main(argc, argv)
      char              **argv;
 {
   int                 res = 0;
-  extern int          log_level;
+  extern int          ze_logLevel;
 
   configure("ze-inet-test", conf_file, FALSE);
 
-  set_log_output(FALSE, TRUE);
-  log_level = 10;
+  zeLog_SetOutput(FALSE, TRUE);
+  ze_logLevel = 10;
 
   {
     char               *ip, *name;
@@ -64,10 +64,10 @@ main(argc, argv)
           name = optarg;
           break;
         case 'v':
-          log_level++;
+          ze_logLevel++;
           break;
         case 'l':
-          log_level = atoi(optarg);
+          ze_logLevel = atoi(optarg);
           break;
         default:
           (void) fprintf(stderr, "-> Unknown command line option : %c\n", c);
@@ -89,12 +89,12 @@ main(argc, argv)
       memset(buf, 0, sizeof (buf));
       if (get_hostbyaddr(argv[i], buf, sizeof (buf)))
       {
-        MESSAGE_INFO(10, " %3d TONAME : %-30s %s", i, argv[i], buf);
+        ZE_MessageInfo(10, " %3d TONAME : %-30s %s", i, argv[i], buf);
       }
       memset(buf, 0, sizeof (buf));
       if (get_hostbyname(argv[i], buf, sizeof (buf)))
       {
-        MESSAGE_INFO(10, " %3d TOADDR : %-30s %s", i, argv[i], buf);
+        ZE_MessageInfo(10, " %3d TOADDR : %-30s %s", i, argv[i], buf);
       }
     }
   }

@@ -539,7 +539,7 @@ dns_lookup_int(domain, rr_class, rr_type, retrans, retry, r)
 
   if (r == NULL)
   {
-    LOG_MSG_ERROR("reply argument shall not be NULL");
+    ZE_LogMsgError(0, "reply argument shall not be NULL");
     return DNS_LOC_ERR;
   }
 #if MT_RES
@@ -561,7 +561,7 @@ dns_lookup_int(domain, rr_class, rr_type, retrans, retry, r)
 
 #if DNS_DEBUG
   {
-    MESSAGE_INFO(11, "dns_lookup(%s, %d, %s)\n", domain, rr_class,
+    ZE_MessageInfo(11, "dns_lookup(%s, %d, %s)\n", domain, rr_class,
                  dns_type_to_string(rr_type));
   }
 #endif
@@ -585,7 +585,7 @@ dns_lookup_int(domain, rr_class, rr_type, retrans, retry, r)
 
 #if DNS_DEBUG
   {
-    MESSAGE_INFO(11, "dns_lookup(%s, %d, %s) --> %d\n",
+    ZE_MessageInfo(11, "dns_lookup(%s, %d, %s) --> %d\n",
                  domain, rr_class, dns_type_to_string(rr_type), len);
   }
 #endif
@@ -649,7 +649,7 @@ dns_lookup(domain, type_name, retrans, retry, r)
 
   if (r == NULL)
   {
-    LOG_MSG_ERROR("reply argument shall not be NULL");
+    ZE_LogMsgError(0, "reply argument shall not be NULL");
     return DNS_LOC_ERR;
   }
 
@@ -660,7 +660,7 @@ dns_lookup(domain, type_name, retrans, retry, r)
   type = dns_string_to_type(type_name);
   if (type == -1)
   {
-    LOG_MSG_ERROR("dns_lookup: unknown resource type: %s", type_name);
+    ZE_LogMsgError(0, "dns_lookup: unknown resource type: %s", type_name);
     return DNS_LOC_ERR;
   }
 

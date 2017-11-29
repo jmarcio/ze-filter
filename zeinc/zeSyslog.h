@@ -52,6 +52,8 @@ void                zeCloselog();
 int                 zeLog_FacilityValue(char *);
 char               *zeLog_FacilityName(int);
 
+int                 zeLog_PriorityValue(char *);
+char               *zeLog_PriorityName(int);
 
 /* ****************************************************************************
  *                                                                            * 

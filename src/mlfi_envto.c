@@ -59,14 +59,14 @@ mlfi_envto(ctx, envto)
   sm_macro_update(ctx, priv->sm);
 
   if (envto == NULL) {
-    LOG_MSG_WARNING("%s : envto = NULL", CONNID_STR(priv->id));
+    ZE_LogMsgWarning(0, "%s : envto = NULL", CONNID_STR(priv->id));
     result = SMFIS_TEMPFAIL;
 
     goto fin;
   }
   rcpt_to = envto[0];
   if (rcpt_to == NULL) {
-    LOG_MSG_WARNING("%s : envto[0] = NULL", CONNID_STR(priv->id));
+    ZE_LogMsgWarning(0, "%s : envto[0] = NULL", CONNID_STR(priv->id));
     result = SMFIS_TEMPFAIL;
     return result;
   }
@@ -111,7 +111,7 @@ mlfi_envto(ctx, envto)
    */
   if ((rcpt_to != NULL) && (strlen(rcpt_to) > 0)) {
     if ((priv->env_to = strdup(rcpt_to)) == NULL) {
-      LOG_SYS_ERROR("%-12s : strdup mlfi_envto", CONNID_STR(priv->id));
+      ZE_LogSysError("%-12s : strdup mlfi_envto", CONNID_STR(priv->id));
       result = SMFIS_TEMPFAIL;
 
       goto fin;
@@ -132,12 +132,12 @@ mlfi_envto(ctx, envto)
     char               *rcpt_mailer = NULL;
 
     rcpt_mailer = sm_macro_get_str(priv->sm, "{rcpt_mailer}");
-    MESSAGE_INFO(11, "rcpt_mailer = %s", STRNULL(rcpt_mailer, "NULL"));
+    ZE_MessageInfo(11, "rcpt_mailer = %s", STRNULL(rcpt_mailer, "NULL"));
     if ((rcpt_mailer != NULL) && STRCASEEQUAL(rcpt_mailer, "error")) {
       char                why[256];
 
 
-      MESSAGE_INFO(12, "%s : SM BAD RECIPIENT : %s", CONNID_STR(priv->id),
+      ZE_MessageInfo(12, "%s : SM BAD RECIPIENT : %s", CONNID_STR(priv->id),
                    rcpt_to);
 
       stats_inc(STAT_RCPT_UNKNOWN, 1);
@@ -174,7 +174,7 @@ mlfi_envto(ctx, envto)
    ** prepare to check recipient
    */
   if ((rcpt_email = strdup(rcpt_to)) == NULL) {
-    LOG_SYS_ERROR("Error strdup(%s)", rcpt_to);
+    ZE_LogSysError("Error strdup(%s)", rcpt_to);
     result = SMFIS_TEMPFAIL;
     goto fin;
   }
@@ -184,7 +184,7 @@ mlfi_envto(ctx, envto)
    * Check if email address is enclosed within <> and conforms to RFC2822 
    */
   if (!strexpr(rcpt_to, "<.*>", NULL, NULL, TRUE)) {
-    MESSAGE_INFO(9, "%-12s : ENV TO   Syntax Error : %s",
+    ZE_MessageInfo(9, "%-12s : ENV TO   Syntax Error : %s",
                  CONNID_STR(priv->id), priv->env_to);
   }
   /*
@@ -196,12 +196,12 @@ mlfi_envto(ctx, envto)
    */
   rcpt_rec = rcpt_list_add(&priv->env_rcpt, rcpt_to, access);
   if (rcpt_rec == NULL) {
-    MESSAGE_WARNING(9, "%-12s mlfi_envto : can't add %s to rcpt_list",
+    ZE_MessageWarning(9, "%-12s mlfi_envto : can't add %s to rcpt_list",
                     CONNID_STR(priv->id), rcpt_to);
     result = SMFIS_TEMPFAIL;
     goto fin;
   }
-  MESSAGE_INFO(11,
+  ZE_MessageInfo(11,
                "RCPT LIST : ARG=(%s) TO=(%s) EMAIL=(%s) USER=(%s) HOST=(%s)",
                envto[0], rcpt_rec->rcpt, rcpt_rec->email, rcpt_rec->user,
                rcpt_rec->host);
@@ -231,7 +231,7 @@ mlfi_envto(ctx, envto)
       rstr = rcpt_code_string(access);
       rstr = STRNULL(rstr, "???");
 
-      MESSAGE_INFO(11, "%s : RCPT ACCESS : %-16s %02X %-16s %s : %s %2d %s",
+      ZE_MessageInfo(11, "%s : RCPT ACCESS : %-16s %02X %-16s %s : %s %2d %s",
                    CONNID_STR(priv->id), priv->peer_addr, ip_class,
                    CTX_NETCLASS_LABEL(priv),
                    priv->peer_name, priv->env_to, access, rstr);
@@ -402,7 +402,7 @@ mlfi_envto(ctx, envto)
                 msg = argv[2];
               }
             }
-            MESSAGE_INFO(10, "GREY REPLY : rcode=%s xcode=%s msg=%s",
+            ZE_MessageInfo(10, "GREY REPLY : rcode=%s xcode=%s msg=%s",
                          rcode, xcode, msg);
             ok = TRUE;
           }
@@ -427,7 +427,7 @@ mlfi_envto(ctx, envto)
     if (check_policy_tuple("Archive", priv->peer_addr, priv->peer_name,
                            CTX_NETCLASS_LABEL(priv),
                            priv->env_from, priv->env_to, FALSE)) {
-      MESSAGE_INFO(10, "%-12s Archiving message : %s %s %s %s",
+      ZE_MessageInfo(10, "%-12s Archiving message : %s %s %s %s",
                    CONNID_STR(priv->id), priv->peer_addr, priv->peer_name,
                    priv->env_from, priv->env_to);
 

@@ -74,7 +74,7 @@ av_decode_args(arg)
     {
       if ((sockname = strdup(p)) == NULL)
       {
-        LOG_SYS_ERROR("strdup(sockname) error");
+        ZE_LogSysError("strdup(sockname) error");
         return FALSE;
       }
     }
@@ -90,7 +90,7 @@ av_decode_args(arg)
     {
       if ((sockname = strdup(p)) == NULL)
       {
-        LOG_SYS_ERROR("strdup(sockname) error");
+        ZE_LogSysError("strdup(sockname) error");
         return FALSE;
       }
     }
@@ -121,7 +121,7 @@ av_decode_args(arg)
       else
         inethost = strdup("localhost");
       if (inethost == NULL)
-        LOG_SYS_ERROR("strdup(inethost) error");
+        ZE_LogSysError("strdup(inethost) error");
     }
 
     if ((inethost == NULL) || (inetport < 0))
@@ -155,15 +155,15 @@ av_client_init()
     if ((scan_arg = cf_get_str(CF_SCANNER_SOCK)) != NULL)
       args_ok = av_decode_args(scan_arg);
 
-    MESSAGE_INFO(DEBUG_LEVEL, "SOCK            : %s",
+    ZE_MessageInfo(DEBUG_LEVEL, "SOCK            : %s",
                  STRNULL(scan_arg, "NULL"));
-    MESSAGE_INFO(DEBUG_LEVEL, "SOCKTYPE        : %d", socktype);
-    MESSAGE_INFO(DEBUG_LEVEL, "SOCKNAME        : %s",
+    ZE_MessageInfo(DEBUG_LEVEL, "SOCKTYPE        : %d", socktype);
+    ZE_MessageInfo(DEBUG_LEVEL, "SOCKNAME        : %s",
                  STRNULL(sockname, "NULL"));
-    MESSAGE_INFO(DEBUG_LEVEL, "INETHOST        : %s",
+    ZE_MessageInfo(DEBUG_LEVEL, "INETHOST        : %s",
                  STRNULL(inethost, "NULL"));
-    MESSAGE_INFO(DEBUG_LEVEL, "INETPORT        : %d", inetport);
-    MESSAGE_INFO(DEBUG_LEVEL, "INIT OK         : %d %s", args_ok,
+    ZE_MessageInfo(DEBUG_LEVEL, "INETPORT        : %d", inetport);
+    ZE_MessageInfo(DEBUG_LEVEL, "INIT OK         : %d %s", args_ok,
                  STRBOOL(args_ok, "TRUE", "FALSE"));
   }
   MUTEX_UNLOCK(&mutex);
@@ -204,14 +204,14 @@ connect2server()
 
     if ((sd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
     {
-      LOG_SYS_ERROR("AF_INET : socket");
+      ZE_LogSysError("AF_INET : socket");
       return -1;
     }
 
     /* adresse destinataire XXX */
     if ((hp = gethostbyname(inethost)) == NULL)
     {
-      LOG_SYS_ERROR("gethostbyname(%s)", STRNULL(inethost, "NULL"));
+      ZE_LogSysError("gethostbyname(%s)", STRNULL(inethost, "NULL"));
       return -1;
     }
 
@@ -219,13 +219,15 @@ connect2server()
     his_sock.sin_family = AF_INET;
     his_sock.sin_port = htons(inetport);
 
-    if (log_level >= DEBUG_LEVEL)
+#if 0
+    if (ze_logLevel >= DEBUG_LEVEL)
       log_sock_addr(&his_sock);
+#endif
 
     /* emission sur sd vers his_sock d'un message de taille size */
     if (connect_timed(sd, (struct sockaddr *) &his_sock, sizeof (his_sock), 10) != 0)
     {
-      LOG_SYS_ERROR("connect error (%s:%d)", STRNULL(inethost, "NULL"),
+      ZE_LogSysError("connect error (%s:%d)", STRNULL(inethost, "NULL"),
                     inetport);
       sd = disconnect2server(sd);
     }
@@ -238,13 +240,13 @@ connect2server()
 
     if ((sockname != NULL) && (strlen(sockname) == 0))
     {
-      LOG_SYS_ERROR("AF_UNIX : No sockname given...");
+      ZE_LogSysError("AF_UNIX : No sockname given...");
       return -1;
     }
 
     if ((sd = socket(AF_UNIX, SOCK_STREAM, 0)) < 0)
     {
-      LOG_SYS_ERROR("AF_UNIX : socket");
+      ZE_LogSysError("AF_UNIX : socket");
       return -1;
     }
 
@@ -256,14 +258,14 @@ connect2server()
     /* emission sur sd vers his_sock d'un message de taille size */
     if (connect(sd, (struct sockaddr *) &his_sock, sizeof (his_sock)) != 0)
     {
-      LOG_SYS_ERROR("connect error (%s)", STRNULL(sockname, "NULL"));
+      ZE_LogSysError("connect error (%s)", STRNULL(sockname, "NULL"));
       sd = disconnect2server(sd);
     }
 
     return sd;
   }
 
-  MESSAGE_ERROR(8, "Family socket unknown... %d", socktype);
+  ZE_MessageError(8, "Family socket unknown... %d", socktype);
 
   return -1;
 }
@@ -299,7 +301,7 @@ read_scanner_answer(sd, buf, sz, to)
     case ZE_SOCK_TIMEOUT:
       break;
     default:
-      LOG_MSG_WARNING("Error waiting for antivirus answer...");
+      ZE_LogMsgWarning(0, "Error waiting for antivirus answer...");
       break;
   }
 
@@ -329,11 +331,11 @@ av_client(answer, sz_answer, msg, sz_msg, question)
   if (av_timeout < 5)
     av_timeout = AVRD_TO;
 
-  LOG_MSG_INFO(DEBUG_LEVEL, "Entering...");
+  ZE_LogMsgInfo(DEBUG_LEVEL, "Entering...");
 
   if ((answer == NULL) || (question == NULL) || (strlen(question) == 0))
   {
-    LOG_MSG_ERROR("question=(%s) answer=(%s)",
+    ZE_LogMsgError(0, "question=(%s) answer=(%s)",
                   STRNULL(question, "NULL"), STRNULL(answer, "NULL"));
     return AV_ZERO;
   }
@@ -348,7 +350,7 @@ av_client(answer, sz_answer, msg, sz_msg, question)
 
   if (sd < 0)
   {
-    LOG_MSG_WARNING("Can't connect to antivirus scanner server");
+    ZE_LogMsgWarning(0, "Can't connect to antivirus scanner server");
     res = AV_ERROR;
 
     goto fin;
@@ -372,22 +374,22 @@ av_client(answer, sz_answer, msg, sz_msg, question)
         break;
     }
 
-    LOG_MSG_DEBUG(DEBUG_LEVEL, "Let's check if ready...");
+    ZE_LogMsgDebug(DEBUG_LEVEL, "Let's check if ready...");
     if ((r = jfd_ready(sd, ZE_SOCK_WRITE, 10000)) == ZE_SOCK_READY)
     {
-      LOG_MSG_DEBUG(DEBUG_LEVEL, "READY...! Let's go !");
+      ZE_LogMsgDebug(DEBUG_LEVEL, "READY...! Let's go !");
       if ((nb = sendto(sd, buf, strlen(buf), 0, NULL, 0)) < 0)
       {
-        LOG_SYS_ERROR("ze-avclient : sendto error");
+        ZE_LogSysError("ze-avclient : sendto error");
 	res = AV_ERROR;
 
 	goto fin;
       }
-      LOG_MSG_DEBUG(DEBUG_LEVEL, "         Sent... %s", buf);
+      ZE_LogMsgDebug(DEBUG_LEVEL, "         Sent... %s", buf);
     } else
-      LOG_SYS_WARNING("jfd_ready returned NOT READY %d ", r);
+      ZE_LogSysWarning("jfd_ready returned NOT READY %d ", r);
 
-    LOG_MSG_DEBUG(DEBUG_LEVEL, "ze-avclient - SEND : %s", buf);
+    ZE_LogMsgDebug(DEBUG_LEVEL, "ze-avclient - SEND : %s", buf);
   }
 
   if (sd >= 0)
@@ -427,18 +429,18 @@ av_client(answer, sz_answer, msg, sz_msg, question)
           } else
           {
             nerr++;
-            LOG_SYS_WARNING("Error reading antivirus answer : %ld bytes read",
+            ZE_LogSysWarning("Error reading antivirus answer : %ld bytes read",
                             (long) nb);
           }
           break;
         case ZE_SOCK_TIMEOUT:
-          LOG_MSG_WARNING("Timeout waiting for antivirus answer...");
+          ZE_LogMsgWarning(0, "Timeout waiting for antivirus answer...");
 	  res = AV_ERROR;
 	  goto fin;
           break;
         default:
           nerr++;
-          LOG_MSG_WARNING("Error waiting for antivirus answer...");
+          ZE_LogMsgWarning(0, "Error waiting for antivirus answer...");
 	  res = AV_ERROR;
           done = TRUE;
 	  goto fin;
@@ -448,8 +450,7 @@ av_client(answer, sz_answer, msg, sz_msg, question)
         break;
       if (nerr >= MAX_ERR)
       {
-        LOG_MSG_ERROR
-          ("ERROR : Too many while errors waiting for antivirus answer...");
+        ZE_LogMsgError(0, "ERROR : Too many while errors waiting for antivirus answer...");
 	res = AV_ERROR;
 	goto fin;
       }
@@ -457,7 +458,7 @@ av_client(answer, sz_answer, msg, sz_msg, question)
 
     strchomp(buf);
     strlcpy(answer, buf, sz_answer);
-    LOG_MSG_DEBUG(DEBUG_LEVEL, "RECV (%s)", buf);
+    ZE_LogMsgDebug(DEBUG_LEVEL, "RECV (%s)", buf);
     switch (protocol)
     {
       case OPT_INTERNAL:
@@ -470,7 +471,7 @@ av_client(answer, sz_answer, msg, sz_msg, question)
         res = decode_answer(answer, sz_answer, msg, sz_msg, buf);
         break;
     }
-    LOG_MSG_DEBUG(DEBUG_LEVEL, "DECODED : RES=(%d) ANSWER=(%s)", res, answer);
+    ZE_LogMsgDebug(DEBUG_LEVEL, "DECODED : RES=(%d) ANSWER=(%s)", res, answer);
     done = TRUE;
   }
 
@@ -507,7 +508,7 @@ decode_answer(answer, sz_answer, msg, sz_msg, buf)
     {
       char               *expr = "^6[0-9]{2} .*";
 
-      MESSAGE_INFO(18, "Checking %s against %s", s, expr);
+      ZE_MessageInfo(18, "Checking %s against %s", s, expr);
 
       if (strexpr(s, expr, NULL, NULL, TRUE))
       {

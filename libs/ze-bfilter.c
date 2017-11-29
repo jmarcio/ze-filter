@@ -80,18 +80,18 @@ bfilter_db2bf(bf)
   memset(v, 0, sizeof (v));
 
   snprintf(k, sizeof (k), "%s:%s", "count", "msgs");
-  MESSAGE_INFO(19, "Looking for %s", k);
+  ZE_MessageInfo(19, "Looking for %s", k);
   if (zeDb_GetRec(&bf->bdb, k, v, sizeof (v)))
   {
     int                 ns, nh;
     int                 n;
 
-    MESSAGE_INFO(19, "   Found %s", v);
+    ZE_MessageInfo(19, "   Found %s", v);
     ns = nh = 0;
     n = sscanf(v, "%d %d", &ns, &nh);
     if (n < 2)
     {
-      LOG_MSG_WARNING("Error : %s %s", k, v);
+      ZE_LogMsgWarning(0, "Error : %s %s", k, v);
 
       goto fin;
     }
@@ -109,18 +109,18 @@ bfilter_db2bf(bf)
   }
 
   snprintf(k, sizeof (k), "%s:%s", "count", "tokens");
-  MESSAGE_INFO(19, "Looking for %s", k);
+  ZE_MessageInfo(19, "Looking for %s", k);
   if (zeDb_GetRec(&bf->bdb, k, v, sizeof (v)))
   {
     int                 ns, nh;
     int                 n;
 
-    MESSAGE_INFO(19, "   Found %s", v);
+    ZE_MessageInfo(19, "   Found %s", v);
     ns = nh = 0;
     n = sscanf(v, "%d %d", &ns, &nh);
     if (n < 2)
     {
-      LOG_MSG_WARNING("Error : %s %s", k, v);
+      ZE_LogMsgWarning(0, "Error : %s %s", k, v);
 
       goto fin;
     }
@@ -137,18 +137,18 @@ bfilter_db2bf(bf)
   }
 
   snprintf(k, sizeof (k), "%s:%s", "count", "features");
-  MESSAGE_INFO(19, "Looking for %s", k);
+  ZE_MessageInfo(19, "Looking for %s", k);
   if (zeDb_GetRec(&bf->bdb, k, v, sizeof (v)))
   {
     int                 ns, nh;
     int                 n;
 
-    MESSAGE_INFO(19, "   Found %s", v);
+    ZE_MessageInfo(19, "   Found %s", v);
     ns = nh = 0;
     n = sscanf(v, "%d %d", &ns, &nh);
     if (n < 2)
     {
-      LOG_MSG_WARNING("Error : %s %s", k, v);
+      ZE_LogMsgWarning(0, "Error : %s %s", k, v);
 
       goto fin;
     }
@@ -167,16 +167,16 @@ bfilter_db2bf(bf)
   memset(k, 0, sizeof (k));
   memset(v, 0, sizeof (v));
   snprintf(k, sizeof (k), "%s:%s", "crypt", "tokens");
-  MESSAGE_INFO(19, "Looking for %s", k);
+  ZE_MessageInfo(19, "Looking for %s", k);
   if (zeDb_GetRec(&bf->bdb, k, v, sizeof (v)))
   {
     int                 code;
 
-    MESSAGE_INFO(19, "   Found %s", v);
+    ZE_MessageInfo(19, "   Found %s", v);
     code = hash_label2code(v);
     (void) set_bfilter_db_crypt(code);
 
-    MESSAGE_INFO(9, "Setting bayes filter encode mode to %s",
+    ZE_MessageInfo(9, "Setting bayes filter encode mode to %s",
                  hash_code2label(get_bfilter_db_crypt()));
   }
 
@@ -209,7 +209,7 @@ bfilter_init(dbname)
     if ((bf->dbname = strdup(dbname)) == NULL)
     {
       res = FALSE;
-      LOG_SYS_ERROR("strdup(%s) error", dbname);
+      ZE_LogSysError("strdup(%s) error", dbname);
       goto fin;
     }
 
@@ -382,7 +382,7 @@ bfilter_init(dbname)
     FREE(tenv);
   }
 
-  MESSAGE_INFO(18, "DOUBLE = %s", STRBOOL(bf->segDouble, "TRUE", "FALSE"));
+  ZE_MessageInfo(18, "DOUBLE = %s", STRBOOL(bf->segDouble, "TRUE", "FALSE"));
 
 fin:
 
@@ -735,7 +735,7 @@ smodel_db_check_token(key, token)
   BFILTER_LOCK();
   if (!zeDb_OK(&(bf->bdb)))
   {
-    LOG_MSG_ERROR("Bayes database not opened");
+    ZE_LogMsgError(0, "Bayes database not opened");
     goto fin;
   }
 
@@ -760,7 +760,7 @@ smodel_db_check_token(key, token)
   }
 
   strtolower(k);
-  MESSAGE_INFO(19, "Looking for %s", k);
+  ZE_MessageInfo(19, "Looking for %s", k);
   if (zeDb_GetRec(&bf->bdb, k, v, sizeof (v)))
   {
     int                 ns, nh;
@@ -768,11 +768,11 @@ smodel_db_check_token(key, token)
     double              ks, kh = 0.;
     double              prob = UT_PROB;
 
-    MESSAGE_INFO(19, "  Found %s %s", k, v);
+    ZE_MessageInfo(19, "  Found %s %s", k, v);
     ns = nh = 0;
     if (sscanf(v, "%d %d", &ns, &nh) < 2)
     {
-      LOG_MSG_WARNING("Error : %s %s", k, v);
+      ZE_LogMsgWarning(0, "Error : %s %s", k, v);
       goto fin;
     }
 
@@ -848,7 +848,7 @@ smodel_db_info(prefix, func, arg)
 
   if (!zeDb_OK(&(bf->bdb)))
   {
-    LOG_MSG_ERROR("Bayes database not opened");
+    ZE_LogMsgError(0, "Bayes database not opened");
     return;
   }
 

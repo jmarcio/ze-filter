@@ -216,14 +216,14 @@ new_base64_decode(bufin, size)
 
   if ((bufin == NULL) || (strlen(bufin) == 0))
   {
-    LOG_MSG_ERROR("input buffer NULL or empty");
+    ZE_LogMsgError(0, "input buffer NULL or empty");
     return NULL;
   }
 
   sz_in = strlen(bufin);
   if ((bufout = (char *) malloc(sz_in + 1)) == NULL)
   {
-    LOG_SYS_ERROR("malloc output buffer");
+    ZE_LogSysError("malloc output buffer");
     return NULL;
   }
   memset(bufout, 0, sz_in + 1);

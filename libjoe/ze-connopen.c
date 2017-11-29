@@ -73,12 +73,12 @@ FALSE, (time_t) 0, 0, PTHREAD_MUTEX_INITIALIZER, JBT_INITIALIZER};
 
 #define DATA_LOCK() \
   if (pthread_mutex_lock(&hdata.mutex) != 0) { \
-    LOG_SYS_ERROR("pthread_mutex_lock"); \
+    ZE_LogSysError("pthread_mutex_lock"); \
   }
 
 #define DATA_UNLOCK() \
   if (pthread_mutex_unlock(&hdata.mutex) != 0) { \
-    LOG_SYS_ERROR("pthread_mutex_unlock"); \
+    ZE_LogSysError("pthread_mutex_unlock"); \
   }
 
 
@@ -127,7 +127,7 @@ connopen_init()
       hdata.ok = TRUE;
       hdata.last = time(NULL);
     } else
-      LOG_MSG_ERROR("Can't initialize db_open");
+      ZE_LogMsgError(0, "Can't initialize db_open");
   }
 
   DATA_UNLOCK();
@@ -210,7 +210,7 @@ connopen_check_host(ip, name, nb)
         res = p.nb;
         hdata.nb += nb;
       } else
-        LOG_MSG_ERROR("Error adding new leaf to db");
+        ZE_LogMsgError(0, "Error adding new leaf to db");
     }
   }
 
@@ -271,7 +271,7 @@ connopen_clean_table()
 #if 1
     JBT_T               tmp = JBT_INITIALIZER;
 
-    MESSAGE_INFO(19, "connopen_clean_table : before  : %d nodes",
+    ZE_MessageInfo(19, "connopen_clean_table : before  : %d nodes",
                  jbt_count(&hdata.db_open));
 
     if (jbt_init(&tmp, sizeof (OpenConn_T), connopen_cmp))
@@ -281,14 +281,14 @@ connopen_clean_table()
         jbt_destroy(&hdata.db_open);
         hdata.db_open = tmp;
       } else
-        LOG_MSG_ERROR("Can't copy btrees...");
+        ZE_LogMsgError(0, "Can't copy btrees...");
     } else
 #else
     if (!jbt_cleanup(&hdata.db_open, connopen_cmp, NULL))
 #endif
-      LOG_MSG_ERROR("Can't initialize temporary btree");
+      ZE_LogMsgError(0, "Can't initialize temporary btree");
 
-    MESSAGE_INFO(19, "connopen_clean_table : after   : %d nodes",
+    ZE_MessageInfo(19, "connopen_clean_table : after   : %d nodes",
                  jbt_count(&hdata.db_open));
 
     hdata.last = now;
@@ -313,7 +313,7 @@ log_rec(void *data, void *param)
   if (p->nb > 0)
   {
     if (logfd < 0)
-      MESSAGE_INFO(10, "  %-17s : %3d : %s", p->ip, p->nb, p->name);
+      ZE_MessageInfo(10, "  %-17s : %3d : %s", p->ip, p->nb, p->name);
     else
       FD_PRINTF(logfd, "  %-17s : %3d : %s\n", p->ip, p->nb, p->name);
     return 1;
@@ -334,14 +334,14 @@ connopen_print_table(fd)
 
   logfd = fd;
   if (logfd < 0)
-    MESSAGE_INFO(10, "*** Open connections :");
+    ZE_MessageInfo(10, "*** Open connections :");
   else
     FD_PRINTF(logfd, "*** Open connections :\n");
 
   nb = jbt_browse(&hdata.db_open, log_rec, NULL);
 
   if (logfd < 0)
-    MESSAGE_INFO(10, "    %d entries on database", nb);
+    ZE_MessageInfo(10, "    %d entries on database", nb);
   else
     FD_PRINTF(logfd, "    %d entries on database\n", nb);
   fd = -1;

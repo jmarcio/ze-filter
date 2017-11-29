@@ -68,12 +68,12 @@ static ThrottleData hdata = { FALSE, PTHREAD_MUTEX_INITIALIZER };
 
 #define THROTTLE_LOCK() \
   if (pthread_mutex_lock(&hdata.mutex) != 0) { \
-    LOG_SYS_ERROR("pthread_mutex_lock"); \
+    ZE_LogSysError("pthread_mutex_lock"); \
   }
 
 #define THROTTLE_UNLOCK() \
   if (pthread_mutex_unlock(&hdata.mutex) != 0) { \
-    LOG_SYS_ERROR("pthread_mutex_unlock"); \
+    ZE_LogSysError("pthread_mutex_unlock"); \
   }
 
 
@@ -224,7 +224,7 @@ update_throttle(t)
   for (i = 0; i < DIM_LO; i++)
     kstats_update(&st_min, (double) hdata.min[i].nb);
 
-  MESSAGE_INFO(12,
+  ZE_MessageInfo(12,
                "THROTTLE : short=[%7.3f/%7.3f] long=[%7.3f/%7.3f] (mean/std dev)",
                kmean(&st_sec), kstddev(&st_sec), kmean(&st_min),
                kstddev(&st_min));
@@ -292,7 +292,7 @@ update_throttle_dos()
 
     if ((dos_last_log == (time_t) 0) && (dos_last_log + HOLD_TIME < now))
     {
-      MESSAGE_INFO(LOG_LEVEL, "*** DoS - THROTTLE : %7.3f %7.3f %7.3f",
+      ZE_MessageInfo(LOG_LEVEL, "*** DoS - THROTTLE : %7.3f %7.3f %7.3f",
                     mean, stddev, last_mean);
       dos_last_log = now;
     }
@@ -302,7 +302,7 @@ update_throttle_dos()
   {
     if (dos_last_log != (time_t) 0)
     {
-      MESSAGE_INFO(LOG_LEVEL, "*** DoS - THROTTLE : END");
+      ZE_MessageInfo(LOG_LEVEL, "*** DoS - THROTTLE : END");
       dos_last_log = (time_t) 0;
     }
     dos_start_time = (time_t) 0;
@@ -325,7 +325,7 @@ log_throttle_stats()
   double              last_mean = (double) hdata.min[DIM_LO - 1].nb;
 
   if (cf_get_int(CF_LOG_THROTTLE) == OPT_YES)
-    MESSAGE_INFO(9, "THROTTLE STAT : %7.3f %7.3f %7.3f", mean, stddev,
+    ZE_MessageInfo(9, "THROTTLE STAT : %7.3f %7.3f %7.3f", mean, stddev,
                  last_mean);
 }
 

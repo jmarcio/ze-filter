@@ -170,7 +170,7 @@ res_t_cmp_by_addr(a, b)
   Res_T              *ta = (Res_T *) a;
   Res_T              *tb = (Res_T *) b;
 
-  LOG_MSG_INFO(30, " %s <-> %s", STRNULL(ta->key, ""), STRNULL(tb->key, ""));
+  ZE_LogMsgInfo(30, " %s <-> %s", STRNULL(ta->key, ""), STRNULL(tb->key, ""));
 
   if (ta == NULL || tb == NULL) {
     if (tb != NULL)
@@ -272,7 +272,7 @@ smtprate_init(sza, szb)
   DATA_LOCK();
 
   if (!hdata.ok) {
-    LOG_MSG_INFO(DEBUG_LEVEL, " again ??? ");
+    ZE_LogMsgInfo(DEBUG_LEVEL, " again ??? ");
     if (hdata.signature != SIGNATURE) {
       memset(hdata.hist, 0, sizeof (hdata.hist));
       memset(&hdata.gres, 0, sizeof (hdata.gres));
@@ -295,7 +295,7 @@ smtprate_init(sza, szb)
         memset(hdata.hist[i].data, 0, DIM_HIST * sizeof (HistEvt_T));
         hdata.hist[i].ptr = 0;
       } else {
-        LOG_SYS_ERROR("malloc conn array");
+        ZE_LogSysError("malloc conn array");
         DATA_UNLOCK();
         return FALSE;
       }
@@ -304,7 +304,7 @@ smtprate_init(sza, szb)
     memset(&hdata.gres, 0, sizeof (hdata.gres));
 
     if (!jbt_init(&hdata.db_rate, sizeof (Res_T), res_t_cmp_by_addr))
-      LOG_MSG_ERROR("Can't initialize db_rate");
+      ZE_LogMsgError(0, "Can't initialize db_rate");
 
     jbt_set_btree_size(&hdata.db_rate, FALSE, 0);
 
@@ -382,10 +382,10 @@ smtprate_add_entry(which, key, name, nb, t)
   if (key == NULL)
     return 0;
 
-  LOG_MSG_INFO(DEBUG_LEVEL, "Entering : %s", key);
+  ZE_LogMsgInfo(DEBUG_LEVEL, "Entering : %s", key);
 
   if (!smtprate_init(0, 0)) {
-    LOG_MSG_ERROR("Can't continue : connection cache null ptr");
+    ZE_LogMsgError(0, "Can't continue : connection cache null ptr");
     return 0;
   }
 
@@ -432,7 +432,7 @@ smtprate_add_entry(which, key, name, nb, t)
   ptr = jbt_get(&hdata.db_rate, &p);
 
   if (ptr != NULL) {
-    LOG_MSG_INFO(DEBUG_LEVEL, "Found in tree : %s", key);
+    ZE_LogMsgInfo(DEBUG_LEVEL, "Found in tree : %s", key);
 
     if (ptr->Srate[ibucket].date != tbucket) {
       memset(&ptr->Srate[ibucket], 0, sizeof (Bucket_T));
@@ -443,7 +443,7 @@ smtprate_add_entry(which, key, name, nb, t)
     ptr->rate[which] =
       calc_bucket_rate(ptr->Srate, which, t, rateDef[which].wsz);
   } else {
-    LOG_MSG_INFO(DEBUG_LEVEL, "Adding to tree : %s", key);
+    ZE_LogMsgInfo(DEBUG_LEVEL, "Adding to tree : %s", key);
     strlcpy(p.key, key, sizeof (p.key));
 
     p.Srate[ibucket].date = tbucket;
@@ -452,7 +452,7 @@ smtprate_add_entry(which, key, name, nb, t)
     p.rate[which] = calc_bucket_rate(p.Srate, which, t, rateDef[which].wsz);
 
     if (!jbt_add(&hdata.db_rate, &p))
-      LOG_MSG_ERROR("Error adding new leaf to db");
+      ZE_LogMsgError(0, "Error adding new leaf to db");
   }
 
   switch (which) {
@@ -463,7 +463,7 @@ smtprate_add_entry(which, key, name, nb, t)
 
   n = calc_bucket_rate(hdata.gres.Srate, which, t, rateDef[which].wsz);
 
-  LOG_MSG_INFO(DEBUG_LEVEL, "Global rate : %s : %d %d", key, n,
+  ZE_LogMsgInfo(DEBUG_LEVEL, "Global rate : %s : %d %d", key, n,
                hdata.gres.rate[which]);
 
   DATA_UNLOCK();
@@ -493,7 +493,7 @@ smtprate_check(which, key, win)
   strlcpy(p.key, key, sizeof (p.key));
 
   if (!smtprate_init(0, 0)) {
-    LOG_MSG_ERROR("Can't continue : connection cache null ptr");
+    ZE_LogMsgError(0, "Can't continue : connection cache null ptr");
     return 0;
   }
 
@@ -553,32 +553,32 @@ smtprate_cleanup_table(now, win)
      time_t              now;
      time_t              win;
 {
-  LOG_MSG_INFO(DEBUG_LEVEL, "Entering ...");
+  ZE_LogMsgInfo(DEBUG_LEVEL, "Entering ...");
 
   if (!smtprate_init(0, 0)) {
-    LOG_MSG_ERROR("Can't continue : connection cache null ptr");
+    ZE_LogMsgError(0, "Can't continue : connection cache null ptr");
     return FALSE;
   }
 
   if (hdata.last_update + 120 > now)
     return TRUE;
 
-  LOG_MSG_INFO(DEBUG_LEVEL, "Updating Connection Rate Results...");
+  ZE_LogMsgInfo(DEBUG_LEVEL, "Updating Connection Rate Results...");
 
   DATA_LOCK();
 
   cleanuptime = now;
 
 #if _PERIODIC_DEBUG
-  MESSAGE_INFO(9, "smtprate_cleanup_table : before  : %d nodes",
+  ZE_MessageInfo(9, "smtprate_cleanup_table : before  : %d nodes",
                jbt_count(&hdata.db_rate));
 #endif
 
   if (!jbt_cleanup(&hdata.db_rate, cleanup_select, &win))
-    LOG_MSG_ERROR("Can't initialize temporary btree");
+    ZE_LogMsgError(0, "Can't initialize temporary btree");
 
 #if _PERIODIC_DEBUG
-  MESSAGE_INFO(9, "smtprate_cleanup_table : after   : %d nodes",
+  ZE_MessageInfo(9, "smtprate_cleanup_table : after   : %d nodes",
                jbt_count(&hdata.db_rate));
 #endif
 
@@ -605,19 +605,19 @@ smtprate_update_table(w_width)
   static bool         save_it = FALSE;
   int                 which;
 
-  LOG_MSG_INFO(DEBUG_LEVEL, "Entering ...");
+  ZE_LogMsgInfo(DEBUG_LEVEL, "Entering ...");
 
   if (!smtprate_init(0, 0)) {
-    LOG_MSG_ERROR("Can't continue : connection cache null ptr");
+    ZE_LogMsgError(0, "Can't continue : connection cache null ptr");
     return 0;
   }
 
-  LOG_MSG_INFO(DEBUG_LEVEL, "Updating Connection Rate Results...");
+  ZE_LogMsgInfo(DEBUG_LEVEL, "Updating Connection Rate Results...");
 
   DATA_LOCK();
 
 #if _PERIODIC_DEBUG
-  MESSAGE_INFO(9, "smtprate_update_table : before  : %d nodes",
+  ZE_MessageInfo(9, "smtprate_update_table : before  : %d nodes",
                jbt_count(&hdata.db_rate));
 #endif
 
@@ -640,7 +640,7 @@ smtprate_update_table(w_width)
         continue;
 
       if (h->date + w_width < now) {
-        LOG_MSG_INFO(DEBUG_LEVEL, "connection too old...");
+        ZE_LogMsgInfo(DEBUG_LEVEL, "connection too old...");
         continue;
       }
 
@@ -648,7 +648,7 @@ smtprate_update_table(w_width)
         time_t              tbucket = h->date / SZ_BUCKET;
         int                 ibucket = tbucket % NB_BUCKET;
 
-        LOG_MSG_INFO(DEBUG_LEVEL, "Updating info for %s...", p.key);
+        ZE_LogMsgInfo(DEBUG_LEVEL, "Updating info for %s...", p.key);
 
         if (hdata.gres.Srate[ibucket].date > tbucket)
           continue;
@@ -666,7 +666,7 @@ smtprate_update_table(w_width)
         strlcpy(p.key, h->key, sizeof (p.key));
 
         if ((t = jbt_get(&hdata.db_rate, &p)) != NULL) {
-          LOG_MSG_INFO(DEBUG_LEVEL, "   %-20s already there...", p.key);
+          ZE_LogMsgInfo(DEBUG_LEVEL, "   %-20s already there...", p.key);
 
           if (t->Srate[ibucket].date < tbucket) {
             memset(&t->Srate[ibucket], 0, sizeof (Bucket_T));
@@ -675,7 +675,7 @@ smtprate_update_table(w_width)
           if (t->Srate[ibucket].date == tbucket)
             t->Srate[ibucket].nb[which] += h->nb;
         } else {
-          LOG_MSG_INFO(DEBUG_LEVEL, "   %-20s not already there...", p.key);
+          ZE_LogMsgInfo(DEBUG_LEVEL, "   %-20s not already there...", p.key);
           memset(&p, 0, sizeof (p));
           strlcpy(p.key, h->key, sizeof (p.key));
 
@@ -684,7 +684,7 @@ smtprate_update_table(w_width)
           p.Srate[ibucket].nb[which] += h->nb;
 
           if (!jbt_add(&hdata.db_rate, &p))
-            LOG_MSG_ERROR("Error adding new leaf to db");
+            ZE_LogMsgError(0, "Error adding new leaf to db");
           else
             hdata.hist[which].nb += h->nb;
         }
@@ -700,14 +700,14 @@ smtprate_update_table(w_width)
     if (rateDef[which].name == NULL)
       continue;
 
-    LOG_MSG_INFO(DEBUG_LEVEL, "Global %-16s : %d",
+    ZE_LogMsgInfo(DEBUG_LEVEL, "Global %-16s : %d",
                  rateDef[which].name, hdata.gres.rate[which]);
   }
 
-  LOG_MSG_INFO(DEBUG_LEVEL, "SMTP Rates update OK !");
+  ZE_LogMsgInfo(DEBUG_LEVEL, "SMTP Rates update OK !");
 
 #if _PERIODIC_DEBUG
-  MESSAGE_INFO(9, "smtprate_update_table : after   : %d nodes",
+  ZE_MessageInfo(9, "smtprate_update_table : after   : %d nodes",
                jbt_count(&hdata.db_rate));
 #endif
 
@@ -723,7 +723,7 @@ smtprate_update_table(w_width)
 
   smtprate_cleanup_table(time(NULL), 0);
 
-  LOG_MSG_INFO(DEBUG_LEVEL, "Exiting ...");
+  ZE_LogMsgInfo(DEBUG_LEVEL, "Exiting ...");
 
   return hdata.gres.rate[RATE_CONN];
 }
@@ -744,7 +744,7 @@ smtprate_save_table(filename)
   int                 which;
 
   if (!smtprate_init(0, 0)) {
-    LOG_MSG_ERROR("Can't continue : connection cache null ptr");
+    ZE_LogMsgError(0, "Can't continue : connection cache null ptr");
     return;
   }
 
@@ -759,17 +759,17 @@ smtprate_save_table(filename)
     if (rateDef[which].fname == NULL || hdata.hist[which].data == NULL)
       continue;
 
-    LOG_MSG_INFO(DEBUG_LEVEL, "Saving \"%s\" history file : %s",
+    ZE_LogMsgInfo(DEBUG_LEVEL, "Saving \"%s\" history file : %s",
                  rateDef[which].name, rateDef[which].fname);
 
     snprintf(fname, sizeof (fname), "%s/%s", work_dir, rateDef[which].fname);
     if ((fd = open(fname, O_WRONLY | O_CREAT | O_TRUNC, 00644)) >= 0) {
       size = DIM_HIST * sizeof (HistEvt_T);
       if (write(fd, hdata.hist[which].data, size) != size)
-        LOG_MSG_WARNING("Can't write %s file", fname);
+        ZE_LogMsgWarning(0, "Can't write %s file", fname);
       close(fd);
     } else
-      LOG_MSG_WARNING("Can't open %s file", fname);
+      ZE_LogMsgWarning(0, "Can't open %s file", fname);
   }
 
   DATA_UNLOCK();
@@ -795,10 +795,10 @@ smtprate_read_table(filename)
   if (work_dir == NULL)
     work_dir = ZE_WORKDIR;
 
-  LOG_MSG_INFO(DEBUG_LEVEL, "Entering ...");
+  ZE_LogMsgInfo(DEBUG_LEVEL, "Entering ...");
 
   if (!smtprate_init(0, 0)) {
-    LOG_MSG_ERROR("Can't continue : connection cache null ptr");
+    ZE_LogMsgError(0, "Can't continue : connection cache null ptr");
     return 0;
   }
 
@@ -812,17 +812,17 @@ smtprate_read_table(filename)
     if (hdata.hist[which].data == NULL)
       continue;
 
-    LOG_MSG_INFO(DEBUG_LEVEL, "Reading \"%s\" history file : %s",
+    ZE_LogMsgInfo(DEBUG_LEVEL, "Reading \"%s\" history file : %s",
                  rateDef[which].name, rateDef[which].fname);
 
     snprintf(fname, sizeof (fname), "%s/%s", work_dir, rateDef[which].fname);
     if ((fd = open(fname, O_RDONLY)) >= 0) {
       size = DIM_HIST * sizeof (HistEvt_T);
       if (read(fd, hdata.hist[which].data, size) != size)
-        LOG_MSG_WARNING("Can't read %s file", fname);
+        ZE_LogMsgWarning(0, "Can't read %s file", fname);
       close(fd);
     } else
-      LOG_MSG_WARNING("Can't open %s file", fname);
+      ZE_LogMsgWarning(0, "Can't open %s file", fname);
 
     for (i = 0, imax = 0, tmax = 0; i < DIM_HIST; i++) {
       if (tmax == 0)
@@ -847,7 +847,7 @@ smtprate_read_table(filename)
   smtprate_update_table(connrate_window);
 #endif
 
-  LOG_MSG_INFO(DEBUG_LEVEL, "Exiting ...");
+  ZE_LogMsgInfo(DEBUG_LEVEL, "Exiting ...");
 
   return 0;
 }
@@ -859,11 +859,11 @@ smtprate_read_table(filename)
 void
 smtprate_log_table()
 {
-  MESSAGE_INFO(10, "*** THROTTLE TABLE");
+  ZE_MessageInfo(10, "*** THROTTLE TABLE");
 #if 0
   for (i = 0; i < hdata.conn_nb; i++) {
     if (hdata.rate_res[i].nb > 5)
-      MESSAGE_INFO(10, " CONN THROTTLE : %-16s %5d",
+      ZE_MessageInfo(10, " CONN THROTTLE : %-16s %5d",
                    hdata.rate_res[i].ip, hdata.rate_res[i].nb);
   }
 #endif
@@ -987,10 +987,10 @@ smtprate_print_table(fd, allhosts, verbose, hostnames, win, flags, nbrecs)
   if (fd < 0)
     fd = STDOUT_FILENO;
 
-  LOG_MSG_INFO(DEBUG_LEVEL, "Entering ...");
+  ZE_LogMsgInfo(DEBUG_LEVEL, "Entering ...");
 
   if (!smtprate_init(0, 0)) {
-    LOG_MSG_ERROR("Can't continue : connection cache null ptr");
+    ZE_LogMsgError(0, "Can't continue : connection cache null ptr");
     return;
   }
 
@@ -1138,7 +1138,7 @@ smtprate_print_table(fd, allhosts, verbose, hostnames, win, flags, nbrecs)
     MUTEX_UNLOCK(&fdmutex);
   }
 
-  LOG_MSG_INFO(DEBUG_LEVEL, "Exiting ...");
+  ZE_LogMsgInfo(DEBUG_LEVEL, "Exiting ...");
 }
 
 

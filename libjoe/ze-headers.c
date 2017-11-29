@@ -48,7 +48,7 @@ add_to_msgheader_list(head, attr, value)
 
   if ((p = (header_T *) malloc(sizeof (header_T))) == NULL)
   {
-    LOG_SYS_ERROR("malloc header_T error");
+    ZE_LogSysError("malloc header_T error");
     return FALSE;
   }
   memset(p, 0, sizeof (header_T));
@@ -58,7 +58,7 @@ add_to_msgheader_list(head, attr, value)
     p->attr = strdup(attr);
     if (p->attr == NULL)
     {
-      LOG_SYS_ERROR("strdup(attr) error");
+      ZE_LogSysError("strdup(attr) error");
       res = FALSE;
     }
   } else
@@ -69,7 +69,7 @@ add_to_msgheader_list(head, attr, value)
     p->value = strdup(value);
     if (p->value == NULL)
     {
-      LOG_SYS_ERROR("strdup(value) error");
+      ZE_LogSysError("strdup(value) error");
       res = FALSE;
     }
   } else
@@ -86,7 +86,7 @@ add_to_msgheader_list(head, attr, value)
     FREE(p);
   }
 
-  MESSAGE_INFO(19, "Adding %s : %s (res = %d)", attr, value, res);
+  ZE_MessageInfo(19, "Adding %s : %s (res = %d)", attr, value, res);
 
   return res;
 }
@@ -162,7 +162,7 @@ get_msgheader(head, attr)
   if ((attr == NULL) || (strlen(attr) == 0))
     return head;
 
-  LOG_MSG_INFO(19, "Looking for ATTR = %s %s", attr,
+  ZE_LogMsgInfo(19, "Looking for ATTR = %s %s", attr,
                (head == NULL ? "NULL" : "NOTNULL"));
 
   for (p = head; p != NULL; p = p->next)
@@ -170,7 +170,7 @@ get_msgheader(head, attr)
     if (p->attr == NULL)
       continue;
 
-    MESSAGE_INFO(19, "ATTR = %-32s %s ", attr, p->attr);
+    ZE_MessageInfo(19, "ATTR = %-32s %s ", attr, p->attr);
     if (strcasecmp(attr, p->attr) == 0)
       return p;
   }
@@ -208,7 +208,7 @@ get_msgheader_index(head, attr)
   if ((attr == NULL) || (strlen(attr) == 0))
     return i;
 
-  LOG_MSG_INFO(19, "Looking for ATTR = %s %s", attr,
+  ZE_LogMsgInfo(19, "Looking for ATTR = %s %s", attr,
                (head == NULL ? "NULL" : "NOTNULL"));
 
   for (p = head; p != NULL; p = p->next)
@@ -217,7 +217,7 @@ get_msgheader_index(head, attr)
     if (p->attr == NULL)
       continue;
 
-    MESSAGE_INFO(19, "ATTR = %-32s %s ", attr, p->attr);
+    ZE_MessageInfo(19, "ATTR = %-32s %s ", attr, p->attr);
     if (strcasecmp(attr, p->attr) == 0)
       return i;
   }
@@ -240,7 +240,7 @@ get_msgheader_index_2(head, attr, index)
   if ((attr == NULL) || (strlen(attr) == 0))
     return NULL;
 
-  LOG_MSG_INFO(19, "Looking for ATTR = %s %s", attr,
+  ZE_LogMsgInfo(19, "Looking for ATTR = %s %s", attr,
                (head == NULL ? "NULL" : "NOTNULL"));
 
   for (p = head; p != NULL; p = p->next)
@@ -248,7 +248,7 @@ get_msgheader_index_2(head, attr, index)
     if (p->attr == NULL)
       continue;
 
-    MESSAGE_INFO(19, "ATTR = %-32s %s ", attr, p->attr);
+    ZE_MessageInfo(19, "ATTR = %-32s %s ", attr, p->attr);
     if (strcasecmp(attr, p->attr) == 0)
     {
       i++;
@@ -286,7 +286,7 @@ get_msgheader_attribute(header, attr, value, size)
   if (header->value == NULL)
     return FALSE;
 
-  MESSAGE_INFO(15, "Looking for %s, in %s = %s", attr,
+  ZE_MessageInfo(15, "Looking for %s, in %s = %s", attr,
                STRNULL(header->attr, "ATTR"), header->value);
 
   if (!strexpr(header->value, attr, NULL, &pf, TRUE))
@@ -316,7 +316,7 @@ get_msgheader_attribute(header, attr, value, size)
   strlcpy(value, p, size);
 #endif
 
-  MESSAGE_INFO(15, "FOUND ! %s = %s", attr, value);
+  ZE_MessageInfo(15, "FOUND ! %s = %s", attr, value);
 
   return TRUE;
 }

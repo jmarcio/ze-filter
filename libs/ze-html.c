@@ -79,7 +79,7 @@ html_clean_codes(buf, size)
 
   if ((buf == NULL) || (size == 0) || (strlen(buf) > size))
   {
-    LOG_MSG_ERROR("Error...");
+    ZE_LogMsgError(0, "Error...");
     return;
   }
 
@@ -87,7 +87,7 @@ html_clean_codes(buf, size)
   sz += (8 - sz % 8);
   if ((new = (char *) malloc(sz)) == NULL)
   {
-    LOG_SYS_ERROR("malloc new error");
+    ZE_LogSysError("malloc new error");
     return;
   }
   memcpy(new, buf, size);
@@ -176,7 +176,7 @@ cleanup_html_buffer(buf, size)
   sz += (8 - sz % 8);
   if ((p = (char *) malloc(sz)) == NULL)
   {
-    LOG_SYS_ERROR("malloc error");
+    ZE_LogSysError("malloc error");
     return NULL;
   }
 
@@ -378,7 +378,7 @@ check_valid_html_tags(id, buf)
         *v = '\0';
       }
 
-      MESSAGE_INFO(19, "%s SPAMCHECK : Checking : %s, %ld %ld", id, rbuf, pi,
+      ZE_MessageInfo(19, "%s SPAMCHECK : Checking : %s, %ld %ld", id, rbuf, pi,
                    pf);
 
       for (s = VALID_HTML_TAGS; (*s != NULL) && !ok; s++)
@@ -395,10 +395,10 @@ check_valid_html_tags(id, buf)
       {
         score++;
         if (score <= 10)
-          MESSAGE_INFO(10, "%s SPAM CHECK - NOT VALID HTML TAG : %s", id, rbuf);
+          ZE_MessageInfo(10, "%s SPAM CHECK - NOT VALID HTML TAG : %s", id, rbuf);
         if (score == 10)
         {
-          MESSAGE_INFO(10,
+          ZE_MessageInfo(10,
                        "%s SPAM CHECK - NOT VALID HTML TAG : more than 10 already found ! ",
                        id);
           break;

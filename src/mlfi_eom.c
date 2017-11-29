@@ -92,7 +92,7 @@ static sfsistat     eom_check_content(SMFICTX * ctx, bool * done);
 	      strlcat(buft, st, sizeof (buft));				\
 	    }								\
 									\
-	  MESSAGE_INFO(10, "%s Content Unchecked by policy %s %s",	\
+	  ZE_MessageInfo(10, "%s Content Unchecked by policy %s %s",	\
 		       CONNID_STR(priv->id), bufh, buft);		\
 	}								\
     }									\
@@ -129,7 +129,7 @@ mlfi_eom(ctx)
   sm_macro_update(ctx, priv->sm);
 
   if (!spool_file_close(priv))
-    LOG_MSG_WARNING("spool_file_close error");
+    ZE_LogMsgWarning(0, "spool_file_close error");
 
   if (priv->rej_greyrcpt > 0) {
     priv->rej_greymsgs++;
@@ -229,7 +229,7 @@ mlfi_eom(ctx)
 
         nb++;
         log_msg_context(ctx, *hdr);
-        MESSAGE_INFO(10, "%s SPAM CHECK - %s : %s",
+        ZE_MessageInfo(10, "%s SPAM CHECK - %s : %s",
                      CONNID_STR(priv->id), *hdr, h->value);
       }
       if (do_it) {
@@ -455,9 +455,9 @@ mlfi_eom(ctx)
     int                 n;
 
     if ((n = update_nb_badrcpts(ctx)) > 0)
-      MESSAGE_INFO(19, "%s : BAD RECIPIENTS : %d", CONNID_STR(priv->id), n);
+      ZE_MessageInfo(19, "%s : BAD RECIPIENTS : %d", CONNID_STR(priv->id), n);
     priv->nb_mbadrcpt = n;
-    MESSAGE_INFO(19, "mlfi_eom : bad = %d", n);
+    ZE_MessageInfo(19, "mlfi_eom : bad = %d", n);
     result = check_nb_badrcpts(ctx);
     if (result != SMFIS_CONTINUE)
       priv->rej_badrcpt = TRUE;
@@ -494,7 +494,7 @@ mlfi_eom(ctx)
       if (h->value == NULL)
         continue;
       for (cmd = SYMPA_CMDS; (*cmd != NULL); cmd++) {
-        MESSAGE_INFO(12, "Checking Subject %s %s", h->value, *cmd);
+        ZE_MessageInfo(12, "Checking Subject %s %s", h->value, *cmd);
         if (strexpr(h->value, *cmd, NULL, NULL, TRUE)) {
           priv->msg_short = FALSE;
           break;
@@ -507,7 +507,7 @@ mlfi_eom(ctx)
     int                 nb;
 
     nb = livehistory_add_entry(priv->peer_addr, time(NULL), 1, LH_EMPTYMSGS);
-    MESSAGE_INFO(9, "%s Empty or too short message : %d bytes",
+    ZE_MessageInfo(9, "%s Empty or too short message : %d bytes",
                  CONNID_STR(priv->id), priv->msg_size);
     if (cf_get_int(CF_REJECT_SHORT_BODIES) == OPT_YES) {
       bool                doit = FALSE;
@@ -601,10 +601,10 @@ mlfi_eom(ctx)
     int                 n;
 
     if ((n = update_nb_badrcpts(ctx)) > 0)
-      MESSAGE_INFO(19, "%s : BAD RECIPIENTS : %d", CONNID_STR(priv->id), n);
+      ZE_MessageInfo(19, "%s : BAD RECIPIENTS : %d", CONNID_STR(priv->id), n);
     priv->nb_cbadrcpt += n;
     priv->nb_mbadrcpt = 0;
-    MESSAGE_INFO(19, "mlfi_abort : bad = %d", n);
+    ZE_MessageInfo(19, "mlfi_abort : bad = %d", n);
   }
 
 fin:
@@ -628,7 +628,7 @@ fin:
         char               *serror;
 
         serror = STRBOOL(p->xfile, "SUSPECT ???", "CLEAN");
-        MESSAGE_INFO(10, "%s : **** (%-11s) : %-10s %-30s %s\n",
+        ZE_MessageInfo(10, "%s : **** (%-11s) : %-10s %-30s %s\n",
                      CONNID_STR(priv->id),
                      serror, STRNULL(p->disposition, ""),
                      STRNULL(p->mimetype, ""), STRNULL(p->name, ""));
@@ -806,7 +806,7 @@ eom_check_xfiles(ctx, ahead, done)
             char               *tag = cf_get_str(CF_XFILE_SUBJECT_TAG);
 
             if (!add_tag2subject(ctx, tag))
-              LOG_MSG_WARNING("Error changing subject");
+              ZE_LogMsgWarning(0, "Error changing subject");
           }
           result = SMFIS_CONTINUE;
           break;                /* end of OPT_X_HEADER */
@@ -865,7 +865,7 @@ eom_check_virus(ctx, ahead, done)
     memset(data, 0, sizeof (why));
     strlcpy(question, priv->fname, sizeof (question));
     avres = av_client(why, sizeof (why), data, sizeof (data), question);
-    MESSAGE_INFO(11, "av_client : %3d (%s) (%s)", avres, why,
+    ZE_MessageInfo(11, "av_client : %3d (%s) (%s)", avres, why,
                  strchomp(question));
 
     if (avres == AV_ZERO || avres == AV_OK)
@@ -874,7 +874,7 @@ eom_check_virus(ctx, ahead, done)
     if (avres == AV_ERROR) {
       if (done != NULL)
         *done = TRUE;
-      MESSAGE_ERROR(9, "%s Error with external message scanner",
+      ZE_MessageError(9, "%s Error with external message scanner",
                     CONNID_STR(priv->id));
       if (cf_get_int(CF_SCANNER_REJECT_ON_ERROR) == OPT_YES) {
         (void) jsmfi_vsetreply(ctx, "450", "4.6.0",
@@ -1003,10 +1003,10 @@ eom_check_content(ctx, done)
         bcheck.nbt = 64;
       score = sfilter_check_message(CONNID_STR(priv->id), priv->fname, &bcheck);
       if (score >= 0.)
-        MESSAGE_INFO(10, "%s Bayes filter score : %6.3f",
+        ZE_MessageInfo(10, "%s Bayes filter score : %6.3f",
                      CONNID_STR(priv->id), score);
       else
-        MESSAGE_INFO(10, "%s Bayes filter score : Unchecked",
+        ZE_MessageInfo(10, "%s Bayes filter score : Unchecked",
                      CONNID_STR(priv->id));
       if (score >= 0.) {
         priv->rawScores.Bayes.value = score;
@@ -1048,7 +1048,7 @@ eom_check_content(ctx, done)
     }
     fsize = get_file_size(priv->fname);
 
-    MESSAGE_INFO(10, "%s LogReg filter sizes : size %7d, size max %7d %s %s",
+    ZE_MessageInfo(10, "%s LogReg filter sizes : size %7d, size max %7d %s %s",
                  CONNID_STR(priv->id), fsize, fsize_max,
                  (fsize >= fsize_max ? "XXX" : "---"),
                  (fsize >= 300000 && fsize < fsize_max ? "YYY" : "---"));
@@ -1085,7 +1085,7 @@ eom_check_content(ctx, done)
         nscore.actif = FALSE;
 
         agree = TRUE;
-        MESSAGE_INFO(10, "%s LogReg filter score : %6.3f",
+        ZE_MessageInfo(10, "%s LogReg filter score : %6.3f",
                      CONNID_STR(priv->id), priv->rawScores.LogReg.value);
 
         if (priv->rawScores.Bayes.actif && priv->rawScores.LogReg.actif) {
@@ -1175,7 +1175,7 @@ eom_check_content(ctx, done)
                  STRBOOL(agree, "", STRBOOL(win > 0, "Winner=B", "Winner=P")),
                  STRBOOL(agree, "", STRBOOL(gres > 0.5, "S", "H")));
 
-        MESSAGE_INFO(10, buf);
+        ZE_MessageInfo(10, buf);
 
         smfi_addheader(ctx, "X-Scores-Stats", buf);
 
@@ -1217,7 +1217,7 @@ eom_check_content(ctx, done)
     bool                do_log = FALSE;
 
     result = evaluate_message_score(ctx, &do_log);
-    if (do_log && log_level >= 8) {
+    if (do_log && ze_logLevel >= 8) {
       char                logbuf[256];
 
       snprintf(logbuf, sizeof (logbuf), "%s : B=%.3f U=%d R=%d O=%d -> G=%.3f",

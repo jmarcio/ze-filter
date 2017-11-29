@@ -128,7 +128,7 @@ probability_average(t, n)
       lodd /= nt;
 #if 0
     hmt = 1 - hmt / (nt * log(2.));
-    MESSAGE_INFO(19, "X HMT = %6.3f", hmt);
+    ZE_MessageInfo(19, "X HMT = %6.3f", hmt);
 #endif
 
     return 1 / (1 + exp(-lodd));
@@ -335,7 +335,7 @@ sfilter_check_message(id, fname, bcheck)
   if (bfilter_handle_message(id, fname, browse_tokens, bcheck))
     prob = probability_average(bcheck->tok, bcheck->nbt);
 
-  MESSAGE_INFO(11, "PROB = %6.2f", prob);
+  ZE_MessageInfo(11, "PROB = %6.2f", prob);
   return prob;
 }
 

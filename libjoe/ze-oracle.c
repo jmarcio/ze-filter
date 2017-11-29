@@ -53,12 +53,12 @@ static pthread_mutex_t st_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 #define ORA_LOCK() \
   if (pthread_mutex_lock(&st_mutex) != 0) { \
-    LOG_SYS_ERROR("pthread_mutex_lock(st_mutex)"); \
+    ZE_LogSysError("pthread_mutex_lock(st_mutex)"); \
   }
 
 #define ORA_UNLOCK() \
   if (pthread_mutex_unlock(&st_mutex) != 0) { \
-    LOG_SYS_ERROR("pthread_mutex_unlock(st_mutex)"); \
+    ZE_LogSysError("pthread_mutex_unlock(st_mutex)"); \
   }
 #endif
 
@@ -157,7 +157,7 @@ add_oradata_rec(vs, arg)
     s += pf;
     *s++ = '\0';
 
-    MESSAGE_INFO(11, "KEY = (%s) VALUE = (%s)\n", key, val);
+    ZE_MessageInfo(11, "KEY = (%s) VALUE = (%s)\n", key, val);
 
     if (STRCASEEQUAL(key, "score"))
     {
@@ -165,7 +165,7 @@ add_oradata_rec(vs, arg)
       if (strspn(val, "0123456789.") == strlen(val))
         r.score = atof(val);
       else
-        MESSAGE_WARNING(9, "Non numeric value found... %s=%s", key, val);
+        ZE_MessageWarning(9, "Non numeric value found... %s=%s", key, val);
     }
     if (STRCASEEQUAL(key, "odds"))
     {
@@ -178,7 +178,7 @@ add_oradata_rec(vs, arg)
         if (v > 0.)
           r.pOdds = log(v);
       } else
-        MESSAGE_WARNING(9, "Non numeric value found... %s=%s", key, val);
+        ZE_MessageWarning(9, "Non numeric value found... %s=%s", key, val);
     }
     if (STRCASEEQUAL(key, "action"))
     {
@@ -193,7 +193,7 @@ add_oradata_rec(vs, arg)
   strlcpy(r.data, k, sizeof (r.data));
   strlcpy(r.type, v, sizeof (r.type));
 
-  MESSAGE_INFO(12, "TYPE=%-15s SCORE=%.2f VALUE=%s\n", r.type, (double) r.score,
+  ZE_MessageInfo(12, "TYPE=%-15s SCORE=%.2f VALUE=%s\n", r.type, (double) r.score,
                r.data);
 
   return j_table_add(&htbl, &r);
@@ -210,7 +210,7 @@ read_it(path, tag)
 {
   int                 r;
 
-  r = j_rd_file(path, tag, add_oradata_rec, NULL);
+  r = zm_RdFile(path, tag, add_oradata_rec, NULL);
 
   return r >= 0;
 }
@@ -224,7 +224,7 @@ load_oradata_table(cfdir, fname)
   static int          htbl_ok = FALSE;
   bool                result = FALSE;
 
-  MESSAGE_INFO(12, "Will load %s file", STRNULL(fname, "(NULL)"));
+  ZE_MessageInfo(12, "Will load %s file", STRNULL(fname, "(NULL)"));
 
   if ((fname == NULL) || (strlen(fname) == 0))
     fname = cf_get_str(CF_ORACLE_DATA_FILE);
@@ -289,7 +289,7 @@ count_oradata(id, type, data, find, odds)
       if (strexpr(data, p.data, NULL, NULL, TRUE))
       {
         if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-          MESSAGE_NOTICE(10, "%s SPAM CHECK - UNWANTED %s : %s", id, type, p.data);
+          ZE_MessageNotice(10, "%s SPAM CHECK - UNWANTED %s : %s", id, type, p.data);
         nb++;
         bestof_add(&best, p.pOdds);
         if (find)
@@ -303,7 +303,7 @@ count_oradata(id, type, data, find, odds)
   if (odds != NULL)
     *odds = mean;
 
-  MESSAGE_INFO(11, "%s ->Computed ORACLE %-9s odds is %5.2f ...", id, type, mean);
+  ZE_MessageInfo(11, "%s ->Computed ORACLE %-9s odds is %5.2f ...", id, type, mean);
 
   return nb;
 }
@@ -319,12 +319,12 @@ static pthread_mutex_t vc_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 #define VC_LOCK() \
   if (pthread_mutex_lock(&vc_mutex) != 0) { \
-    LOG_SYS_ERROR("pthread_mutex_lock(vc_mutex)"); \
+    ZE_LogSysError("pthread_mutex_lock(vc_mutex)"); \
   }
 
 #define VC_UNLOCK() \
   if (pthread_mutex_unlock(&vc_mutex) != 0) { \
-    LOG_SYS_ERROR("pthread_mutex_unlock(vc_mutex)"); \
+    ZE_LogSysError("pthread_mutex_unlock(vc_mutex)"); \
   }
 #else
 #define VC_LOCK()
@@ -354,9 +354,9 @@ vector_compare(a, b, dim)
     FREE(ta);
     FREE(tb);
     if ((ta = (double *) malloc(dim * sizeof (double))) == NULL)
-      LOG_SYS_ERROR("malloc(ta)");
+      ZE_LogSysError("malloc(ta)");
     if ((tb = (double *) malloc(dim * sizeof (double))) == NULL)
-      LOG_SYS_ERROR("malloc(tb)");
+      ZE_LogSysError("malloc(tb)");
     sdim = dim;
   }
 
@@ -433,7 +433,7 @@ realcleanup_text_buf(buf, size)
 
   if ((nbuf = strdup(buf)) == NULL)
   {
-    LOG_SYS_ERROR("strdup");
+    ZE_LogSysError("strdup");
     return NULL;
   }
 

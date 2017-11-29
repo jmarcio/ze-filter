@@ -43,7 +43,7 @@ mlfi_data(ctx)
 
   if (priv == NULL)
   {
-    LOG_MSG_WARNING("%s priv is NULL ", CONNID_STR(priv->id));
+    ZE_LogMsgWarning(0, "%s priv is NULL ", CONNID_STR(priv->id));
     result = SMFIS_TEMPFAIL;
     goto fin;
   }
@@ -62,7 +62,7 @@ mlfi_data(ctx)
     /* open a file to store this message */
     if (!spool_file_create(priv))
     {
-      LOG_MSG_WARNING("%s can't create spool file ", CONNID_STR(priv->id));
+      ZE_LogMsgWarning(0, "%s can't create spool file ", CONNID_STR(priv->id));
       result = SMFIS_TEMPFAIL;
     }
   }

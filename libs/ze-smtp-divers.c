@@ -69,13 +69,13 @@ header_date2secs(date)
       hour = str2long(p, NULL, 0) / 100;
 
     if (tm.tm_year >= 138) {
-      MESSAGE_NOTICE(10, "Date invalid ??? %s", date);
+      ZE_MessageNotice(10, "Date invalid ??? %s", date);
       tm.tm_year = MIN(135, tm.tm_year); 
     }
 
     secs = mktime(&tm) + hour * 3600;
 
-    MESSAGE_INFO(15, "%d %d %d %02d %02d %02d %ld\n",
+    ZE_MessageInfo(15, "%d %d %d %02d %02d %02d %ld\n",
                  tm.tm_mday, tm.tm_mon,
                  tm.tm_year, tm.tm_hour, tm.tm_min, tm.tm_sec, secs);
 
@@ -100,13 +100,13 @@ header_date2secs(date)
       hour = str2long(p, NULL, 0) / 100;
 
     if (tm.tm_year >= 138) {
-      MESSAGE_NOTICE(10, "Date invalid ??? %s", date);
+      ZE_MessageNotice(10, "Date invalid ??? %s", date);
       tm.tm_year = MIN(135, tm.tm_year); 
     }
 
     secs = mktime(&tm) + hour * 3600;
 
-    MESSAGE_INFO(15, "%d %d %d %02d %02d %02d %ld\n",
+    ZE_MessageInfo(15, "%d %d %d %02d %02d %02d %ld\n",
                  tm.tm_mday, tm.tm_mon,
                  tm.tm_year, tm.tm_hour, tm.tm_min, tm.tm_sec, secs);
 
@@ -114,7 +114,7 @@ header_date2secs(date)
   }
 
 fin:
-  MESSAGE_INFO(13, "header_date2secs : %s -> %ld", STRNULL(date, "NULL"), secs);
+  ZE_MessageInfo(13, "header_date2secs : %s -> %ld", STRNULL(date, "NULL"), secs);
 
   return secs;
 }
@@ -150,7 +150,7 @@ extract_email_address(dst, org, sz)
 
     strlcpy(dst, org + pi + 1, sz);
 
-    MESSAGE_INFO(19, "OK %s %s", org, dst);
+    ZE_MessageInfo(19, "OK %s %s", org, dst);
   } else
   {
     int                 l = strlen(org);
@@ -160,7 +160,7 @@ extract_email_address(dst, org, sz)
       l = sz - 1;
     strncpy(dst, org, l);
 
-    MESSAGE_INFO(19, "KO %s %s", org, dst);
+    ZE_MessageInfo(19, "KO %s %s", org, dst);
   }
   strtolower(dst);
 
@@ -379,7 +379,7 @@ jc_fill_reply(r, rcode, xcode, msg, result)
   /* XXX A voir */
   if (*xcode != *rcode)
   {
-    LOG_MSG_ERROR("rcode=(%s) and xcode=(%s) don't match", rcode, xcode);
+    ZE_LogMsgError(0, "rcode=(%s) and xcode=(%s) don't match", rcode, xcode);
     return FALSE;
   }
   if (strlen(rcode) == 0)

@@ -124,11 +124,11 @@ callback_stats_dump(fd, line)
                 "*********", "*********");
     } else
     {
-      MESSAGE_INFO(9, "   Callback Handling Times Statistics");
-      MESSAGE_INFO(9, "*  %-15s : %8s %10s %10s %10s %10s",
+      ZE_MessageInfo(9, "   Callback Handling Times Statistics");
+      ZE_MessageInfo(9, "*  %-15s : %8s %10s %10s %10s %10s",
                    "Callback", "Count", "Minimum", "Maximum", "Mean",
                    "Std. Dev.");
-      MESSAGE_INFO(9, "*  %-15s : %8s %10s %10s %10s %10s", "********",
+      ZE_MessageInfo(9, "*  %-15s : %8s %10s %10s %10s %10s", "********",
                    "********", "*********", "*********", "*********",
                    "*********");
     }
@@ -142,7 +142,7 @@ callback_stats_dump(fd, line)
                   kmax(&callback_st[i]),
                   kmean(&callback_st[i]), kstddev(&callback_st[i]));
       else
-        MESSAGE_INFO(9, "*  %-15s : %8d %10.1f %10.1f %10.1f %10.1f  ms",
+        ZE_MessageInfo(9, "*  %-15s : %8d %10.1f %10.1f %10.1f %10.1f  ms",
                      CALLBACK_LABEL(i),
                      kcount(&callback_st[i]),
                      kmin(&callback_st[i]),
@@ -162,10 +162,10 @@ callback_stats_dump(fd, line)
                 kmean(&callback_gst), kstddev(&callback_gst));
     } else
     {
-      MESSAGE_INFO(9, "*  %-15s : %8s %10s %10s %10s %10s",
+      ZE_MessageInfo(9, "*  %-15s : %8s %10s %10s %10s %10s",
                    "********", "********", "*********", "*********",
                    "*********", "*********");
-      MESSAGE_INFO(9, "*  %-15s : %8d %10.1f %10.1f %10.1f %10.1f  ms",
+      ZE_MessageInfo(9, "*  %-15s : %8d %10.1f %10.1f %10.1f %10.1f  ms",
                    "Global",
                    kcount(&callback_gst),
                    kmin(&callback_gst),

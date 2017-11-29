@@ -117,7 +117,7 @@ zeMap_Open(map, env, name, rdonly, cache_size)
   s = "local:";
   if (strncasecmp(map->name, s, strlen(s)) == 0);
 
-  if (strexpr(map->name, "^/.*", NULL, &pf, TRUE));
+  if (zeStrRegex(map->name, "^/.*", NULL, &pf, TRUE));
 
   map->cache_size = cache_size;
   map->env = env;

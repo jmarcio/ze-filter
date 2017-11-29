@@ -104,7 +104,7 @@ free_private_data(priv, ok)
   priv->dbrcpt_msg_unknown = 0;
   priv->dbrcpt_msg_spamtrap = 0;
   if (!spool_file_forget(priv))
-    LOG_MSG_ERROR("spool_file_forget error");
+    ZE_LogMsgError(0, "spool_file_forget error");
   priv->save_msg = FALSE;
   priv->save_why = 0;
   FREE(priv->hdr_subject);

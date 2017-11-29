@@ -47,7 +47,7 @@ mlfi_negotiate(SMFICTX * ctx,
   if (priv != NULL) {
     if (smfi_setpriv(ctx, priv) != MI_SUCCESS) {
       FREE(priv);
-      LOG_MSG_ERROR("smfi_setpriv(priv) error");
+      ZE_LogMsgError(0, "smfi_setpriv(priv) error");
       (void) jsmfi_setreply(ctx, "421", "4.5.1",
                             "I'm too busy now. Try again later !");
       result = SMFIS_TEMPFAIL;
@@ -63,7 +63,7 @@ mlfi_negotiate(SMFICTX * ctx,
     static int          n = 0;
 
     if (n++ < 5)
-      MESSAGE_INFO(10, "MTA unable to send rejected recipients information");
+      ZE_MessageInfo(10, "MTA unable to send rejected recipients information");
   } else
     *pf1 |= SMFIP_RCPT_REJ;
 #if 0

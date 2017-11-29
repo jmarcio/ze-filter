@@ -67,7 +67,7 @@ jreg_comp(re, expr, flags)
   use_pcre = FALSE;
 #endif             /* USE_PCRE */
 
-  MESSAGE_INFO(20, "Using PCRE : %s", use_pcre ? "YES" : "NO"); 
+  ZE_MessageInfo(20, "Using PCRE : %s", use_pcre ? "YES" : "NO"); 
 
   if (re->signature == SIGNATURE)
     jreg_free(re);
@@ -83,12 +83,12 @@ jreg_comp(re, expr, flags)
 
       re->pcre_rebase = pcre_compile(expr, J_PCRE_FLAGS, &errptr, &erroffset, NULL);
       if (re->pcre_rebase == NULL)
-        LOG_MSG_ERROR("pcre_compile error : %s", errptr);
+        ZE_LogMsgError(0, "pcre_compile error : %s", errptr);
       if (re->pcre_rebase != NULL)
       {
         re->pcre_rextra = pcre_study(re->pcre_rebase, 0, &errptr);
         if (re->pcre_rextra == NULL)
-          LOG_MSG_INFO(12, "pcre_study error : %s", errptr);
+          ZE_LogMsgInfo(12, "pcre_study error : %s", errptr);
       }
       re->re_ok = (re->pcre_rebase != NULL);
     }
