@@ -1,7 +1,8 @@
 
 noinst_LIBRARIES      = 	libze.a 
 
-libze_a_SOURCES       = 	zeStrings.c \
+libze_a_SOURCES       = 	zeString.c \
+				zeStrings.c \
 				zeStrConvert.c \
 				zeFileSystem.c \
 				zeDb.c \
@@ -9,15 +10,9 @@ libze_a_SOURCES       = 	zeStrings.c \
 				zeSyslog.c \
 				zeRdFile.c \
 				zeRegex.c
-				strlcat.c 
 #				ze-linkedlist.c \
-#				ze-map.c \
-#				ze-syslog.c \
 #				ze-divers.c \
 #				ze-strings.c \
-#				ze-strconvert.c \
-#				ze-rdfile.c \
-#				strlcpy.c
 
 
 #LDADD                 = @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@

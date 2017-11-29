@@ -109,9 +109,10 @@ am__v_AR_0 = @echo "  AR      " $@;
 am__v_AR_1 = 
 libze_a_AR = $(AR) $(ARFLAGS)
 libze_a_LIBADD =
-am_libze_a_OBJECTS = zeStrings.$(OBJEXT) zeStrConvert.$(OBJEXT) \
-	zeFileSystem.$(OBJEXT) zeDb.$(OBJEXT) zeMap.$(OBJEXT) \
-	zeSyslog.$(OBJEXT) zeRdFile.$(OBJEXT) zeRegex.$(OBJEXT)
+am_libze_a_OBJECTS = zeString.$(OBJEXT) zeStrings.$(OBJEXT) \
+	zeStrConvert.$(OBJEXT) zeFileSystem.$(OBJEXT) zeDb.$(OBJEXT) \
+	zeMap.$(OBJEXT) zeSyslog.$(OBJEXT) zeRdFile.$(OBJEXT) \
+	zeRegex.$(OBJEXT)
 libze_a_OBJECTS = $(am_libze_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -327,7 +328,8 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 noinst_LIBRARIES = libze.a 
-libze_a_SOURCES = zeStrings.c \
+libze_a_SOURCES = zeString.c \
+				zeStrings.c \
 				zeStrConvert.c \
 				zeFileSystem.c \
 				zeDb.c \
@@ -401,6 +403,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeRdFile.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeRegex.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeStrConvert.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeString.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeStrings.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeSyslog.Po@am__quote@
 
@@ -636,7 +639,6 @@ uninstall-am:
 
 .PRECIOUS: Makefile
 
-				strlcat.c 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

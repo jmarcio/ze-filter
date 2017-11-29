@@ -9,7 +9,6 @@ noinst_LIBRARIES	= librepl.a
 librepl_a_SOURCES	= dummyrepl.c \
 			ffs.c \
 			sm_memcmp.c \
-			strlcpy.c strlcat.c \
 			strsep.c \
 			vsyslog.c
 # not yet:		fdwalk.c

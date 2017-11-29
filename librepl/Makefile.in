@@ -112,8 +112,7 @@ am__v_AR_1 =
 librepl_a_AR = $(AR) $(ARFLAGS)
 librepl_a_LIBADD =
 am_librepl_a_OBJECTS = dummyrepl.$(OBJEXT) ffs.$(OBJEXT) \
-	sm_memcmp.$(OBJEXT) strlcpy.$(OBJEXT) strlcat.$(OBJEXT) \
-	strsep.$(OBJEXT) vsyslog.$(OBJEXT)
+	sm_memcmp.$(OBJEXT) strsep.$(OBJEXT) vsyslog.$(OBJEXT)
 librepl_a_OBJECTS = $(am_librepl_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -334,7 +333,6 @@ noinst_LIBRARIES = librepl.a
 librepl_a_SOURCES = dummyrepl.c \
 			ffs.c \
 			sm_memcmp.c \
-			strlcpy.c strlcat.c \
 			strsep.c \
 			vsyslog.c
 
@@ -389,8 +387,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dummyrepl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ffs.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sm_memcmp.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/strlcat.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/strlcpy.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/strsep.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/vsyslog.Po@am__quote@
 

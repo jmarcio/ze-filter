@@ -5,10 +5,10 @@
  * Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz
  *
  *  Auteur       : Jose Marcio Martins da Cruz
- *                 jose.marcio.mc@gmail.org
+ *                 jose.marcio.mc@gmail.com
  *
  *  Historique   :
- *  Creation     : Sun Jun 15 21:32:00 CEST 2014
+ *  Creation     : Wed Nov 29 10:19:07 CET 2017
  *
  * This program is free software - GPL v2., 
  *
@@ -19,21 +19,19 @@
  */
 
 
-#ifndef ZMLIBS_H
+#ifndef ZESTRING_H
 
-#include <ze-macros.h>
+size_t zeStrlcat(char *, const char *, size_t);
+size_t zeStrlcpy(char *, const char *, size_t);
 
-#include <zeSyslog.h>
-#include <zeFileSystem.h>
-#include <zeString.h>
-#include <zeStrings.h>
-#include <zeStrConvert.h>
-#include <ze-linkedlist.h>
-#include <zeDb.h>
-#include <zeMap.h>
-#include <zeRdFile.h>
-#include <zeRegex.h>
+#ifndef HAVE_STRLCAT
+# define     strlcat   zeStrlcat
+#endif
 
-# define ZMLIBS_H    1
-#endif /* ZMLIBS_H */
+#ifndef HAVE_STRLCPY
+# define     strlcpy   zeStrlcpy
+#endif
+
+# define ZESTRING_H    1
+#endif /* ZESTRING_H */
 
