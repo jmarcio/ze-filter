@@ -23,6 +23,7 @@
 
 
 #include <ze-sys.h>
+#include <zeLibs.h>
 #include <ze-filter.h>
 #include <ze-grey-client.h>
 
@@ -307,7 +308,7 @@ grey_server_connect()
   gChan.recv_timeout = 10;
   if ((env = getenv("GREYD_RECV_TIMEOUT")) != NULL)
   {
-    long                to = str2long(env, NULL, gChan.recv_timeout);
+    long                to = zeStr2long(env, NULL, gChan.recv_timeout);
 
     if (to > 100)
       gChan.recv_timeout = to;
@@ -315,7 +316,7 @@ grey_server_connect()
   gChan.send_timeout = 10;
   if ((env = getenv("GREYD_SEND_TIMEOUT")) != NULL)
   {
-    long                to = str2long(env, NULL, gChan.send_timeout);
+    long                to = zeStr2long(env, NULL, gChan.send_timeout);
 
     if (to > 100)
       gChan.send_timeout = to;
@@ -653,12 +654,12 @@ remote_grey_check(ip, from, to, hostname)
           ZE_MessageInfo(DEBUG_LEVEL, "LINE IN : %s", line);
 
           p += sz;
-          if (!strexpr(line, "([0-9]+) .*GREYCHECK ANSWER", NULL, NULL, TRUE))
+          if (!zeStrRegex(line, "([0-9]+) .*GREYCHECK ANSWER", NULL, NULL, TRUE))
             continue;
 
-          argc = str2tokens(line, 16, argv, " ");
+          argc = zeStr2Tokens(line, 16, argv, " ");
           if (argc > 0)
-            code = str2ulong(argv[0], NULL, GREY_OK);
+            code = zeStr2ulong(argv[0], NULL, GREY_OK);
           switch (code)
           {
             case GREY_OK:
@@ -862,12 +863,12 @@ remote_grey_validate(ip, from, to, hostname)
           ZE_MessageInfo(DEBUG_LEVEL, "LINE IN : %s", line);
 
           p += sz;
-          if (!strexpr(line, "([0-9]+) .*GREYVALID ANSWER", NULL, NULL, TRUE))
+          if (!zeStrRegex(line, "([0-9]+) .*GREYVALID ANSWER", NULL, NULL, TRUE))
             continue;
 
-          argc = str2tokens(line, 16, argv, " ");
+          argc = zeStr2Tokens(line, 16, argv, " ");
           if (argc > 0)
-            code = str2ulong(argv[0], NULL, GREY_OK);
+            code = zeStr2ulong(argv[0], NULL, GREY_OK);
           switch (code)
           {
             case GREY_OK:

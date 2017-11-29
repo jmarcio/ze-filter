@@ -122,13 +122,12 @@ am_libcommon_a_OBJECTS = ze-base64.$(OBJEXT) ze-btree.$(OBJEXT) \
 	ze-txtlog.$(OBJEXT) ze-morpho.$(OBJEXT) ze-name2id.$(OBJEXT) \
 	ze-parse-dns.$(OBJEXT) ze-qp.$(OBJEXT) ze-regex.$(OBJEXT) \
 	ze-server.$(OBJEXT) ze-client.$(OBJEXT) ze-shmem.$(OBJEXT) \
-	ze-smtp-divers.$(OBJEXT) ze-strings.$(OBJEXT) \
-	ze-strconvert.$(OBJEXT) ze-time.$(OBJEXT) ze-table.$(OBJEXT) \
-	ze-uudecode.$(OBJEXT) ze-unattach.$(OBJEXT) ze-load.$(OBJEXT) \
-	ze-cyclic.$(OBJEXT) kstats.$(OBJEXT) ze-logit.$(OBJEXT) \
-	ze-bfilter.$(OBJEXT) ze-bsegmentation.$(OBJEXT) \
-	ze-bcheck.$(OBJEXT) md5.$(OBJEXT) sha1.$(OBJEXT) \
-	ze-msg-hash.$(OBJEXT) ze-bestof-n.$(OBJEXT) \
+	ze-smtp-divers.$(OBJEXT) ze-strconvert.$(OBJEXT) \
+	ze-time.$(OBJEXT) ze-table.$(OBJEXT) ze-uudecode.$(OBJEXT) \
+	ze-unattach.$(OBJEXT) ze-load.$(OBJEXT) ze-cyclic.$(OBJEXT) \
+	kstats.$(OBJEXT) ze-logit.$(OBJEXT) ze-bfilter.$(OBJEXT) \
+	ze-bsegmentation.$(OBJEXT) ze-bcheck.$(OBJEXT) md5.$(OBJEXT) \
+	sha1.$(OBJEXT) ze-msg-hash.$(OBJEXT) ze-bestof-n.$(OBJEXT) \
 	ze-lr-funcs.$(OBJEXT)
 libcommon_a_OBJECTS = $(am_libcommon_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
@@ -375,7 +374,6 @@ libcommon_a_SOURCES = ze-base64.c \
 				ze-client.c \
 				ze-shmem.c \
 				ze-smtp-divers.c \
-				ze-strings.c \
 				ze-strconvert.c \
 				ze-time.c \
 				ze-table.c \
@@ -491,7 +489,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-shmem.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-smtp-divers.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-strconvert.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-strings.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-table.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-time.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-txtlog.Po@am__quote@

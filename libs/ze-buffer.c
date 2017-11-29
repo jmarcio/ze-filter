@@ -214,7 +214,7 @@ read_text_file (fname, sz)
     close (fd);
 
     buf[fsize] = '\0';
-    fsize = strclean (buf, fsize);
+    fsize = zeStrRmNulls (buf, fsize);
 
     if (sz != 0)
       *sz = fsize;
@@ -285,7 +285,7 @@ text_word_length(buf, st, size)
 
     pi = pf = 0;
 
-    if (!strexpr(p, "[A-Za-z]+", &pi, &pf, TRUE))
+    if (!zeStrRegex(p, "[A-Za-z]+", &pi, &pf, TRUE))
       break;
 
     if (pi == 0)

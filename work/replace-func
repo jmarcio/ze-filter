@@ -1,0 +1,69 @@
+#! /usr/bin/perl -w
+
+my $DIRS = $ENV{DIRS};
+my @Dirs = split " ", $DIRS;
+
+if ($#Dirs < 0) {
+  @Dirs = qw(
+    libs
+    libjoe
+    src 
+    ze-scanfile
+    ze-printstats
+    ze-makemap
+    ze-logserver
+    ze-greyd
+    ze-bayes-tbx
+    scratch 
+    libzechk/src
+    libze/src
+  );
+}
+
+my %New = ();
+
+foreach my $fin (@ARGV) {
+  readSymbols($fin);
+}
+
+foreach my $dir (@Dirs) {
+  printf "* DIR = $dir\n";
+
+  foreach my $k (sort keys %New) {
+    my $v = $New{$k};
+    my @Files = <$dir/*.c>;
+    foreach my $fin (@Files) {
+      my $r = 0;
+      $r = system("grep -d skip -q $k $fin 2>/dev/null");
+      next if $r != 0;
+      $r = system("sed -i s/$k/$v/ $fin");
+      printf "  %-5s %-40s %s\n", $r, $fin, $k;
+    }
+    @Files = <$dir/*.h>;
+    foreach my $fin (@Files) {
+      my $r = 0;
+      $r = system("grep -d skip -q $k $fin 2>/dev/null");
+      next if $r != 0;
+      $r = system("sed -i s/$k/$v/ $fin");
+      printf "  %-5s %-40s %s\n", $r, $fin, $k;
+    }
+  }
+}
+
+exit 0;
+
+sub readSymbols {
+  my ($fin, undef) = @_;
+  open FIN, "<$fin" || return 0;
+  while (<FIN>) {
+    chomp;
+    next if /^\s*$/;
+    next if /^\s*#/;
+    my ($k, $v) = split;
+    next unless (defined $k && defined $v);
+    next unless $k ne "" && defined $v;
+    $New{$k} = $v;
+  }
+  return 1;
+}
+

@@ -442,15 +442,15 @@ mlfi_connect(ctx, hostname, hostaddr)
 
   if (res != SMFIS_CONTINUE || IS_KNOWN(ip_class))
     goto hostname_check_ok;
-  if (strexpr(priv->peer_name, HOSTNAME_IPV4, NULL, NULL, TRUE))
+  if (zeStrRegex(priv->peer_name, HOSTNAME_IPV4, NULL, NULL, TRUE))
     goto hostname_check_ok;
-  if (strexpr(priv->peer_name, HOSTNAME_IPV6, NULL, NULL, TRUE))
+  if (zeStrRegex(priv->peer_name, HOSTNAME_IPV6, NULL, NULL, TRUE))
     goto hostname_check_ok;
 
   {
     bool                badname = FALSE;
 
-    badname = strexpr(priv->peer_name, "[^a-z0-9.-]+", NULL, NULL, TRUE);
+    badname = zeStrRegex(priv->peer_name, "[^a-z0-9.-]+", NULL, NULL, TRUE);
     if (badname) {
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
         ZE_MessageInfo(9, "%s SPAM CHECK - Invalid priv->peer_name %s",

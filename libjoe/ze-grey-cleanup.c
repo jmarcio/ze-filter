@@ -23,6 +23,7 @@
 
 
 #include <ze-sys.h>
+#include <zeLibs.h>
 #include <ze-filter.h>
 #include <ze-grey-cleanup.h>
 
@@ -56,7 +57,7 @@ set_threshold_from_env()
   env = getenv("GREY_DEWHITELIST_THRESHOLD");
   if (env != NULL)
   {
-    double              t = str2double(env, NULL, 0);
+    double              t = zeStr2double(env, NULL, 0);
 
     if (errno != EINVAL && errno != ERANGE)
       threshold = t;

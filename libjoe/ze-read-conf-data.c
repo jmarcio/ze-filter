@@ -50,7 +50,7 @@ read_conf_data_file(cfdir, fname, dfile, func)
   memset(fbuf, 0, sizeof (fbuf));
   if (fname != NULL)
     strlcpy(fbuf, fname, sizeof (fbuf));
-  argc = str2tokens(fbuf, 32, argv, " ,");
+  argc = zeStr2Tokens(fbuf, 32, argv, " ,");
 
   result = TRUE;
   for (i = 0; i < argc && result; i++)

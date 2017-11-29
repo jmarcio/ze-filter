@@ -42,7 +42,7 @@ print_str_bounds(s, i, f)
   printf("  -> %s\n", buf);
 
   memset(buf, 0, sizeof (buf));
-  strset(buf, ' ', strlen(s) + 1);
+  zeStrSet(buf, ' ', strlen(s) + 1);
   buf[i] = buf[f] = '+';
   printf("  -> %s\n", buf);
 }

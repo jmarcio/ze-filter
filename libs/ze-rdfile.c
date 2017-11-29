@@ -265,21 +265,21 @@ j_rd_file(fname, tag, func, arg)
     if (strlen(s) == 0)
       continue;
 
-    if (strexpr(s, "^[ \t]*$", NULL, NULL, FALSE))
+    if (zeStrRegex(s, "^[ \t]*$", NULL, NULL, FALSE))
       continue;
-    if (strexpr(s, "^[ \t]*#", NULL, NULL, FALSE))
+    if (zeStrRegex(s, "^[ \t]*#", NULL, NULL, FALSE))
       continue;
 
     if (chktag)
     {
       if (!rdstate)
       {
-        if (strexpr(s, beg_tag, NULL, NULL, TRUE))
+        if (zeStrRegex(s, beg_tag, NULL, NULL, TRUE))
           rdstate = TRUE;
         continue;
       } else
       {
-        if (strexpr(s, end_tag, NULL, NULL, TRUE))
+        if (zeStrRegex(s, end_tag, NULL, NULL, TRUE))
         {
           rdstate = FALSE;
           continue;

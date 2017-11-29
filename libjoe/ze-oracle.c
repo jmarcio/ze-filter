@@ -143,7 +143,7 @@ add_oradata_rec(vs, arg)
 
   SKIP_SPACES(s);
 
-  while (strexpr(s, KEYVALUE, &pi, &pf, TRUE))
+  while (zeStrRegex(s, KEYVALUE, &pi, &pf, TRUE))
   {
     char               *key, *val;
 
@@ -286,7 +286,7 @@ count_oradata(id, type, data, find, odds)
       if (strcasecmp(type, p.type) != 0)
         continue;
 
-      if (strexpr(data, p.data, NULL, NULL, TRUE))
+      if (zeStrRegex(data, p.data, NULL, NULL, TRUE))
       {
         if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
           ZE_MessageNotice(10, "%s SPAM CHECK - UNWANTED %s : %s", id, type, p.data);

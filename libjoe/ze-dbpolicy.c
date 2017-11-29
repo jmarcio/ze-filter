@@ -190,7 +190,7 @@ db_policy_check(prefix, key, bufout, size)
   {
     /* First of all, let's check the entire key */
     snprintf(k, sizeof (k), "%s:%s", prefix, email);
-    (void) strtolower(k);
+    (void) zeStr2Upper(k);
     ZE_MessageInfo(DBG_LEVEL, "KEY FULL : Looking for %s ...", k);
     if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
     {
@@ -213,12 +213,12 @@ db_policy_check(prefix, key, bufout, size)
   ZE_MessageInfo(DBG_LEVEL, "db_policy : domain = %s", domain);
 
   /* Entire key doesn't match - lets check domain part */
-  if (strexpr(domain, IPV4_ADDR_REGEX, NULL, NULL, TRUE))
+  if (zeStrRegex(domain, IPV4_ADDR_REGEX, NULL, NULL, TRUE))
   {
     /* This is a numeric IP address */
 
     snprintf(k, sizeof (k), "%s:%s", prefix, domain);
-    (void) strtolower(k);
+    (void) zeStr2Upper(k);
     p = k;
     /* Try each part beginning from the most complete one */
     while (strlen(k) > 0)
@@ -240,7 +240,7 @@ db_policy_check(prefix, key, bufout, size)
     goto host_check_ok;
   }
 
-  if (strexpr(domain, IPV6_ADDR_REGEX, NULL, NULL, TRUE))
+  if (zeStrRegex(domain, IPV6_ADDR_REGEX, NULL, NULL, TRUE))
   {
     ipv6_T              ipv6;
     char                buf[256];
@@ -311,7 +311,7 @@ db_policy_check(prefix, key, bufout, size)
     while (p != NULL && strlen(p) > 0)
     {
       snprintf(k, sizeof (k), "%s:%s", prefix, p);
-      (void) strtolower(k);
+      (void) zeStr2Upper(k);
       ZE_MessageInfo(DBG_LEVEL, "NAME : Looking for %s", k);
       if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
       {
@@ -337,7 +337,7 @@ host_check_ok:
     char               *p;
 
     snprintf(k, sizeof (k), "%s:%s", prefix, email);
-    (void) strtolower(k);
+    (void) zeStr2Upper(k);
     p = strchr(k, '@');
     if (p != NULL)
       *(++p) = '\0';
@@ -396,7 +396,7 @@ db_policy_lookup(prefix, key, bufout, size)
   nerr = 0;
   /* First of all, let's check the entire key */
   snprintf(k, sizeof (k), "%s:%s", prefix, key);
-  (void) strtolower(k);
+  (void) zeStr2Upper(k);
   ZE_MessageInfo(DBG_LEVEL, "KEY FULL : Looking for %s ...", k);
   if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
   {

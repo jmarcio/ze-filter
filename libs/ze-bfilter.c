@@ -234,24 +234,24 @@ bfilter_init(dbname)
     if (tenv == NULL)
       goto err1;
 
-    argc = str2tokens(tenv, 32, argv, "; ");
+    argc = zeStr2Tokens(tenv, 32, argv, "; ");
     for (i = 0; i < argc; i++)
     {
       int                 vargc;
       char               *vargv[3];
 
-      vargc = str2tokens(argv[i], 32, vargv, "= ");
+      vargc = zeStr2Tokens(argv[i], 32, vargv, "= ");
       if (vargc > 1)
       {
         if (STRCASEEQUAL(vargv[0], "TYPE"))
         {
 #if 0
-          if (strexpr(varg[1], "^yes|true", NULL, NULL, TRUE))
+          if (zeStrRegex(varg[1], "^yes|true", NULL, NULL, TRUE))
           {
             bf->segDouble = TRUE;
             continue;
           }
-          if (strexpr(vargv[1], "^no|false", NULL, NULL, TRUE))
+          if (zeStrRegex(vargv[1], "^no|false", NULL, NULL, TRUE))
           {
             bf->segDouble = FALSE;
             continue;
@@ -262,12 +262,12 @@ bfilter_init(dbname)
         if (STRCASEEQUAL(vargv[0], "FSEL"))
         {
 #if 0
-          if (strexpr(vargv[1], "^yes|true", NULL, NULL, TRUE))
+          if (zeStrRegex(vargv[1], "^yes|true", NULL, NULL, TRUE))
           {
             bf->segRecurse = TRUE;
             continue;
           }
-          if (strexpr(varg[1], "^no|false", NULL, NULL, TRUE))
+          if (zeStrRegex(varg[1], "^no|false", NULL, NULL, TRUE))
           {
             bf->segRecurse = FALSE;
             continue;
@@ -293,23 +293,23 @@ bfilter_init(dbname)
     if (tenv == NULL)
       goto err2;
 
-    argc = str2tokens(tenv, 32, argv, "; ");
+    argc = zeStr2Tokens(tenv, 32, argv, "; ");
     for (i = 0; i < argc; i++)
     {
       int                 vargc;
       char               *vargv[3];
 
-      vargc = str2tokens(argv[i], 32, vargv, "=: ");
+      vargc = zeStr2Tokens(argv[i], 32, vargv, "=: ");
       if (vargc > 1)
       {
         if (STRCASEEQUAL(vargv[0], "DOUBLE"))
         {
-          if (strexpr(vargv[1], "^yes|true", NULL, NULL, TRUE))
+          if (zeStrRegex(vargv[1], "^yes|true", NULL, NULL, TRUE))
           {
             bf->segDouble = TRUE;
             continue;
           }
-          if (strexpr(vargv[1], "^no|false", NULL, NULL, TRUE))
+          if (zeStrRegex(vargv[1], "^no|false", NULL, NULL, TRUE))
           {
             bf->segDouble = FALSE;
             continue;
@@ -318,12 +318,12 @@ bfilter_init(dbname)
         }
         if (STRCASEEQUAL(vargv[0], "RECURSE"))
         {
-          if (strexpr(vargv[1], "^yes|true", NULL, NULL, TRUE))
+          if (zeStrRegex(vargv[1], "^yes|true", NULL, NULL, TRUE))
           {
             bf->segRecurse = TRUE;
             continue;
           }
-          if (strexpr(vargv[1], "^no|false", NULL, NULL, TRUE))
+          if (zeStrRegex(vargv[1], "^no|false", NULL, NULL, TRUE))
           {
             bf->segRecurse = FALSE;
             continue;
@@ -349,13 +349,13 @@ bfilter_init(dbname)
     if (tenv == NULL)
       goto err3;
 
-    argc = str2tokens(tenv, 32, argv, "; ");
+    argc = zeStr2Tokens(tenv, 32, argv, "; ");
     for (i = 0; i < argc; i++)
     {
       int                 vargc;
       char               *vargv[3];
 
-      vargc = str2tokens(argv[i], 32, vargv, "=:");
+      vargc = zeStr2Tokens(argv[i], 32, vargv, "=:");
       if (vargc > 1)
       {
         if (STRCASEEQUAL(vargv[0], "ENABLE"))
@@ -363,7 +363,7 @@ bfilter_init(dbname)
           int                 xargc;
           char               *xargv[32];
 
-          xargc = str2tokens(vargv[1], 32, xargv, ",");
+          xargc = zeStr2Tokens(vargv[1], 32, xargv, ",");
           for (j = 0; j < xargc; j++)
             set_tokconf_active(xargv[j], TRUE);
         }
@@ -372,7 +372,7 @@ bfilter_init(dbname)
           int                 xargc;
           char               *xargv[32];
 
-          xargc = str2tokens(vargv[1], 32, xargv, ",");
+          xargc = zeStr2Tokens(vargv[1], 32, xargv, ",");
           for (j = 0; j < xargc; j++)
             set_tokconf_active(xargv[j], FALSE);
         }
@@ -759,7 +759,7 @@ smodel_db_check_token(key, token)
       break;
   }
 
-  strtolower(k);
+  zeStr2Upper(k);
   ZE_MessageInfo(19, "Looking for %s", k);
   if (zeDb_GetRec(&bf->bdb, k, v, sizeof (v)))
   {

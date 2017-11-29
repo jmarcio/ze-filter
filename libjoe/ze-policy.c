@@ -22,7 +22,7 @@
  */
 
 #include <ze-sys.h>
-
+#include <zeLibs.h>
 #include "ze-filter.h"
 
 #define JDEBUG 0
@@ -151,19 +151,19 @@ check_policy(prefix, key, buf, szbuf, chkdefault)
     goto fin;
   }
 
-  if (strexpr(key, IPV4_ADDR_REGEX, NULL, NULL, TRUE) ||
-      strexpr(key, IPV6_ADDR_REGEX, NULL, NULL, TRUE) ||
-      strexpr(key, DOMAINNAME_REGEX, NULL, NULL, TRUE))
+  if (zeStrRegex(key, IPV4_ADDR_REGEX, NULL, NULL, TRUE) ||
+      zeStrRegex(key, IPV6_ADDR_REGEX, NULL, NULL, TRUE) ||
+      zeStrRegex(key, DOMAINNAME_REGEX, NULL, NULL, TRUE))
   {
     char                tb[256];
 
     if (ze_logLevel > 10)
     {
-      if (strexpr(key, IPV4_ADDR_REGEX, NULL, NULL, TRUE))
+      if (zeStrRegex(key, IPV4_ADDR_REGEX, NULL, NULL, TRUE))
         ZE_MessageInfo(15, " -> IP     : %s", key);
-      if (strexpr(key, IPV6_ADDR_REGEX, NULL, NULL, TRUE))
+      if (zeStrRegex(key, IPV6_ADDR_REGEX, NULL, NULL, TRUE))
         ZE_MessageInfo(15, " -> IP     : %s", key);
-      if (strexpr(key, DOMAINNAME_REGEX, NULL, NULL, TRUE))
+      if (zeStrRegex(key, DOMAINNAME_REGEX, NULL, NULL, TRUE))
         ZE_MessageInfo(15, " -> DOMAIN : %s", key);
     }
 
@@ -364,7 +364,7 @@ check_policy_tuple(prefix, ip, name, netclass, from, to, result)
       ZE_MessageInfo(11, " Checking FROM_TOKENS %s", token);
 
       snprintf(tag, sizeof (tag), "%sFrom", prefix);
-      argc = str2tokens(token, MAX_TOKENS, argv, " ");
+      argc = zeStr2Tokens(token, MAX_TOKENS, argv, " ");
       for (i = 0; i < argc; i++)
       {
         ZE_MessageInfo(11, " Checking %s:%s", tag, argv[i]);
@@ -434,7 +434,7 @@ check_policy_tuple(prefix, ip, name, netclass, from, to, result)
       ZE_MessageInfo(11, " Checking TO_TOKENS %s", token);
 
       snprintf(tag, sizeof (tag), "%sTo", prefix);
-      argc = str2tokens(token, MAX_TOKENS, argv, " ,");
+      argc = zeStr2Tokens(token, MAX_TOKENS, argv, " ,");
       for (i = 0; i < argc; i++)
       {
         ZE_MessageInfo(11, " Checking %s:%s", tag, argv[i]);
@@ -552,7 +552,7 @@ check_policy_all_rcpts(prefix, ip, name, netclass, from, rcpt, result, conflict)
   do {						\
     long v = 0;					\
 						\
-    v = str2long(buffer, NULL, r);		\
+    v = zeStr2long(buffer, NULL, r);		\
     if (r <= 0)					\
       r = MAX(v,0);				\
     else					\
@@ -625,7 +625,7 @@ check_limit_tuple(prefix, ip, name, netclass, from, to, result)
       ZE_MessageInfo(11, " Checking FROM_TOKENS %s", token);
 
       snprintf(tag, sizeof (tag), "%sFrom", prefix);
-      argc = str2tokens(token, MAX_TOKENS, argv, " ");
+      argc = zeStr2Tokens(token, MAX_TOKENS, argv, " ");
       for (i = 0; i < argc; i++)
       {
         ZE_MessageInfo(11, " Checking %s:%s", tag, argv[i]);
@@ -667,7 +667,7 @@ check_limit_tuple(prefix, ip, name, netclass, from, to, result)
       ZE_MessageInfo(11, " Checking TO_TOKENS %s", token);
 
       snprintf(tag, sizeof (tag), "%sTo", prefix);
-      argc = str2tokens(token, MAX_TOKENS, argv, " ,");
+      argc = zeStr2Tokens(token, MAX_TOKENS, argv, " ,");
       for (i = 0; i < argc; i++)
       {
         ZE_MessageInfo(11, " Checking %s:%s", tag, argv[i]);

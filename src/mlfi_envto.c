@@ -79,7 +79,7 @@ mlfi_envto(ctx, envto)
     char               *s = NULL;
 
     if ((s = getenv("FROMRATEFULL")) != NULL) {
-      if (strexpr(s, "yes|oui|true", NULL, NULL, TRUE))
+      if (zeStrRegex(s, "yes|oui|true", NULL, NULL, TRUE))
         addrPlusEmail = TRUE;
     }
 
@@ -183,7 +183,7 @@ mlfi_envto(ctx, envto)
   /*
    * Check if email address is enclosed within <> and conforms to RFC2822 
    */
-  if (!strexpr(rcpt_to, "<.*>", NULL, NULL, TRUE)) {
+  if (!zeStrRegex(rcpt_to, "<.*>", NULL, NULL, TRUE)) {
     ZE_MessageInfo(9, "%-12s : ENV TO   Syntax Error : %s",
                  CONNID_STR(priv->id), priv->env_to);
   }
@@ -379,14 +379,14 @@ mlfi_envto(ctx, envto)
             memset(rbuf, 0, sizeof (rbuf));
             rstr = getenv("GREY_REPLY");
             if (rstr != NULL) {
-              if (strexpr(rstr, REPLY_REGEX, &pi, NULL, FALSE))
+              if (zeStrRegex(rstr, REPLY_REGEX, &pi, NULL, FALSE))
                 strlcpy(rbuf, rstr + pi, sizeof (rbuf));
               else
                 rstr = NULL;
             }
             if (rstr == NULL) {
               rstr = cf_get_str(CF_GREY_REPLY);
-              if (strexpr(rstr, REPLY_REGEX, &pi, NULL, FALSE))
+              if (zeStrRegex(rstr, REPLY_REGEX, &pi, NULL, FALSE))
                 strlcpy(rbuf, rstr + pi, sizeof (rbuf));
               else
                 rstr = NULL;
@@ -395,7 +395,7 @@ mlfi_envto(ctx, envto)
               int                 argc;
               char               *argv[4];
 
-              argc = str2tokens(rbuf, 4, argv, ":");
+              argc = zeStr2Tokens(rbuf, 4, argv, ":");
               if (argc > 2) {
                 rcode = argv[0];
                 xcode = argv[1];

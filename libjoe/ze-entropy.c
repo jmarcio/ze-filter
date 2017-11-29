@@ -688,18 +688,18 @@ mime_extract_http_urls(buf, size, id, level, type, arg, mime_part)
     char                sout[4096];
 
     memset(sout, 0, sizeof (sout));
-    while (strexpr(p, "(ftp|http)[s]?://[^ /<>\"]*", &pi, &pf, TRUE))
+    while (zeStrRegex(p, "(ftp|http)[s]?://[^ /<>\"]*", &pi, &pf, TRUE))
     {
       char                sout[1024];
       char                c = '.';
       long                xi, xf, xh;
 
-      if (strexpr(p + pf, "></a>", &xi, NULL, TRUE) && (xi - pf) < 30)
+      if (zeStrRegex(p + pf, "></a>", &xi, NULL, TRUE) && (xi - pf) < 30)
       {
         bool                okh, okf;
 
-        okh = strexpr(p + pf, ">", &xh, NULL, TRUE) && (xh < xi);
-        okf = strexpr(p + pf, ">.+</a>", &xf, NULL, TRUE) && (xf < xi);
+        okh = zeStrRegex(p + pf, ">", &xh, NULL, TRUE) && (xh < xi);
+        okf = zeStrRegex(p + pf, ">.+</a>", &xf, NULL, TRUE) && (xf < xi);
 
         c = (okf || okh) ? '.' : 'H';
       }

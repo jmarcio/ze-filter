@@ -399,7 +399,7 @@ print_dns_reply(r, level)
     char                prefix[16];
     RR_RECORD_T        *rr;
 
-    strset(prefix, ' ', level * 2);
+    zeStrSet(prefix, ' ', level * 2);
     for (rr = r->dns_r_head; rr != NULL; rr = rr->rr_next)
     {
       char               *stype = (char *) dns_type_to_string(rr->rr_type);

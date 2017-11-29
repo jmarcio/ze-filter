@@ -307,14 +307,14 @@ check_token(s)
 #endif
 
   /* date */
-  if (strexpr(s, "^[0-9]{2,2}/[0-9]{1,2}/[0-9]{2,4}$", NULL, NULL, TRUE))
+  if (zeStrRegex(s, "^[0-9]{2,2}/[0-9]{1,2}/[0-9]{2,4}$", NULL, NULL, TRUE))
     return FALSE;
 
   /* time */
-  if (strexpr
+  if (zeStrRegex
       (s, "^[0-9]{2,2}:[0-9]{2,2}:[0-9]{2,2}(pm|am)?$", NULL, NULL, TRUE))
     return FALSE;
-  if (strexpr(s, "^[0-9]{2,2}:[0-9]{2,2}(pm|am)?$", NULL, NULL, TRUE))
+  if (zeStrRegex(s, "^[0-9]{2,2}:[0-9]{2,2}(pm|am)?$", NULL, NULL, TRUE))
     return FALSE;
 
   return TRUE;
@@ -378,7 +378,7 @@ extract_word_tokens(cf, prefix, separator, buf, kind, bm, level)
 
   level++;
 
-  strtolower(buf);
+  zeStr2Upper(buf);
 
   for (stok = strtok_r(buf, separator, &ptr); stok != NULL;
        stok = strtok_r(NULL, separator, &ptr))
@@ -548,7 +548,7 @@ extract_html_tags(buf, size)
     if (p[n] == '\0')
       break;
 
-    (void) safe_strncat(t, msz, p, n);
+    (void) zeSafeStrnCat(t, msz, p, n);
     p += n;
 
     strlcat(t, X_HTML_SEP, msz);
@@ -891,7 +891,7 @@ extract_char_tokens(cf, prefix, separator, buf, kind, bm, level)
 
   level++;
 
-  strtolower(buf);
+  zeStr2Upper(buf);
   {
     char               *p, *q, cp, cc;
     bool                blank = FALSE;
@@ -937,7 +937,7 @@ extract_char_tokens(cf, prefix, separator, buf, kind, bm, level)
     {
       char                tok[64];
 
-      safe_strncpy(tok, sizeof (tok), p, C_NGRAM);
+      zeSafeStrnCpy(tok, sizeof (tok), p, C_NGRAM);
       ADD_TOKEN(bm, prefix, tok);
     }
   }

@@ -22,7 +22,7 @@
  */
 
 #include <ze-sys.h>
-
+#include <zeLibs.h>
 #include "ze-libjc.h"
 
 /* ****************************************************************************
@@ -51,7 +51,7 @@ header_date2secs(date)
   if (date == NULL)
     goto fin;
 
-  if (strexpr(date, DATE_RE_1, &pi, NULL, TRUE))
+  if (zeStrRegex(date, DATE_RE_1, &pi, NULL, TRUE))
   {
     char                buf[256];
     long                hour = 0;
@@ -66,7 +66,7 @@ header_date2secs(date)
 
     format = "%d %b %Y %H:%M:%S";
     if ((p = strptime(buf, format, &tm)) != NULL)
-      hour = str2long(p, NULL, 0) / 100;
+      hour = zeStr2long(p, NULL, 0) / 100;
 
     if (tm.tm_year >= 138) {
       ZE_MessageNotice(10, "Date invalid ??? %s", date);
@@ -82,7 +82,7 @@ header_date2secs(date)
     goto fin;
   }
 
-  if (strexpr(date, DATE_RE_2, &pi, NULL, TRUE))
+  if (zeStrRegex(date, DATE_RE_2, &pi, NULL, TRUE))
   {
     char                buf[256];
     long                hour = 0;
@@ -97,7 +97,7 @@ header_date2secs(date)
 
     format = "%d %b %Y %H:%M";
     if ((p = strptime(buf, format, &tm)) != NULL)
-      hour = str2long(p, NULL, 0) / 100;
+      hour = zeStr2long(p, NULL, 0) / 100;
 
     if (tm.tm_year >= 138) {
       ZE_MessageNotice(10, "Date invalid ??? %s", date);
@@ -143,7 +143,7 @@ extract_email_address(dst, org, sz)
 
   pi = pf = 0;
 
-  if (strexpr(org, expr, &pi, &pf, TRUE))
+  if (zeStrRegex(org, expr, &pi, &pf, TRUE))
   {
     if (pf - pi - 1 <= sz)
       sz = pf - pi - 1;
@@ -162,7 +162,7 @@ extract_email_address(dst, org, sz)
 
     ZE_MessageInfo(19, "KO %s %s", org, dst);
   }
-  strtolower(dst);
+  zeStr2Upper(dst);
 
   return dst;
 }
@@ -193,7 +193,7 @@ extract_host_from_email_address(dst, org, sz)
 
   pi = pf = 0;
 
-  if (strexpr(org, expr, &pi, &pf, TRUE))
+  if (zeStrRegex(org, expr, &pi, &pf, TRUE))
   {
     int                 n;
 
@@ -204,7 +204,7 @@ extract_host_from_email_address(dst, org, sz)
       sz = pf - pi - 1;
 
     strlcpy(dst, org + pi + 1, sz);
-    strtolower(dst);
+    zeStr2Upper(dst);
   } else
   {
     char               *p = strchr(org, '@');
@@ -244,9 +244,9 @@ jc_string2reply(r, s)
   r->result = SMFIS_CONTINUE;
   r->signature = SIGNATURE;
 
-  if (strexpr(s, "^ERROR", NULL, NULL, TRUE))
+  if (zeStrRegex(s, "^ERROR", NULL, NULL, TRUE))
   {
-    if (strexpr(s, "^ERROR:[0-9]{3}:[0-9]\\.[0-9]\\.[0-9]:", NULL, NULL, TRUE))
+    if (zeStrRegex(s, "^ERROR:[0-9]{3}:[0-9]\\.[0-9]\\.[0-9]:", NULL, NULL, TRUE))
     {
       char               *p = s;
       int                 n;
@@ -289,13 +289,13 @@ jc_string2reply(r, s)
     goto fin;
   }
 
-  if (strexpr(s, "^OK", NULL, NULL, TRUE))
+  if (zeStrRegex(s, "^OK", NULL, NULL, TRUE))
   {
     r->result = SMFIS_CONTINUE;
     goto fin;
   }
 
-  if (strexpr(s, "^REJECT", NULL, NULL, TRUE))
+  if (zeStrRegex(s, "^REJECT", NULL, NULL, TRUE))
   {
     snprintf(r->rcode, sizeof (r->rcode), "550");
     snprintf(r->xcode, sizeof (r->xcode), "5.7.0");
@@ -305,7 +305,7 @@ jc_string2reply(r, s)
     goto fin;
   }
 
-  if (strexpr(s, "^TEMPFAIL", NULL, NULL, TRUE))
+  if (zeStrRegex(s, "^TEMPFAIL", NULL, NULL, TRUE))
   {
     snprintf(r->rcode, sizeof (r->rcode), "421");
     snprintf(r->xcode, sizeof (r->xcode), "4.5.1");
@@ -316,13 +316,13 @@ jc_string2reply(r, s)
     goto fin;
   }
 
-  if (strexpr(s, "^[0-9]{3}:[0-9]\\.[0-9]\\.[0-9]:.+", NULL, NULL, TRUE))
+  if (zeStrRegex(s, "^[0-9]{3}:[0-9]\\.[0-9]\\.[0-9]:.+", NULL, NULL, TRUE))
   {
     char               *argv[4];
     int                 argc;
 
     memset(argv, 0, sizeof (argv));
-    argc = str2tokens(s, 4, argv, ":");
+    argc = zeStr2Tokens(s, 4, argv, ":");
 
     if (argc >= 2)
     {

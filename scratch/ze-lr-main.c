@@ -22,6 +22,7 @@
  */
 
 #include <ze-sys.h>
+#include <zeLibs.h>
 #include "ze-filter.h"
 
 
@@ -454,7 +455,7 @@ cli_lr_learn(fileIn, dataFile, cliopt)
       if (fscanf(fin, "%s %s %s", stime, sclass, sfile) != 3)
         break;
 
-      date = str2time(stime, NULL, (time_t) 0);
+      date = zeStr2time(stime, NULL, (time_t) 0);
       spam = spam = STRCASEEQUAL(sclass, "spam");
       fname = sfile;
 

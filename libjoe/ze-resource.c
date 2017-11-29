@@ -22,7 +22,7 @@
  */
 
 #include <ze-sys.h>
-
+#include <zeLibs.h>
 #include "ze-filter.h"
 
 
@@ -286,7 +286,7 @@ setup_file_descriptors()
       {
         long                n;
 
-        n = str2long(strlim, NULL, ZE_FD_DFL);
+        n = zeStr2long(strlim, NULL, ZE_FD_DFL);
         if (errno == ERANGE || errno == EINVAL || n <= 0 || n > fd_hard)
           n = ZE_FD_DFL;
         fd_conf = n;

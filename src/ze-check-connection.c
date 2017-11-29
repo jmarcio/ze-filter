@@ -23,6 +23,8 @@
 
 
 #include <ze-sys.h>
+#include <zeLibs.h>
+
 #include <ze-filter.h>
 #include <ze-filter-data.h>
 #include <ze-check-connection.h>
@@ -188,7 +190,7 @@ check_connrate(ctx)
 
       if (check_host_policy("ConnRate", priv->peer_addr, priv->peer_name,
                             priv->netclass.label, buf, sizeof (buf), TRUE))
-        vmax = str2long(buf, NULL, 0);
+        vmax = zeStr2long(buf, NULL, 0);
 
       if (vmax > 0 && n > vmax)
         result = SMFIS_TEMPFAIL;
@@ -249,7 +251,7 @@ check_msgrate(ctx)
 
       if (check_host_policy("MsgRate", priv->peer_addr, priv->peer_name,
                             priv->netclass.label, buf, sizeof (buf), TRUE))
-        vmax = str2long(buf, NULL, 0);
+        vmax = zeStr2long(buf, NULL, 0);
 
       if (vmax > 0 && n > vmax)
         result = SMFIS_TEMPFAIL;
@@ -274,7 +276,7 @@ check_msgrate(ctx)
       char               *sEnv = NULL;
 
       if ((sEnv = getenv("FROMRATEFULL")) != NULL) {
-        if (strexpr(sEnv, "yes|oui|true", NULL, NULL, TRUE))
+        if (zeStrRegex(sEnv, "yes|oui|true", NULL, NULL, TRUE))
           addrPlusEmail = TRUE;
       }
 
@@ -306,7 +308,7 @@ check_msgrate(ctx)
 
         vmax = cf_get_int(CF_MAX_FROM_MSG_RATE);
         if (PolicyLookupEmailAddr("MsgRateFrom", fBuf, buf, sizeof (buf)))
-          vmax = str2long(buf, NULL, 0);
+          vmax = zeStr2long(buf, NULL, 0);
 
         if (vmax > 0 && fromRate > vmax)
           result = SMFIS_TEMPFAIL;
@@ -348,7 +350,7 @@ check_msgrate(ctx)
 
         vmax = cf_get_int(CF_MAX_FROM_MSG_RATE);
         if (PolicyLookupEmailAddr("MsgRateAuth", fBuf, buf, sizeof (buf)))
-          vmax = str2long(buf, NULL, 0);
+          vmax = zeStr2long(buf, NULL, 0);
 
         if (vmax > 0 && authRate > vmax)
           result = SMFIS_TEMPFAIL;
@@ -404,7 +406,7 @@ check_msgcount(ctx)
 
       if (check_host_policy("MaxMsgs", priv->peer_addr, priv->peer_name,
                             priv->netclass.label, buf, sizeof (buf), TRUE))
-        vmax = str2long(buf, NULL, 0);
+        vmax = zeStr2long(buf, NULL, 0);
 
       if (vmax > 0 && nb_from > vmax)
         result = SMFIS_TEMPFAIL;
@@ -473,7 +475,7 @@ check_rcptrate(ctx)
 
       if (check_host_policy("RcptRate", priv->peer_addr, priv->peer_name,
                             priv->netclass.label, buf, sizeof (buf), TRUE))
-        vmax = str2long(buf, NULL, 0);
+        vmax = zeStr2long(buf, NULL, 0);
 
       if (vmax > 0 && rate > vmax)
         result = SMFIS_TEMPFAIL;
@@ -503,7 +505,7 @@ check_rcptrate(ctx)
     char               *sEnv = NULL;
 
     if ((sEnv = getenv("FROMRATEFULL")) != NULL) {
-      if (strexpr(sEnv, "yes|oui|true", NULL, NULL, TRUE))
+      if (zeStrRegex(sEnv, "yes|oui|true", NULL, NULL, TRUE))
         addrPlusEmail = TRUE;
     }
 
@@ -536,7 +538,7 @@ check_rcptrate(ctx)
 
       vmax = cf_get_int(CF_MAX_FROM_RCPT_RATE);
       if (PolicyLookupEmailAddr("RcptRateFrom", fBuf, buf, sizeof (buf)))
-        vmax = str2long(buf, NULL, 0);
+        vmax = zeStr2long(buf, NULL, 0);
 
       if (vmax > 0 && rate > vmax)
         result = SMFIS_TEMPFAIL;
@@ -584,7 +586,7 @@ check_rcptrate(ctx)
 
       vmax = cf_get_int(CF_MAX_FROM_RCPT_RATE);
       if (PolicyLookupEmailAddr("RcptRateAuth", fBuf, buf, sizeof (buf)))
-        vmax = str2long(buf, NULL, 0);
+        vmax = zeStr2long(buf, NULL, 0);
 
       if (vmax > 0 && rate > vmax)
         result = SMFIS_TEMPFAIL;
@@ -646,7 +648,7 @@ check_rcptcount(ctx)
 
       if (check_host_policy("MaxRcpt", priv->peer_addr, priv->peer_name,
                             priv->netclass.label, buf, sizeof (buf), TRUE))
-        vmax = str2long(buf, NULL, 0);
+        vmax = zeStr2long(buf, NULL, 0);
 
       if (vmax > 0 && (nb_rcpt * COEF) > vmax)
         result = SMFIS_TEMPFAIL;
@@ -679,7 +681,7 @@ check_rcptcount(ctx)
 
       vmax = cf_get_int(CF_MAX_FROM_RCPT);
       if (PolicyLookupEmailAddr("MaxRcptFrom", fBuf, buf, sizeof (buf)))
-        vmax = str2long(buf, NULL, 0);
+        vmax = zeStr2long(buf, NULL, 0);
 
       if (vmax > 0 && nb_rcpt > vmax)
         result = SMFIS_TEMPFAIL;
@@ -753,7 +755,7 @@ check_open_connections(ctx)
 
       if (check_host_policy("ConnOpen", priv->peer_addr, priv->peer_name,
                             priv->netclass.label, buf, sizeof (buf), TRUE))
-        vmax = str2long(buf, NULL, 0);
+        vmax = zeStr2long(buf, NULL, 0);
 
       if (vmax > 0 && nb > vmax)
         result = SMFIS_TEMPFAIL;

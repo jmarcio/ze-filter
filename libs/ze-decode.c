@@ -64,7 +64,7 @@ is_rfc1521_encoded(s)
 {
   char               *expr = "=[?].*[?][qQbB][?].*[?]=";
 
-  return strexpr(s, expr, NULL, NULL, TRUE);
+  return zeStrRegex(s, expr, NULL, NULL, TRUE);
 }
 
 /* ****************************************************************************
@@ -95,7 +95,7 @@ decode_rfc1521(out, in, sz)
   }
 
   p = in;
-  if (strexpr(p, expr, &pi, &pf, TRUE))
+  if (zeStrRegex(p, expr, &pi, &pf, TRUE))
   {
     if (pi < sz)
     {
@@ -108,19 +108,19 @@ decode_rfc1521(out, in, sz)
       sz = 0;
   }
 
-  for (; (sz > 0) && strexpr(p, expr, &pi, &pf, TRUE); p += pf)
+  for (; (sz > 0) && zeStrRegex(p, expr, &pi, &pf, TRUE); p += pf)
   {
     long                ki, kf;
     char                strin[1024], strout[1024];
 
     if (pi != 0)
     {
-      ZE_LogMsgWarning(0, "error strexpr...");
+      ZE_LogMsgWarning(0, "error zeStrRegex...");
       sz = 0;
       continue;
     }
 
-    if (strexpr(p, "=[?].*[?][qQ][?]", &ki, &kf, TRUE))
+    if (zeStrRegex(p, "=[?].*[?][qQ][?]", &ki, &kf, TRUE))
     {
       int                 nb = pf - kf - 2;
 
@@ -139,7 +139,7 @@ decode_rfc1521(out, in, sz)
       q += strlen(q);
       continue;
     }
-    if (strexpr(p, "=[?].*[?][bB][?]", &ki, &kf, TRUE))
+    if (zeStrRegex(p, "=[?].*[?][bB][?]", &ki, &kf, TRUE))
     {
       int                 nb = pf - kf - 2;
       size_t              no;
@@ -187,7 +187,7 @@ is_rfc2231_encoded(s)
 
     ZE_MessageInfo(19, "RFC2231 regex : %s", rexp);
 
-    res = strexpr(s, rexp, NULL, NULL, TRUE);
+    res = zeStrRegex(s, rexp, NULL, NULL, TRUE);
   }
   return res;
 }

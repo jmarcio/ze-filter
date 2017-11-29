@@ -419,7 +419,7 @@ av_client(answer, sz_answer, msg, sz_msg, question)
           if ((nb = recv(sd, ptr, nbr, 0)) >= 0)
           {
             ptr[nb] = '\0';
-            strchomp(ptr);
+            zeStrChomp(ptr);
 
             ptr += nb;
             nbr -= nb;
@@ -456,7 +456,7 @@ av_client(answer, sz_answer, msg, sz_msg, question)
       }
     } while (!done && (nbr > 0));
 
-    strchomp(buf);
+    zeStrChomp(buf);
     strlcpy(answer, buf, sz_answer);
     ZE_LogMsgDebug(DEBUG_LEVEL, "RECV (%s)", buf);
     switch (protocol)
@@ -510,7 +510,7 @@ decode_answer(answer, sz_answer, msg, sz_msg, buf)
 
       ZE_MessageInfo(18, "Checking %s against %s", s, expr);
 
-      if (strexpr(s, expr, NULL, NULL, TRUE))
+      if (zeStrRegex(s, expr, NULL, NULL, TRUE))
       {
         char                code[8];
 
@@ -565,7 +565,7 @@ decode_answer_clamav(answer, sz_answer, msg, sz_msg, buf)
   p += strspn(p, " \t");
   i = strcspn(p, " \t");
 #if 1
-  safe_strncpy(msg, sz_msg, p, i);
+  zeSafeStrnCpy(msg, sz_msg, p, i);
 #else
   if (i >= sz_msg)
     i = sz_msg - 1;

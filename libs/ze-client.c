@@ -140,7 +140,7 @@ client_connect(client, spec, to)
     return -1;
 
   strlcpy(sbuf, spec, sizeof (sbuf));
-  sargc = str2tokens(sbuf, 4, sargv, " ,");
+  sargc = zeStr2Tokens(sbuf, 4, sargv, " ,");
 
   for (i = 0; i < sargc; i++)
   {
@@ -160,7 +160,7 @@ client_connect(client, spec, to)
 
       strlcpy(tbuf, p, sizeof (tbuf));
 
-      argc = str2tokens(tbuf, 4, argv, "@");
+      argc = zeStr2Tokens(tbuf, 4, argv, "@");
       if (argc == 0)
         goto fin;
 

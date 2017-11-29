@@ -111,7 +111,7 @@ mlfi_data(ctx)
 
     if (check_host_policy("RcptRate", priv->peer_addr, priv->peer_name,
                           priv->netclass.label, buf, sizeof (buf), TRUE))
-      vmax = str2long(buf, NULL, 0);
+      vmax = zeStr2long(buf, NULL, 0);
 
     if (vmax > 0 && rcpt_rate > vmax)
       result = SMFIS_TEMPFAIL;

@@ -23,6 +23,7 @@
  */
 
 #include <ze-sys.h>
+#include <zeLibs.h>
 #include <ze-filter.h>
 
 #include "ze-fileexp.h"
@@ -467,7 +468,7 @@ add_xfiles(vk, vv)
            s = strtok_r(NULL, ";", &ptr)) {
         long                pi;
 
-        if (strexpr(s, "^SIZE=[0-9]*[km]?,[0,9]*[km]?", &pi, NULL, TRUE)) {
+        if (zeStrRegex(s, "^SIZE=[0-9]*[km]?,[0,9]*[km]?", &pi, NULL, TRUE)) {
           char               *ps, *pmin, *pmax;
 
           ps = s + pi;
@@ -484,16 +485,16 @@ add_xfiles(vk, vv)
           *ps = '\0';
 
           if (strlen(pmin) > 0)
-            r.min = str2long(pmin, NULL, 0);
+            r.min = zeStr2long(pmin, NULL, 0);
 
           if (strlen(pmax) > 0)
-            r.max = str2long(pmax, NULL, 0);
+            r.max = zeStr2long(pmax, NULL, 0);
 
           continue;
         }
 /* JOE XXX action */
 #if 0
-        if (strexpr(s, "^ACTION=.+$", NULL, NULL, TRUE)) {
+        if (zeStrRegex(s, "^ACTION=.+$", NULL, NULL, TRUE)) {
           int                 argc;
           char               *argv[32];
           int                 i;
@@ -504,7 +505,7 @@ add_xfiles(vk, vv)
             continue;
           opt++;
 
-          argc = str2tokens(opt, 32, argv, ", ");
+          argc = zeStr2Tokens(opt, 32, argv, ", ");
           for (i = 0; i < argc; i++) {
             bool                no = FALSE;
 
@@ -520,7 +521,7 @@ add_xfiles(vk, vv)
         }
 #endif
 
-        if (strexpr(s, "^ACTION=(notify|discard|reject|ok)$", NULL, NULL, TRUE)) {
+        if (zeStrRegex(s, "^ACTION=(notify|discard|reject|ok)$", NULL, NULL, TRUE)) {
           char               *ps;
 
           ps = strchr(s, '=');
@@ -533,7 +534,7 @@ add_xfiles(vk, vv)
           continue;
         }
 
-        if (strexpr(s, ".*/.*|ALL", NULL, NULL, TRUE)) {
+        if (zeStrRegex(s, ".*/.*|ALL", NULL, NULL, TRUE)) {
           if (*s == '!') {
             r.mimecond = FALSE;
             s++;
@@ -645,21 +646,21 @@ check_xfiles(fname, mime, msgsize, saction, bufsize)
 
         switch (id) {
           case XFILES_DEFAULT:
-            if (!strexpr(fname, ZE_DEFAULT_EXT, NULL, NULL, TRUE))
+            if (!zeStrRegex(fname, ZE_DEFAULT_EXT, NULL, NULL, TRUE))
               continue;
             break;
           case XFILES_CLSID:
-            if (!strexpr(fname, FNAME_CLSID, NULL, NULL, TRUE))
+            if (!zeStrRegex(fname, FNAME_CLSID, NULL, NULL, TRUE))
               continue;
             break;
           case XFILES_TNEF:
-            if (!strexpr(fname, FNAME_TNEF, NULL, NULL, TRUE))
+            if (!zeStrRegex(fname, FNAME_TNEF, NULL, NULL, TRUE))
               continue;
             break;
           case XFILES_ALL:
             break;
           default:
-            if (!strexpr(fname, q->expr, NULL, NULL, TRUE))
+            if (!zeStrRegex(fname, q->expr, NULL, NULL, TRUE))
               continue;
             break;
         }

@@ -1,0 +1,20 @@
+
+# 
+# zeStrJoin
+#j_strdup        zeStrDup
+#j_malloc        zeMalloc
+strtolower      zeStr2Lower
+strtolower      zeStr2Upper
+strset          zeStrSet
+strchknull      zeStrChkNull
+strclean        zeStrRmNulls
+strnoblanks     zeStrRmBlanks
+# zeStrRmHeadBlanks
+# zeStrRmTailBlanks
+str_clear_trailing_blanks zeStrClearTrailingBlanks
+strchomp                  zeStrChomp
+strexpr                   zeStrRegex
+center_string             zeStrCenter
+str2tokens                zeStr2Tokens
+
+

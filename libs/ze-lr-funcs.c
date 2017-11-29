@@ -23,6 +23,7 @@
 
 
 #include <ze-sys.h>
+#include <zeLibs.h>
 #include <ze-filter.h>
 #include <ze-lr-funcs.h>
 
@@ -142,19 +143,19 @@ lr_data_read(bt, fname)
   while (fgets(buf, sizeof (buf), fin) != NULL)
   {
     nl++;
-    (void) strchomp(buf);
+    (void) zeStrChomp(buf);
 
     if (inHead)
     {
       char               *argv[8];
       int                 argc;
 
-      if (strexpr(buf, "</head>", NULL, NULL, TRUE))
+      if (zeStrRegex(buf, "</head>", NULL, NULL, TRUE))
       {
         inHead = FALSE;
         continue;
       }
-      argc = str2tokens(buf, 8, argv, "=: ");
+      argc = zeStr2Tokens(buf, 8, argv, "=: ");
       if (argc >= 2)
       {
         if (STRCASEEQUAL(argv[0], "count"))
@@ -193,7 +194,7 @@ lr_data_read(bt, fname)
         {
           size_t              len;
 
-          len = str2size(argv[0], NULL, LR_BODY_LENGTH);
+          len = zeStr2size(argv[0], NULL, LR_BODY_LENGTH);
           if (len > 0)
             lr_data.opts.bodyLength = len;
           continue;
@@ -205,7 +206,7 @@ lr_data_read(bt, fname)
     {
       lrtok_T             tok;
 
-      if (strexpr(buf, "</data>", NULL, NULL, TRUE))
+      if (zeStrRegex(buf, "</data>", NULL, NULL, TRUE))
       {
         inData = FALSE;
         continue;
@@ -225,12 +226,12 @@ lr_data_read(bt, fname)
       continue;
     }
 
-    if (strexpr(buf, "<head>", NULL, NULL, TRUE))
+    if (zeStrRegex(buf, "<head>", NULL, NULL, TRUE))
     {
       inHead = TRUE;
       continue;
     }
-    if (strexpr(buf, "<data>", NULL, NULL, TRUE))
+    if (zeStrRegex(buf, "<data>", NULL, NULL, TRUE))
     {
       inData = TRUE;
       continue;
@@ -283,7 +284,7 @@ lr_data_open(fname)
     {
       double              rate;
 
-      rate = str2double(env, NULL, lrate);
+      rate = zeStr2double(env, NULL, lrate);
       if (rate > 0.)
       {
         lrate = rate;
@@ -293,7 +294,7 @@ lr_data_open(fname)
 
     if ((env = getenv("LR_USE_RAW_MSG")) != NULL)
     {
-      if (strexpr(env, "yes|true|oui", NULL, NULL, TRUE))
+      if (zeStrRegex(env, "yes|true|oui", NULL, NULL, TRUE))
         lr_data.opts.useRawMsg = TRUE;
     }
 
@@ -301,7 +302,7 @@ lr_data_open(fname)
     {
       size_t              len;
 
-      len = str2size(env, NULL, LR_RAW_LENGTH);
+      len = zeStr2size(env, NULL, LR_RAW_LENGTH);
       if (len > 0)
         lr_data.opts.rawLength = len;
     }
@@ -310,7 +311,7 @@ lr_data_open(fname)
     {
       size_t              len;
 
-      len = str2size(env, NULL, LR_BODY_LENGTH);
+      len = zeStr2size(env, NULL, LR_BODY_LENGTH);
       if (len > 0)
         lr_data.opts.bodyLength = len;
     }
@@ -686,11 +687,11 @@ tokens_mime_part(buf, size, id, level, type, arg, mpart)
 
     if ((env = getenv("LR_CLEANUP_HEADERS")) != NULL)
     {
-      clHeaders = strexpr(env, "yes|true", NULL, NULL, TRUE);
+      clHeaders = zeStrRegex(env, "yes|true", NULL, NULL, TRUE);
     }
     if ((env = getenv("LR_CLEANUP_DATES")) != NULL)
     {
-      clDates = strexpr(env, "yes|true", NULL, NULL, TRUE);
+      clDates = zeStrRegex(env, "yes|true", NULL, NULL, TRUE);
     }
   }
 
@@ -720,7 +721,7 @@ tokens_mime_part(buf, size, id, level, type, arg, mpart)
           for (s = mymtas; s != NULL && *s != NULL; s++)
           {
 #if 1
-            if (strexpr(h->value, *s, NULL, NULL, TRUE))
+            if (zeStrRegex(h->value, *s, NULL, NULL, TRUE))
 #else
             if (strstr(h->value, *s))
 #endif
@@ -735,7 +736,7 @@ tokens_mime_part(buf, size, id, level, type, arg, mpart)
           for (s = mymtas; s != NULL && *s != NULL; s++)
           {
 #if 1
-            if (strexpr(h->value, *s, NULL, NULL, TRUE))
+            if (zeStrRegex(h->value, *s, NULL, NULL, TRUE))
 #else
             if (strstr(h->value, *s))
 #endif
@@ -749,7 +750,7 @@ tokens_mime_part(buf, size, id, level, type, arg, mpart)
 
       if (clDates)
       {
-        while (strexpr(vbuf, DATE_EXPR, &pi, &pf, TRUE))
+        while (zeStrRegex(vbuf, DATE_EXPR, &pi, &pf, TRUE))
         {
           int                 i, lm;
           char               *p;

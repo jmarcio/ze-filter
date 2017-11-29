@@ -57,7 +57,7 @@ static VALUES       mime_encode[] = {
   {MIME_ENCODE_OTHER, NULL}
 };
 
-char *strndup(const char *s, size_t n);
+char *zeStrnDup(const char *s, size_t n);
 
 /* ****************************************************************************
  *                                                                            *
@@ -191,7 +191,7 @@ decode_mime_buffer(id, buf, sz, level, flags, func, arg)
   {
     char                str[64];
 
-    strset(str, '*', 60);
+    zeStrSet(str, '*', 60);
     ZE_LogMsgDebug(19, str);
     ZE_LogMsgDebug(19, "*** ENTERING...: level = %d", level);
   }
@@ -442,10 +442,10 @@ decode_mime_buffer(id, buf, sz, level, flags, func, arg)
     char               *bstrp = NULL;
     int                 nboundary = 0;
 
-    bstrp = strcatdup("--", boundary);
+    bstrp = zeStrCatDup("--", boundary);
     if (bstrp == NULL)
     {
-      ZE_LogSysError("strcatdup(%s, %s) error", "--", boundary);
+      ZE_LogSysError("zeStrCatDup(%s, %s) error", "--", boundary);
       GOTO_FIN(FALSE);
     }
 
@@ -506,9 +506,9 @@ decode_mime_buffer(id, buf, sz, level, flags, func, arg)
             continue;
           }
 
-          if ((t = strndup(p, pi)) == NULL)
+          if ((t = zeStrnDup(p, pi)) == NULL)
           {
-            ZE_LogSysError("strndup error");
+            ZE_LogSysError("zeStrnDup error");
             break;
           }
 

@@ -200,7 +200,7 @@ cleanup_html_buffer(buf, size)
       {
         long                pi, pf;
 
-        if (strexpr(t, "&[A-Za-z]+;", &pi, &pf, TRUE) && (pi == 0))
+        if (zeStrRegex(t, "&[A-Za-z]+;", &pi, &pf, TRUE) && (pi == 0))
         {
           int                 c;
 
@@ -212,7 +212,7 @@ cleanup_html_buffer(buf, size)
           i += (pf - pi - 1);
           continue;
         }
-        if (strexpr(t, "&#[0-9]+;", &pi, &pf, TRUE) && (pi == 0))
+        if (zeStrRegex(t, "&#[0-9]+;", &pi, &pf, TRUE) && (pi == 0))
         {
           char               *q = t;
           int                 c;
@@ -345,7 +345,7 @@ check_valid_html_tags(id, buf)
 
   id = STRNULL(id, "NOID");
 
-  xmlbuf = strexpr(buf, "<(html)?[ ]*[?]?xml.*[ :]?[^>]*>", NULL, NULL, TRUE);
+  xmlbuf = zeStrRegex(buf, "<(html)?[ ]*[?]?xml.*[ :]?[^>]*>", NULL, NULL, TRUE);
   if (xmlbuf)
     return 0;
 
@@ -355,7 +355,7 @@ check_valid_html_tags(id, buf)
 
     pi = pf = 0;
 
-    if (!strexpr(p, "<[^>]*>", &pi, &pf, TRUE))
+    if (!zeStrRegex(p, "<[^>]*>", &pi, &pf, TRUE))
       break;
 
     if ((pf - pi) < sizeof (rbuf))
@@ -382,13 +382,13 @@ check_valid_html_tags(id, buf)
                    pf);
 
       for (s = VALID_HTML_TAGS; (*s != NULL) && !ok; s++)
-        ok = strexpr(rbuf, *s, NULL, NULL, TRUE);
+        ok = zeStrRegex(rbuf, *s, NULL, NULL, TRUE);
 
 #if 0
       if (1 && !ok && xmlbuf)
       {
         for (s = VALID_XML_TAGS; (*s != NULL) && !ok; s++)
-          ok = strexpr(rbuf, *s, NULL, NULL, TRUE);
+          ok = zeStrRegex(rbuf, *s, NULL, NULL, TRUE);
       }
 #endif
       if (!ok)

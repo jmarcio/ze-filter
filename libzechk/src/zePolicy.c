@@ -313,7 +313,7 @@ stPolicyLookupDomain(prefix, key, buf, bufSize, recurse, chkDefault)
       ZE_LogSysError("Can't strdup(%s)", key);
       goto fin;
     }
-    argc = str2tokens(domKey, 32, argv, ".");
+    argc = zeStr2Tokens(domKey, 32, argv, ".");
     for (i = 0; i < argc && !ok; i++) {
       char               *lKey = NULL;
 
@@ -367,7 +367,7 @@ stPolicyLookupIPv4Addr(prefix, key, buf, bufSize, recurse, chkDefault)
       ZE_LogSysError("Can't strdup(%s)", key);
       goto fin;
     }
-    argc = str2tokens(addrKey, 32, argv, ".");
+    argc = zeStr2Tokens(addrKey, 32, argv, ".");
     for (i = argc - 1; i > 0 && !ok; i--) {
       char               *lKey = NULL;
 
@@ -419,7 +419,7 @@ stPolicyLookupIPv6Addr(prefix, key, buf, bufSize, recurse, chkDefault)
       ZE_LogSysError("Can't strdup(%s)", key);
       goto fin;
     }
-    argc = str2tokens(addrKey, 32, argv, ".");
+    argc = zeStr2Tokens(addrKey, 32, argv, ".");
     for (i = argc; i > 0 && !ok; i--) {
       char               *lKey = NULL;
 
@@ -473,7 +473,7 @@ stPolicyLookupNetClass(addr, name, class, buf, bufSize, recurse)
       ZE_LogSysError("Can't strdup(%s)", addr);
       goto fin;
     }
-    argc = str2tokens(addrKey, 32, argv, ".");
+    argc = zeStr2Tokens(addrKey, 32, argv, ".");
     for (i = argc - 1; i > 0 && !ok; i--) {
       char               *lKey = NULL;
 
@@ -503,7 +503,7 @@ stPolicyLookupNetClass(addr, name, class, buf, bufSize, recurse)
       ZE_LogSysError("Can't strdup(%s)", name);
       goto fin;
     }
-    argc = str2tokens(nameKey, 32, argv, ".");
+    argc = zeStr2Tokens(nameKey, 32, argv, ".");
     for (i = 0; i < argc && !ok; i++) {
       char               *lKey = NULL;
 
@@ -601,7 +601,7 @@ stPolicyLookupEmailAddr(prefix, key, buf, bufSize, recurse, chkDefault)
     char               *argv[32], *argvT[32];
     int                 argc;
 
-    argc = str2tokens(domKey, 32, argv, ".");
+    argc = zeStr2Tokens(domKey, 32, argv, ".");
 
     memcpy(argvT, argv, sizeof (argvT));
     for (i = 0; i < argc && !ok; i++) {

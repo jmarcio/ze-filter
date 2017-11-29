@@ -22,6 +22,7 @@
  */
 
 #include <ze-sys.h>
+#include <zeLibs.h>
 #include <ze-filter.h>
 #include <ze-grey.h>
 #include <ze-log-grey.h>
@@ -490,7 +491,7 @@ grey_check(kAddr, kFrom, kRcpt, kName, new, can_validate)
   kName = STRNULL(kName, kAddr);
 
   ip = kAddr;
-  if (strexpr(ip, IPV6_ADDR_REGEX, NULL, NULL, TRUE))
+  if (zeStrRegex(ip, IPV6_ADDR_REGEX, NULL, NULL, TRUE))
   {
     ipv6_T              ipv6;
 
@@ -809,7 +810,7 @@ grey_validate(kAddr, kFrom, kRcpt, kName)
     ip = from = rcpt = hostname = NULL;
 
     ip = kAddr;
-    if (strexpr(ip, IPV6_ADDR_REGEX, NULL, NULL, TRUE))
+    if (zeStrRegex(ip, IPV6_ADDR_REGEX, NULL, NULL, TRUE))
     {
       ipv6_T              ipv6;
 
@@ -1016,7 +1017,7 @@ grey_key(ip, from, rcpt, ipFlags, fromFlags, rcptFlags)
   from = STRNULL(from, "nullsender");
   rcpt = STRNULL(rcpt, "-");
 
-  if (strexpr(from, "<>", NULL, NULL, TRUE))
+  if (zeStrRegex(from, "<>", NULL, NULL, TRUE))
     from = "<>";
 
   sz = 3 * BF_SZ + 3;
@@ -1041,7 +1042,7 @@ grey_key(ip, from, rcpt, ipFlags, fromFlags, rcptFlags)
 
     nullsender = ISNULLSENDER(from);
 
-    if (strexpr(ip, IPV6_ADDR_REGEX, NULL, NULL, TRUE))
+    if (zeStrRegex(ip, IPV6_ADDR_REGEX, NULL, NULL, TRUE))
     {
       ipv6_T              ipv6;
 
@@ -1144,7 +1145,7 @@ grey_key_white(ip, from)
   ip = STRNULL(ip, "-");
   from = STRNULL(from, "nullsender");
 
-  if (strexpr(from, "<>", NULL, NULL, TRUE))
+  if (zeStrRegex(from, "<>", NULL, NULL, TRUE))
     from = "<>";
 
   sz = 3 * BF_SZ + 3;
@@ -1170,7 +1171,7 @@ grey_key_white(ip, from)
 
     nullsender = ISNULLSENDER(from);
 
-    if (strexpr(ip, IPV6_ADDR_REGEX, NULL, NULL, TRUE))
+    if (zeStrRegex(ip, IPV6_ADDR_REGEX, NULL, NULL, TRUE))
     {
       ipv6_T              ipv6;
 
@@ -1762,7 +1763,7 @@ grey_set_dewhite_flags(s, reset)
   }
 
   memset(argv, 0, sizeof (argv));
-  argc = str2tokens(s, 32, argv, " ,|");
+  argc = zeStr2Tokens(s, 32, argv, " ,|");
 
   for (i = 0; i < argc; i++)
   {
@@ -1904,7 +1905,7 @@ grey_database_expire(h, st, tmax_norm, tmax_null, gdb)
 
     if ((env = getenv("GREY_CLEANUP_DT_LOCK_MAX")) != NULL)
     {
-      dt = str2ulong(env, NULL, dt);
+      dt = zeStr2ulong(env, NULL, dt);
       if (dt >= 500)
         dt_lock_max = dt;
     }
@@ -1984,7 +1985,7 @@ grey_database_expire(h, st, tmax_norm, tmax_null, gdb)
       coef = 1;
 
       strlcpy(kbuf, key, sizeof (kbuf));
-      argck = str2tokens(kbuf, GREY_ARGS, argvk, ";");
+      argck = zeStr2Tokens(kbuf, GREY_ARGS, argvk, ";");
       if (argck == 0 || argvk[0] == NULL || argvk[1] == NULL
           || argvk[2] == NULL)
       {
@@ -1992,7 +1993,7 @@ grey_database_expire(h, st, tmax_norm, tmax_null, gdb)
       }
 
       separator = grey_separator(data);
-      argcv = str2tokens(data, GREY_ARGS, argvv, separator);
+      argcv = zeStr2Tokens(data, GREY_ARGS, argvv, separator);
 
       if (argcv == 0)
       {
@@ -2008,7 +2009,7 @@ grey_database_expire(h, st, tmax_norm, tmax_null, gdb)
 
       /* utiliser entries data rec */
       errno = 0;
-      last = (time_t) str2ulong(argvv[ARG_DATE_UPDT], NULL, 0);
+      last = (time_t) zeStr2ulong(argvv[ARG_DATE_UPDT], NULL, 0);
 
       if (gdb == GDB_WHITELIST)
       {
@@ -2336,7 +2337,7 @@ grey_database_whitelist(dba, dbb, st)
 
       DB_BTREE_SEQ_CHECK(key, dba->database);
 
-      argc = str2tokens(key, GREY_ARGS, argv, ";");
+      argc = zeStr2Tokens(key, GREY_ARGS, argv, ";");
       if (argc < 3)
         continue;
 
@@ -2502,7 +2503,7 @@ grey_task(data)
 
     if ((env = getenv("GREY_CLEANUP_SUB_INTERVAL")) != NULL)
     {
-      dt = str2time(env, NULL, dt);
+      dt = zeStr2time(env, NULL, dt);
       if (dt >= 1 MINUTES)
         dt_grey_sub = dt;
     }
@@ -2701,11 +2702,11 @@ grey_dump(fd, which, dt)
           time_t              t;
 
           strlcpy(buf, data, sizeof (buf));
-          argcv = str2tokens(buf, GREY_ARGS, argvv, ";");
+          argcv = zeStr2Tokens(buf, GREY_ARGS, argvv, ";");
           if (argcv < 2)
             continue;
 
-          t = str2ulong(argvv[1], NULL, 0);
+          t = zeStr2ulong(argvv[1], NULL, 0);
           if (t == 0 || t + dt <= now)
             continue;
         }
@@ -2785,11 +2786,11 @@ grey_upload(fname, which)
           char                buf[256];
 
           strlcpy(buf, data, sizeof (buf));
-          argcv = str2tokens(buf, GREY_ARGS, argvv, ";");
+          argcv = zeStr2Tokens(buf, GREY_ARGS, argvv, ";");
           if (argcv < 2)
             continue;
 
-          t = str2ulong(argvv[1], NULL, 0);
+          t = zeStr2ulong(argvv[1], NULL, 0);
         }
 #endif
         nb++;
@@ -2864,13 +2865,13 @@ grey_value_str2entry(entry, s)
   }
 
   separator = grey_separator(s);
-  argc = str2tokens(tstr, GREY_ARGS, argv, separator);
+  argc = zeStr2Tokens(tstr, GREY_ARGS, argv, separator);
   if (argc > ARG_DATE_INIT)
   {
     time_t              t;
 
     errno = 0;
-    t = (time_t) str2ulong(argv[ARG_DATE_INIT], NULL, 0);
+    t = (time_t) zeStr2ulong(argv[ARG_DATE_INIT], NULL, 0);
     if (errno != EINVAL && errno != ERANGE)
       entry->date_init = t;
     else
@@ -2882,7 +2883,7 @@ grey_value_str2entry(entry, s)
     time_t              t;
 
     errno = 0;
-    t = (time_t) str2ulong(argv[ARG_DATE_UPDT], NULL, 0);
+    t = (time_t) zeStr2ulong(argv[ARG_DATE_UPDT], NULL, 0);
     if (errno != EINVAL && errno != ERANGE)
       entry->date_updt = t;
     else
@@ -2921,7 +2922,7 @@ grey_value_str2entry(entry, s)
     int                 t;
 
     errno = 0;
-    t = (time_t) str2ulong(argv[ARG_COUNT], NULL, 0);
+    t = (time_t) zeStr2ulong(argv[ARG_COUNT], NULL, 0);
     if (errno == 0)
       entry->count = t;
   }
@@ -3108,8 +3109,8 @@ recursive_compatible_domainnames(da, db, level)
     goto error;
   }
 
-  (void) strrev(ta);
-  (void) strrev(tb);
+  (void) zeStrRev(ta);
+  (void) zeStrRev(tb);
 
   if ((p = strchr(ta, '@')) != NULL)
     *p = '\0';
@@ -3125,8 +3126,8 @@ recursive_compatible_domainnames(da, db, level)
 
     ok = FALSE;
 
-    argca = str2tokens(ta, DOM_DIM, argva, ".");
-    argcb = str2tokens(tb, DOM_DIM, argvb, ".");
+    argca = zeStr2Tokens(ta, DOM_DIM, argva, ".");
+    argcb = zeStr2Tokens(tb, DOM_DIM, argvb, ".");
 
     m = MIN(argca, argcb);
 
@@ -3182,7 +3183,7 @@ recursive_compatible_domainnames(da, db, level)
     {
       if (strlen(buf) > 0)
       {
-        argc = str2tokens(buf, 32, argv, ", ");
+        argc = zeStr2Tokens(buf, 32, argv, ", ");
         for (i = 0; i < argc; i++)
         {
           ok = recursive_compatible_domainnames(db, argv[i], level);
@@ -3199,7 +3200,7 @@ recursive_compatible_domainnames(da, db, level)
     {
       if (strlen(buf) > 0)
       {
-        argc = str2tokens(buf, 32, argv, ", ");
+        argc = zeStr2Tokens(buf, 32, argv, ", ");
         for (i = 0; i < argc; i++)
         {
           ok = recursive_compatible_domainnames(da, argv[i], level);

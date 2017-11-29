@@ -196,7 +196,7 @@ HandleStdin()
     bool                ok = FALSE;
     char               *pBuf;
 
-    strchomp(buf);
+    zeStrChomp(buf);
 
     pBuf = buf;
     pBuf += strspn(pBuf, " ");
@@ -204,7 +204,7 @@ HandleStdin()
       continue;
 
     strlcpy(args, pBuf, sizeof (args));
-    argc = str2tokens(pBuf, 32, argv, " ");
+    argc = zeStr2Tokens(pBuf, 32, argv, " ");
     if (argc > 0) {
       if (STRCASEEQUAL(argv[0], "quit"))
         break;

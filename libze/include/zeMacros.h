@@ -242,7 +242,7 @@
       strlcpy(path, name, sizeof(path));				\
     else								\
       snprintf(path, sizeof(path), "%s/%s", cfdir, name);		\
-    MESSAGE_INFO(15, "Adjusted path is %s", path);			\
+    ZE_MessageInfo(15, "Adjusted path is %s", path);			\
   } while (FALSE);
 
 

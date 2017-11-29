@@ -181,7 +181,7 @@ read_mod_cf_line(line, arg)
   ZE_MessageInfo(9, " *        %s", line);
 
   memset(argv, 0, sizeof (argv));
-  argc = str2tokens(line, 8, argv, " \t");
+  argc = zeStr2Tokens(line, 8, argv, " \t");
   for (i = 0; i < argc; i++)
   {
     switch (i)
@@ -196,7 +196,7 @@ read_mod_cf_line(line, arg)
         break;
       case 2:
         ZE_MessageInfo(9, "Enabled   : %s", argv[i]);
-        if (strexpr(argv[i], "YES|ENABLE|OUI", NULL, NULL, TRUE))
+        if (zeStrRegex(argv[i], "YES|ENABLE|OUI", NULL, NULL, TRUE))
           enable = TRUE;
         break;
       case 3:
@@ -209,7 +209,7 @@ read_mod_cf_line(line, arg)
 
           strlcpy(buf, argv[i], sizeof (buf));
           memset(cargv, 0, sizeof (cargv));
-          cargc = str2tokens(buf, 32, cargv, ",");
+          cargc = zeStr2Tokens(buf, 32, cargv, ",");
           for (j = 0; j < cargc; j++)
           {
             if (STRCASEEQUAL(cargv[j], "connect"))

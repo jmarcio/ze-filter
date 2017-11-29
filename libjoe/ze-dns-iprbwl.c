@@ -83,7 +83,7 @@ check_dns_iprbwl(ip, name, rbwl, code, size)
     if (sip == NULL)
       ZE_MessageError(10, "strdup(%s) error", ip);
 
-    argc = str2tokens(sip, 16, argv, ".");
+    argc = zeStr2Tokens(sip, 16, argv, ".");
     while (--argc >= 0)
     {
       char                s[8];
@@ -223,10 +223,10 @@ read_iprbwl_line(v, arg)
   r.odds = 1.;
 
   n = strcspn(s, " \t");
-  safe_strncpy(r.rbwl, sizeof (r.rbwl), s, n);
+  zeSafeStrnCpy(r.rbwl, sizeof (r.rbwl), s, n);
   s += n;
 
-  argc = str2tokens(s, 32, argv, "; ");
+  argc = zeStr2Tokens(s, 32, argv, "; ");
   for (i = 0; i < argc; i++)
   {
     char               *tag;
@@ -270,7 +270,7 @@ read_iprbwl_line(v, arg)
       p += strlen(tag);
       r.flags &= ~(RBWL_ONMATCH_CONTINUE);
       strlcpy(buf, p, sizeof (buf));
-      argxc = str2tokens(buf, 16, argxv, ", ");
+      argxc = zeStr2Tokens(buf, 16, argxv, ", ");
       for (j = 0; j < argxc; j++)
       {
         if (STRCASEEQUAL(argxv[j], "stop"))
@@ -296,7 +296,7 @@ read_iprbwl_line(v, arg)
 
       p += strlen(tag);
       strlcpy(buf, p, sizeof (buf));
-      argxc = str2tokens(buf, 16, argxv, ", ");
+      argxc = zeStr2Tokens(buf, 16, argxv, ", ");
       for (j = 0; j < argxc; j++)
       {
         if (STRCASEEQUAL(argxv[j], "ip"))
@@ -509,7 +509,7 @@ check_iprbwl_table(id, ip, name, rbwl)
         found = FALSE;
 
         strlcpy(buf, r.code, sizeof (buf));
-        argc = str2tokens(buf, 16, argv, ", ");
+        argc = zeStr2Tokens(buf, 16, argv, ", ");
         for (j = 0; j < argc; j++)
         {
 	  char               *p = argv[j];

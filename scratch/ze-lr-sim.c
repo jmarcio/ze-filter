@@ -22,6 +22,7 @@
  */
 
 #include <ze-sys.h>
+#include <zeLibs.h>
 #include "ze-filter.h"
 
 
@@ -532,7 +533,7 @@ cli_lr_learn(fileIn, dataFile, cliopt, lropts)
       if (fscanf(fin, "%s %s %s", stime, sclass, sfile) != 3)
         break;
 
-      date = str2time(stime, NULL, (time_t) 0);
+      date = zeStr2time(stime, NULL, (time_t) 0);
       spam = spam = STRCASEEQUAL(sclass, "spam");
       fname = sfile;
 
@@ -729,7 +730,7 @@ cli_lr_simul(fileIn, dataFile, cliopt, lropts)
 
     if ((env = getenv("STDIM")) != NULL)
     {
-      st_dim = str2long(env, NULL, st_dim);
+      st_dim = zeStr2long(env, NULL, st_dim);
       st_dim = MIN(st_dim, ST_DIM);
     }
   }
@@ -817,7 +818,7 @@ cli_lr_simul(fileIn, dataFile, cliopt, lropts)
 
         cargs.nmsg++;
 
-        date = str2time(stime, NULL, (time_t) 0);
+        date = zeStr2time(stime, NULL, (time_t) 0);
         class = LR_LABEL2CLASS(sclass);
         spam = (class == LR_CLASS_SPAM);
         fname = sfile;
@@ -1284,12 +1285,12 @@ pile_sort(pile)
 
 #define OPTION_INT(args, v)					\
   {								\
-    (v) = str2long(args, NULL, (v));				\
+    (v) = zeStr2long(args, NULL, (v));				\
   }
 
 #define OPTION_DOUBLE(args, v)					\
   {								\
-    (v) = str2double(args, NULL, (v));				\
+    (v) = zeStr2double(args, NULL, (v));				\
   }
 
 static              bool

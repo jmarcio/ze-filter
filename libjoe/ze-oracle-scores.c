@@ -910,7 +910,7 @@ read_oracle_def_string(v, arg)
       continue;
     }
 
-    while (strexpr(s, KEYVALUE, &pi, &pf, TRUE))
+    while (zeStrRegex(s, KEYVALUE, &pi, &pf, TRUE))
     {
       char               *key, *val;
 

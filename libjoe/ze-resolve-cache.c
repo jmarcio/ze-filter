@@ -23,6 +23,7 @@
 
 
 #include <ze-sys.h>
+#include <zeLibs.h>
 #include <ze-libjc.h>
 #include <ze-resolve-cache.h>
 
@@ -96,7 +97,7 @@ resolve_cache_check(prefix, key, value, size)
       int                 argc;
 
       memset(argv, 0, sizeof (argv));
-      argc = str2tokens(buf, 8, argv, ";");
+      argc = zeStr2Tokens(buf, 8, argv, ";");
 
       if (argv[2] != NULL)
         strlcpy(value, argv[2], size);
@@ -159,12 +160,12 @@ resolve_cache_add(prefix, key, value)
       unsigned long       tl;
 
       memset(argv, 0, sizeof (argv));
-      argc = str2tokens(buf, 8, argv, ";");
+      argc = zeStr2Tokens(buf, 8, argv, ";");
 
       if (argv[0] != NULL)
-        first = str2ulong(argv[0], NULL, 0);
+        first = zeStr2ulong(argv[0], NULL, 0);
       if (argv[1] != NULL)
-        last = str2ulong(argv[1], NULL, 0);
+        last = zeStr2ulong(argv[1], NULL, 0);
       hostname = argv[2];
     }
 
@@ -301,12 +302,12 @@ clean_up_cache(key, val, arg)
 
     first = last = (time_t) 0;
     memset(argv, 0, sizeof (argv));
-    argc = str2tokens(val, 8, argv, ";");
+    argc = zeStr2Tokens(val, 8, argv, ";");
 
     if (argv[0] != NULL)
-      first = str2ulong(argv[0], NULL, 0);
+      first = zeStr2ulong(argv[0], NULL, 0);
     if (argv[1] != NULL)
-      last = str2ulong(argv[1], NULL, 0);
+      last = zeStr2ulong(argv[1], NULL, 0);
 
     if (last + dt_expire < *now)
     {

@@ -1195,8 +1195,8 @@ decode_mime_content_tag(buf, content)
       p = ps;
       break;
     }
-    strtolower(line);
-    str_clear_trailing_blanks(line);
+    zeStr2Upper(line);
+    zeStrClearTrailingBlanks(line);
     ptr = line;
     ptr += strspn(ptr, " \t");
 
@@ -1213,7 +1213,7 @@ decode_mime_content_tag(buf, content)
       if (strlen(ptr) == 0)
         continue;
 
-      if (strexpr(ptr, "[a-z]*=", &pi, &pf, TRUE))
+      if (zeStrRegex(ptr, "[a-z]*=", &pi, &pf, TRUE))
         ZE_MessageInfo(19, "-> TAG  : %s", ptr);
 
       if (strchr(TSPECIALS, *ptr) != NULL)

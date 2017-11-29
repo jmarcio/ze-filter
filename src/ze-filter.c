@@ -22,6 +22,7 @@
  */
 
 #include <ze-sys.h>
+#include <zeLibs.h>
 
 #include "ze-filter.h"
 #include "ze-filter-data.h"

@@ -21,6 +21,7 @@
  * web site : http://foss.jose-marcio.org
  */
 #include <ze-sys.h>
+#include <zeLibs.h>
 
 #include "ze-cf.h"
 
@@ -406,7 +407,7 @@ mk_cf_file(fd, inuse, verbose)
       char                s[128];
 
       section = p->cfsection;
-      strset(s, '#', 72);
+      zeStrSet(s, '#', 72);
       FD_PRINTF(fd, "%s\n", s);
       FD_PRINTF(fd, "#    SECTION  :  %s\n", section);
       FD_PRINTF(fd, "%s\n\n", s);
@@ -463,7 +464,7 @@ mk_cf_file(fd, inuse, verbose)
         ts = strdup(svalue);
         if (ts == NULL)
           continue;
-        argc = str2tokens(ts, 32, argv, "\n");
+        argc = zeStr2Tokens(ts, 32, argv, "\n");
         for (i = 0; i < argc; i++)
           FD_PRINTF(fd, "%-32s   %s\n", p->cftag, argv[i]);
         FREE(ts);
@@ -713,11 +714,11 @@ cf_set_val(id, value)
       strlcpy(cf[i].sv, value, cf[i].slen);
       break;
     case ZE_INT:
-      val = str2long(value, NULL, 0);
+      val = zeStr2long(value, NULL, 0);
       cf[i].iv = val;
       break;
     case ZE_DOUBLE:
-      val = str2double(value, NULL, 0.0);
+      val = zeStr2double(value, NULL, 0.0);
       cf[i].dv = val;
       break;
     case ZE_ENUM:
@@ -1052,7 +1053,7 @@ cf_read_file(fname)
   memset(fbuf, 0, sizeof(fbuf));		\
   if (fname != NULL)				\
     strlcpy(fbuf, fname, sizeof(fbuf));		\
-  argc = str2tokens(fbuf, 32, argv, " ,");	\
+  argc = zeStr2Tokens(fbuf, 32, argv, " ,");	\
   for (i = 0; i < argc; i++) {			\
     char *tag;					\
 						\

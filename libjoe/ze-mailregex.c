@@ -183,7 +183,7 @@ add_regex_rec(vk, vv)
 
   strlcpy(r.regex, k, sizeof (r.regex));
   strlcpy(r.revex, k, sizeof (r.revex));
-  strrev(r.revex);
+  zeStrRev(r.revex);
 
   r.re_ok = regcomp(&r.re, r.regex, REGCOMP_FLAGS);
   if (r.re_ok != 0)
@@ -492,7 +492,7 @@ check_rurlbl(id, ip, msg)
     LISTR_T            *urllist = NULL;
 
     p = msg;
-    while (strexpr(p, URL_DOMAIN_EXPRESSION, &pi, &pf, TRUE))
+    while (zeStrRegex(p, URL_DOMAIN_EXPRESSION, &pi, &pf, TRUE))
     {
       size_t              size = pf - pi + 16;
       char               *buf = NULL;
@@ -524,7 +524,7 @@ check_rurlbl(id, ip, msg)
       {
         long                i;
 
-        if (strexpr(buf, "(\n\n|\r\r|\r\n\r|\n\r\n)", &i, NULL, TRUE))
+        if (zeStrRegex(buf, "(\n\n|\r\r|\r\n\r|\n\r\n)", &i, NULL, TRUE))
           buf[i] = '\0';
       }
 
@@ -546,14 +546,14 @@ check_rurlbl(id, ip, msg)
       {
         long                ia = 0;
 
-        if (strexpr(buf, ":[0-9]+$", &ia, NULL, TRUE))
+        if (zeStrRegex(buf, ":[0-9]+$", &ia, NULL, TRUE))
           buf[ia] = '\0';
       }
 
-      strtolower(buf);
+      zeStr2Upper(buf);
 
       ZE_MessageInfo(URLBL_LOG + 2, "%s DIR DOMAIN : %s", id, buf);
-      revurl = strduprev(buf);
+      revurl = zeStrDupRev(buf);
       ZE_MessageInfo(URLBL_LOG + 2, "%s RAW DOMAIN : %s", id, revurl);
 
       if (revurl == NULL)
@@ -632,8 +632,8 @@ check_rurlbl(id, ip, msg)
         /*
          ** Check URLBL
          */
-        if ((dirurl = strduprev(revurl)) == NULL)
-          ZE_LogSysError("strduprev(%s)", STRNULL(revurl, "revurl"));
+        if ((dirurl = zeStrDupRev(revurl)) == NULL)
+          ZE_LogSysError("zeStrDupRev(%s)", STRNULL(revurl, "revurl"));
 
         /*
          ** Check URLBL
@@ -684,7 +684,7 @@ check_rurlbl(id, ip, msg)
           memset(&rbl, 0, sizeof (rbl));
 
 #if 1
-          while (strcountchar(p, '.') > 3)
+          while (zeStrCountChar(p, '.') > 3)
           {
             p = strchr(p, '.');
             if (p != NULL && *p != '\0')
@@ -734,7 +734,7 @@ check_rurlbl(id, ip, msg)
     char               *p;
 
     p = msg;
-    while (strexpr(p, URL_FULL_EXPRESSION, &pi, &pf, TRUE))
+    while (zeStrRegex(p, URL_FULL_EXPRESSION, &pi, &pf, TRUE))
     {
       size_t              size = pf - pi + 16;
       char               *buf = NULL;
@@ -748,7 +748,7 @@ check_rurlbl(id, ip, msg)
         memcpy(buf, p + pi, pf - pi);
 
         /* two empty lines end URL */
-        if (strexpr(buf, "(\n\n|\r\r|\r\n\r|\n\r\n)", &i, NULL, TRUE))
+        if (zeStrRegex(buf, "(\n\n|\r\r|\r\n\r|\n\r\n)", &i, NULL, TRUE))
           buf[i] = '\0';
 
         /* Check here against MAIL_URLEXPR */
@@ -768,7 +768,7 @@ check_rurlbl(id, ip, msg)
               {
                 ZE_MessageInfo(URLBL_LOG + 2, "%s Checking %s against %s", id,
                              buf, q->regex);
-                if (strexpr(buf, sb, NULL, NULL, TRUE))
+                if (zeStrRegex(buf, sb, NULL, NULL, TRUE))
                 {
                   ZE_MessageNotice(10, "%s URLEXPR : Found %s", id, q->regex);
                   found = TRUE;
@@ -946,7 +946,7 @@ db_rurlbl_check(id, url, dest, size, urlbl, szurlbl)
 
       bool                isIPAddr = FALSE;
 
-      isIPAddr = strexpr(url, IPV4_ADDR_REGEX, NULL, NULL, TRUE);
+      isIPAddr = zeStrRegex(url, IPV4_ADDR_REGEX, NULL, NULL, TRUE);
 
       while (strlen(q) > 0)
       {
@@ -971,7 +971,7 @@ db_rurlbl_check(id, url, dest, size, urlbl, szurlbl)
             char               *fields[DBBL_DIM];
             int                 n = 0;
 
-            n = str2tokens(value, DBBL_DIM, fields, ":");
+            n = zeStr2Tokens(value, DBBL_DIM, fields, ":");
 
             if (fields[DBBL_SCORE] != NULL)
             {

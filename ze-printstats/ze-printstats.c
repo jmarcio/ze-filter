@@ -22,6 +22,7 @@
  */
 
 #include <ze-sys.h>
+#include <zeLibs.h>
 
 #include "ze-filter.h"
 #include "ze-filter-data.h"
@@ -104,7 +105,7 @@ main(int argc, char **argv)
         jx = 1;
         break;
       case 'l':
-        dt = str2time(optarg, NULL, 3600);
+        dt = zeStr2time(optarg, NULL, 3600);
         break;
       case 'm':
         if (jq > 0)

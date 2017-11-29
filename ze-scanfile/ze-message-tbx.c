@@ -218,7 +218,7 @@ main(int argc, char **argv)
 
     docheck = 0;
 
-    iargc = str2tokens(p, 8, iargv, ";, ");
+    iargc = zeStr2Tokens(p, 8, iargv, ";, ");
     while (iargc-- > 0)
     {
       if (strncasecmp(iargv[iargc], "all", strlen(iargv[iargc])) == 0)
@@ -418,7 +418,7 @@ get_msg_headers(fname, spam)
     if ((nl == 0) && (strncasecmp("From ", line, strlen("From ")) == 0))
       continue;
 
-    strchomp(line);
+    zeStrChomp(line);
 
     s = line + strspn(line, "\r\n");
     if ((*s != ' ') && (*s != '\t'))
@@ -756,10 +756,10 @@ cli_toolbox(mstat)
     int                 argc;
     char               *argv[NARG];
 
-    strchomp(line);
+    zeStrChomp(line);
     ZE_MessageInfo(12, "Read : %s !", line);
 
-    argc = str2tokens(line, NARG, argv, " ");
+    argc = zeStr2Tokens(line, NARG, argv, " ");
     if (argc == 0)
       break;
 

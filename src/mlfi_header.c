@@ -142,7 +142,7 @@ mlfi_header(ctx, headerf, headerv)
     goto fin;
 #endif             /* _FFR_MODULES */
 
-  if (strexpr(headerv, "<script>", NULL, NULL, TRUE))
+  if (zeStrRegex(headerv, "<script>", NULL, NULL, TRUE))
   {
     result = SMFIS_REJECT;
 
@@ -153,7 +153,7 @@ mlfi_header(ctx, headerf, headerv)
   if (result != SMFIS_CONTINUE)
     goto fin;
 
-  if (strexpr(headerv, "<html>", NULL, NULL, TRUE))
+  if (zeStrRegex(headerv, "<html>", NULL, NULL, TRUE))
   {
     result = SMFIS_REJECT;
 

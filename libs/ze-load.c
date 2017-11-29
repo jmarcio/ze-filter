@@ -22,7 +22,7 @@
  */
 
 #include <ze-sys.h>
-
+#include <zeLibs.h>
 #include "ze-filter.h"
 
 
@@ -304,19 +304,19 @@ gather_cpu_load_info()
     int                 largc;
     int                 iarg;
 
-    largc = str2tokens(buf, 32, largv, "\r\n");
+    largc = zeStr2Tokens(buf, 32, largv, "\r\n");
     for (iarg = 0; iarg < largc; iarg++)
     {
       loadtype_T          u, n, s, i, x, y, z;
       char               *argv[16], **p;
       int                 argc;
 
-      if (!strexpr(largv[iarg], "^cpu ", NULL, NULL, TRUE))
+      if (!zeStrRegex(largv[iarg], "^cpu ", NULL, NULL, TRUE))
         continue;
 
       u = n = s = i = x = y = z = 0;
 
-      argc = str2tokens(largv[iarg], 16, argv, " ");
+      argc = zeStr2Tokens(largv[iarg], 16, argv, " ");
 
       p = argv;
       if (*p == NULL)
@@ -324,43 +324,43 @@ gather_cpu_load_info()
 
       if (*++p != NULL)
       {
-        u = str2ulonglong(*p, NULL, 0);
+        u = zeStr2ulonglong(*p, NULL, 0);
         if (errno == ERANGE)
           continue;
       }
       if (*++p != NULL)
       {
-        n = str2ulonglong(*p, NULL, 0);
+        n = zeStr2ulonglong(*p, NULL, 0);
         if (errno == ERANGE)
           continue;
       }
       if (*++p != NULL)
       {
-        s = str2ulonglong(*p, NULL, 0);
+        s = zeStr2ulonglong(*p, NULL, 0);
         if (errno == ERANGE)
           continue;
       }
       if (*++p != NULL)
       {
-        i = str2ulonglong(*p, NULL, 0);
+        i = zeStr2ulonglong(*p, NULL, 0);
         if (errno == ERANGE)
           continue;
       }
       if (*++p != NULL)
       {
-        x = str2ulonglong(*p, NULL, 0);
+        x = zeStr2ulonglong(*p, NULL, 0);
         if (errno == ERANGE)
           continue;
       }
       if (*++p != NULL)
       {
-        y = str2ulonglong(*p, NULL, 0);
+        y = zeStr2ulonglong(*p, NULL, 0);
         if (errno == ERANGE)
           continue;
       }
       if (*++p != NULL)
       {
-        z = str2ulonglong(*p, NULL, 0);
+        z = zeStr2ulonglong(*p, NULL, 0);
         if (errno == ERANGE)
           continue;
       }

@@ -455,7 +455,7 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
             char                fname[MAX_LINE];
 
             /* XXX */
-            safe_strncpy(sout, sizeof (sout), &p[pm_uu.rm_so],
+            zeSafeStrnCpy(sout, sizeof (sout), &p[pm_uu.rm_so],
                          pm_uu.rm_eo - pm_uu.rm_so);
             t += strcspn(t, " \t");
             t += strspn(t, " \t");
@@ -463,7 +463,7 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
             t += strspn(t, " \t");
             memset(fname, 0, sizeof (fname));
             /* XXX */
-            safe_strncpy(fname, sizeof (fname), t, strcspn(t, " \t\r\n"));
+            zeSafeStrnCpy(fname, sizeof (fname), t, strcspn(t, " \t\r\n"));
 
             ZE_MessageInfo(10, "fname : %s", fname);
             if (is_rfc2047_encoded(fname))
@@ -544,7 +544,7 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
         d = strcspn(p, " \t\r\n;");
         if (d >= sizeof (sout))
           ZE_LogMsgNotice(0, "%-12s scan_block : d >= sizeof(sout) = %ld", id, d);
-        d = safe_strncpy(sout, sizeof (sout), p, d);
+        d = zeSafeStrnCpy(sout, sizeof (sout), p, d);
         /*sout[d] = '\0'; */
         p += d;
 
@@ -675,7 +675,7 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
           if (d >= sizeof (name))
             ZE_LogMsgNotice(0, "%-12s scan_block : d >= sizeof(name) = %ld", id, d);
           /* XXX */
-          d = safe_strncpy(name, sizeof (name), p, d);
+          d = zeSafeStrnCpy(name, sizeof (name), p, d);
           name[d] = '\0';
           if (name[d - 1] == '*')
           {
@@ -713,7 +713,7 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
               {
                 char                tmpstr[MAX_LINE];
 
-                da = safe_strncpy(tmpstr, sizeof (tmpstr), p, da);
+                da = zeSafeStrnCpy(tmpstr, sizeof (tmpstr), p, da);
                 tmpstr[da] = '\0';
                 while (da > 0 && tmpstr[da - 1] == ' ')
                   da--;
@@ -725,7 +725,7 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
           if (d >= sizeof (value))
             ZE_LogMsgNotice(0, "%-12s scan_block : d >= sizeof(value) = %ld", id,
                            d);
-          d = safe_strncpy(value, sizeof (value), p, d);
+          d = zeSafeStrnCpy(value, sizeof (value), p, d);
           value[d] = '\0';
           p += d;
           if (*p == '"')
@@ -759,7 +759,7 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
           if (d >= sizeof (sout))
             ZE_LogMsgNotice(0, "%-12s scan_block : d >= sizeof(sout) = %ld (2)",
                            id, d);
-          d = safe_strncpy(sout, sizeof (sout), p, d);
+          d = zeSafeStrnCpy(sout, sizeof (sout), p, d);
           sout[d] = '\0';
 
           ZE_MessageDebug(20, "      NAME  : %s ", sout);
@@ -1199,8 +1199,8 @@ decode_mime_content_tag(buf, content)
       p = ps;
       break;
     }
-    strtolower(line);
-    str_clear_trailing_blanks(line);
+    zeStr2Upper(line);
+    zeStrClearTrailingBlanks(line);
     ptr = line;
     ptr += strspn(ptr, " \t");
 

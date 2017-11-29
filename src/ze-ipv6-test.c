@@ -39,7 +39,7 @@ ipv6_init_nets()
     int                 argc;
     char               *argv[8];
 
-    argc = str2tokens(env, 8, argv, ",");
+    argc = zeStr2Tokens(env, 8, argv, ",");
     if (argc >= 3)
     {
       v6net_lo = atoi(argv[0]);

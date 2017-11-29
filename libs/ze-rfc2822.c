@@ -186,7 +186,7 @@ rfc2822_get_main_attr(header)
 
   n = strcspn(header->value, "; \t");
   if ((p = malloc(n + 1)) != NULL)
-    safe_strncpy(p, n + 1, header->value, n);
+    zeSafeStrnCpy(p, n + 1, header->value, n);
   else 
     ZE_LogSysError("malloc error");
 
@@ -210,7 +210,7 @@ rfc2822_get_attr(head, attr)
     return NULL;
 
   str = head->value;
-  if (strexpr(str, attr, &pi, &pf, TRUE))
+  if (zeStrRegex(str, attr, &pi, &pf, TRUE))
   {
     char          *s = str + pf;
     bool           quoted = FALSE;
@@ -227,7 +227,7 @@ rfc2822_get_attr(head, attr)
       n = strcspn(s, "<>@,;:\\/[]?=\"" " \t");
 
     value = malloc(n + 1);
-    safe_strncpy(value, n + 1, s, n);
+    zeSafeStrnCpy(value, n + 1, s, n);
 
     ZE_MessageInfo(15, "    -> %s : %s", attr, value);
   }
@@ -306,7 +306,7 @@ line2header(line)
   p->value = c;
 #if 0
   if (p->value != NULL)
-    strtolower(p->value);
+    zeStr2Upper(p->value);
 #endif
 fin:
   return p;

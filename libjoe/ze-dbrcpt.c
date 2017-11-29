@@ -182,7 +182,7 @@ db_rcpt_check_email(prefix, key, bufout, size)
   {
     /* First of all, let's check the entire key */
     snprintf(k, sizeof (k), "%s:%s", prefix, email);
-    (void) strtolower(k);
+    (void) zeStr2Upper(k);
     ZE_MessageInfo(DBG_LEVEL, "KEY FULL : Looking for %s ...", k);
     if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
     {
@@ -199,7 +199,7 @@ db_rcpt_check_email(prefix, key, bufout, size)
   {
     /* First of all, let's check the entire key */
     snprintf(k, sizeof (k), "%s:%s", prefix, domain);
-    (void) strtolower(k);
+    (void) zeStr2Upper(k);
     ZE_MessageInfo(DBG_LEVEL, "KEY FULL : Looking for %s ...", k);
     if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
     {
@@ -226,7 +226,7 @@ db_rcpt_check_email(prefix, key, bufout, size)
     while (p != NULL && strlen(p) > 0)
     {
       snprintf(k, sizeof (k), "%s:%s", prefix, p);
-      (void) strtolower(k);
+      (void) zeStr2Upper(k);
       ZE_MessageInfo(DBG_LEVEL, "NAME : Looking for %s", k);
       if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
       {
@@ -260,7 +260,7 @@ db_rcpt_check_email(prefix, key, bufout, size)
   if (!found && is_email && email != NULL)
   {
     snprintf(k, sizeof (k), "%s:%s", prefix, email);
-    (void) strtolower(k);
+    (void) zeStr2Upper(k);
     domain = strchr(k, '@');
     if (domain != NULL)
       *(++domain) = '\0';
@@ -330,7 +330,7 @@ db_rcpt_check_domain(prefix, key, bufout, size, flags)
   if (p != NULL && strlen(p) > 0)
   {
     snprintf(k, sizeof (k), "%s:%s", prefix, p);
-    (void) strtolower(k);
+    (void) zeStr2Upper(k);
     ZE_MessageInfo(DBG_LEVEL, "NAME : Looking for %s", k);
     if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
     {
@@ -348,7 +348,7 @@ db_rcpt_check_domain(prefix, key, bufout, size, flags)
     while (p != NULL && strlen(p) > 0)
     {
       snprintf(k, sizeof (k), "%s:*.%s", prefix, p);
-      (void) strtolower(k);
+      (void) zeStr2Upper(k);
       ZE_MessageInfo(DBG_LEVEL, "NAME : Looking for %s", k);
       if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
       {
@@ -368,7 +368,7 @@ db_rcpt_check_domain(prefix, key, bufout, size, flags)
   if (!found)
   {
     snprintf(k, sizeof (k), "%s:%s", prefix, "default");
-    (void) strtolower(k);
+    (void) zeStr2Upper(k);
     ZE_MessageInfo(DBG_LEVEL, "NAME : Looking for %s", k);
     if (zeDb_GetRec(&hdb, k, v, sizeof (v)))
     {

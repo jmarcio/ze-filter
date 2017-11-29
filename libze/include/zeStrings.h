@@ -21,37 +21,34 @@
 
 #ifndef ZMSTRINGS_H
 
+
+char               *zeStrRev(char *);
+char               *zeStrDupRev(char *);
+int                 zeStrlEqual(char *, char*);
+int                 zeSafeStrnCat(char *, size_t, char *, size_t );
+int                 zeSafeStrnCpy(char *, size_t, char *, size_t );
+char               *zeStrnDup(const char *, size_t);
+char               *zm_malloc(size_t);
+char               *zeStrCatDup(char *, char *);
+int                 zeStrCountChar(char *, int);
 char               *zeStrJoin(char *, int, char **);
+char               *zeStrDup(char *);
+void               *zeMalloc(size_t);
+char               *zeStr2Lower(char *);
+char               *zeStr2Upper(char *);
+char               *zeStrSet(char *, int, int);
+void                zeStrChkNull(char *, int);
+size_t              zeStrRmNulls(char *, size_t);
+char               *zeStrRmBlanks(char *, size_t);
+char               *zeStrRmHeadBlanks(char *, size_t);
+char               *zeStrRmTailBlanks(char *, size_t);
+char               *zeStrClearTrailingBlanks(char *);
+char               *zeStrChomp(char *);
 bool                zeStrRegex(char *, char *, long *, long *, bool);
+void                zeStrCenter(char *, char *, int);
+int                 zeStr2Tokens(char *, int, char **, char *);
 
-#if 0
-zeStrRev(s)
-zeStrDupRev(s)
-zeStrlEqual(sa, sb)
-zeSafeStrnCat(out, sz, in, n)
-zeSafeStrnCpy(out, sz, in, n)
-zeStrnDup(sin, n)
-zm_malloc(size)
-zeStrCatDup(s1, s2)
-zeStrCountChar(s, c)
-zm_snprintf(char *s, size_t maxlen, const char *format, ...)
-
-zeStrJoin(sep, argc, argv)
-zeStrDup(s)
-zeMalloc(sz)
-zeStr2Lower(s)
-zeStr2Upper(s)
-zeStrSet(dst, c, len)
-zeStrChkNull(s, len)
-zeStrRmNulls(s, sz)
-zeStrChomp(s)
-zeStrRmBlanks(s, size)
-zeStrClearTrailingBlanks(s)
-zeStrRegex(s, expr, pi, pf, icase)
-zeStrCenter(dst, org, ldst)
-zeStr2Tokens(s, sz, argv, sep)
-#endif
-
+char               *zm_malloc(size_t);
 #if 0
 #define STRCASEEQUAL(a,b)                                               \
   ((a) != NULL && (b) != NULL ? strcasecmp((a),(b)) == 0 : ((a) == (b)))

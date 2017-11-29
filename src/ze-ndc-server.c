@@ -22,7 +22,7 @@
  */
 
 #include <ze-sys.h>
-
+#include <zeLibs.h>
 
 #include "ze-filter.h"
 
@@ -150,9 +150,9 @@ control_handler(name)
       {
         char               *ptr;
 
-        strchomp(buf);
+        zeStrChomp(buf);
         strtoupper(buf);
-        strtolower(buf);
+        zeStr2Upper(buf);
 
         ZE_MessageInfo(9, "CTRL CHAN CMD : %s", buf);
 
@@ -388,7 +388,7 @@ do_control(sd, argc, argv)
 
       FD_PRINTF(sd, "200 OK for %s %s %s !\r\n", cmd, arg, prmt);
 
-      if (strexpr(p, "[rcmhp][0-9]{2,2}", NULL, NULL, TRUE))
+      if (zeStrRegex(p, "[rcmhp][0-9]{2,2}", NULL, NULL, TRUE))
       {
         switch (*arg)
         {
@@ -413,10 +413,10 @@ do_control(sd, argc, argv)
         }
         p++;
 
-        ind = str2long(p, NULL, 0);
+        ind = zeStr2long(p, NULL, 0);
       }
 
-      value = str2double(prmt, NULL, 0);
+      value = zeStr2double(prmt, NULL, 0);
       if (errno == ERANGE || errno == EINVAL)
         goto done_setoracle;
 
@@ -452,7 +452,7 @@ do_control(sd, argc, argv)
     scmd = "URLBLTIME";
     if (strncasecmp(arg, scmd, strlen(scmd)) == 0)
     {
-      pt = str2time(prmt, NULL, 3600);
+      pt = zeStr2time(prmt, NULL, 3600);
 
       FD_PRINTF(sd, "200 OK for %s %s %ld s !\r\n", cmd, arg, pt);
 
@@ -537,7 +537,7 @@ do_control(sd, argc, argv)
       for (i = 0; i < 4; i++)
       {
         if (argc > i + 2)
-          delays[i] = str2time(argv[i + 2], NULL, 3600);
+          delays[i] = zeStr2time(argv[i + 2], NULL, 3600);
       }
 
       FD_PRINTF(sd, "200 OK for %s %s %ld !\r\n", cmd, arg, pi);
@@ -558,7 +558,7 @@ do_control(sd, argc, argv)
       for (i = 0; i < 4; i++)
       {
         if (argc > i + 2)
-          lifetime[i] = str2time(argv[i + 2], NULL, 3600);
+          lifetime[i] = zeStr2time(argv[i + 2], NULL, 3600);
       }
 
       FD_PRINTF(sd, "200 OK for %s %s %ld !\r\n", cmd, arg, pi);
@@ -579,7 +579,7 @@ do_control(sd, argc, argv)
       for (i = 0; i < 2; i++)
       {
         if (argc > i + 2)
-          nb[i] = str2long(argv[i + 2], NULL, 0);
+          nb[i] = zeStr2long(argv[i + 2], NULL, 0);
       }
 
       FD_PRINTF(sd, "200 OK for %s %s %ld !\r\n", cmd, arg, pi);
@@ -616,7 +616,7 @@ do_control(sd, argc, argv)
 
       if (argc > 2)
       {
-        dt = str2time(argv[2], NULL, 3600);
+        dt = zeStr2time(argv[2], NULL, 3600);
 
         FD_PRINTF(sd, "200 OK for %s %s %ld !\r\n", cmd, arg, dt);
         ok = grey_set_cleanup_interval(dt);
@@ -634,7 +634,7 @@ do_control(sd, argc, argv)
     {
       double              t;
 
-      t = str2double(prmt, NULL, 0);
+      t = zeStr2double(prmt, NULL, 0);
       if (errno != ERANGE && errno != EINVAL && t >= 0)
       {
         FD_PRINTF(sd, "200 OK for %s %s %5.2f !\r\n", cmd, arg, t);

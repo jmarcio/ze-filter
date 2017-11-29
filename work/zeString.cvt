@@ -1,0 +1,16 @@
+
+# ze-strings.c
+
+strrev            zeStrRev
+strduprev         zeStrDupRev
+strlequal         zeStrlEqual
+safe_strncat      zeSafeStrnCat
+safe_strncpy      zeSafeStrnCpy
+strndup           zeStrnDup
+strcatdup         zeStrCatDup
+strcountchar      zeStrCountChar
+
+# jm_malloc     zm_malloc
+# sm_snprintf   zm_snprintf
+
+

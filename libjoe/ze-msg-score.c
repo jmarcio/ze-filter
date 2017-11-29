@@ -503,7 +503,7 @@ configure_msg_eval_function(val)
   q->scale.oracle = 1.;
   q->func = EVAL_UNDEF;
 
-  argc = str2tokens(buf, 32, argv, ";, ");
+  argc = zeStr2Tokens(buf, 32, argv, ";, ");
   for (i = 0; i < argc; i++)
   {
     if (!decode_msg_eval_token(q, argv[i]))
@@ -548,7 +548,7 @@ configure_msg_score_scales(val)
   q->scale.regex = 0.2;
   q->scale.oracle = 1.;
 
-  argc = str2tokens(buf, 32, argv, ";, ");
+  argc = zeStr2Tokens(buf, 32, argv, ";, ");
   for (i = 0; i < argc; i++)
   {
     if (!decode_msg_eval_token(q, argv[i]))
@@ -782,7 +782,7 @@ create_msg_score_header(buf, size, id, hostname, scp)
   nx = MAX(nx, 0);
   n = MIN(nx, MAX_MSG_SCORE);
   if (n > 0)
-    strset(sout, 'X', n);
+    zeStrSet(sout, 'X', n);
   else
     strlcpy(sout, ".", sizeof (sout));
   if (nx > MAX_MSG_SCORE)
@@ -795,21 +795,21 @@ create_msg_score_header(buf, size, id, hostname, scp)
   nx = msg_eval.scale.regex * regex;
   n = MIN(nx, sizeof (sr) - 1);
   if (n > 0)
-    strset(sr, '#', n);
+    zeStrSet(sr, '#', n);
   else
     strlcpy(sr, ".", sizeof (sr));
 
   nx = msg_eval.scale.urlbl * scp->urlbl;
   n = MIN(nx, sizeof (su) - 1);
   if (n > 0)
-    strset(su, '#', n);
+    zeStrSet(su, '#', n);
   else
     strlcpy(su, ".", sizeof (su));
 
   nx = msg_eval.scale.oracle * scp->oracle;
   n = MIN(nx, sizeof (so) - 1);
   if (n > 0)
-    strset(so, '#', n);
+    zeStrSet(so, '#', n);
   else
     strlcpy(so, ".", sizeof (so));
 
@@ -1063,7 +1063,7 @@ evaluate_msg_action(action, scp, score, str)
           break;
         case MATCH_REGEX:
           if (str != NULL)
-            result = strexpr(str, q->value.regex, NULL, NULL, TRUE);
+            result = zeStrRegex(str, q->value.regex, NULL, NULL, TRUE);
           else
             ZE_LogMsgError(0, "str : NULL pointer");
           break;

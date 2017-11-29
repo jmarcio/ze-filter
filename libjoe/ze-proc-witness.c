@@ -150,7 +150,7 @@ remove_milter_sock()
   if (sock_file == NULL || strlen(milter_sock_file) == 0)
     goto end;
 
-  if (!strexpr(sock_file, "^(unix|local):", NULL, NULL, TRUE))
+  if (!zeStrRegex(sock_file, "^(unix|local):", NULL, NULL, TRUE))
     goto end;
 
   if (strncasecmp(sock_file, "unix:", strlen("unix:")) == 0)

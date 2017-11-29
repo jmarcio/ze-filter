@@ -522,7 +522,7 @@ livehistory_log_table(fd, resolve)
     int                 i;
     char                buf[256];
 
-    strset(buf, '-', (LH_MAX - 1) * 10);
+    zeStrSet(buf, '-', (LH_MAX - 1) * 10);
     FD_PRINTF(fd, "  %-17s   %s\n", "", buf);
     FD_PRINTF(fd, "  %-17s :", "");
 

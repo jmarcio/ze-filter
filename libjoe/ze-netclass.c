@@ -142,7 +142,7 @@ DecodeNetClass(class, label, sz)
     return NET_UNKNOWN;
   }
 
-  argc = str2tokens(class, 32, argv, "+, ");
+  argc = zeStr2Tokens(class, 32, argv, "+, ");
   for (i = 0; i < argc && code == NET_UNKNOWN; i++)
   {
     if ((i == 0) && (label != NULL))
@@ -190,7 +190,7 @@ typedef struct
       if (env != NULL) {						\
       (kC)->buf = strdup(env);						\
         if ((kC)->buf != NULL) {					\
-	  (kC)->nb = str2tokens((kC)->buf, 32, (kC)->classes, ",+ ");	\
+	  (kC)->nb = zeStr2Tokens((kC)->buf, 32, (kC)->classes, ",+ ");	\
 	  (kC)->netcode = (code);					\
 	  (kC)->ok = TRUE;						\
 	} else {							\

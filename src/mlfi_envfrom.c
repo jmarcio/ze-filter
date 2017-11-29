@@ -187,7 +187,7 @@ mlfi_envfrom(ctx, envfrom)
     char                fbuf[256];
     char               *user, *domain;
 
-    if (!strexpr(priv->env_from, "<.*>", NULL, NULL, TRUE))
+    if (!zeStrRegex(priv->env_from, "<.*>", NULL, NULL, TRUE))
     {
       ZE_MessageInfo(9, "%-12s : ENV FROM Syntax Error : %s",
                    CONNID_STR(priv->id), priv->env_from);
@@ -207,7 +207,7 @@ mlfi_envfrom(ctx, envfrom)
       *domain++ = '\0';
 
     if (domain == NULL
-        || strexpr(domain, "^[a-z][-a-z.]+[.][-a-z.]+$", NULL, NULL, TRUE))
+        || zeStrRegex(domain, "^[a-z][-a-z.]+[.][-a-z.]+$", NULL, NULL, TRUE))
     {
 
     }
@@ -221,7 +221,7 @@ mlfi_envfrom(ctx, envfrom)
 
     memset(buf, 0, sizeof (buf));
 
-    if (!strexpr(priv->env_from, "<>", NULL, NULL, FALSE))
+    if (!zeStrRegex(priv->env_from, "<>", NULL, NULL, FALSE))
     {
       extract_host_from_email_address(buf, priv->env_from, sizeof (buf));
       mail_host = strchr(buf, '@');
@@ -236,7 +236,7 @@ mlfi_envfrom(ctx, envfrom)
 
     if (mail_host != NULL && strlen(mail_host) > 0)
     {
-      if (strexpr(mail_host, "[^a-zA-Z0-9.-]", NULL, NULL, TRUE))
+      if (zeStrRegex(mail_host, "[^a-zA-Z0-9.-]", NULL, NULL, TRUE))
       {
         if (IS_UNKNOWN(priv->netclass.class))
           ZE_MessageInfo(11, "%-12s : Bad mail_host = %s", CONNID_STR(priv->id),

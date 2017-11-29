@@ -128,13 +128,13 @@ get_reply_msg(ctx, code, msg, sz, attr, value)
 
   if ((sin != NULL) && rule2reply(ctx, b_out, b_in, sizeof (b_out), attr, value))
   {
-    safe_strncpy(msg, sz, b_out, strlen(b_out));
+    zeSafeStrnCpy(msg, sz, b_out, strlen(b_out));
     result = TRUE;
   } else
   {
     sout = "*** Unknown error";
 
-    safe_strncpy(msg, sz, sout, strlen(sout));
+    zeSafeStrnCpy(msg, sz, sout, strlen(sout));
     result = TRUE;
   }
 
@@ -167,14 +167,14 @@ rule2reply(ctx, out, in, sz, attr, value)
 
   p = in;
   q = out;
-  while ((sz > 0) && strexpr(p, "__[A-Z0-9_]+__", &pi, &pf, TRUE))
+  while ((sz > 0) && zeStrRegex(p, "__[A-Z0-9_]+__", &pi, &pf, TRUE))
   {
     char               *tag = NULL;
     int                 n;
 
     if (pi > 0)
     {
-      n = safe_strncat(q, sz, p, pi);
+      n = zeSafeStrnCat(q, sz, p, pi);
       p += pi;
       q += n;
       sz -= n;
@@ -190,7 +190,7 @@ rule2reply(ctx, out, in, sz, attr, value)
     {
       if (value != NULL)
       {
-        n = safe_strncat(q, sz, value, strlen(value));
+        n = zeSafeStrnCat(q, sz, value, strlen(value));
         q += n;
         sz -= n;
       }
@@ -221,7 +221,7 @@ rule2reply(ctx, out, in, sz, attr, value)
 
       addr = (priv != NULL && priv->peer_addr) ? priv->peer_addr : "???";
 
-      n = safe_strncat(q, sz, addr, strlen(addr));
+      n = zeSafeStrnCat(q, sz, addr, strlen(addr));
 
       /* printf(" pi = %ld; pf = %ld; n = %d\n", pi, pf, n); */
 
@@ -260,7 +260,7 @@ rule2reply(ctx, out, in, sz, attr, value)
   }
 
   if (p != NULL)
-    (void) safe_strncat(q, sz, p, strlen(p));
+    (void) zeSafeStrnCat(q, sz, p, strlen(p));
 
   return TRUE;
 }

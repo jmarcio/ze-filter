@@ -22,6 +22,7 @@
  */
 
 #include <ze-sys.h>
+#include <zeLibs.h>
 
 #include <libmilter/mfapi.h>
 
@@ -414,7 +415,7 @@ periodic_tasks_loop(data)
     {
       time_t              t;
 
-      t = str2time(env, NULL, 3600);
+      t = zeStr2time(env, NULL, 3600);
       if (t > 1 HOURS)
         t_restart = t;
     }
@@ -579,7 +580,7 @@ periodic_tasks_loop(data)
         {
           int                 max_load = 100;
 
-          max_load = str2long(env, NULL, 100);
+          max_load = zeStr2long(env, NULL, 100);
           if (errno == ERANGE)
             max_load = 100;
           if (max_load < 50 || max_load > 100)

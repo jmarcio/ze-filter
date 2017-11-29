@@ -151,7 +151,7 @@ mlfi_eom(ctx)
     char               *s = NULL;
 
     if ((s = getenv("FROMRATEFULL")) != NULL) {
-      if (strexpr(s, "yes|oui|true", NULL, NULL, TRUE))
+      if (zeStrRegex(s, "yes|oui|true", NULL, NULL, TRUE))
         addrPlusEmail = TRUE;
     }
 
@@ -335,7 +335,7 @@ mlfi_eom(ctx)
       strlcpy(buf, p, sizeof (buf));
     else
       memset(buf, 0, sizeof (buf));
-    argc = str2tokens(buf, 32, argv, ", ");
+    argc = zeStr2Tokens(buf, 32, argv, ", ");
     for (i = 0; i < argc; i++) {
       if (strlen(argv[i]) == 0 || STRCASEEQUAL(argv[i], "none"))
         break;
@@ -362,7 +362,7 @@ mlfi_eom(ctx)
       strlcpy(buf, p, sizeof (buf));
     else
       memset(buf, 0, sizeof (buf));
-    argc = str2tokens(buf, 32, argv, ", ");
+    argc = zeStr2Tokens(buf, 32, argv, ", ");
 
     if (argc > 0) {
       n = count_msgheader_attr(priv->headers, "x-ze-filter-score");
@@ -410,7 +410,7 @@ mlfi_eom(ctx)
            * "MSGID : %s on %s : ze-filter score : %s : %d/%d %d %5.3f -> %d", 
            */
           snprintf(expr, sizeof (expr), "on [^ ]*%s : ze-filter score", arg);
-          if (strexpr(h->value, expr, NULL, NULL, TRUE)) {
+          if (zeStrRegex(h->value, expr, NULL, NULL, TRUE)) {
             if (!preserve)
               do_it = TRUE;
             break;
@@ -495,7 +495,7 @@ mlfi_eom(ctx)
         continue;
       for (cmd = SYMPA_CMDS; (*cmd != NULL); cmd++) {
         ZE_MessageInfo(12, "Checking Subject %s %s", h->value, *cmd);
-        if (strexpr(h->value, *cmd, NULL, NULL, TRUE)) {
+        if (zeStrRegex(h->value, *cmd, NULL, NULL, TRUE)) {
           priv->msg_short = FALSE;
           break;
         }
@@ -574,7 +574,7 @@ mlfi_eom(ctx)
       env = DEFAULT_ORDER;
     strlcpy(buf, env, sizeof (buf));
 
-    argc = str2tokens(buf, 32, argv, " ,");
+    argc = zeStr2Tokens(buf, 32, argv, " ,");
     for (i = 0; i < argc; i++) {
       bool                done = FALSE;
 
@@ -866,7 +866,7 @@ eom_check_virus(ctx, ahead, done)
     strlcpy(question, priv->fname, sizeof (question));
     avres = av_client(why, sizeof (why), data, sizeof (data), question);
     ZE_MessageInfo(11, "av_client : %3d (%s) (%s)", avres, why,
-                 strchomp(question));
+                 zeStrChomp(question));
 
     if (avres == AV_ZERO || avres == AV_OK)
       goto fin;
@@ -1044,7 +1044,7 @@ eom_check_content(ctx, done)
       char               *env;
 
       if ((env = getenv("LR_MAX_FSIZE")) != NULL)
-        fsize_max = str2size(env, NULL, fsize_max);
+        fsize_max = zeStr2size(env, NULL, fsize_max);
     }
     fsize = get_file_size(priv->fname);
 
@@ -1102,7 +1102,7 @@ eom_check_content(ctx, done)
             char               *s = getenv("MLOGBAY");
 
             if (s != NULL) {
-              Mlb = str2double(s, NULL, MLOGBAY);
+              Mlb = zeStr2double(s, NULL, MLOGBAY);
               if (Mlb < 0)
                 Mlb = MLOGBAY;
             } else
@@ -1112,7 +1112,7 @@ eom_check_content(ctx, done)
             char               *s = getenv("KLOGBAY");
 
             if (s != NULL) {
-              Klb = str2double(s, NULL, KLOGBAY);
+              Klb = zeStr2double(s, NULL, KLOGBAY);
               if (Klb < 0. || Klb > 1.)
                 Klb = KLOGBAY;
             } else

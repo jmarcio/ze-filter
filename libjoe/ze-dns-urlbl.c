@@ -67,7 +67,7 @@ check_dns_urlbl(name, bl, code, size, recurse)
     return FALSE;
   }
 
-  if (name != NULL && strexpr(name, IPV4_ADDR_REGEX, NULL, NULL, TRUE))
+  if (name != NULL && zeStrRegex(name, IPV4_ADDR_REGEX, NULL, NULL, TRUE))
   {
     int                 argc;
     char               *argv[16];
@@ -83,7 +83,7 @@ check_dns_urlbl(name, bl, code, size, recurse)
     if (sip == NULL)
       ZE_MessageError(10, "strdup(%s) error", name);
 
-    argc = str2tokens(sip, 16, argv, ".");
+    argc = zeStr2Tokens(sip, 16, argv, ".");
     while (--argc >= 0)
     {
       char                s[8];
@@ -117,7 +117,7 @@ check_dns_urlbl(name, bl, code, size, recurse)
       goto fin;
   }
 
-  if (name != NULL && strexpr(name, DOMAINNAME_REGEX, NULL, NULL, TRUE))
+  if (name != NULL && zeStrRegex(name, DOMAINNAME_REGEX, NULL, NULL, TRUE))
   {
     DNS_HOSTARR_T       a;
     char               *pname = name;
@@ -229,11 +229,11 @@ read_urlbl_line(v, arg)
   r.odds = 1.;
 
   n = strcspn(s, " \t");
-  safe_strncpy(r.bl, sizeof (r.bl), s, n);
+  zeSafeStrnCpy(r.bl, sizeof (r.bl), s, n);
   s += n;
 
   r.flags |= URLBL_RECURSE;
-  argc = str2tokens(s, 32, argv, "; ");
+  argc = zeStr2Tokens(s, 32, argv, "; ");
   for (i = 0; i < argc; i++)
   {
     char               *tag;
@@ -289,7 +289,7 @@ read_urlbl_line(v, arg)
       r.flags &= ~(URLBL_ONMATCH_CONTINUE);
 
       strlcpy(buf, p, sizeof (buf));
-      argxc = str2tokens(buf, 16, argxv, ", ");
+      argxc = zeStr2Tokens(buf, 16, argxv, ", ");
       for (j = 0; j < argxc; j++)
       {
         if (STRCASEEQUAL(argxv[j], "stop"))
@@ -316,7 +316,7 @@ read_urlbl_line(v, arg)
       p += strlen(tag);
 
       strlcpy(buf, p, sizeof (buf));
-      argxc = str2tokens(buf, 16, argxv, ", ");
+      argxc = zeStr2Tokens(buf, 16, argxv, ", ");
       for (j = 0; j < argxc; j++)
       {
         if (STRCASEEQUAL(argxv[j], "no"))
@@ -499,7 +499,7 @@ check_urlbl_table(id, name, urlbl)
         int                 j;
 
         strlcpy(buf, r.code, sizeof (buf));
-        argc = str2tokens(buf, 16, argv, ", ");
+        argc = zeStr2Tokens(buf, 16, argv, ", ");
         for (j = 0; j < argc; j++)
         {
           if (STRCASEEQUAL(code, argv[j]))

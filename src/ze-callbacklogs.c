@@ -393,10 +393,10 @@ read_error_msg(buf, sz, ahead, answer, from, why, tag, priv)
     char               *msg =
       "ze-filter - (c) Ecole des Mines de Paris 2002, ...";
 
-    strset(s, '-', 64);
+    zeStrSet(s, '-', 64);
     strlcat(buf, s, sz);
     strlcat(buf, CRLF, sz);
-    center_string(s, msg, 64);
+    zeStrCenter(s, msg, 64);
     strlcat(buf, s, sz);
     strlcat(buf, CRLF CRLF, sz);
   }
@@ -718,7 +718,7 @@ add_tag2subject(ctx, tag)
 
   osubject = STRNULL(priv->hdr_subject, "");
 #if 0
-  if (!strexpr(osubject, ntag, NULL, NULL, TRUE))
+  if (!zeStrRegex(osubject, ntag, NULL, NULL, TRUE))
 #else
   if (strstr(osubject, ntag) == NULL)
 #endif

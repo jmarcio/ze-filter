@@ -68,11 +68,11 @@ chkfrom:
     int                 argcA, argcB, argcC;
     int                 i, j, k;
 
-    argcA = str2tokens(buf, 32, argvA, ";");
+    argcA = zeStr2Tokens(buf, 32, argvA, ";");
     for (i = 0; i < argcA && !match; i++) {
-      argcB = str2tokens(argvA[i], 32, argvB, ":");
+      argcB = zeStr2Tokens(argvA[i], 32, argvB, ":");
       if (argcB == 2) {
-        argcC = str2tokens(argvB[0], 32, argvC, ",");
+        argcC = zeStr2Tokens(argvB[0], 32, argvC, ",");
         for (k = 0; k < argcC && !match; k++) {
           if (EmailMatch(to, argvC[k])) {
             strlcpy(rBuf, argvB[1], sizeof(rBuf));
@@ -94,11 +94,11 @@ chkaddr:
     int                 argcA, argcB, argcC;
     int                 i, j, k;
 
-    argcA = str2tokens(buf, 32, argvA, ";");
+    argcA = zeStr2Tokens(buf, 32, argvA, ";");
     for (i = 0; i < argcA && !match; i++) {
-      argcB = str2tokens(argvA[i], 32, argvB, ":");
+      argcB = zeStr2Tokens(argvA[i], 32, argvB, ":");
       if (argcB == 2) {
-        argcC = str2tokens(argvB[0], 32, argvC, ",");
+        argcC = zeStr2Tokens(argvB[0], 32, argvC, ",");
         for (k = 0; k < argcC && !match; k++) {
           if (EmailMatch(to, argvC[k])) {
             strlcpy(rBuf, argvB[1], sizeof(rBuf));
@@ -191,7 +191,7 @@ EmailMatch(email, target)
   if (tEmail == NULL) {
     goto fin;
   }
-  argc = str2tokens(tEmail, 3, argv, "@");
+  argc = zeStr2Tokens(tEmail, 3, argv, "@");
   for (i = 0; i < argc; i++) {
     if (STRCASEEQUAL(argv[i], target)) {
       match = TRUE;
@@ -217,7 +217,7 @@ EmailMatch(email, target)
       goto fin;
     }
 
-    argcT = str2tokens(domKey, 32, argvT, ".");
+    argcT = zeStr2Tokens(domKey, 32, argvT, ".");
     for (i = 0; i < argcT; i++) {
       char               *lKey = NULL;
 

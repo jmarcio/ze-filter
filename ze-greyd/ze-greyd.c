@@ -23,6 +23,7 @@
 
 
 #include <ze-sys.h>
+#include <zeLibs.h>
 #include <ze-filter.h>
 
 #define  CTRL_TO          60000
@@ -182,8 +183,8 @@ main(argc, argv)
           /* socket */
         case 's':
           FREE(cargs.socket);
-          if (strexpr(optarg, "^inet:[0-9]+@[-a-z0-9.]+$", NULL, NULL, TRUE) ||
-              strexpr(optarg, "^(local|unix):([-/a-z0-9.]+)+$", NULL, NULL,
+          if (zeStrRegex(optarg, "^inet:[0-9]+@[-a-z0-9.]+$", NULL, NULL, TRUE) ||
+              zeStrRegex(optarg, "^(local|unix):([-/a-z0-9.]+)+$", NULL, NULL,
                       TRUE))
           {
             cargs.socket = strdup(optarg);
@@ -300,7 +301,7 @@ main(argc, argv)
     if ((s = strdup(ntuple)) != NULL)
     {
       memset(argv, 0, sizeof (argv));
-      argc = str2tokens(s, NTP, argv, ",");
+      argc = zeStr2Tokens(s, NTP, argv, ",");
       for (i = 0; i < NTP; i++)
         argv[i] = STRNULL(argv[i], "");
       (void) grey_set_tuples(argv[0], argv[1], argv[2]);
@@ -320,11 +321,11 @@ main(argc, argv)
     {
       memset(argv, 0, sizeof (argv));
       memset(tc, 0, sizeof (tc));
-      argc = str2tokens(s, NTC, argv, ",");
+      argc = zeStr2Tokens(s, NTC, argv, ",");
       for (i = 0; i < NTC; i++)
       {
         argv[i] = STRNULL(argv[i], "0");
-        tc[i] = str2time(argv[i], NULL, 0);
+        tc[i] = zeStr2time(argv[i], NULL, 0);
       }
       (void) grey_set_delays(tc[0], tc[1], tc[2], tc[3]);
     }
@@ -340,7 +341,7 @@ main(argc, argv)
     if ((s = strdup(access_str)) != NULL)
     {
       memset(access_arr, 0, sizeof (access_arr));
-      argc = str2tokens(s, MAX_ACCESS, access_arr, ",");
+      argc = zeStr2Tokens(s, MAX_ACCESS, access_arr, ",");
       for (i = 0; i < MAX_ACCESS; i++)
         access_arr[i] = STRNULL(access_arr[i], "UNKNOWN");
     }
@@ -679,8 +680,8 @@ greyd_server(arg)
 
         neintr = 0;
         arg = NULL;
-        strchomp(buf);
-        strtolower(buf);
+        zeStrChomp(buf);
+        zeStr2Upper(buf);
 
         ZE_MessageInfo(9, "PEER=(%s) CMD=(%s)", addr, buf);
         if (strlen(buf) == 0) {
@@ -695,7 +696,7 @@ greyd_server(arg)
           char               *argv[MAX_ARGS];
           int                 argc;
 
-          argc = str2tokens(buf, MAX_ARGS, argv, " ,");
+          argc = zeStr2Tokens(buf, MAX_ARGS, argv, " ,");
 
           r = handle_command(fd, addr, argc, argv);
           if (r == GREY_SRV_OK)
@@ -933,7 +934,7 @@ handle_command(sd, addr, argc, argv)
       return GREY_SRV_ERROR;
 
     if (argc > 2)
-      dt = str2ulong(argv[2], NULL, 0);
+      dt = zeStr2ulong(argv[2], NULL, 0);
 
     if (STRCASEEQUAL(argv[1], "PENDING"))
     {
@@ -1233,7 +1234,7 @@ usage(arg)
 static void
 remove_socket_file(void)
 {
-  if (strexpr(cargs.socket, "^(local|unix):", NULL, NULL, TRUE))
+  if (zeStrRegex(cargs.socket, "^(local|unix):", NULL, NULL, TRUE))
   {
     char               *p = strchr(cargs.socket, ':');
     struct stat         buf;

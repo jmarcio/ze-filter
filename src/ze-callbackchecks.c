@@ -102,7 +102,7 @@ passport_ok(to, key)
   long                pi, pf;
   bool                ok = FALSE;
 
-  if (strexpr(to, "[+][0-9]{6,6}-.+@", &pi, &pf, TRUE))
+  if (zeStrRegex(to, "[+][0-9]{6,6}-.+@", &pi, &pf, TRUE))
   {
     time_t              now;
     struct tm           tm;
@@ -264,7 +264,7 @@ compatible_domains(da, db)
   if (strcasecmp(da, db) == 0)
     return TRUE;
 
-  le = strlequal(da, db);
+  le = zeStrlEqual(da, db);
   if (le == 0)
     return FALSE;
 
@@ -285,11 +285,11 @@ enveloppe_postmaster(from)
 {
   if (from == NULL)
     return FALSE;
-  if (strexpr(from, NULLSENDER, NULL, NULL, TRUE))
+  if (zeStrRegex(from, NULLSENDER, NULL, NULL, TRUE))
     return TRUE;
-  if (strexpr(from, "postmaster@", NULL, NULL, TRUE))
+  if (zeStrRegex(from, "postmaster@", NULL, NULL, TRUE))
     return TRUE;
-  if (strexpr(from, "mailer-daemon@", NULL, NULL, TRUE))
+  if (zeStrRegex(from, "mailer-daemon@", NULL, NULL, TRUE))
     return TRUE;
   return FALSE;
 }
@@ -313,11 +313,11 @@ check_valid_postmaster(env_from, from, nbrcpt)
   if (nbrcpt > 1)
     return POSTMASTER_FORGED;
 
-  if (strexpr(from, "postmaster@", NULL, NULL, TRUE))
+  if (zeStrRegex(from, "postmaster@", NULL, NULL, TRUE))
     return POSTMASTER_OK;
-  if (strexpr(from, "root@", NULL, NULL, TRUE))
+  if (zeStrRegex(from, "root@", NULL, NULL, TRUE))
     return POSTMASTER_OK;
-  if (strexpr(from, "mailer-daemon@", NULL, NULL, TRUE))
+  if (zeStrRegex(from, "mailer-daemon@", NULL, NULL, TRUE))
     return POSTMASTER_OK;
 
   return POSTMASTER_FORGED;
@@ -545,7 +545,7 @@ check_condition(cond, header, rScore)
     }
     buf[i] = '\0';
   }
-  argc = str2tokens(buf, 32, argv, ";");
+  argc = zeStr2Tokens(buf, 32, argv, ";");
   for (i = 0; i < argc && !result; i++)
   {
     char               *pcond;
@@ -752,7 +752,7 @@ check_condition(cond, header, rScore)
       if (*pcond == '\0')
         continue;
 
-      if (strexpr(header, pcond, NULL, NULL, TRUE))
+      if (zeStrRegex(header, pcond, NULL, NULL, TRUE))
         result = TRUE;
 
       if (result)
@@ -762,7 +762,7 @@ check_condition(cond, header, rScore)
 
     if (header != NULL || strlen(header) > 0)
     {
-      if (strexpr(header, pcond, NULL, NULL, TRUE))
+      if (zeStrRegex(header, pcond, NULL, NULL, TRUE))
         result = TRUE;
     }
   }
@@ -1165,7 +1165,7 @@ check_ehlo_value(ctx)
 
       ehlo_check_rules = EHLO_NONE;
       memset(argv, 0, sizeof (argv));
-      argc = str2tokens(checks, 32, argv, " ,");
+      argc = zeStr2Tokens(checks, 32, argv, " ,");
 
       for (i = 0; i < argc; i++)
       {
@@ -1226,13 +1226,13 @@ check_ehlo_value(ctx)
     }
   }
 
-  if (strexpr(helohost, IPV4_ADDR_REGEX, NULL, NULL, TRUE))
+  if (zeStrRegex(helohost, IPV4_ADDR_REGEX, NULL, NULL, TRUE))
     is_ipv4 = TRUE;
 
   /*
    ** Invalid characters
    */
-  if (strexpr(helohost, "[^a-z0-9:.-]+", NULL, NULL, TRUE))
+  if (zeStrRegex(helohost, "[^a-z0-9:.-]+", NULL, NULL, TRUE))
   {
     ehlo_flags |= EHLO_INVALID_CHAR;
     SET_BIT(ehlo_res, SPAM_CONN_BAD_EHLO);
@@ -1271,7 +1271,7 @@ check_ehlo_value(ctx)
   }
 
   /* Check against localhost */
-  if (is_ipv6 && strexpr(helohost, "(::1)", NULL, NULL, TRUE))
+  if (is_ipv6 && zeStrRegex(helohost, "(::1)", NULL, NULL, TRUE))
   {
     ehlo_flags |= EHLO_FAKE_LOCALHOST;
     SET_BIT(ehlo_res, SPAM_CONN_FORGED_EHLO);
@@ -1291,7 +1291,7 @@ check_ehlo_value(ctx)
 		 priv->peer_addr, helohost);
   }
 
-  if (!is_ipv4 && !is_ipv6 && strexpr(helohost, "^localhost", NULL, NULL, TRUE))
+  if (!is_ipv4 && !is_ipv6 && zeStrRegex(helohost, "^localhost", NULL, NULL, TRUE))
   {
     ehlo_flags |= EHLO_FAKE_LOCALHOST;
     SET_BIT(ehlo_res, SPAM_CONN_FORGED_EHLO);
@@ -1314,7 +1314,7 @@ check_ehlo_value(ctx)
     myself = STRNULL(myself, "");
     strlcpy(tme, myself, sizeof (tme));
 
-    argc = str2tokens(tme, 64, argv, ", ");
+    argc = zeStr2Tokens(tme, 64, argv, ", ");
     for (i = 0; i < argc; i++)
     {
       char               *expr = argv[i];
@@ -1327,7 +1327,7 @@ check_ehlo_value(ctx)
 
       ZE_MessageInfo(19, "Checking helo %s against %s", helohost, expr);
 
-      if (strexpr(helohost, expr, NULL, NULL, TRUE)
+      if (zeStrRegex(helohost, expr, NULL, NULL, TRUE)
           /* && (strlen(helohost) - strlen(expr) <= 2) */ )
       {
         ehlo_flags |= EHLO_IDENTITY_THEFT;

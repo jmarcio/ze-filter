@@ -24,6 +24,7 @@
 
 
 #include <ze-sys.h>
+#include <zeLibs.h>
 #include "ze-filter.h"
 #include <ze-bfilter.h>
 #include <ze-bcheck.h>
@@ -498,11 +499,11 @@ print_db_info(k, v, arg)
       char                buf[256];
 
       snprintf(buf, sizeof (buf), "%s=\\([^\\)]*\\)", *tag);
-      if (strexpr(v, buf, &pi, &pf, TRUE))
+      if (zeStrRegex(v, buf, &pi, &pf, TRUE))
       {
         char               *s, *t;
 
-        safe_strncpy(buf, sizeof (buf), (char *) v + pi, pf - pi);
+        zeSafeStrnCpy(buf, sizeof (buf), (char *) v + pi, pf - pi);
 
         if ((t = strrchr(buf, ')')) != NULL)
           *t = '\0';
@@ -560,7 +561,7 @@ print_histogram(histo, nmax, step)
     nm += nb;
     if (nb > 80)
       nb = 80;
-    strset(line, '*', nb);
+    zeStrSet(line, '*', nb);
     if (nb > 80)
       strlcat(line, "->", sizeof (line));
     printf("%3d : %6.3f %5d %s\n", i, i * step, histo[i], line);
@@ -667,7 +668,7 @@ group_token_files(argc, argv, msgMin, scli_crypt)
 
         if (STRNCASEEQUAL(buf, "msgs:", strlen("msgs:")))
         {
-          if (strexpr(buf, "^msgs:[^ ]*[.]dtok[ ]+", NULL, NULL, TRUE))
+          if (zeStrRegex(buf, "^msgs:[^ ]*[.]dtok[ ]+", NULL, NULL, TRUE))
             list = linked_list_add(list, buf, 1, NULL, 0);
         }
 
@@ -946,13 +947,13 @@ agregate_tokens(argc, argv, multinomial)
           char               *bargv[8];
           int                 n = 0;
 
-          bargc = str2tokens(buf, 8, bargv, " ");
+          bargc = zeStr2Tokens(buf, 8, bargv, " ");
           if (bargc == 0)
             continue;
 
           spam = STRCASEEQUAL(bargv[3], "s");
           errno = 0;
-          n = str2long(bargv[4], NULL, 0);
+          n = zeStr2long(bargv[4], NULL, 0);
           if (errno == 0 && n > 0)
             msgs = n;
 
@@ -971,7 +972,7 @@ agregate_tokens(argc, argv, multinomial)
           char               *bargv[8];
           int                 nb = 1;
 
-          bargc = str2tokens(buf, 8, bargv, " ");
+          bargc = zeStr2Tokens(buf, 8, bargv, " ");
           if (bargc == 0)
             continue;
 

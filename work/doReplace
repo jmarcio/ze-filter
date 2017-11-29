@@ -1,8 +1,10 @@
 #! /bin/bash
 
 [ -n "$DIRS" ] || DIRS="
-  libs :wqlibjoe src ze-scanfile ze-printstats ze-makemap
-  ze-logserver ze-greyd ze-bayes-tbx scratch zechklib zelib
+  libs libjoe src 
+  ze-scanfile ze-printstats ze-makemap
+  ze-logserver ze-greyd ze-bayes-tbx scratch 
+  libzechk/src libze/src
 "
 
 for dir in $DIRS

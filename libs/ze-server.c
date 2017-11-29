@@ -360,7 +360,7 @@ server_listen(spec, server)
       ZE_LogSysError("strdup error");
       goto fin;
     }
-    argc = str2tokens(ts, 4, argv, "@");
+    argc = zeStr2Tokens(ts, 4, argv, "@");
     if (argc == 0)
       goto fin;
 
@@ -397,7 +397,7 @@ server_listen(spec, server)
       ZE_LogSysError("strdup error");
       goto fin;
     }
-    argc = str2tokens(ts, 4, argv, "@");
+    argc = zeStr2Tokens(ts, 4, argv, "@");
     if (argc == 0)
     {
       FREE(ts);

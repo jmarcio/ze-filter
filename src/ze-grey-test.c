@@ -23,6 +23,7 @@
 
 
 #include <ze-sys.h>
+#include <zeLibs.h>
 #include <ze-filter.h>
 
 
@@ -142,7 +143,7 @@ main(argc, argv)
     if ((s = strdup(ntuple)) != NULL)
     {
       memset(argv, 0, sizeof (argv));
-      argc = str2tokens(s, NTP, argv, ",");
+      argc = zeStr2Tokens(s, NTP, argv, ",");
       for (i = 0; i < NTP; i++)
         argv[i] = STRNULL(argv[i], "");
       (void) grey_set_tuples(argv[0], argv[1], argv[2]);
@@ -162,11 +163,11 @@ main(argc, argv)
     {
       memset(argv, 0, sizeof (argv));
       memset(tc, 0, sizeof (tc));
-      argc = str2tokens(s, NTC, argv, ",");
+      argc = zeStr2Tokens(s, NTC, argv, ",");
       for (i = 0; i < NTC; i++)
       {
         argv[i] = STRNULL(argv[i], "0");
-        tc[i] = (time_t) str2time(argv[i], NULL, 0);
+        tc[i] = (time_t) zeStr2time(argv[i], NULL, 0);
       }
       (void) grey_set_delays(tc[0], tc[1], tc[2], tc[3]);
     }

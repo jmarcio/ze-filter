@@ -123,12 +123,12 @@ static char *sympa_cmds[] = {
       goto ok;
 
     /* is this a subscription message ? */
-    if (strexpr(buf, "subscribe", NULL, NULL, TRUE))
+    if (zeStrRegex(buf, "subscribe", NULL, NULL, TRUE))
       goto ok;
 
     while ((h = get_msgheader_next(h, "Subject")) != NULL)
     {
-      if (h->value != NULL && strexpr(h->value, "subscribe", NULL, NULL, TRUE))
+      if (h->value != NULL && zeStrRegex(h->value, "subscribe", NULL, NULL, TRUE))
         goto ok;
     }
 

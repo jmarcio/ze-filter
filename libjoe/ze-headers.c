@@ -289,7 +289,7 @@ get_msgheader_attribute(header, attr, value, size)
   ZE_MessageInfo(15, "Looking for %s, in %s = %s", attr,
                STRNULL(header->attr, "ATTR"), header->value);
 
-  if (!strexpr(header->value, attr, NULL, &pf, TRUE))
+  if (!zeStrRegex(header->value, attr, NULL, &pf, TRUE))
     return FALSE;
 
   p = header->value + pf;
@@ -311,7 +311,7 @@ get_msgheader_attribute(header, attr, value, size)
     return TRUE;
 
 #if 1
-  safe_strncat(value, size, p, n);
+  zeSafeStrnCat(value, size, p, n);
 #else
   strlcpy(value, p, size);
 #endif

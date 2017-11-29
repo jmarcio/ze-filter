@@ -84,7 +84,7 @@ main(argc, argv)
 #endif
 
       ZE_MessageInfo(10, "* HOSTNAME_REGEX %s", HOSTNAME_REGEX);
-      if (strexpr(name, HOSTNAME_REGEX, NULL, NULL, TRUE))
+      if (zeStrRegex(name, HOSTNAME_REGEX, NULL, NULL, TRUE))
         ZE_MessageInfo(10, "* %s is a domain name", name);
       else
         ZE_MessageInfo(10, "* %s isn't a domain name", name);

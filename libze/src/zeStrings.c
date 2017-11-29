@@ -154,7 +154,6 @@ zeSafeStrnCpy(out, sz, in, n)
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
-#if !HAVE_STRNDUP
 char               *
 zeStrnDup(sin, n)
      const char         *sin;
@@ -165,14 +164,13 @@ zeStrnDup(sin, n)
   if (sin == NULL || n == 0)
     return NULL;
 
-  if ((p = jm_malloc(n + 1)) != NULL)
-    safe_strncpy((char *) p, n + 1, (char *) sin, n);
+  if ((p = zm_malloc(n + 1)) != NULL)
+    zeSafeStrnCpy((char *) p, n + 1, (char *) sin, n);
   else
     ZE_LogSysError("malloc error");
 
   return p;
 }
-#endif /* HAVE_STRNDUP */
 
 /* ****************************************************************************
  *                                                                            *
@@ -423,9 +421,6 @@ zeStrRmBlanks(s, size)
 
   p = q = s;
   while ((*p != '\0') && (size-- > 0)) {
-    /*
-     * ' ' or '\t' 
-     */
     if (!isblank(*p))
       *q++ = *p;
     p++;
@@ -451,9 +446,6 @@ zeStrRmHeadBlanks(s, size)
 
   p = q = s;
   while ((*p != '\0') && (size-- > 0)) {
-    /*
-     * ' ' or '\t' 
-     */
     if (!isblank(*p))
       *q++ = *p;
     p++;
@@ -479,9 +471,6 @@ zeStrRmTailBlanks(s, size)
 
   p = q = s;
   while ((*p != '\0') && (size-- > 0)) {
-    /*
-     * ' ' or '\t' 
-     */
     if (!isblank(*p))
       *q++ = *p;
     p++;

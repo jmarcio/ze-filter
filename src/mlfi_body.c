@@ -139,7 +139,7 @@ mlfi_body(ctx, bodyp, bodylen)
       for (cmd = SYMPA_CMDS; (*cmd != NULL); cmd++)
       {
         ZE_MessageInfo(12, "Checking body : %s %s", buf, *cmd);
-        if (strexpr(buf, *cmd, NULL, NULL, TRUE))
+        if (zeStrRegex(buf, *cmd, NULL, NULL, TRUE))
           goto ok;
       }
 
@@ -152,7 +152,7 @@ mlfi_body(ctx, bodyp, bodylen)
         for (cmd = SYMPA_CMDS; (*cmd != NULL); cmd++)
         {
           ZE_MessageInfo(12, "Checking Subject %s %s", h->value, *cmd);
-          if (strexpr(h->value, *cmd, NULL, NULL, TRUE))
+          if (zeStrRegex(h->value, *cmd, NULL, NULL, TRUE))
             goto ok;
         }
       }

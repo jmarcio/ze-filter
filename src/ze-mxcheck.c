@@ -23,6 +23,7 @@
 
 
 #include <ze-sys.h>
+#include <zeLibs.h>
 #include <ze-filter.h>
 #include <ze-filter-data.h>
 #include <ze-mxcheck.h>
@@ -100,7 +101,7 @@ check_sender_mx(ctx, mail_host)
     {
       int                 i;
 
-      i = str2long(env, NULL, 1);
+      i = zeStr2long(env, NULL, 1);
       if (errno == 0 && i < 100)
         mx_check_level = i;
     }

@@ -686,7 +686,7 @@ scan_body_contents(id, ip, fname, maxsize, data, flags, scores)
       }
 
       if ((h->value != NULL)
-          && strexpr(h->value, "multipart/(alternative|mixed)", NULL, NULL,
+          && zeStrRegex(h->value, "multipart/(alternative|mixed)", NULL, NULL,
                      TRUE))
       {
         if (get_msgheader_attribute(h, "boundary", value, sizeof (value)))
@@ -808,7 +808,7 @@ scan_body_contents(id, ip, fname, maxsize, data, flags, scores)
      */
     if ((h = get_msgheader(data->hdrs, "Content-Transfer-Encoding")) != NULL)
     {
-      if ((h->value != NULL) && strexpr(h->value, "base64", NULL, NULL, TRUE))
+      if ((h->value != NULL) && zeStrRegex(h->value, "base64", NULL, NULL, TRUE))
       {
         SET_BIT(data->flags.msg, SPAM_MSG_BASE64);
         if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
@@ -823,7 +823,7 @@ scan_body_contents(id, ip, fname, maxsize, data, flags, scores)
     if ((h = get_msgheader(data->hdrs, "Subject")) != NULL)
     {
       if ((h->value != NULL) &&
-          strexpr(h->value, "^=[?].*[?][bB][?].*[?]=", NULL, NULL, TRUE))
+          zeStrRegex(h->value, "^=[?].*[?][bB][?].*[?]=", NULL, NULL, TRUE))
       {
         SET_BIT(data->flags.msg, SPAM_MSG_BASE64_SUBJECT);
         if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
@@ -1399,12 +1399,12 @@ check_rfc2822_headers_syntax(id, head)
 
     p = h->value;
     s = "(Mon|Tue|Wed|Thu|Fri|Sat|Sun)";
-    if (strexpr(p, s, &pi, &pf, TRUE))
+    if (zeStrRegex(p, s, &pi, &pf, TRUE))
       p += pf;
 
     s =
       "[0-9]{1,2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec){1,1} [0-9]{4,4}";
-    if (!strexpr(p, s, &pi, &pf, TRUE))
+    if (!zeStrRegex(p, s, &pi, &pf, TRUE))
     {
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
         ZE_MessageInfo(10,
@@ -1415,7 +1415,7 @@ check_rfc2822_headers_syntax(id, head)
       p += pf;
 
     s = "[0-9]{2,2}:[0-9]{2,2}:[0-9]{2,2}";
-    if (!strexpr(p, s, &pi, &pf, TRUE))
+    if (!zeStrRegex(p, s, &pi, &pf, TRUE))
     {
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
         ZE_MessageInfo(10,
@@ -1533,7 +1533,7 @@ check_rfc2822_headers_syntax(id, head)
   {
     if (h->value == NULL)
       continue;
-    if (!strexpr(h->value, "<[^>@]+@[^>]+>", NULL, NULL, TRUE))
+    if (!zeStrRegex(h->value, "<[^>@]+@[^>]+>", NULL, NULL, TRUE))
     {
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
         ZE_MessageInfo(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %-12s", id, s);
@@ -1547,7 +1547,7 @@ check_rfc2822_headers_syntax(id, head)
   {
     if (h->value == NULL)
       continue;
-    if (!strexpr(h->value, "<[^>@]+@[^>]+>", NULL, NULL, TRUE))
+    if (!zeStrRegex(h->value, "<[^>@]+@[^>]+>", NULL, NULL, TRUE))
     {
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
         ZE_MessageInfo(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %s empty", id, s);
@@ -1563,7 +1563,7 @@ check_rfc2822_headers_syntax(id, head)
   {
     if (h->value == NULL)
       continue;
-    if (!strexpr(h->value, "<[^>@]+@[^>]+>", NULL, NULL, TRUE))
+    if (!zeStrRegex(h->value, "<[^>@]+@[^>]+>", NULL, NULL, TRUE))
     {
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
         ZE_MessageInfo(10, "%s SPAM CHECK - MSG HDRS SYNTAX : %s empty", id, s);
@@ -1762,7 +1762,7 @@ count_html_tags(buf)
     return 0;
 
   p = buf;
-  while ((strlen(p) > 0) && strexpr(p, "<[^>]{1,40}>", NULL, &pos, TRUE))
+  while ((strlen(p) > 0) && zeStrRegex(p, "<[^>]{1,40}>", NULL, &pos, TRUE))
   {
     p += pos;
     res++;
@@ -1786,7 +1786,7 @@ count_html_comments(buf)
     return 0;
 
   p = buf;
-  while ((strlen(p) > 0) && strexpr(p, "<!--[^>]{0,40}-->", NULL, &pos, TRUE))
+  while ((strlen(p) > 0) && zeStrRegex(p, "<!--[^>]{0,40}-->", NULL, &pos, TRUE))
   {
     p += pos;
     res++;

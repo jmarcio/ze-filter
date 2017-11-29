@@ -23,6 +23,7 @@
 
 
 #include <ze-sys.h>
+#include <zeLibs.h>
 #include <ze-libjc.h>
 #include <ze-txtlog.h>
 
@@ -190,9 +191,9 @@ log_open(log, spec)
   if (log->debug)
     ZE_MessageInfo(10, "Opening spec %s", spec);
 
-  log->argc = str2tokens(log->args, 4, log->argv, ":");
+  log->argc = zeStr2Tokens(log->args, 4, log->argv, ":");
 
-  if (log->argc == 1 || strexpr(spec, PATH_REGEX, NULL, NULL, TRUE))
+  if (log->argc == 1 || zeStrRegex(spec, PATH_REGEX, NULL, NULL, TRUE))
   {
     /* XXX compatibility with older versions */
     /* shift right values in argv and add "file" to argv[0] */
@@ -450,7 +451,7 @@ locked_log_open(log)
         char               *addr = NULL;
         int                 r = 0;
 
-        port = str2long(inet, NULL, 10001);
+        port = zeStr2long(inet, NULL, 10001);
         addr = strchr(inet, '@');
 
         ZE_MessageInfo(10, "Opening UDP to %s port %d",

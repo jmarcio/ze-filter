@@ -30,7 +30,6 @@ libcommon_a_SOURCES   = 	ze-base64.c \
 				ze-client.c \
 				ze-shmem.c \
 				ze-smtp-divers.c \
-				ze-strings.c \
 				ze-strconvert.c \
 				ze-time.c \
 				ze-table.c \
