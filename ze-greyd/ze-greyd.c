@@ -681,7 +681,7 @@ greyd_server(arg)
         neintr = 0;
         arg = NULL;
         zeStrChomp(buf);
-        zeStr2Upper(buf);
+        zeStr2Lower(buf);
 
         ZE_MessageInfo(9, "PEER=(%s) CMD=(%s)", addr, buf);
         if (strlen(buf) == 0) {

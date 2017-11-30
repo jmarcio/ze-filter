@@ -164,7 +164,7 @@ mlfi_eom(ctx)
       (void) smtprate_add_entry(RATE_FROM_MSGS, priv->env_from, NULL, 1, now);
     }
   }
-  
+
   {
     char               *auth_authen = NULL;
 
@@ -210,6 +210,7 @@ mlfi_eom(ctx)
     do_it = (cf_get_int(CF_DROP_DELIVERY_NOTIFICATION_REQUEST) == OPT_YES);
 
     char              **hdr = NULL;
+
     char               *unwanted_hdrs[] = {
       "Disposition-Notification-To",
       "X-Confirm-Reading-To",
@@ -230,7 +231,7 @@ mlfi_eom(ctx)
         nb++;
         log_msg_context(ctx, *hdr);
         ZE_MessageInfo(10, "%s SPAM CHECK - %s : %s",
-                     CONNID_STR(priv->id), *hdr, h->value);
+                       CONNID_STR(priv->id), *hdr, h->value);
       }
       if (do_it) {
         while (nb > 0)
@@ -508,7 +509,7 @@ mlfi_eom(ctx)
 
     nb = livehistory_add_entry(priv->peer_addr, time(NULL), 1, LH_EMPTYMSGS);
     ZE_MessageInfo(9, "%s Empty or too short message : %d bytes",
-                 CONNID_STR(priv->id), priv->msg_size);
+                   CONNID_STR(priv->id), priv->msg_size);
     if (cf_get_int(CF_REJECT_SHORT_BODIES) == OPT_YES) {
       bool                doit = FALSE;
 
@@ -535,7 +536,7 @@ mlfi_eom(ctx)
    ** Check DomainKeys
    */
   dkresult = check_domainkeys(ctx);
-  if (dkresult...) {
+  if (dkresult ...) {
 
   }
 
@@ -629,9 +630,9 @@ fin:
 
         serror = STRBOOL(p->xfile, "SUSPECT ???", "CLEAN");
         ZE_MessageInfo(10, "%s : **** (%-11s) : %-10s %-30s %s\n",
-                     CONNID_STR(priv->id),
-                     serror, STRNULL(p->disposition, ""),
-                     STRNULL(p->mimetype, ""), STRNULL(p->name, ""));
+                       CONNID_STR(priv->id),
+                       serror, STRNULL(p->disposition, ""),
+                       STRNULL(p->mimetype, ""), STRNULL(p->name, ""));
         p = p->next;
       }
     }
@@ -695,7 +696,7 @@ eom_check_xfiles(ctx, ahead, done)
       memset(str_action, 0, sizeof (str_action));
       if (!p->xfile)
         p->xfile = check_xfiles(p->name, p->mimetype, priv->msg_size,
-                                  str_action, sizeof (str_action));
+                                str_action, sizeof (str_action));
       if (p->xfile
           && (strlen(str_action) == 0 || !STRCASEEQUAL(str_action, "ok")))
         nb_xfiles++;
@@ -866,7 +867,7 @@ eom_check_virus(ctx, ahead, done)
     strlcpy(question, priv->fname, sizeof (question));
     avres = av_client(why, sizeof (why), data, sizeof (data), question);
     ZE_MessageInfo(11, "av_client : %3d (%s) (%s)", avres, why,
-                 zeStrChomp(question));
+                   zeStrChomp(question));
 
     if (avres == AV_ZERO || avres == AV_OK)
       goto fin;
@@ -875,7 +876,7 @@ eom_check_virus(ctx, ahead, done)
       if (done != NULL)
         *done = TRUE;
       ZE_MessageError(9, "%s Error with external message scanner",
-                    CONNID_STR(priv->id));
+                      CONNID_STR(priv->id));
       if (cf_get_int(CF_SCANNER_REJECT_ON_ERROR) == OPT_YES) {
         (void) jsmfi_vsetreply(ctx, "450", "4.6.0",
                                "Temporary system error. Come back later");
@@ -1004,10 +1005,10 @@ eom_check_content(ctx, done)
       score = sfilter_check_message(CONNID_STR(priv->id), priv->fname, &bcheck);
       if (score >= 0.)
         ZE_MessageInfo(10, "%s Bayes filter score : %6.3f",
-                     CONNID_STR(priv->id), score);
+                       CONNID_STR(priv->id), score);
       else
         ZE_MessageInfo(10, "%s Bayes filter score : Unchecked",
-                     CONNID_STR(priv->id));
+                       CONNID_STR(priv->id));
       if (score >= 0.) {
         priv->rawScores.Bayes.value = score;
         priv->rawScores.Bayes.odds = logit(score);
@@ -1049,9 +1050,9 @@ eom_check_content(ctx, done)
     fsize = get_file_size(priv->fname);
 
     ZE_MessageInfo(10, "%s LogReg filter sizes : size %7d, size max %7d %s %s",
-                 CONNID_STR(priv->id), fsize, fsize_max,
-                 (fsize >= fsize_max ? "XXX" : "---"),
-                 (fsize >= 300000 && fsize < fsize_max ? "YYY" : "---"));
+                   CONNID_STR(priv->id), fsize, fsize_max,
+                   (fsize >= fsize_max ? "XXX" : "---"),
+                   (fsize >= 300000 && fsize < fsize_max ? "YYY" : "---"));
 
     if (fsize < fsize_max)
       check_it = check_policy_all_rcpts("BayesCheck", priv->peer_addr,
@@ -1086,7 +1087,7 @@ eom_check_content(ctx, done)
 
         agree = TRUE;
         ZE_MessageInfo(10, "%s LogReg filter score : %6.3f",
-                     CONNID_STR(priv->id), priv->rawScores.LogReg.value);
+                       CONNID_STR(priv->id), priv->rawScores.LogReg.value);
 
         if (priv->rawScores.Bayes.actif && priv->rawScores.LogReg.actif) {
 #define KLOGBAY      (2./3.)

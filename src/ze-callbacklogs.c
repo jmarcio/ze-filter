@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -70,27 +71,22 @@ do_notify(ctx, ahead, answer, why, tag)
   if (!warn_send && !warn_rcpt)
     return SMFIS_DISCARD;
 
-  if (!warn_rcpt)
-  {
+  if (!warn_rcpt) {
     rcpt_addr_T        *p = priv->env_rcpt;
 
-    while (p != NULL)
-    {
+    while (p != NULL) {
       if (p->rcpt != NULL)
         smfi_delrcpt(ctx, p->rcpt);
       p = p->next;
     }
   }
 
-  if (warn_send)
-  {
+  if (warn_send) {
     char               *p = NULL;
 
-    if (check_address_ok2warn(priv->env_from))
-    {
+    if (check_address_ok2warn(priv->env_from)) {
       p = priv->env_from;
-    } else
-    {
+    } else {
       if (check_address_ok2warn(priv->hdr_from))
         p = priv->hdr_from;
     }
@@ -104,11 +100,12 @@ do_notify(ctx, ahead, answer, why, tag)
   if (!warn_send && !warn_rcpt)
     return SMFIS_DISCARD;
 
-  if ((msg = (char *) malloc(WARN_MSG_SIZE)) != NULL)
-  {
+  if ((msg = (char *) malloc(WARN_MSG_SIZE)) != NULL) {
     char                buf[256];
 
-    /* Content-Type: mutipart/report; report-type=delivery-status */
+    /*
+     * Content-Type: mutipart/report; report-type=delivery-status 
+     */
     smfi_chgheader(ctx, "Content-type", 1, NULL);
     smfi_chgheader(ctx, "Content-disposition", 1, NULL);
     smfi_chgheader(ctx, "Content-transfer-encoding", 1, NULL);
@@ -118,11 +115,10 @@ do_notify(ctx, ahead, answer, why, tag)
              priv->nb_msgs, my_hostname);
     smfi_chgheader(ctx, "Message-ID", 1, buf);
     ZE_MessageInfo(10, "%s changing Message-ID header to %s",
-                 CONNID_STR(priv->id), buf);
+                   CONNID_STR(priv->id), buf);
 #endif
 
-    if (cf_get_int(CF_ZE_SENDER) != OPT_SENDER)
-    {
+    if (cf_get_int(CF_ZE_SENDER) != OPT_SENDER) {
       char               *sender = cf_get_str(CF_ZE_SENDER);
 
       if ((sender != NULL) && (strlen(sender) > 0))
@@ -131,8 +127,7 @@ do_notify(ctx, ahead, answer, why, tag)
 
     Smfi_ChgFrom(ctx, "<>", NULL);
 
-    if (cf_get_int(CF_ZE_SUBJECT) != OPT_SUBJECT)
-    {
+    if (cf_get_int(CF_ZE_SUBJECT) != OPT_SUBJECT) {
       char               *subject = cf_get_str(CF_ZE_SUBJECT);
 
       if ((subject != NULL) && (strlen(subject) > 0))
@@ -187,8 +182,7 @@ read_error_msg(buf, sz, ahead, answer, from, why, tag, priv)
   MUTEX_LOCK(&mutex);
 
   *buf = '\0';
-  if ((fin = fopen(path, "r")) != NULL)
-  {
+  if ((fin = fopen(path, "r")) != NULL) {
     regex_t             re;
     regmatch_t          pm;
     bool                compile_ok;
@@ -202,8 +196,7 @@ read_error_msg(buf, sz, ahead, answer, from, why, tag, priv)
     compile_ok = !regcomp(&re, "_+[A-Z]+_+", REG_ICASE | REG_EXTENDED);
 
     while (((strlen(buf) + sizeof (line)) < sz) &&
-           (fgets(line, sizeof (line), fin) != NULL))
-    {
+           (fgets(line, sizeof (line), fin) != NULL)) {
 
       char               *p = line + strlen(line) - 1;
 
@@ -211,8 +204,7 @@ read_error_msg(buf, sz, ahead, answer, from, why, tag, priv)
         *p = '\0';
       strcat(line, CRLF);
 
-      if (state == 0)
-      {
+      if (state == 0) {
         p = line + strspn(line, " \t");
         if (*p == '#')
           continue;
@@ -221,34 +213,34 @@ read_error_msg(buf, sz, ahead, answer, from, why, tag, priv)
           continue;
         state = 1;
         continue;
-      } else
-      {
+      } else {
         if (strstr(line, tag_end) != NULL)
           break;
       }
 
-      if (compile_ok && !regexec(&re, line, 1, &pm, 0))
-      {
+      if (compile_ok && !regexec(&re, line, 1, &pm, 0)) {
         char               *p = s1;
 
-        /*int  len = pm.rm_eo - pm.rm_so; */
+        /*
+         * int  len = pm.rm_eo - pm.rm_so; 
+         */
         int                 j;
 
-        for (j = pm.rm_so; j < pm.rm_eo; j++)
-        {
+        for (j = pm.rm_so; j < pm.rm_eo; j++) {
           if (line[j] != '_')
             *p++ = line[j];
         }
         *p = '\0';
-        if (strcasecmp(s1, "MSGID") == 0)
-        {
+        if (strcasecmp(s1, "MSGID") == 0) {
           char                filename[256];
           char               *suffix = STRNULL(priv->fsuffix, SUFFIX_UNKNOWN);
 
           if (priv->fname == NULL)
             continue;
 
-          /* delete directory part from filename */
+          /*
+           * delete directory part from filename 
+           */
           if (j_basename(filename, priv->fname, sizeof (filename)) == filename)
             snprintf(line, sizeof (line), "  **** MSG ID : %s%s", filename,
                      suffix);
@@ -260,8 +252,7 @@ read_error_msg(buf, sz, ahead, answer, from, why, tag, priv)
           strcat(buf, CRLF);
           continue;
         }
-        if (strcasecmp(s1, "FROM") == 0)
-        {
+        if (strcasecmp(s1, "FROM") == 0) {
 #if 1
           from = STRNULL(priv->hdr_from, priv->env_from);
           from = STRNULL(from, "Unknown sender");
@@ -273,8 +264,7 @@ read_error_msg(buf, sz, ahead, answer, from, why, tag, priv)
           strcat(buf, CRLF);
           continue;
         }
-        if (strcasecmp(s1, "TO") == 0)
-        {
+        if (strcasecmp(s1, "TO") == 0) {
           char               *to = NULL;
 
           if (priv != NULL)
@@ -285,8 +275,7 @@ read_error_msg(buf, sz, ahead, answer, from, why, tag, priv)
           strcat(buf, CRLF);
           continue;
         }
-        if (strcasecmp(s1, "SUBJECT") == 0)
-        {
+        if (strcasecmp(s1, "SUBJECT") == 0) {
           char               *p;
 
           p = priv->hdr_subject != NULL ? priv->hdr_subject : "-- NULL --";
@@ -295,8 +284,7 @@ read_error_msg(buf, sz, ahead, answer, from, why, tag, priv)
           strlcat(buf, CRLF, sz);
           continue;
         }
-        if (strcasecmp(s1, "SMTP-PEER") == 0)
-        {
+        if (strcasecmp(s1, "SMTP-PEER") == 0) {
           char               *p;
 
           p = priv->peer_name != NULL ? priv->peer_name : priv->peer_addr;
@@ -305,15 +293,13 @@ read_error_msg(buf, sz, ahead, answer, from, why, tag, priv)
           strlcat(buf, CRLF, sz);
           continue;
         }
-        if (strcasecmp(s1, "WHY") == 0)
-        {
+        if (strcasecmp(s1, "WHY") == 0) {
           strlcpy(line, why, sizeof (line));
           strlcat(buf, line, sz);
           strlcat(buf, CRLF, sz);
           continue;
         }
-        if (strcasecmp(s1, "VIRUS") == 0)
-        {
+        if (strcasecmp(s1, "VIRUS") == 0) {
           snprintf(line, sizeof (line), "  VIRUS FOUND : %s",
                    answer ? answer : "NONE");
           strlcat(buf, line, sz);
@@ -322,21 +308,18 @@ read_error_msg(buf, sz, ahead, answer, from, why, tag, priv)
         }
         if (strcasecmp(s1, "TO") == 0)
           continue;
-        if (strcasecmp(s1, "ATTACHMENT") == 0 && ahead != NULL)
-        {
+        if (strcasecmp(s1, "ATTACHMENT") == 0 && ahead != NULL) {
           attachment_T       *p = ahead;
           int                 nb = 0;
 
-          if (p == NULL)
-          {
+          if (p == NULL) {
             snprintf(line, sizeof (line),
                      "      There isn't attached files !!!");
             strlcat(buf, line, sz);
             strlcat(buf, CRLF, sz);
             continue;
           }
-          while (p != NULL)
-          {
+          while (p != NULL) {
             char               *serror;
 
             serror = STRBOOL(p->xfile, "SUSPECT", "CLEAN");
@@ -344,16 +327,14 @@ read_error_msg(buf, sz, ahead, answer, from, why, tag, priv)
                      p->name);
             strlcat(buf, line, sz);
             strlcat(buf, CRLF, sz);
-            if (p->mimetype != NULL)
-            {
+            if (p->mimetype != NULL) {
               sprintf(line, "        TYPE         : %s", p->mimetype);
               strlcat(buf, line, sz);
               strlcat(buf, CRLF, sz);
             }
             p = p->next;
           }
-          if (nb > 0)
-          {
+          if (nb > 0) {
             strlcat(buf, CRLF, sz);
             snprintf(line, sizeof (line), "  **** SUSPECT FILES : %d", nb);
             strlcat(buf, line, sz);
@@ -368,9 +349,8 @@ read_error_msg(buf, sz, ahead, answer, from, why, tag, priv)
     regfree(&re);
     if (state == 0)
       ZE_LogMsgError(0, "read_error_msg : msg for tag %s not found",
-                    STRNULL(tag, ""));
-  } else
-  {
+                     STRNULL(tag, ""));
+  } else {
     char               *s = "";
 
     ZE_LogSysError("Error opening %s file", STRNULL(path, ""));
@@ -386,9 +366,10 @@ read_error_msg(buf, sz, ahead, answer, from, why, tag, priv)
     strlcpy(buf, s, sz);
   }
 
-  /* Let's add a copyright footer */
-  if (cf_get_int(CF_FOOTER) == OPT_SHOW)
-  {
+  /*
+   * Let's add a copyright footer 
+   */
+  if (cf_get_int(CF_FOOTER) == OPT_SHOW) {
     char                s[128];
     char               *msg =
       "ze-filter - (c) Ecole des Mines de Paris 2002, ...";
@@ -457,15 +438,13 @@ log_msg_context(ctx, why)
 
   snprintf(buf, sizeof (buf), "%12s : SMQID=(%s)", id, smid);
 
-  if (1)
-  {
+  if (1) {
     snprintf(st, sizeof (st), ", Txn#=(%d)", priv->nb_from);
     strlcat(buf, st, sizeof (buf));
   }
 
   pc = callback_name(priv->callback_id);
-  if (pc != NULL && strlen(pc) > 0)
-  {
+  if (pc != NULL && strlen(pc) > 0) {
     snprintf(st, sizeof (st), ", Callback=(%s)", pc);
     strlcat(buf, st, sizeof (buf));
   }
@@ -486,50 +465,42 @@ log_msg_context(ctx, why)
     strlcat(buf, st, sizeof (buf));
   }
 
-  if (why != NULL)
-  {
+  if (why != NULL) {
     snprintf(st, sizeof (st), ", Why=(%s)", why);
     strlcat(buf, st, sizeof (buf));
   }
 
-  if (priv->peer_addr != NULL && strlen(priv->peer_addr) > 0)
-  {
+  if (priv->peer_addr != NULL && strlen(priv->peer_addr) > 0) {
     snprintf(st, sizeof (st), ", PeerAddr=(%s)", priv->peer_addr);
     strlcat(buf, st, sizeof (buf));
   }
 
-  if (priv->peer_name != NULL && strlen(priv->peer_name) > 0)
-  {
+  if (priv->peer_name != NULL && strlen(priv->peer_name) > 0) {
     snprintf(st, sizeof (st), ", PeerName=(%s)", priv->peer_name);
     strlcat(buf, st, sizeof (buf));
   }
 
   pc = CTX_NETCLASS_LABEL(priv);
-  if (pc != NULL && strlen(pc) > 0)
-  {
+  if (pc != NULL && strlen(pc) > 0) {
     snprintf(st, sizeof (st), ", NetClass=(%s)", pc);
     strlcat(buf, st, sizeof (buf));
   }
-
 #if 0
   if (priv->callback_id == CALLBACK_EHLO || priv->callback_id == CALLBACK_MAIL)
 #endif
   {
-    if (priv->helohost != NULL && strlen(priv->helohost) > 0)
-    {
+    if (priv->helohost != NULL && strlen(priv->helohost) > 0) {
       snprintf(st, sizeof (st), ", Ehlo=(%s)", priv->helohost);
       strlcat(buf, st, sizeof (buf));
     }
   }
 
-  if (priv->env_from != NULL && strlen(priv->env_from) > 0)
-  {
+  if (priv->env_from != NULL && strlen(priv->env_from) > 0) {
     snprintf(st, sizeof (st), ", MAIL=(%s)", priv->env_from);
     strlcat(buf, st, sizeof (buf));
   }
 
-  if (priv->callback_id == CALLBACK_RCPT)
-  {
+  if (priv->callback_id == CALLBACK_RCPT) {
     snprintf(st, sizeof (st), ", NbRCPT=(%d)", priv->env_nb_rcpt);
     strlcat(buf, st, sizeof (buf));
 
@@ -537,12 +508,10 @@ log_msg_context(ctx, why)
     strlcat(buf, st, sizeof (buf));
   }
 
-  if (priv->callback_id <= CALLBACK_RCPT)
-  {
+  if (priv->callback_id <= CALLBACK_RCPT) {
 #if 0
     pc = NULL;
-    switch (reply)
-    {
+    switch (reply) {
       case SMFIS_CONTINUE:
         pc = "continue";
         break;
@@ -557,8 +526,7 @@ log_msg_context(ctx, why)
         break;
     }
 #endif
-    if (priv->reply_code != NULL)
-    {
+    if (priv->reply_code != NULL) {
       snprintf(st, sizeof (st), ", Reply=(%s)", priv->reply_code);
       strlcat(buf, st, sizeof (buf));
     }
@@ -567,14 +535,12 @@ log_msg_context(ctx, why)
     goto fin;
   }
 
-  if (priv->callback_id > CALLBACK_RCPT)
-  {
+  if (priv->callback_id > CALLBACK_RCPT) {
     rcpt_addr_T        *p;
     char                sbuf[1024];
     int                 nr = 0;
 
-    for (p = priv->env_rcpt; p != NULL; p = p->next)
-    {
+    for (p = priv->env_rcpt; p != NULL; p = p->next) {
       nr++;
 
       if (p->access != RCPT_OK)
@@ -585,19 +551,16 @@ log_msg_context(ctx, why)
       snprintf(st, sizeof (st), ", NbRCPT=(%d/%d)", nr, priv->env_nb_rcpt);
       strlcat(sbuf, st, sizeof (sbuf));
 
-      if (p->rcpt != NULL && strlen(p->rcpt) > 0)
-      {
+      if (p->rcpt != NULL && strlen(p->rcpt) > 0) {
         snprintf(st, sizeof (st), ", RCPT=(%s)", p->rcpt);
         strlcat(sbuf, st, sizeof (sbuf));
       }
 
-      if (priv->hdr_from != NULL && strlen(priv->hdr_from) > 0)
-      {
+      if (priv->hdr_from != NULL && strlen(priv->hdr_from) > 0) {
         unsigned char      *p = (unsigned char *) priv->hdr_from;
         char               *q;
 
-        while (*p != '\0')
-        {
+        while (*p != '\0') {
           if (*p > 0x7F || *p < 0x20)
             *p = '.';
           p++;
@@ -612,13 +575,11 @@ log_msg_context(ctx, why)
         strlcat(sbuf, st, sizeof (sbuf));
       }
 
-      if (priv->hdr_mailer != NULL && strlen(priv->hdr_mailer) > 0)
-      {
+      if (priv->hdr_mailer != NULL && strlen(priv->hdr_mailer) > 0) {
         unsigned char      *p = (unsigned char *) priv->hdr_mailer;
         char               *q;
 
-        while (*p != '\0')
-        {
+        while (*p != '\0') {
           if (*p > 0x7F || *p < 0x20)
             *p = '.';
           p++;
@@ -641,8 +602,7 @@ log_msg_context(ctx, why)
         strlcat(sbuf, st, sizeof (sbuf));
       }
 
-      if (priv->callback_id == CALLBACK_EOM)
-      {
+      if (priv->callback_id == CALLBACK_EOM) {
 #if 0
         int                 gScore = 0;
         int                 iscore = 0;
@@ -659,8 +619,7 @@ log_msg_context(ctx, why)
           priv->netScores.body + priv->netScores.headers +
           priv->netScores.oracle + priv->netScores.urlbl;
 #endif
-        if (priv->rawScores.spam)
-        {
+        if (priv->rawScores.spam) {
           snprintf(st, sizeof (st),
                    ", Scores=(R=%d U=%d O=%d B=%5.3f -> %6.3f)",
                    priv->rawScores.body + priv->rawScores.headers,
@@ -670,20 +629,17 @@ log_msg_context(ctx, why)
         }
       }
 
-      if (priv->msg_size >= 0)
-      {
+      if (priv->msg_size >= 0) {
         snprintf(st, sizeof (st), ", Size=(%d)", priv->msg_size);
         strlcat(sbuf, st, sizeof (sbuf));
       }
 
-      if (priv->reply_code != NULL)
-      {
+      if (priv->reply_code != NULL) {
         snprintf(st, sizeof (st), ", Reply=(%s)", priv->reply_code);
         strlcat(sbuf, st, sizeof (sbuf));
       }
 
-      if (priv->save_msg)
-      {
+      if (priv->save_msg) {
         snprintf(st, sizeof (st), ", QuarantineFile=(%s)",
                  STRNULL(priv->fname, "NOFILE"));
         strlcat(sbuf, st, sizeof (sbuf));
@@ -727,13 +683,11 @@ add_tag2subject(ctx, tag)
     size_t              sz;
 
     sz = strlen(osubject) + strlen(ntag) + 8;
-    if ((nsubject = (char *) malloc(sz)) != NULL)
-    {
+    if ((nsubject = (char *) malloc(sz)) != NULL) {
       snprintf(nsubject, sz, "%s %s", ntag, osubject);
       result = (smfi_chgheader(ctx, "Subject", 1, nsubject) == MI_SUCCESS);
       FREE(nsubject);
-    } else
-    {
+    } else {
       ZE_LogSysError("malloc error");
       result = FALSE;
     }
@@ -758,11 +712,9 @@ open_scores4stats_file()
   bool                ret = TRUE;
   char               *fname = ZE_SERIES_FNAME;
 
-  if (scf_fd < 0)
-  {
+  if (scf_fd < 0) {
     scf_fd = open(fname, O_WRONLY | O_CREAT | O_APPEND, 0644);
-    if (scf_fd < 0)
-    {
+    if (scf_fd < 0) {
       ZE_LogSysError("Error opening %s", fname);
       scf_nerr++;
       ret = FALSE;
@@ -779,15 +731,13 @@ reopen_scores4stats_file()
   char               *fname = ZE_SERIES_FNAME;
 
   MUTEX_LOCK(&scf_mutex);
-  if (scf_fd >= 0)
-  {
+  if (scf_fd >= 0) {
     close(scf_fd);
     scf_fd = -1;
   }
 
   scf_fd = open(fname, O_WRONLY | O_CREAT | O_APPEND, 0644);
-  if (scf_fd < 0)
-  {
+  if (scf_fd < 0) {
     ZE_LogSysError("Error opening %s", fname);
     scf_nerr++;
     ret = FALSE;
@@ -830,18 +780,15 @@ dump_msg_scores4stats(ctx)
   ASSERT(priv != NULL);
 
   MUTEX_LOCK(&scf_mutex);
-  if (scf_fd < 0)
-  {
+  if (scf_fd < 0) {
     scf_fd = open(fname, O_WRONLY | O_CREAT | O_APPEND, 0644);
-    if (scf_fd < 0)
-    {
+    if (scf_fd < 0) {
       ZE_LogSysError("Error opening %s", fname);
       scf_nerr++;
     }
   }
 
-  if (scf_fd >= 0)
-  {
+  if (scf_fd >= 0) {
     msg_scores_T       *scp;
 
     scp = &priv->rawScores;
@@ -883,8 +830,7 @@ dump_msg_scores4stats(ctx)
              priv->env_from);
 #endif
 
-    if (write(scf_fd, buf, strlen(buf)) < strlen(buf))
-    {
+    if (write(scf_fd, buf, strlen(buf)) < strlen(buf)) {
       ZE_LogSysError("Error writing into file %s", fname);
       close(scf_fd);
       scf_fd = -1;

@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -32,7 +33,7 @@
  *                                                                            *
  ******************************************************************************/
 
-bool   lr_filter_ok = FALSE;
+bool                lr_filter_ok = FALSE;
 
 static void        *lr_initialize(void *);
 
@@ -43,10 +44,9 @@ static void        *lr_initialize(void *);
 
 bool
 lr_data_load(background)
-     bool background;
+     bool                background;
 {
-  if (background)
-  {
+  if (background) {
     pthread_t           tid;
     int                 r;
 
@@ -75,10 +75,9 @@ lr_initialize(arg)
   char               *cdb_dir = NULL;
 
   {
-    bool              is_thread = (bool) arg;
+    bool                is_thread = (bool) arg;
 
-    if (is_thread)
-    {
+    if (is_thread) {
       pthread_t           tid;
 
       tid = pthread_self();
@@ -95,8 +94,7 @@ lr_initialize(arg)
   lr_filter_ok = FALSE;
   ZE_MessageInfo(9, "Opening perceptron data file : %s", path);
   (void) lr_data_close();
-  if (lr_data_open(path))
-  {
+  if (lr_data_open(path)) {
     ZE_MessageInfo(9, "Perceptron data file : %s : OK !", path);
     lr_filter_ok = TRUE;
   } else
@@ -104,5 +102,3 @@ lr_initialize(arg)
 
   return NULL;
 }
-
-

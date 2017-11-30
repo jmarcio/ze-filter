@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -49,26 +50,22 @@ check_dns_urlbl(name, bl, code, size, recurse)
   bool                result = FALSE;
   char                domain[256];
 
-  if (name == NULL || strlen(name) == 0)
-  {
+  if (name == NULL || strlen(name) == 0) {
     ZE_LogMsgError(0, "name : NULL pointer");
     return FALSE;
   }
 
-  if ((bl == NULL) || (strlen(bl) == 0))
-  {
+  if ((bl == NULL) || (strlen(bl) == 0)) {
     ZE_LogMsgError(0, "urlbl : NULL pointer or empty string");
     return FALSE;
   }
 
-  if ((code != NULL) && (size <= 0))
-  {
+  if ((code != NULL) && (size <= 0)) {
     ZE_LogMsgError(0, "host size <= 0");
     return FALSE;
   }
 
-  if (name != NULL && zeStrRegex(name, IPV4_ADDR_REGEX, NULL, NULL, TRUE))
-  {
+  if (name != NULL && zeStrRegex(name, IPV4_ADDR_REGEX, NULL, NULL, TRUE)) {
     int                 argc;
     char               *argv[16];
 
@@ -84,8 +81,7 @@ check_dns_urlbl(name, bl, code, size, recurse)
       ZE_MessageError(10, "strdup(%s) error", name);
 
     argc = zeStr2Tokens(sip, 16, argv, ".");
-    while (--argc >= 0)
-    {
+    while (--argc >= 0) {
       char                s[8];
 
       snprintf(s, sizeof (s), ".%s", argv[argc]);
@@ -98,12 +94,10 @@ check_dns_urlbl(name, bl, code, size, recurse)
 
     FREE(sip);
 
-    if (dns_get_a(domain + 1, &a) > 0)
-    {
+    if (dns_get_a(domain + 1, &a) > 0) {
       int                 i;
 
-      for (i = 0; i < a.count; i++)
-      {
+      for (i = 0; i < a.count; i++) {
         ZE_MessageInfo(11, " * A  : %-16s %s", a.host[i].ip, a.host[i].name);
         if (code != NULL)
           strlcpy(code, a.host[i].ip, size);
@@ -117,21 +111,17 @@ check_dns_urlbl(name, bl, code, size, recurse)
       goto fin;
   }
 
-  if (name != NULL && zeStrRegex(name, DOMAINNAME_REGEX, NULL, NULL, TRUE))
-  {
+  if (name != NULL && zeStrRegex(name, DOMAINNAME_REGEX, NULL, NULL, TRUE)) {
     DNS_HOSTARR_T       a;
     char               *pname = name;
 
-    while (pname != NULL && strlen(pname) > 0)
-    {
+    while (pname != NULL && strlen(pname) > 0) {
       snprintf(domain, sizeof (domain), "%s.%s", pname, bl);
 
-      if (dns_get_a(domain, &a) > 0)
-      {
+      if (dns_get_a(domain, &a) > 0) {
         int                 i;
 
-        for (i = 0; i < a.count; i++)
-        {
+        for (i = 0; i < a.count; i++) {
           ZE_MessageInfo(12, " * A  : %-16s %s", a.host[i].ip, a.host[i].name);
           if (code != NULL)
             strlcpy(code, a.host[i].ip, size);
@@ -167,8 +157,7 @@ fin:
 #define DIM_URLBL          16
 
 
-typedef struct
-{
+typedef struct {
   bool                ok;
   int                 nb;
   urlbl_T             urlbl[DIM_URLBL];
@@ -234,22 +223,19 @@ read_urlbl_line(v, arg)
 
   r.flags |= URLBL_RECURSE;
   argc = zeStr2Tokens(s, 32, argv, "; ");
-  for (i = 0; i < argc; i++)
-  {
+  for (i = 0; i < argc; i++) {
     char               *tag;
     char               *p = argv[i];
 
     tag = "code=";
-    if (STRNCASEEQUAL(p, tag, strlen(tag)))
-    {
+    if (STRNCASEEQUAL(p, tag, strlen(tag))) {
       p += strlen(tag);
 
       strlcpy(r.code, p, sizeof (r.code));
     }
 
     tag = "odds=";
-    if (STRNCASEEQUAL(p, tag, strlen(tag)))
-    {
+    if (STRNCASEEQUAL(p, tag, strlen(tag))) {
       double              t;
       int                 terrno = 0;
 
@@ -262,8 +248,7 @@ read_urlbl_line(v, arg)
     }
 
     tag = "score=";
-    if (STRNCASEEQUAL(p, tag, strlen(tag)))
-    {
+    if (STRNCASEEQUAL(p, tag, strlen(tag))) {
       double              t;
       int                 terrno = 0;
 
@@ -277,8 +262,7 @@ read_urlbl_line(v, arg)
 
 
     tag = "onmatch=";
-    if (STRNCASEEQUAL(p, tag, strlen(tag)))
-    {
+    if (STRNCASEEQUAL(p, tag, strlen(tag))) {
       int                 argxc;
       char               *argxv[16];
       char                buf[64];
@@ -290,15 +274,12 @@ read_urlbl_line(v, arg)
 
       strlcpy(buf, p, sizeof (buf));
       argxc = zeStr2Tokens(buf, 16, argxv, ", ");
-      for (j = 0; j < argxc; j++)
-      {
-        if (STRCASEEQUAL(argxv[j], "stop"))
-        {
+      for (j = 0; j < argxc; j++) {
+        if (STRCASEEQUAL(argxv[j], "stop")) {
           r.flags &= ~(URLBL_ONMATCH_CONTINUE);
           continue;
         }
-        if (STRCASEEQUAL(argxv[j], "continue"))
-        {
+        if (STRCASEEQUAL(argxv[j], "continue")) {
           r.flags |= URLBL_ONMATCH_CONTINUE;
           continue;
         }
@@ -306,8 +287,7 @@ read_urlbl_line(v, arg)
     }
 
     tag = "recurse=";
-    if (STRNCASEEQUAL(p, tag, strlen(tag)))
-    {
+    if (STRNCASEEQUAL(p, tag, strlen(tag))) {
       int                 argxc;
       char               *argxv[16];
       char                buf[64];
@@ -317,15 +297,12 @@ read_urlbl_line(v, arg)
 
       strlcpy(buf, p, sizeof (buf));
       argxc = zeStr2Tokens(buf, 16, argxv, ", ");
-      for (j = 0; j < argxc; j++)
-      {
-        if (STRCASEEQUAL(argxv[j], "no"))
-        {
+      for (j = 0; j < argxc; j++) {
+        if (STRCASEEQUAL(argxv[j], "no")) {
           r.flags &= ~(URLBL_RECURSE);
           continue;
         }
-        if (STRCASEEQUAL(argxv[j], "yes"))
-        {
+        if (STRCASEEQUAL(argxv[j], "yes")) {
           r.flags |= URLBL_RECURSE;
           continue;
         }
@@ -345,8 +322,7 @@ read_urlbl_line(v, arg)
   if (r.odds <= 0)
     r.odds = 1;
 
-  if (urlblCf.nb < DIM_URLBL)
-  {
+  if (urlblCf.nb < DIM_URLBL) {
     urlblCf.urlbl[urlblCf.nb] = r;
     urlblCf.nb++;
   } else
@@ -401,8 +377,7 @@ init_urlbl_table()
     return TRUE;
 
   URLBL_LOCK();
-  if (!urlblCf.ok)
-  {
+  if (!urlblCf.ok) {
     memset(urlblCf.urlbl, 0, sizeof (urlblCf.urlbl));
 
     urlblCf.nb = 0;
@@ -425,15 +400,14 @@ dump_urlbl_table()
   printf("\n");
   printf("<DNS-URLBL>\n");
 
-  for (i = 0; i < urlblCf.nb; i++)
-  {
+  for (i = 0; i < urlblCf.nb; i++) {
     urlbl_T            *r;
 
     r = &urlblCf.urlbl[i];
 
     printf("%-20s odds=%.4f; score=%.3f; code=%s; onmatch=%s; recurse=%s\n",
-	   r->bl, r->odds, r->score, r->code, r->onmatch,
-	   STRBOOL((r->flags & URLBL_RECURSE) != URLBL_NONE, "yes", "no"));
+           r->bl, r->odds, r->score, r->code, r->onmatch,
+           STRBOOL((r->flags & URLBL_RECURSE) != URLBL_NONE, "yes", "no"));
   }
 
   printf("</DNS-URLBL>\n");
@@ -453,8 +427,7 @@ get_urlbl_rec(i, urlbl)
   bool                r = FALSE;
 
   URLBL_LOCK();
-  if (urlblCf.ok && i < DIM_URLBL && i < urlblCf.nb)
-  {
+  if (urlblCf.ok && i < DIM_URLBL && i < urlblCf.nb) {
     *urlbl = urlblCf.urlbl[i];
     r = TRUE;
   }
@@ -477,8 +450,7 @@ check_urlbl_table(id, name, urlbl)
   if (name == NULL || strlen(name) == 0)
     return 0;
 
-  for (i = 0; i < DIM_URLBL; i++)
-  {
+  for (i = 0; i < DIM_URLBL; i++) {
     urlbl_T             r;
     char                code[64];
     bool                recurse;
@@ -487,11 +459,11 @@ check_urlbl_table(id, name, urlbl)
       break;
 
     recurse = (r.flags & URLBL_RECURSE) != URLBL_NONE;
-    if (check_dns_urlbl(name, r.bl, code, sizeof (code), recurse))
-    {
-      /* check code */
-      if (strlen(r.code) > 0 && !STRCASEEQUAL(r.code, "all"))
-      {
+    if (check_dns_urlbl(name, r.bl, code, sizeof (code), recurse)) {
+      /*
+       * check code 
+       */
+      if (strlen(r.code) > 0 && !STRCASEEQUAL(r.code, "all")) {
         int                 argc;
         char               *argv[16];
         char                buf[256];
@@ -500,10 +472,8 @@ check_urlbl_table(id, name, urlbl)
 
         strlcpy(buf, r.code, sizeof (buf));
         argc = zeStr2Tokens(buf, 16, argv, ", ");
-        for (j = 0; j < argc; j++)
-        {
-          if (STRCASEEQUAL(code, argv[j]))
-          {
+        for (j = 0; j < argc; j++) {
+          if (STRCASEEQUAL(code, argv[j])) {
             found = TRUE;
             break;
           }
@@ -521,7 +491,7 @@ check_urlbl_table(id, name, urlbl)
         *urlbl = r;
 
       ZE_MessageInfo(9, "%s URLBL check list=(%s) code=(%s) name=(%s)",
-                   id, r.bl, code, STREMPTY(name, "NONAME"));
+                     id, r.bl, code, STREMPTY(name, "NONAME"));
 
       SET_BIT(flag, i);
 
@@ -530,8 +500,7 @@ check_urlbl_table(id, name, urlbl)
     }
   }
 
-  if (urlbl != NULL)
-  {
+  if (urlbl != NULL) {
     urlbl->odds = exp(lodds);
     urlbl->score = lscore;
   }

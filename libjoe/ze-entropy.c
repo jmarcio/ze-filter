@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -48,8 +49,7 @@ conv2ascii(c)
   if (strchr("ç", c) != NULL)
     return 'c';
 #else
-  switch (c)
-  {
+  switch (c) {
     case 'à':
     case 'ä':
     case 'â':
@@ -91,8 +91,7 @@ text2lowerascii(buf, size)
   if (buf == NULL)
     return;
 
-  for (p = buf; (size > 0) && (*p != '\0'); p++)
-  {
+  for (p = buf; (size > 0) && (*p != '\0'); p++) {
     c = (conv2ascii(*p) + 256) % 256;
     *p = tolower(c);
   }
@@ -121,8 +120,7 @@ entropy_monogram(buf, sz)
   memset(freq, 0, sizeof (freq));
   sum = 0;
 
-  for (i = 0, p = buf; i < sz; i++, p++)
-  {
+  for (i = 0, p = buf; i < sz; i++, p++) {
     int                 c;
 
     c = conv2ascii(*p);
@@ -133,10 +131,8 @@ entropy_monogram(buf, sz)
     nc++;
   }
 
-  for (i = 0; i < 256; i++)
-  {
-    if (freq[i] != 0)
-    {
+  for (i = 0; i < 256; i++) {
+    if (freq[i] != 0) {
       double              k;
 
       k = ((double) freq[i]) / ((double) nc);
@@ -150,14 +146,12 @@ entropy_monogram(buf, sz)
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
-typedef struct
-{
+typedef struct {
   int                 key;
   int                 count;
   double              pp;
   double              pc;
-}
-hash_rec_T;
+} hash_rec_T;
 
 static int
 get_hash_index(k, h, sz)
@@ -172,8 +166,7 @@ get_hash_index(k, h, sz)
     uint32_t            tk = k;
 
     c = d = 0;
-    for (i = 0; i < 4; i++)
-    {
+    for (i = 0; i < 4; i++) {
       d = tk & 0x000000FF;
       tk = tk >> 8;
       c = d;
@@ -183,15 +176,13 @@ get_hash_index(k, h, sz)
     }
     hv %= sz;
   }
-  for (i = 0; i < sz; i++)
-  {
+  for (i = 0; i < sz; i++) {
     int                 j = (hv + i) % sz;
 
     if (h[j].key == k)
       return j;
 
-    if (h[j].key == 0)
-    {
+    if (h[j].key == 0) {
       h[j].key = k;
       return j;
     }
@@ -237,8 +228,7 @@ text_buffer_entropy(buf, sz, e0, e1, e2)
   h0 = (hash_rec_T *) malloc(SZH0 * sizeof (hash_rec_T));
   h1 = (hash_rec_T *) malloc(SZH1 * sizeof (hash_rec_T));
   h2 = (hash_rec_T *) malloc(SZH2 * sizeof (hash_rec_T));
-  if ((h0 == NULL) || (h1 == NULL) || (h2 == NULL))
-  {
+  if ((h0 == NULL) || (h1 == NULL) || (h2 == NULL)) {
     FREE(h0);
     FREE(h1);
     FREE(h2);
@@ -250,8 +240,7 @@ text_buffer_entropy(buf, sz, e0, e1, e2)
   memset(h2, 0, SZH2 * sizeof (hash_rec_T));
 
   sum = 0;
-  for (i = 0, p = buf; i < sz - 2; i++, p++)
-  {
+  for (i = 0, p = buf; i < sz - 2; i++, p++) {
     int                 c0, c1, c2;
     int                 hi;
     uint32_t            k;
@@ -278,10 +267,8 @@ text_buffer_entropy(buf, sz, e0, e1, e2)
   }
 
   sum = 0.;
-  for (i = 0; i < SZH0; i++)
-  {
-    if (h0[i].count > 0)
-    {
+  for (i = 0; i < SZH0; i++) {
+    if (h0[i].count > 0) {
       h0[i].pp = ((double) h0[i].count) / nc;
       sum -= h0[i].pp * log(h0[i].pp);
     }
@@ -289,18 +276,15 @@ text_buffer_entropy(buf, sz, e0, e1, e2)
   *e0 = sum / log(2.);
 
   sum = 0.;
-  for (i = 0; i < SZH1; i++)
-  {
-    if (h1[i].count > 0)
-    {
+  for (i = 0; i < SZH1; i++) {
+    if (h1[i].count > 0) {
       int                 hi;
 
       h1[i].pp = ((double) h1[i].count) / nc;
       hi = h1[i].key & 0xFF;
       hi = get_hash_index(hi, h0, SZH0);
 
-      if (h0[hi].count > 0)
-      {
+      if (h0[hi].count > 0) {
         h1[i].pc = h1[i].pp / h0[hi].pp;
         sum -= h1[i].pp * log(h1[i].pc);
       }
@@ -309,18 +293,15 @@ text_buffer_entropy(buf, sz, e0, e1, e2)
   *e1 = sum / log(2.);
 
   sum = 0;
-  for (i = 0; i < SZH2; i++)
-  {
-    if (h2[i].count > 0)
-    {
+  for (i = 0; i < SZH2; i++) {
+    if (h2[i].count > 0) {
       int                 hi;
 
       h2[i].pp = ((double) h2[i].count) / nc;
       hi = h2[i].key & 0xFFFF;
       hi = get_hash_index(hi, h1, SZH1);
 
-      if (h1[hi].pp > 0)
-      {
+      if (h1[hi].pp > 0) {
         h2[i].pc = h2[i].pp / h1[hi].pp;
         sum -= h2[i].pp * log(h2[i].pc);
       }
@@ -357,47 +338,39 @@ entropy_token_class(buf, sz)
   memset(freq, 0, sizeof (freq));
   sum = 0;
 
-  for (i = 0, p = buf; i < sz; i++, p++)
-  {
+  for (i = 0, p = buf; i < sz; i++, p++) {
     int                 c;
 
     c = conv2ascii(*p);
     c = (c + 256) % 256;
 
     nc++;
-    if (isalpha(c))
-    {
+    if (isalpha(c)) {
       freq[2]++;
       continue;
     }
 
-    if (isdigit(c))
-    {
+    if (isdigit(c)) {
       freq[3]++;
       continue;
     }
-    if (isspace(c))
-    {
+    if (isspace(c)) {
       freq[4]++;
       continue;
     }
-    if (ispunct(c))
-    {
+    if (ispunct(c)) {
       freq[5]++;
       continue;
     }
-    if (iscntrl(c))
-    {
+    if (iscntrl(c)) {
       freq[6]++;
       continue;
     }
     freq[0]++;
   }
 
-  for (i = 0; i < 256; i++)
-  {
-    if (freq[i] != 0)
-    {
+  for (i = 0; i < 256; i++) {
+    if (freq[i] != 0) {
       double              k;
 
       k = ((double) freq[i]) / ((double) nc);
@@ -429,27 +402,23 @@ entropy_punct_class(buf, sz)
   memset(freq, 0, sizeof (freq));
   sum = 0;
 
-  for (i = 0, p = buf; i < sz; i++, p++)
-  {
+  for (i = 0, p = buf; i < sz; i++, p++) {
     int                 c;
 
     c = conv2ascii(*p);
     c = (c + 256) % 256;
 
     nc++;
-    if (isalnum(c))
-    {
+    if (isalnum(c)) {
       freq[1]++;
       continue;
     }
 
-    if (isspace(c))
-    {
+    if (isspace(c)) {
       freq[2]++;
       continue;
     }
-    if (ispunct(c))
-    {
+    if (ispunct(c)) {
       freq[2]++;
       continue;
     }
@@ -459,10 +428,8 @@ entropy_punct_class(buf, sz)
     freq[0]++;
   }
 
-  for (i = 0; i < 256; i++)
-  {
-    if (freq[i] != 0)
-    {
+  for (i = 0; i < 256; i++) {
+    if (freq[i] != 0) {
       double              k;
 
       k = ((double) freq[i]) / ((double) nc);
@@ -483,8 +450,7 @@ buf_extract_tokens(buf)
 {
   char               *s, *ptr;
 
-  for (s = strtok_r(buf, " ", &ptr); s != NULL; s = strtok_r(NULL, " ", &ptr))
-  {
+  for (s = strtok_r(buf, " ", &ptr); s != NULL; s = strtok_r(NULL, " ", &ptr)) {
     printf("--> %s\n", s);
   }
 }
@@ -494,14 +460,12 @@ buf_extract_tokens(buf)
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
-typedef struct
-{
+typedef struct {
   kstats_T            html_st;
   size_t              html_sz;
   kstats_T            plain_st;
   size_t              plain_sz;
-}
-DATA_T;
+} DATA_T;
 
 
 static              bool
@@ -540,8 +504,7 @@ entropy_mime_part(buf, size, id, level, type, arg, mime_part)
     return TRUE;
 #endif
 
-  if (strcasecmp("text/html", mime_part->mime) == 0)
-  {
+  if (strcasecmp("text/html", mime_part->mime) == 0) {
     mtype = "HTML ";
 
     n = check_valid_html_tags(NULL, buf);
@@ -560,8 +523,7 @@ entropy_mime_part(buf, size, id, level, type, arg, mime_part)
       char               *x = NULL;
 
       x = realcleanup_text_buf(cleanbuf, strlen(cleanbuf));
-      if (x != NULL)
-      {
+      if (x != NULL) {
         ZE_MessageInfo(9, "\nBUF ...\n%s\n", x);
         buf_extract_tokens(x);
         FREE(x);
@@ -586,29 +548,26 @@ entropy_mime_part(buf, size, id, level, type, arg, mime_part)
   (void) text_word_length(wbuf, &st, strlen(wbuf));
 
   ZE_MessageInfo(9,
-               "%s ENTROPY = %7.3f %7.3f %7.3f %7.3f %7.3f - SIZE = %5d %5d %5d %7.2f",
-               mtype, h0, h1, h2, h3, h4, size, strlen(buf), strlen(wbuf),
-               ratio);
+                 "%s ENTROPY = %7.3f %7.3f %7.3f %7.3f %7.3f - SIZE = %5d %5d %5d %7.2f",
+                 mtype, h0, h1, h2, h3, h4, size, strlen(buf), strlen(wbuf),
+                 ratio);
 
   ZE_MessageInfo(9,
-               "%s WORDS   = %7.3f %7.3f %7.3f %7.3f - SIZE = %5d %5d %5d %7.2f",
-               mtype,
-               kmin(&st), kmean(&st), kmax(&st), kstddev(&st),
-               size, strlen(buf), strlen(wbuf), ratio);
+                 "%s WORDS   = %7.3f %7.3f %7.3f %7.3f - SIZE = %5d %5d %5d %7.2f",
+                 mtype,
+                 kmin(&st), kmean(&st), kmax(&st), kstddev(&st),
+                 size, strlen(buf), strlen(wbuf), ratio);
 
-  if (0)
-  {
+  if (0) {
     long                prob[256], nb;
 
-    if ((nb = text_buf_histogram(wbuf, strlen(wbuf) + 1, prob)) > 0)
-    {
+    if ((nb = text_buf_histogram(wbuf, strlen(wbuf) + 1, prob)) > 0) {
       int                 i;
 
-      for (i = 0; i < 256; i++)
-      {
+      for (i = 0; i < 256; i++) {
         if (prob[i] > 0)
           ZE_MessageInfo(9, "%s HISTO   = %3d %6d   %c",
-                       mtype, i, prob[i], (isprint(i) ? i : '.'));
+                         mtype, i, prob[i], (isprint(i) ? i : '.'));
       }
     }
   }
@@ -644,14 +603,12 @@ message_entropy(id, fname)
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
-typedef struct
-{
+typedef struct {
   kstats_T            html_st;
   size_t              html_sz;
   kstats_T            plain_st;
   size_t              plain_sz;
-}
-HTTP_T;
+} HTTP_T;
 
 #if 1
 #define       URL_DOMAIN_EXPRESSION      "http[s]?://[^ /<>\\(\\)\"\'?]*"
@@ -688,14 +645,12 @@ mime_extract_http_urls(buf, size, id, level, type, arg, mime_part)
     char                sout[4096];
 
     memset(sout, 0, sizeof (sout));
-    while (zeStrRegex(p, "(ftp|http)[s]?://[^ /<>\"]*", &pi, &pf, TRUE))
-    {
+    while (zeStrRegex(p, "(ftp|http)[s]?://[^ /<>\"]*", &pi, &pf, TRUE)) {
       char                sout[1024];
       char                c = '.';
       long                xi, xf, xh;
 
-      if (zeStrRegex(p + pf, "></a>", &xi, NULL, TRUE) && (xi - pf) < 30)
-      {
+      if (zeStrRegex(p + pf, "></a>", &xi, NULL, TRUE) && (xi - pf) < 30) {
         bool                okh, okf;
 
         okh = zeStrRegex(p + pf, ">", &xh, NULL, TRUE) && (xh < xi);
@@ -707,11 +662,11 @@ mime_extract_http_urls(buf, size, id, level, type, arg, mime_part)
       sout[pf - pi] = 0;
 #if 1
       {
-        char *p, *q;
+        char               *p, *q;
 
         for (p = q = sout; *p != '\0'; p++) {
           if (strchr(" \t\r\n()", *p) == NULL)
-	    *q++ = *p;
+            *q++ = *p;
         }
         *q = '\0';
       }
@@ -743,18 +698,15 @@ message_extract_http_urls(id, fname)
 {
   HTTP_T              data;
 
-  if (fname != NULL)
-  {
+  if (fname != NULL) {
     memset(&data, 0, sizeof (data));
 
     return decode_mime_file(id, fname, NULL, mime_extract_http_urls, &data);
-  } else
-  {
+  } else {
     char               *buf = NULL;
     size_t              sz;
 
-    if ((buf = malloc(SZBUF)) != NULL)
-    {
+    if ((buf = malloc(SZBUF)) != NULL) {
       sz = read(STDIN_FILENO, buf, SZBUF);
       if (sz > 0)
         return decode_mime_buffer(id, buf, sz, 0, NULL, mime_extract_http_urls,

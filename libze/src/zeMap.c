@@ -200,7 +200,7 @@ zeMap_Lookup(map, key, value, size)
   }
 
   (void) strlcpy(k, key, sizeof (k));
-  (void) strtolower(k);
+  (void) zeStr2Lower(k);
   memset(v, 0, sizeof (v));
 
   if (zeDb_GetRec(&map->db, k, v, sizeof (v))) {
@@ -233,7 +233,7 @@ zeMap_Add(map, key, value, size)
   ASSERT(value != NULL);
 
   (void) strlcpy(k, key, sizeof (k));
-  (void) strtolower(k);
+  (void) zeStr2Lower(k);
   res = zeDb_AddRec(&map->db, k, value, size);
 
   return res;

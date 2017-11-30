@@ -215,7 +215,7 @@ HandleStdin()
         ZE_MessageInfo(0, "====== %s", args);
         ok = PolicyLookupEmailAddr(argv[1], eMail, buf, sizeof (buf));
         ZE_MessageInfo(0, " ->  Result : %-5s : %s", (ok ? "OK" : "--"),
-                     (ok ? buf : ""));
+                       (ok ? buf : ""));
         ZE_MessageInfo(0, "");
         continue;
       }
@@ -233,7 +233,7 @@ HandleStdin()
           PolicyLookupClient(argv[1], argv[2], argv[3], &nClass, buf,
                              sizeof (buf));
         ZE_MessageInfo(0, " ->  Result : %-5s : %s", (ok ? "OK" : "--"),
-                     (ok ? buf : ""));
+                       (ok ? buf : ""));
         ZE_MessageInfo(0, "");
         continue;
       }
@@ -246,7 +246,7 @@ HandleStdin()
         ZE_MessageInfo(0, "====== %s", args);
         ok = PolicyLookupNetClass(argv[1], argv[2], &nClass, buf, sizeof (buf));
         ZE_MessageInfo(0, " ->  Result : %-5s : %s %s", (ok ? "OK" : "--"),
-                     (ok ? nClass.label : ""), (ok ? nClass.equiv : ""));
+                       (ok ? nClass.label : ""), (ok ? nClass.equiv : ""));
         ZE_MessageInfo(0, "");
         continue;
       }

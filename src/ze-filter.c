@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -38,14 +39,14 @@
  ******************************************************************************/
 #define _FFR_CTX_CONNECT  TRUE
 #ifndef _FFR_CTX_CONNECT
-# define _FFR_CTX_CONNECT FALSE
+#define _FFR_CTX_CONNECT FALSE
 #endif
 
 
 #if _FFR_PREPEND_HEADERS
-# if HAVE_SMFI_INSHEADER
-#  define smfi_addheader(a,b,c)  smfi_insheader(a,0,b,c)
-# endif            /* HAVE_SMFI_INSHEADER */
+#if HAVE_SMFI_INSHEADER
+#define smfi_addheader(a,b,c)  smfi_insheader(a,0,b,c)
+#endif             /* HAVE_SMFI_INSHEADER */
 #endif             /* _FFR_PREPEND_HEADERS */
 
 static sfsistat     mlfi_connect(SMFICTX *, char *, _SOCK_ADDR *);
@@ -134,7 +135,7 @@ static char        *SYMPA_CMDS[] = {
   time_t  ti = time(NULL), tf = time(NULL);   \
   uint64_t tims = time_ms(), tfms = time_ms()
 
-# define UPDATE_SVCTIME()						\
+#define UPDATE_SVCTIME()						\
   (void) smtprate_add_entry(RATE_SVCTIME, priv->peer_addr,		\
 			    priv->peer_name, (tfms - tims), time(NULL));
 
@@ -183,8 +184,7 @@ char               *
 mlfi_result_string(code)
      sfsistat            code;
 {
-  switch (code)
-  {
+  switch (code) {
     case SMFIS_CONTINUE:
       return "CONTINUE";
       break;
@@ -265,6 +265,7 @@ static CONNID_T     sid = {
   {
    0, 0}
 };
+
 static              bool
 new_conn_id(id)
      CONNID_T           *id;
@@ -277,8 +278,7 @@ new_conn_id(id)
     return FALSE;
   MUTEX_LOCK(&id_mutex);
   now = time(NULL);
-  if (now != sid.t[0])
-  {
+  if (now != sid.t[0]) {
     sid.t[0] = now;
     sid.t[1] = 0;
   } else
@@ -313,8 +313,7 @@ count_connections(nb)
   if (cnt_conn < 0)
     cnt_conn = 0;
   nb = cnt_conn;
-  if ((new - old) > 60)
-  {
+  if ((new - old) > 60) {
     ZE_MessageInfo(9, "Current open connections : %d", nb);
     old = new;
   }
@@ -342,8 +341,7 @@ check_filter_open_connections(ctx, id, ip, ip_class)
   int                 nbcmax = cf_get_int(CF_MAX_OPEN_CONNECTIONS);
   int                 nb_open = count_connections(0);
 
-  if ((nbcmax > 0) && (nb_open > nbcmax))
-  {
+  if ((nbcmax > 0) && (nb_open > nbcmax)) {
     ZE_MessageWarning(8, "%-12s Too many open connections : %d", id, nb_open);
     (void) jsmfi_setreply(ctx, "421", "4.5.1",
                           "I'm too busy. Try again later !");
@@ -376,8 +374,7 @@ check_cpu_load(ctx, id, ip, ip_class)
     reject = TRUE;
   if (IS_UNKNOWN(ip_class) && (soft > 0) && (load < (double) soft))
     reject = TRUE;
-  if (reject)
-  {
+  if (reject) {
     ZE_MessageWarning(8, "%-12s Load Too High : %6.2f", id, load);
     (void) jsmfi_setreply(ctx, "421", "4.5.1",
                           "I'm too busy. Try again later !");
@@ -414,13 +411,13 @@ check_recipient_quarantine(head, score)
   rcpt_addr_T        *rcpt;
   bool                result = FALSE;
 
-  for (rcpt = head; rcpt != NULL; rcpt = rcpt->next)
-  {
+  for (rcpt = head; rcpt != NULL; rcpt = rcpt->next) {
     int                 threshold =
       get_recipient_quarantine_threshold(rcpt->user);
-    if (score > threshold)
-    {
-      /*  XXX */
+    if (score > threshold) {
+      /*
+       * XXX 
+       */
       rcpt->quarantine = TRUE;
       rcpt->deleted = TRUE;
       result = TRUE;
@@ -443,8 +440,7 @@ count_rcpt(rcpt)
   int                 n = 0;
   rcpt_addr_T        *p = rcpt;
 
-  while (p != NULL)
-  {
+  while (p != NULL) {
     n++;
     p = p->next;
   }
@@ -467,7 +463,9 @@ struct smfiDesc     smfilter = {
 #if HAVE_SMFI_CHGFROM
     | SMFIF_CHGFROM
 #endif
-    /* flags */
+    /*
+     * flags 
+     */
     , mlfi_connect              /* connection info filter */
     , mlfi_helo                 /* SMTP HELO command filter */
     , mlfi_envfrom              /* envelope sender filter */
@@ -530,8 +528,7 @@ zeFilter()
   cf_dir = cf_get_str(CF_CONFDIR);
   if (cf_dir == NULL || strlen(cf_dir) == 0)
     cf_dir = ZE_CONFDIR;
-  if (strlen(root_dir) > 0)
-  {
+  if (strlen(root_dir) > 0) {
     if (*work_dir != '/')
       ZE_LogMsgWarning(0, "WORKDIR doesn't begins with a / : %s", work_dir);
     if (chdir(work_dir) != 0)
@@ -545,14 +542,15 @@ zeFilter()
     memset(dbdir, 0, sizeof (dbdir));
     if (wdb_dir != NULL && strlen(wdb_dir) > 0)
       snprintf(dbdir, sizeof (dbdir), "%s", wdb_dir);
-    if (!open_work_db_env(dbdir, ZE_WDBDIR, FALSE))
-    {
+    if (!open_work_db_env(dbdir, ZE_WDBDIR, FALSE)) {
     }
   }
 
   cyclic_tasks_init(10 SECONDS);
   (void) setup_filter_signal_handler();
-  /* alarm(2 * DT_SIGALRM); */
+  /*
+   * alarm(2 * DT_SIGALRM); 
+   */
   zeLog_SetOutput(TRUE, FALSE);
   init_proc_state();
   (void) setup_control_handler();
@@ -575,8 +573,7 @@ zeFilter()
   (void) policy_init();
   (void) rcpt_init();
 
-  if (cf_get_int(CF_RESOLVE_CACHE_ENABLE) == OPT_YES)
-  {
+  if (cf_get_int(CF_RESOLVE_CACHE_ENABLE) == OPT_YES) {
     time_t              dt_expire, dt_check, dt_sync;
 
     dt_expire = cf_get_int(CF_RESOLVE_CACHE_EXPIRE);
@@ -590,8 +587,7 @@ zeFilter()
     char               *modcf = cf_get_str(CF_MODULES_CF);
     char               *moddir = cf_get_str(CF_MODDIR);
 
-    if (!load_all_modules(cf_dir, modcf, moddir))
-    {
+    if (!load_all_modules(cf_dir, modcf, moddir)) {
     }
   }
 #endif             /* _FFR_MODULES */
@@ -615,12 +611,13 @@ zeFilter()
     cfdir = cf_get_str(CF_CDBDIR);
     dbname = cf_get_str(CF_DB_BAYES);
     ADJUST_FILENAME(path, dbname, cfdir, "ze-bayes.db");
-    if (strlen(path) > 0 && !bfilter_init(path))
-    {
+    if (strlen(path) > 0 && !bfilter_init(path)) {
       ZE_LogMsgError(0, "Error while opening %s database\n", path);
     }
 #if 0
-    /* crypt = cf_get_int(CF_BAYES_DB_CRYPT); */
+    /*
+     * crypt = cf_get_int(CF_BAYES_DB_CRYPT); 
+     */
     (void) set_bfilter_db_crypt(crypt);
 #endif
     msgSize = cf_get_int(CF_BAYES_MAX_MESSAGE_SIZE);
@@ -655,36 +652,34 @@ zeFilter()
   db_map_open("spams");
   db_map_open("hits");
 #endif
-  /* Now let's finally launch the filter... */
-  if (1)
-  {
+  /*
+   * Now let's finally launch the filter... 
+   */
+  if (1) {
     char               *milter_debug = getenv("MILTER_DEBUG_LEVEL");
 
     ZE_MessageInfo(9, "MILTER_DEBUG_LEVEL = %s", STRNULL(milter_debug, "NULL"));
-    if (milter_debug != NULL)
-    {
+    if (milter_debug != NULL) {
       int                 level = atoi(milter_debug);
 
-      if (level > 0)
-      {
+      if (level > 0) {
         ZE_MessageInfo(9, "Setting milter debug level to %d", level);
         (void) smfi_setdbg(level);
       } else
-        ZE_LogMsgWarning(0, "Invalid MILTER_DEBUG_LEVEL value %s", milter_debug);
+        ZE_LogMsgWarning(0, "Invalid MILTER_DEBUG_LEVEL value %s",
+                         milter_debug);
     }
   }
 
-  if (milter_sock_file != NULL && strlen(milter_sock_file) > 0)
-  {
+  if (milter_sock_file != NULL && strlen(milter_sock_file) > 0) {
     (void) smfi_setconn(milter_sock_file);
-  } else
-  {
-    ZE_LogMsgError(0, "FATAL ERROR Don't know how to communicate with sendmail");
+  } else {
+    ZE_LogMsgError(0,
+                   "FATAL ERROR Don't know how to communicate with sendmail");
     exit(1);
   }
 
-  if (smfi_register(smfilter) == MI_FAILURE)
-  {
+  if (smfi_register(smfilter) == MI_FAILURE) {
     ZE_LogMsgError(0, "smfi_register failed");
     exit(EX_UNAVAILABLE);
   }
@@ -696,15 +691,14 @@ zeFilter()
     int                 nw = 4;
 
     ZE_MessageInfo(9, "Setting the minimum number of workers in the pool to %d",
-                 nw);
+                   nw);
     smfi_setminworkers(nw);
   }
 #endif
   {
     int                 smto = cf_get_int(CF_SM_TIMEOUT);
 
-    if (smto > 0)
-    {
+    if (smto > 0) {
       ZE_MessageInfo(9, "Setting MTA communication timeout to %d s", smto);
       (void) smfi_settimeout(smto);
     }
@@ -719,7 +713,7 @@ zeFilter()
 end:
 
   if (!lr_data_close()) {
-      ;
+    ;
   }
 
   db_close_blacklist();
@@ -729,4 +723,3 @@ end:
   smtprate_save_table(NULL);
   return 0;
 }
-

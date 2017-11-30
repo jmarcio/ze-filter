@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -31,8 +32,7 @@
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
-typedef struct
-{
+typedef struct {
   int                 type;
   int                 ind;
   double              score;
@@ -41,8 +41,7 @@ typedef struct
   long                count;
   bool                enable;
   char               *msg;
-}
-oracle_message_T;
+} oracle_message_T;
 
 static oracle_message_T oracle_messages[] = {
   /*
@@ -314,8 +313,7 @@ oracle_stats_update(score)
   ORACLE_DATA_LOCK();
   kstats_update(&st_ora_global, (double) score);
   nb_tot++;
-  if (score > 0)
-  {
+  if (score > 0) {
     kstats_update(&st_ora_tagged, (double) score);
     nb_tag++;
   }
@@ -365,8 +363,7 @@ oracle_get_label(type, ind)
 {
   oracle_message_T   *p = oracle_messages;
 
-  while (p->type >= 0)
-  {
+  while (p->type >= 0) {
     if ((p->type == type) && (p->ind == ind))
       return p->msg;
     p++;
@@ -387,10 +384,8 @@ oracle_get_podds(type, ind)
   oracle_message_T   *p = oracle_messages;
 
   ORACLE_DATA_LOCK();
-  while (p->type >= 0)
-  {
-    if ((p->type == type) && (p->ind == ind))
-    {
+  while (p->type >= 0) {
+    if ((p->type == type) && (p->ind == ind)) {
       odds = p->pOdds;
       break;
     }
@@ -415,10 +410,8 @@ oracle_set_podds(type, ind, value)
   oracle_message_T   *p = oracle_messages;
 
   ORACLE_DATA_LOCK();
-  while (p->type >= 0)
-  {
-    if ((p->type == type) && (p->ind == ind))
-    {
+  while (p->type >= 0) {
+    if ((p->type == type) && (p->ind == ind)) {
       p->pOdds = value;
       result = TRUE;
       break;
@@ -443,10 +436,8 @@ oracle_get_nodds(type, ind)
   oracle_message_T   *p = oracle_messages;
 
   ORACLE_DATA_LOCK();
-  while (p->type >= 0)
-  {
-    if ((p->type == type) && (p->ind == ind))
-    {
+  while (p->type >= 0) {
+    if ((p->type == type) && (p->ind == ind)) {
       odds = p->nOdds;
       break;
     }
@@ -471,10 +462,8 @@ oracle_set_nodds(type, ind, value)
   oracle_message_T   *p = oracle_messages;
 
   ORACLE_DATA_LOCK();
-  while (p->type >= 0)
-  {
-    if ((p->type == type) && (p->ind == ind))
-    {
+  while (p->type >= 0) {
+    if ((p->type == type) && (p->ind == ind)) {
       p->nOdds = value;
       result = TRUE;
       break;
@@ -499,10 +488,8 @@ oracle_get_score(type, ind)
   oracle_message_T   *p = oracle_messages;
 
   ORACLE_DATA_LOCK();
-  while (p->type >= 0)
-  {
-    if ((p->type == type) && (p->ind == ind))
-    {
+  while (p->type >= 0) {
+    if ((p->type == type) && (p->ind == ind)) {
       score = p->score;
       break;
     }
@@ -527,10 +514,8 @@ oracle_set_score(type, ind, value)
   oracle_message_T   *p = oracle_messages;
 
   ORACLE_DATA_LOCK();
-  while (p->type >= 0)
-  {
-    if ((p->type == type) && (p->ind == ind))
-    {
+  while (p->type >= 0) {
+    if ((p->type == type) && (p->ind == ind)) {
       p->score = value;
       result = TRUE;
       break;
@@ -556,10 +541,8 @@ oracle_get_count(type, ind)
   oracle_message_T   *p = oracle_messages;
 
   ORACLE_DATA_LOCK();
-  while (p->type >= 0)
-  {
-    if ((p->type == type) && (p->ind == ind))
-    {
+  while (p->type >= 0) {
+    if ((p->type == type) && (p->ind == ind)) {
       count = p->count;
       break;
     }
@@ -584,10 +567,8 @@ oracle_set_count(type, ind, value)
   oracle_message_T   *p = oracle_messages;
 
   ORACLE_DATA_LOCK();
-  while (p->type >= 0)
-  {
-    if ((p->type == type) && (p->ind == ind))
-    {
+  while (p->type >= 0) {
+    if ((p->type == type) && (p->ind == ind)) {
       count = p->count = value;
       break;
     }
@@ -611,10 +592,8 @@ oracle_inc_count(type, ind)
   oracle_message_T   *p = oracle_messages;
 
   ORACLE_DATA_LOCK();
-  while (p->type >= 0)
-  {
-    if ((p->type == type) && (p->ind == ind))
-    {
+  while (p->type >= 0) {
+    if ((p->type == type) && (p->ind == ind)) {
       count = ++p->count;
       break;
     }
@@ -645,8 +624,7 @@ oracle_dump_counters(fd, verbose)
 
   bool                CloseOnQuit = (fd < 0);
 
-  if (fd < 0)
-  {
+  if (fd < 0) {
     char                fname[256];
 
     if (((p = cf_get_str(CF_ORACLE_STATS_FILE)) == NULL) || (strlen(p) == 0))
@@ -657,15 +635,13 @@ oracle_dump_counters(fd, verbose)
     else
       snprintf(fname, sizeof (fname), "%s/%s", cf_get_str(CF_WORKDIR), p);
 
-    if ((fd = open(fname, O_WRONLY | O_TRUNC | O_CREAT, 0644)) < 0)
-    {
+    if ((fd = open(fname, O_WRONLY | O_TRUNC | O_CREAT, 0644)) < 0) {
       ZE_LogSysError("Error opening %s file ", fname);
       return FALSE;
     }
   }
 
-  if (fd >= 0)
-  {
+  if (fd >= 0) {
     char                s[256];
     struct tm           tm;
     time_t              now = time(NULL);
@@ -684,8 +660,7 @@ oracle_dump_counters(fd, verbose)
     /*
      **
      */
-    for (i = 0; i < SPAM_CONN_NB; i++)
-    {
+    for (i = 0; i < SPAM_CONN_NB; i++) {
       nb = oracle_get_count(ORACLE_TYPE_CONN, i);
       if (verbose)
         label = oracle_get_label(ORACLE_TYPE_CONN, i);
@@ -704,8 +679,7 @@ oracle_dump_counters(fd, verbose)
     /*
      **
      */
-    for (i = 0; i < SPAM_MSG_NB; i++)
-    {
+    for (i = 0; i < SPAM_MSG_NB; i++) {
       nb = oracle_get_count(ORACLE_TYPE_MSG, i);
       if (verbose)
         label = oracle_get_label(ORACLE_TYPE_MSG, i);
@@ -724,8 +698,7 @@ oracle_dump_counters(fd, verbose)
     /*
      **
      */
-    for (i = 0; i < SPAM_PLAIN_NB; i++)
-    {
+    for (i = 0; i < SPAM_PLAIN_NB; i++) {
       nb = oracle_get_count(ORACLE_TYPE_PLAIN, i);
       if (verbose)
         label = oracle_get_label(ORACLE_TYPE_PLAIN, i);
@@ -744,8 +717,7 @@ oracle_dump_counters(fd, verbose)
     /*
      **
      */
-    for (i = 0; i < SPAM_HTML_NB; i++)
-    {
+    for (i = 0; i < SPAM_HTML_NB; i++) {
       nb = oracle_get_count(ORACLE_TYPE_HTML, i);
       if (verbose)
         label = oracle_get_label(ORACLE_TYPE_HTML, i);
@@ -858,8 +830,7 @@ read_oracle_def_string(v, arg)
   double              score = -1.;
   double              odds = 0.;
 
-  switch (tolower(*s))
-  {
+  switch (tolower(*s)) {
     case 'c':
       type = ORACLE_TYPE_CONN;
       break;
@@ -890,28 +861,24 @@ read_oracle_def_string(v, arg)
 
   SKIP_SPACES(s);
 
-  while (strlen(s) > 0)
-  {
+  while (strlen(s) > 0) {
     long                pi, pf;
 
-    if (strncasecmp(s, "ENABLE", strlen("ENABLE")) == 0)
-    {
+    if (strncasecmp(s, "ENABLE", strlen("ENABLE")) == 0) {
       enable = TRUE;
       SKIP_ALPHAS(s);
       SKIP_SPACES(s);
       continue;
     }
 
-    if (strncasecmp(s, "DISABLE", strlen("DISABLE")) == 0)
-    {
+    if (strncasecmp(s, "DISABLE", strlen("DISABLE")) == 0) {
       enable = FALSE;
       SKIP_ALPHAS(s);
       SKIP_SPACES(s);
       continue;
     }
 
-    while (zeStrRegex(s, KEYVALUE, &pi, &pf, TRUE))
-    {
+    while (zeStrRegex(s, KEYVALUE, &pi, &pf, TRUE)) {
       char               *key, *val;
 
       if (pi != 0)
@@ -926,18 +893,15 @@ read_oracle_def_string(v, arg)
 
       ZE_MessageInfo(19, "KEY = (%s) VALUE = (%s)\n", key, val);
 
-      if (STRCASEEQUAL(key, "score"))
-      {
+      if (STRCASEEQUAL(key, "score")) {
         if (strspn(val, "0123456789.") == strlen(val))
           score = atof(val);
         else
           ZE_MessageWarning(9, "Non numeric value found... %s=%s", key, val);
       }
 
-      if (STRCASEEQUAL(key, "odds"))
-      {
-        if (strspn(val, "0123456789.") == strlen(val))
-        {
+      if (STRCASEEQUAL(key, "odds")) {
+        if (strspn(val, "0123456789.") == strlen(val)) {
           double              v;
 
           v = atof(val);
@@ -947,8 +911,7 @@ read_oracle_def_string(v, arg)
           ZE_MessageWarning(9, "Non numeric value found... %s=%s", key, val);
       }
 #if 0
-      if (STRCASEEQUAL(key, "action"))
-      {
+      if (STRCASEEQUAL(key, "action")) {
         strlcpy(r.action, val, sizeof (r.action));
       }
 #endif
@@ -965,16 +928,18 @@ read_oracle_def_string(v, arg)
 
     ORACLE_DATA_LOCK();
 
-    while (p->type >= 0)
-    {
-      if ((p->type == type) && (p->ind == ind))
-      {
+    while (p->type >= 0) {
+      if ((p->type == type) && (p->ind == ind)) {
         if (score >= 0)
           p->score = score;
-        /* if (odds != 0.) */
+        /*
+         * if (odds != 0.) 
+         */
         p->pOdds = odds;
         p->enable = enable;
-        /*result = TRUE; */
+        /*
+         * result = TRUE; 
+         */
         break;
       }
       p++;
@@ -1007,7 +972,8 @@ load_oracle_defs(cfdir, fname)
 
   ASSERT(fname != NULL);
 
-  result = read_conf_data_file(cfdir, fname, "ze-oracle:oracle-scores", read_it);
+  result =
+    read_conf_data_file(cfdir, fname, "ze-oracle:oracle-scores", read_it);
 
   return result;
 }
@@ -1025,8 +991,7 @@ dump_oracle_defs()
 
   printf("\n");
   printf("<ORACLE-SCORES>\n");
-  for (q = oracle_messages; q->type >= 0; q++)
-  {
+  for (q = oracle_messages; q->type >= 0; q++) {
     char                c = '.';
     char                sa[16];
 
@@ -1062,12 +1027,12 @@ oracle_check_enabled(type, ind)
 
   oracle_message_T   *p = oracle_messages;
 
-  /* XXX shall this loop be locked ??? */
+  /*
+   * XXX shall this loop be locked ??? 
+   */
   ORACLE_DATA_LOCK();
-  while (p->type >= 0)
-  {
-    if ((p->type == type) && (p->ind == ind))
-    {
+  while (p->type >= 0) {
+    if ((p->type == type) && (p->ind == ind)) {
       enable = p->enable;
       break;
     }
@@ -1102,22 +1067,17 @@ oracle_compute_score(id, ip, data)
 
   bestof_init(&data->best, 5, NULL);
 
-  for (i = 0; i < (8 * sizeof (uint32_t)); i++)
-  {
-    if (oracle_check_enabled(ORACLE_TYPE_CONN, i))
-    {
-      if (GET_BIT(data->flags.conn, i))
-      {
+  for (i = 0; i < (8 * sizeof (uint32_t)); i++) {
+    if (oracle_check_enabled(ORACLE_TYPE_CONN, i)) {
+      if (GET_BIT(data->flags.conn, i)) {
         odds = oracle_get_podds(ORACLE_TYPE_CONN, i);
         bestof_add(&data->best, odds);
 
         value = oracle_get_score(ORACLE_TYPE_CONN, i);
-        if (TRUE || value > 0)
-        {
+        if (TRUE || value > 0) {
           oracle_inc_count(ORACLE_TYPE_CONN, i);
           v = 1.;
-          switch (i)
-          {
+          switch (i) {
             case SPAM_CONN_RESOLVE_FAIL:
               break;
             case SPAM_CONN_RESOLVE_FORGED:
@@ -1137,33 +1097,28 @@ oracle_compute_score(id, ip, data)
           }
           msg = oracle_get_label(ORACLE_TYPE_CONN, i);
           if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 1)
-            ZE_MessageInfo(9, "%s ORACLE - C%02d %s (%6.1f)", id, i, msg, value * v);
+            ZE_MessageInfo(9, "%s ORACLE - C%02d %s (%6.1f)", id, i, msg,
+                           value * v);
           score += value * v;
         }
-      } else
-      {
+      } else {
         odds = oracle_get_nodds(ORACLE_TYPE_CONN, i);
         bestof_add(&data->best, odds);
       }
     }
   }
 
-  for (i = 0; i < (8 * sizeof (uint32_t)); i++)
-  {
-    if (oracle_check_enabled(ORACLE_TYPE_MSG, i))
-    {
-      if (GET_BIT(data->flags.msg, i))
-      {
+  for (i = 0; i < (8 * sizeof (uint32_t)); i++) {
+    if (oracle_check_enabled(ORACLE_TYPE_MSG, i)) {
+      if (GET_BIT(data->flags.msg, i)) {
         odds = oracle_get_podds(ORACLE_TYPE_MSG, i);
         bestof_add(&data->best, odds);
 
         value = oracle_get_score(ORACLE_TYPE_MSG, i);
-        if (TRUE || value > 0)
-        {
+        if (TRUE || value > 0) {
           oracle_inc_count(ORACLE_TYPE_MSG, i);
           v = 1.;
-          switch (i)
-          {
+          switch (i) {
             case SPAM_MSG_NO_TEXT_PART:
               break;
             case SPAM_MSG_TOO_MUCH_HTML:
@@ -1210,7 +1165,9 @@ oracle_compute_score(id, ip, data)
             case SPAM_MSG_UNWANTED_MAILER:
               break;
             case SPAM_MSG_MATCH_MIME_PARTS:
-              /* v = data->nb_diff_html_plain; */
+              /*
+               * v = data->nb_diff_html_plain; 
+               */
               break;
             case SPAM_MSG_HAS_SPAMTRAP:
               break;
@@ -1229,33 +1186,28 @@ oracle_compute_score(id, ip, data)
           }
           msg = oracle_get_label(ORACLE_TYPE_MSG, i);
           if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 1)
-            ZE_MessageInfo(9, "%s ORACLE - M%02d %s (%6.1f)", id, i, msg, value * v);
+            ZE_MessageInfo(9, "%s ORACLE - M%02d %s (%6.1f)", id, i, msg,
+                           value * v);
           score += value * v;
         }
-      } else
-      {
+      } else {
         odds = oracle_get_nodds(ORACLE_TYPE_MSG, i);
         bestof_add(&data->best, odds);
       }
     }
   }
 
-  for (i = 0; i < (8 * sizeof (uint32_t)); i++)
-  {
-    if (oracle_check_enabled(ORACLE_TYPE_PLAIN, i))
-    {
-      if (GET_BIT(data->flags.plain, i))
-      {
+  for (i = 0; i < (8 * sizeof (uint32_t)); i++) {
+    if (oracle_check_enabled(ORACLE_TYPE_PLAIN, i)) {
+      if (GET_BIT(data->flags.plain, i)) {
         odds = oracle_get_podds(ORACLE_TYPE_PLAIN, i);
         bestof_add(&data->best, odds);
 
         value = oracle_get_score(ORACLE_TYPE_PLAIN, i);
-        if (TRUE || value > 0)
-        {
+        if (TRUE || value > 0) {
           oracle_inc_count(ORACLE_TYPE_PLAIN, i);
           v = 1.;
-          switch (i)
-          {
+          switch (i) {
             case SPAM_PLAIN_EMPTY:
               break;
             case SPAM_PLAIN_BASE64:
@@ -1267,33 +1219,28 @@ oracle_compute_score(id, ip, data)
           }
           msg = oracle_get_label(ORACLE_TYPE_PLAIN, i);
           if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 1)
-            ZE_MessageInfo(9, "%s ORACLE - P%02d %s (%6.1f)", id, i, msg, value * v);
+            ZE_MessageInfo(9, "%s ORACLE - P%02d %s (%6.1f)", id, i, msg,
+                           value * v);
           score += value * v;
         }
-      } else
-      {
+      } else {
         odds = oracle_get_nodds(ORACLE_TYPE_PLAIN, i);
         bestof_add(&data->best, odds);
       }
     }
   }
 
-  for (i = 0; i < (8 * sizeof (uint32_t)); i++)
-  {
-    if (oracle_check_enabled(ORACLE_TYPE_HTML, i))
-    {
-      if (GET_BIT(data->flags.html, i))
-      {
+  for (i = 0; i < (8 * sizeof (uint32_t)); i++) {
+    if (oracle_check_enabled(ORACLE_TYPE_HTML, i)) {
+      if (GET_BIT(data->flags.html, i)) {
         odds = oracle_get_podds(ORACLE_TYPE_HTML, i);
         bestof_add(&data->best, odds);
 
         value = oracle_get_score(ORACLE_TYPE_HTML, i);
-        if (TRUE || value > 0)
-        {
+        if (TRUE || value > 0) {
           oracle_inc_count(ORACLE_TYPE_HTML, i);
           v = 1.;
-          switch (i)
-          {
+          switch (i) {
             case SPAM_HTML_CLEAN_TOO_SHORT:
               break;
             case SPAM_HTML_BASE64:
@@ -1309,11 +1256,11 @@ oracle_compute_score(id, ip, data)
           }
           msg = oracle_get_label(ORACLE_TYPE_HTML, i);
           if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 1)
-            ZE_MessageInfo(9, "%s ORACLE - H%02d %s (%6.1f)", id, i, msg, value * v);
+            ZE_MessageInfo(9, "%s ORACLE - H%02d %s (%6.1f)", id, i, msg,
+                           value * v);
           score += value * v;
         }
-      } else
-      {
+      } else {
         odds = oracle_get_nodds(ORACLE_TYPE_HTML, i);
         bestof_add(&data->best, odds);
       }
@@ -1330,8 +1277,9 @@ oracle_compute_score(id, ip, data)
 
     data->scores.noracle = lam;
 
-    ZE_MessageInfo(12, "%s ->Computed ORACLE score is %5.2f odds=%6.3f lam=%6.3f...",
-                 id, score, odds, lam);
+    ZE_MessageInfo(12,
+                   "%s ->Computed ORACLE score is %5.2f odds=%6.3f lam=%6.3f...",
+                   id, score, odds, lam);
   }
 
   return ((int) floor(score + 0.5));

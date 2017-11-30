@@ -316,7 +316,7 @@ main(argc, argv)
     char               *s = "012345678901234567890";
     char               *expr = "234";
 
-    if (strexpr(s, expr, &pi, &pf, TRUE))
+    if (zeStrRegex(s, expr, &pi, &pf, TRUE))
     {
       printf("s  = %s\n", s);
       printf("x  = %s\n", expr);

@@ -11,7 +11,6 @@ libcommon_a_SOURCES   = 	ze-base64.c \
 				ze-demime.c \
 				ze-convert-8to7.c \
 				ze-mbox.c \
-				ze-divers.c \
 				ze-dns-parse.c \
 				ze-dns.c \
 				ze-html.c \
@@ -30,7 +29,6 @@ libcommon_a_SOURCES   = 	ze-base64.c \
 				ze-client.c \
 				ze-shmem.c \
 				ze-smtp-divers.c \
-				ze-strconvert.c \
 				ze-time.c \
 				ze-table.c \
 				ze-uudecode.c \

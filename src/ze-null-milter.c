@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -61,8 +62,7 @@ static sfsistat     mlfi_cleanup(SMFICTX *, bool);
 
 #define MLFIPRIV(ctx)  (ctx != NULL ? (CTXPRIV_T *) smfi_getpriv(ctx) : NULL)
 
-typedef struct mlfiPfiv
-{
+typedef struct mlfiPfiv {
   int                 dummy;
 
   unsigned long       pf0;
@@ -276,11 +276,9 @@ mlfi_negotiate(SMFICTX * ctx,
 
   printf("malloc inside mlfi_negotiate\n");
   priv = malloc(sizeof (CTXPRIV_T));
-  if (priv != NULL)
-  {
+  if (priv != NULL) {
     printf("malloc priv OK\n");
-    if (smfi_setpriv(ctx, priv) != MI_SUCCESS)
-    {
+    if (smfi_setpriv(ctx, priv) != MI_SUCCESS) {
       FREE(priv);
       printf("smfi_setpriv(priv) error\n");
 
@@ -315,8 +313,6 @@ struct smfiDesc     smfilter = {
   mlfi_eom,                     /* end of message */
   mlfi_abort,                   /* message aborted */
   mlfi_close                    /* connection cleanup */
-
-
 #if HAVE_XXFI_UNKNOWN
     , mlfi_unknown              /* unknown command */
 #endif
@@ -329,7 +325,6 @@ struct smfiDesc     smfilter = {
 #if HAVE_XXFI_SIGNAL
     , NULL                      /* signale */
 #endif
-
 };
 
 int
@@ -345,8 +340,7 @@ main(argc, argv)
   (void) smfi_setconn("inet:2040@127.0.0.1");
 #endif
 
-  if (smfi_register(smfilter) == MI_FAILURE)
-  {
+  if (smfi_register(smfilter) == MI_FAILURE) {
     fprintf(stderr, "smfi_register failed\n");
     exit(EX_UNAVAILABLE);
   }

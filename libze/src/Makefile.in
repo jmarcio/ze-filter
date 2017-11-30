@@ -112,7 +112,7 @@ libze_a_LIBADD =
 am_libze_a_OBJECTS = zeString.$(OBJEXT) zeStrings.$(OBJEXT) \
 	zeStrConvert.$(OBJEXT) zeFileSystem.$(OBJEXT) zeDb.$(OBJEXT) \
 	zeMap.$(OBJEXT) zeSyslog.$(OBJEXT) zeRdFile.$(OBJEXT) \
-	zeRegex.$(OBJEXT)
+	zeRegex.$(OBJEXT) zeDivers.$(OBJEXT)
 libze_a_OBJECTS = $(am_libze_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -337,7 +337,8 @@ libze_a_SOURCES = zeString.c \
 				zeMap.c \
 				zeSyslog.c \
 				zeRdFile.c \
-				zeRegex.c
+				zeRegex.c \
+				zeDivers.c
 
 
 #LDADD                 = @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@
@@ -391,6 +392,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeDb.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeDivers.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeFileSystem.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeMap.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeRdFile.Po@am__quote@

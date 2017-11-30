@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -51,26 +52,22 @@ check_dns_iprbwl(ip, name, rbwl, code, size)
   bool                result = FALSE;
   char                domain[256];
 
-  if ((ip == NULL || strlen(ip) == 0) && (name == NULL || strlen(name) == 0))
-  {
+  if ((ip == NULL || strlen(ip) == 0) && (name == NULL || strlen(name) == 0)) {
     ZE_MessageWarning(10, "rbwl : no IP nor hostname to check");
     return FALSE;
   }
 
-  if ((code != NULL) && (size <= 0))
-  {
+  if ((code != NULL) && (size <= 0)) {
     ZE_LogMsgError(0, "host size <= 0");
     return FALSE;
   }
 
-  if ((rbwl == NULL) || (strlen(rbwl) == 0))
-  {
+  if ((rbwl == NULL) || (strlen(rbwl) == 0)) {
     ZE_LogMsgError(0, "rbwl : NULL pointer or empty string");
     return FALSE;
   }
 
-  if (ip != NULL && strlen(ip) > 0)
-  {
+  if (ip != NULL && strlen(ip) > 0) {
     int                 argc;
     char               *argv[16];
     char               *sip = NULL;
@@ -84,8 +81,7 @@ check_dns_iprbwl(ip, name, rbwl, code, size)
       ZE_MessageError(10, "strdup(%s) error", ip);
 
     argc = zeStr2Tokens(sip, 16, argv, ".");
-    while (--argc >= 0)
-    {
+    while (--argc >= 0) {
       char                s[8];
 
       snprintf(s, sizeof (s), "%s.", argv[argc]);
@@ -97,12 +93,10 @@ check_dns_iprbwl(ip, name, rbwl, code, size)
 
     FREE(sip);
 
-    if (dns_get_a(domain + 1, &a) > 0)
-    {
+    if (dns_get_a(domain + 1, &a) > 0) {
       int                 i;
 
-      for (i = 0; i < a.count; i++)
-      {
+      for (i = 0; i < a.count; i++) {
         ZE_MessageInfo(11, " * A  : %-16s %s", a.host[i].ip, a.host[i].name);
         if (code != NULL)
           strlcpy(code, a.host[i].ip, size);
@@ -130,12 +124,10 @@ check_dns_iprbwl(ip, name, rbwl, code, size)
     snprintf(domain, sizeof (domain), "%s.%s", name, rbwl);
     ZE_MessageInfo(11, "DOMAIN : %s", domain);
 
-    if (dns_get_a(domain, &a) > 0)
-    {
+    if (dns_get_a(domain, &a) > 0) {
       int                 i;
 
-      for (i = 0; i < a.count; i++)
-      {
+      for (i = 0; i < a.count; i++) {
         ZE_MessageInfo(11, " * A  : %-16s %s", a.host[i].ip, a.host[i].name);
         if (code != NULL)
           strlcpy(code, a.host[i].ip, size);
@@ -162,8 +154,7 @@ fin:
 #define DIM_RBWL          16
 
 
-typedef struct
-{
+typedef struct {
   bool                ok;
   int                 nb;
   iprbwl_T            rbwl[DIM_RBWL];
@@ -227,28 +218,24 @@ read_iprbwl_line(v, arg)
   s += n;
 
   argc = zeStr2Tokens(s, 32, argv, "; ");
-  for (i = 0; i < argc; i++)
-  {
+  for (i = 0; i < argc; i++) {
     char               *tag;
     char               *p = argv[i];
 
     tag = "code=";
-    if (STRNCASEEQUAL(p, tag, strlen(tag)))
-    {
+    if (STRNCASEEQUAL(p, tag, strlen(tag))) {
       p += strlen(tag);
       strlcpy(r.code, p, sizeof (r.code));
     }
 
     tag = "netclass=";
-    if (STRNCASEEQUAL(p, tag, strlen(tag)))
-    {
+    if (STRNCASEEQUAL(p, tag, strlen(tag))) {
       p += strlen(tag);
       strlcpy(r.netclass, p, sizeof (r.netclass));
     }
 
     tag = "odds=";
-    if (STRNCASEEQUAL(p, tag, strlen(tag)))
-    {
+    if (STRNCASEEQUAL(p, tag, strlen(tag))) {
       double              t;
       int                 terrno = 0;
 
@@ -260,8 +247,7 @@ read_iprbwl_line(v, arg)
     }
 
     tag = "onmatch=";
-    if (STRNCASEEQUAL(p, tag, strlen(tag)))
-    {
+    if (STRNCASEEQUAL(p, tag, strlen(tag))) {
       int                 argxc;
       char               *argxv[16];
       char                buf[64];
@@ -271,15 +257,12 @@ read_iprbwl_line(v, arg)
       r.flags &= ~(RBWL_ONMATCH_CONTINUE);
       strlcpy(buf, p, sizeof (buf));
       argxc = zeStr2Tokens(buf, 16, argxv, ", ");
-      for (j = 0; j < argxc; j++)
-      {
-        if (STRCASEEQUAL(argxv[j], "stop"))
-        {
+      for (j = 0; j < argxc; j++) {
+        if (STRCASEEQUAL(argxv[j], "stop")) {
           r.flags &= ~(RBWL_ONMATCH_CONTINUE);
           continue;
         }
-        if (STRCASEEQUAL(argxv[j], "continue"))
-        {
+        if (STRCASEEQUAL(argxv[j], "continue")) {
           r.flags |= RBWL_ONMATCH_CONTINUE;
           continue;
         }
@@ -287,8 +270,7 @@ read_iprbwl_line(v, arg)
     }
 
     tag = "checks=";
-    if (STRNCASEEQUAL(p, tag, strlen(tag)))
-    {
+    if (STRNCASEEQUAL(p, tag, strlen(tag))) {
       int                 argxc;
       char               *argxv[16];
       char                buf[64];
@@ -297,30 +279,24 @@ read_iprbwl_line(v, arg)
       p += strlen(tag);
       strlcpy(buf, p, sizeof (buf));
       argxc = zeStr2Tokens(buf, 16, argxv, ", ");
-      for (j = 0; j < argxc; j++)
-      {
-        if (STRCASEEQUAL(argxv[j], "ip"))
-        {
+      for (j = 0; j < argxc; j++) {
+        if (STRCASEEQUAL(argxv[j], "ip")) {
           r.flags |= RBWL_CHECK_ADDR;
           continue;
         }
-        if (STRCASEEQUAL(argxv[j], "addr"))
-        {
+        if (STRCASEEQUAL(argxv[j], "addr")) {
           r.flags |= RBWL_CHECK_ADDR;
           continue;
         }
-        if (STRCASEEQUAL(argxv[j], "name"))
-        {
+        if (STRCASEEQUAL(argxv[j], "name")) {
           r.flags |= RBWL_CHECK_NAME;
           continue;
         }
-        if (STRCASEEQUAL(argxv[j], "hostname"))
-        {
+        if (STRCASEEQUAL(argxv[j], "hostname")) {
           r.flags |= RBWL_CHECK_NAME;
           continue;
         }
-        if (STRCASEEQUAL(argxv[j], "all"))
-        {
+        if (STRCASEEQUAL(argxv[j], "all")) {
           r.flags |= RBWL_CHECK_ALL;
           continue;
         }
@@ -339,8 +315,7 @@ read_iprbwl_line(v, arg)
   memset(&r.checks, 0, sizeof (r.checks));
   if ((r.flags & RBWL_CHECK_ADDR) != RBWL_NONE)
     strlcpy(r.checks, "addr", sizeof (r.checks));
-  if ((r.flags & RBWL_CHECK_NAME) != RBWL_NONE)
-  {
+  if ((r.flags & RBWL_CHECK_NAME) != RBWL_NONE) {
     if (strlen(r.checks) > 0)
       strlcat(r.checks, ",", sizeof (r.checks));
     strlcat(r.checks, "name", sizeof (r.checks));
@@ -352,8 +327,7 @@ read_iprbwl_line(v, arg)
   if (r.odds <= 0)
     r.odds = 1;
 
-  if (ipRbwl.nb < DIM_RBWL)
-  {
+  if (ipRbwl.nb < DIM_RBWL) {
     ipRbwl.rbwl[ipRbwl.nb] = r;
     ipRbwl.nb++;
   } else
@@ -406,8 +380,7 @@ init_iprbwl_table()
     return TRUE;
 
   RBWL_LOCK();
-  if (!ipRbwl.ok)
-  {
+  if (!ipRbwl.ok) {
     memset(ipRbwl.rbwl, 0, sizeof (ipRbwl.rbwl));
     ipRbwl.nb = 0;
     ipRbwl.ok = TRUE;
@@ -429,8 +402,7 @@ dump_iprbwl_table()
   printf("\n");
   printf("<DNS-IP-RBWL>\n");
 
-  for (i = 0; i < ipRbwl.nb; i++)
-  {
+  for (i = 0; i < ipRbwl.nb; i++) {
     iprbwl_T           *r;
 
     r = &ipRbwl.rbwl[i];
@@ -455,8 +427,7 @@ get_rbwl_rec(i, rbwl)
   bool                r = FALSE;
 
   RBWL_LOCK();
-  if (ipRbwl.ok && i < DIM_RBWL && i < ipRbwl.nb)
-  {
+  if (ipRbwl.ok && i < DIM_RBWL && i < ipRbwl.nb) {
     *rbwl = ipRbwl.rbwl[i];
     r = TRUE;
   }
@@ -476,8 +447,7 @@ check_iprbwl_table(id, ip, name, rbwl)
   uint32_t            flag = 0;
   double              lodds = 0;
 
-  for (i = 0; i < DIM_RBWL; i++)
-  {
+  for (i = 0; i < DIM_RBWL; i++) {
     iprbwl_T            r;
     char                code[64];
     char               *paddr, *pname;
@@ -493,14 +463,14 @@ check_iprbwl_table(id, ip, name, rbwl)
       pname = name;
 
     ZE_MessageInfo(11, "Checking %s/%s against %s",
-                 STRNULL(paddr, "(NULL)"), STRNULL(pname, "(NULL)"), r.rbwl);
-    if (check_dns_iprbwl(paddr, pname, r.rbwl, code, sizeof (code)))
-    {
+                   STRNULL(paddr, "(NULL)"), STRNULL(pname, "(NULL)"), r.rbwl);
+    if (check_dns_iprbwl(paddr, pname, r.rbwl, code, sizeof (code))) {
       bool                found = TRUE;
 
-      /* check code */
-      if (strlen(r.code) > 0 && !STRCASEEQUAL(r.code, "all"))
-      {
+      /*
+       * check code 
+       */
+      if (strlen(r.code) > 0 && !STRCASEEQUAL(r.code, "all")) {
         int                 argc;
         char               *argv[16];
         char                buf[256];
@@ -510,27 +480,23 @@ check_iprbwl_table(id, ip, name, rbwl)
 
         strlcpy(buf, r.code, sizeof (buf));
         argc = zeStr2Tokens(buf, 16, argv, ", ");
-        for (j = 0; j < argc; j++)
-        {
-	  char               *p = argv[j];
+        for (j = 0; j < argc; j++) {
+          char               *p = argv[j];
 
-          if (STRCASEEQUAL("all", argv[j]))
-          {
+          if (STRCASEEQUAL("all", argv[j])) {
             found = TRUE;
             break;
           }
- 
-          if (*p == '!')
-          {
+
+          if (*p == '!') {
             p++;
 
-	    if (STRCASEEQUAL(code, p))
-	      break;
-	    continue;
+            if (STRCASEEQUAL(code, p))
+              break;
+            continue;
           }
 
-          if (STRCASEEQUAL(code, argv[j]))
-          {
+          if (STRCASEEQUAL(code, argv[j])) {
             found = TRUE;
             break;
           }
@@ -547,9 +513,9 @@ check_iprbwl_table(id, ip, name, rbwl)
         *rbwl = r;
 
       ZE_MessageInfo(10,
-                   "%s RBWL check list=(%s) code=(%s) class=(%s) addr=(%s) name=(%s)",
-                   id, r.rbwl, code, r.netclass, STREMPTY(ip, "NOIP"),
-                   STREMPTY(name, "NONAME"));
+                     "%s RBWL check list=(%s) code=(%s) class=(%s) addr=(%s) name=(%s)",
+                     id, r.rbwl, code, r.netclass, STREMPTY(ip, "NOIP"),
+                     STREMPTY(name, "NONAME"));
 
       SET_BIT(flag, i);
 

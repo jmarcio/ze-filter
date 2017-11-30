@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -31,16 +32,14 @@
  *****************************************************************************/
 #define ORADATA_LEN          256
 
-typedef struct
-{
+typedef struct {
   char                type[32];
   char                data[ORADATA_LEN];
   char                action[32];
   float               score;
   double              pOdds;
   double              nOdds;
-}
-oradata_T;
+} oradata_T;
 
 static j_table_T    htbl;
 
@@ -72,10 +71,8 @@ dump_oradata_table()
   oradata_T           p;
 
   printf("# Let's dump j_oradata_table : \n");
-  if (j_table_get_first(&htbl, &p) == 0)
-  {
-    do
-    {
+  if (j_table_get_first(&htbl, &p) == 0) {
+    do {
       char                sodds[32];
 
       snprintf(sodds, sizeof (sodds), "odds=%.3f", exp(p.pOdds));
@@ -143,8 +140,7 @@ add_oradata_rec(vs, arg)
 
   SKIP_SPACES(s);
 
-  while (zeStrRegex(s, KEYVALUE, &pi, &pf, TRUE))
-  {
+  while (zeStrRegex(s, KEYVALUE, &pi, &pf, TRUE)) {
     char               *key, *val;
 
     if (pi != 0)
@@ -159,19 +155,16 @@ add_oradata_rec(vs, arg)
 
     ZE_MessageInfo(11, "KEY = (%s) VALUE = (%s)\n", key, val);
 
-    if (STRCASEEQUAL(key, "score"))
-    {
+    if (STRCASEEQUAL(key, "score")) {
       strlcpy(r.action, key, sizeof (r.action));
       if (strspn(val, "0123456789.") == strlen(val))
         r.score = atof(val);
       else
         ZE_MessageWarning(9, "Non numeric value found... %s=%s", key, val);
     }
-    if (STRCASEEQUAL(key, "odds"))
-    {
+    if (STRCASEEQUAL(key, "odds")) {
       strlcpy(r.action, key, sizeof (r.action));
-      if (strspn(val, "0123456789.") == strlen(val))
-      {
+      if (strspn(val, "0123456789.") == strlen(val)) {
         double              v;
 
         v = atof(val);
@@ -180,8 +173,7 @@ add_oradata_rec(vs, arg)
       } else
         ZE_MessageWarning(9, "Non numeric value found... %s=%s", key, val);
     }
-    if (STRCASEEQUAL(key, "action"))
-    {
+    if (STRCASEEQUAL(key, "action")) {
       strlcpy(r.action, val, sizeof (r.action));
     }
 
@@ -193,8 +185,8 @@ add_oradata_rec(vs, arg)
   strlcpy(r.data, k, sizeof (r.data));
   strlcpy(r.type, v, sizeof (r.type));
 
-  ZE_MessageInfo(12, "TYPE=%-15s SCORE=%.2f VALUE=%s\n", r.type, (double) r.score,
-               r.data);
+  ZE_MessageInfo(12, "TYPE=%-15s SCORE=%.2f VALUE=%s\n", r.type,
+                 (double) r.score, r.data);
 
   return j_table_add(&htbl, &r);
 }
@@ -234,8 +226,7 @@ load_oradata_table(cfdir, fname)
 
   ORA_LOCK();
 
-  if (htbl_ok == FALSE)
-  {
+  if (htbl_ok == FALSE) {
     memset(&htbl, 0, sizeof (htbl));
     res = j_table_init(&htbl, sizeof (oradata_T), 256, oradata_comp);
     if (res == 0)
@@ -245,7 +236,8 @@ load_oradata_table(cfdir, fname)
     res = j_table_clear(&htbl);
 
   if (res == 0)
-    result = read_conf_data_file(cfdir, fname, "ze-oracle:oracle-data", read_it);
+    result =
+      read_conf_data_file(cfdir, fname, "ze-oracle:oracle-data", read_it);
 
   ORA_UNLOCK();
 
@@ -279,17 +271,15 @@ count_oradata(id, type, data, find, odds)
   bestof_init(&best, 3, NULL);
 
   ORA_LOCK();
-  if (j_table_get_first(&htbl, &p) == 0)
-  {
-    do
-    {
+  if (j_table_get_first(&htbl, &p) == 0) {
+    do {
       if (strcasecmp(type, p.type) != 0)
         continue;
 
-      if (zeStrRegex(data, p.data, NULL, NULL, TRUE))
-      {
+      if (zeStrRegex(data, p.data, NULL, NULL, TRUE)) {
         if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-          ZE_MessageNotice(10, "%s SPAM CHECK - UNWANTED %s : %s", id, type, p.data);
+          ZE_MessageNotice(10, "%s SPAM CHECK - UNWANTED %s : %s", id, type,
+                           p.data);
         nb++;
         bestof_add(&best, p.pOdds);
         if (find)
@@ -303,7 +293,8 @@ count_oradata(id, type, data, find, odds)
   if (odds != NULL)
     *odds = mean;
 
-  ZE_MessageInfo(11, "%s ->Computed ORACLE %-9s odds is %5.2f ...", id, type, mean);
+  ZE_MessageInfo(11, "%s ->Computed ORACLE %-9s odds is %5.2f ...", id, type,
+                 mean);
 
   return nb;
 }
@@ -349,8 +340,7 @@ vector_compare(a, b, dim)
 
   VC_LOCK();
 
-  if (1 || (dim > sdim))
-  {
+  if (1 || (dim > sdim)) {
     FREE(ta);
     FREE(tb);
     if ((ta = (double *) malloc(dim * sizeof (double))) == NULL)
@@ -360,12 +350,9 @@ vector_compare(a, b, dim)
     sdim = dim;
   }
 
-  if ((ta != NULL) && (tb != NULL))
-  {
-    for (i = 0; i < dim; i++)
-    {
-      if (a[i] == b[i])
-      {
+  if ((ta != NULL) && (tb != NULL)) {
+    for (i = 0; i < dim; i++) {
+      if (a[i] == b[i]) {
         if (a[i] != 0)
           ta[i] = tb[i] = 1.;
         else
@@ -374,28 +361,24 @@ vector_compare(a, b, dim)
         ta[i] = tb[i] = 1.;     /* JOE */
         continue;
       }
-      if (a[i] > b[i])
-      {
+      if (a[i] > b[i]) {
         ta[i] = 1.;
         tb[i] = b[i] / a[i];
-      } else
-      {
+      } else {
         ta[i] = a[i] / b[i];
         tb[i] = 1.;
       }
     }
 
     ma = mb = ab = 0;
-    for (i = 0; i < dim; i++)
-    {
+    for (i = 0; i < dim; i++) {
       ma += ta[i] * ta[i];
       mb += tb[i] * tb[i];
       ab += ta[i] * tb[i];
     }
     if ((ma > 0.) && (mb > 0.))
       res = ab / sqrt(ma * mb);
-    else
-    {
+    else {
       if (ma == mb)
         res = 1.;
       else
@@ -431,27 +414,21 @@ realcleanup_text_buf(buf, size)
   if ((buf == NULL) || (size == 0))
     return NULL;
 
-  if ((nbuf = strdup(buf)) == NULL)
-  {
+  if ((nbuf = strdup(buf)) == NULL) {
     ZE_LogSysError("strdup");
     return NULL;
   }
 
   p = buf;
   q = nbuf;
-  while (*++p != '\0')
-  {
-    if (isalpha(*p))
-    {
+  while (*++p != '\0') {
+    if (isalpha(*p)) {
       *q++ = tolower(*p);
       continue;
     }
-    if (isdigit(*p))
-    {
-      if (isalpha(*(p - 1)) || isalpha(*(p + 1)))
-      {
-        switch (*p)
-        {
+    if (isdigit(*p)) {
+      if (isalpha(*(p - 1)) || isalpha(*(p + 1))) {
+        switch (*p) {
           case '0':
             *q++ = 'o';
             break;
@@ -468,21 +445,17 @@ realcleanup_text_buf(buf, size)
             *q++ = ' ';
             break;
         }
-      } else
-      {
+      } else {
         *q++ = ' ';
       }
       continue;
     }
-    if (isspace(*p))
-    {
+    if (isspace(*p)) {
       *q++ = ' ';
       continue;
     }
-    if (isalpha(*(p - 1)) || (0 && isalpha(*(p + 1))))
-    {
-      switch (*p)
-      {
+    if (isalpha(*(p - 1)) || (0 && isalpha(*(p + 1)))) {
+      switch (*p) {
         case '|':
           *q++ = 'l';
           break;
@@ -507,12 +480,9 @@ realcleanup_text_buf(buf, size)
   {
     bool                space = FALSE;
 
-    for (p = q = nbuf; *p != '\0'; p++)
-    {
-      if (isspace(*p))
-      {
-        if (!space)
-        {
+    for (p = q = nbuf; *p != '\0'; p++) {
+      if (isspace(*p)) {
+        if (!space) {
           space = TRUE;
           *q++ = *p;
         }

@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -35,9 +36,9 @@
 #define REGCOMP_FLAGS         (REG_ICASE | REG_NEWLINE | REG_EXTENDED)
 
 #if USE_PCRE
-# define ZE_PCRE_FLAGS          (PCRE_CASELESS | PCRE_DOTALL)
+#define ZE_PCRE_FLAGS          (PCRE_CASELESS | PCRE_DOTALL)
 #else
-# define ZE_PCRE_FLAGS          (PCRE_CASELESS | PCRE_DOTALL)
+#define ZE_PCRE_FLAGS          (PCRE_CASELESS | PCRE_DOTALL)
 #endif             /* USE_PCRE */
 
 #if USE_PCRE
@@ -66,8 +67,7 @@ bool                log_found_regex(char *, char *, char *, int, int, char *);
  *                                                                           *
  *                                                                           *
  *****************************************************************************/
-typedef struct
-{
+typedef struct {
   char                action[32];
   int                 where;
   char                regex[REGEX_MAX_LEN];
@@ -84,8 +84,7 @@ typedef struct
   bool                pcre_ok;
 #endif                          /* USE_PCRE */
   int                 count;
-}
-REGEX_REC;
+} REGEX_REC;
 
 static j_table_T    htbl = JTABLE_INITIALIZER;
 
@@ -109,11 +108,9 @@ dump_regex_table()
   REGEX_REC           p;
 
   printf("*** Regular Expressions lookup table : \n");
-  if (j_table_get_first(&htbl, &p) == 0)
-  {
+  if (j_table_get_first(&htbl, &p) == 0) {
     printf(" ** WHERE        : SCORE - Regular Expression\n");
-    do
-    {
+    do {
       printf(" -> %-12s : %5d - /%s/\n", p.action, p.score, p.regex);
     } while (j_table_get_next(&htbl, &p) == 0);
   }
@@ -161,12 +158,10 @@ add_regex_rec(vk, vv)
 
   r.score = 1;
 
-  if ((i = strspn(k, "0123456789")) == (j = strcspn(k, " \t")))
-  {
+  if ((i = strspn(k, "0123456789")) == (j = strcspn(k, " \t"))) {
     char                s[32];
 
-    if (i > 0)
-    {
+    if (i > 0) {
       strlcpy(s, k, sizeof (s));
 #if HAVE_STRTOL
       errno = 0;
@@ -186,8 +181,7 @@ add_regex_rec(vk, vv)
   zeStrRev(r.revex);
 
   r.re_ok = regcomp(&r.re, r.regex, REGCOMP_FLAGS);
-  if (r.re_ok != 0)
-  {
+  if (r.re_ok != 0) {
     char                str[256];
 
     regerror(r.re_ok, &r.re, str, sizeof (str));
@@ -195,8 +189,7 @@ add_regex_rec(vk, vv)
     return 1;
   }
 #if USE_PCRE
-  if (!r.pcre_ok)
-  {
+  if (!r.pcre_ok) {
     const char         *errptr = NULL;
     int                 erroffset = 0;
 
@@ -204,15 +197,13 @@ add_regex_rec(vk, vv)
       pcre_compile(r.regex, ZE_PCRE_FLAGS, &errptr, &erroffset, NULL);
     if (r.pcre_rebase == NULL)
       ZE_LogMsgError(0, "pcre_compile error : /%s/ : %s", r.regex,
-                    errptr != NULL ? errptr : "(NULL)");
-
-    if (r.pcre_rebase != NULL)
-    {
-      r.pcre_rextra = pcre_study(r.pcre_rebase, 0, &errptr);
-      if (r.pcre_rextra == NULL)
-      {
-        ZE_LogMsgInfo(12, "pcre_study error : %s",
                      errptr != NULL ? errptr : "(NULL)");
+
+    if (r.pcre_rebase != NULL) {
+      r.pcre_rextra = pcre_study(r.pcre_rebase, 0, &errptr);
+      if (r.pcre_rextra == NULL) {
+        ZE_LogMsgInfo(12, "pcre_study error : %s",
+                      errptr != NULL ? errptr : "(NULL)");
       }
     }
     r.pcre_ok = (r.pcre_rebase != NULL);
@@ -233,10 +224,8 @@ clear_compiled_regex()
 {
   REGEX_REC          *q;
 
-  if ((q = (REGEX_REC *) j_table_get_first_ptr(&htbl)) != NULL)
-  {
-    do
-    {
+  if ((q = (REGEX_REC *) j_table_get_first_ptr(&htbl)) != NULL) {
+    do {
       regfree(&q->re);
 #if USE_PCRE
       if (q->pcre_rebase != NULL)
@@ -279,16 +268,14 @@ load_regex_table(cfdir, fname)
 
   DATA_LOCK();
 
-  if (htbl_ok == FALSE)
-  {
+  if (htbl_ok == FALSE) {
     memset(&htbl, 0, sizeof (htbl));
     res = j_table_init(&htbl, sizeof (REGEX_REC), 256, NULL);
     if (res == 0)
       htbl_ok = TRUE;
   }
 
-  if (res == 0)
-  {
+  if (res == 0) {
     clear_compiled_regex();
     res = j_table_clear(&htbl);
   }
@@ -330,20 +317,15 @@ check_regex(id, ip, msg, where)
   DATA_LOCK();
 
 
-  if ((q = (REGEX_REC *) j_table_get_first_ptr(&htbl)) != NULL)
-  {
-    do
-    {
-      if ((q->where & where) != 0)
-      {
+  if ((q = (REGEX_REC *) j_table_get_first_ptr(&htbl)) != NULL) {
+    do {
+      if ((q->where & where) != 0) {
         char               *ptr = msg;
         int                 nb = 0;
 
-        if (use_pcre)
-        {
+        if (use_pcre) {
 #if USE_PCRE
-          if (!q->pcre_ok)
-          {
+          if (!q->pcre_ok) {
             const char         *errptr = NULL;
             int                 erroffset = 0;
 
@@ -351,24 +333,20 @@ check_regex(id, ip, msg, where)
                                           &erroffset, NULL);
             if (q->pcre_rebase == NULL)
               ZE_LogMsgError(0, "pcre_compile error : /%s/ : %s", q->regex,
-                            errptr != NULL ? errptr : "(NULL)");
+                             errptr != NULL ? errptr : "(NULL)");
 
-            if (q->pcre_rebase != NULL)
-            {
+            if (q->pcre_rebase != NULL) {
               q->pcre_rextra = pcre_study(q->pcre_rebase, 0, &errptr);
-              if (q->pcre_rextra == NULL)
-              {
+              if (q->pcre_rextra == NULL) {
                 ZE_LogMsgInfo(12, "pcre_study error : %s", errptr);
               }
             }
             q->pcre_ok = (q->pcre_rebase != NULL);
           }
-          if (q->pcre_ok)
-          {
+          if (q->pcre_ok) {
             int                 ovector[DIM_VECTOR];
 
-            for (;;)
-            {
+            for (;;) {
               int                 rc = 0;
 
               if (strlen(ptr) == 0)
@@ -392,23 +370,23 @@ check_regex(id, ip, msg, where)
               if (ovector[1] == 0)
                 break;
 
-              /* XXX - break if only one is enough */
+              /*
+               * XXX - break if only one is enough 
+               */
               if (1)
                 break;
             }
           }
 #else              /* USE_PCRE */
-          ZE_LogMsgError(0, "use_pcre set, but ze-filter wasn't compiled with lib pcre");
+          ZE_LogMsgError(0,
+                         "use_pcre set, but ze-filter wasn't compiled with lib pcre");
 #endif             /* USE_PCRE */
-        } else
-        {
+        } else {
           regmatch_t          rm;
 
-          if (q->re_ok != 0)
-          {
+          if (q->re_ok != 0) {
             q->re_ok = regcomp(&q->re, q->regex, REGCOMP_FLAGS);
-            if (q->re_ok != 0)
-            {
+            if (q->re_ok != 0) {
               char                str[256];
 
               regerror(q->re_ok, &q->re, str, sizeof (str));
@@ -416,8 +394,7 @@ check_regex(id, ip, msg, where)
               break;
             }
           }
-          while (regexec(&q->re, ptr, (size_t) 1, &rm, 0) == 0)
-          {
+          while (regexec(&q->re, ptr, (size_t) 1, &rm, 0) == 0) {
             ptr += rm.rm_eo;
             q->count++;
             if (q->score >= 0)
@@ -485,15 +462,16 @@ check_rurlbl(id, ip, msg)
 
   DATA_LOCK();
 
-  /* extract URLs and check domains */
+  /*
+   * extract URLs and check domains 
+   */
   {
     long                pi, pf;
     char               *p;
     LISTR_T            *urllist = NULL;
 
     p = msg;
-    while (zeStrRegex(p, URL_DOMAIN_EXPRESSION, &pi, &pf, TRUE))
-    {
+    while (zeStrRegex(p, URL_DOMAIN_EXPRESSION, &pi, &pf, TRUE)) {
       size_t              size = pf - pi + 16;
       char               *buf = NULL;
       bool                alreadydone = FALSE;
@@ -505,8 +483,7 @@ check_rurlbl(id, ip, msg)
 
       ZE_MessageInfo(URLBL_LOG + 2, "Hmmm . %s DIR DOMAIN : %s", id, p);
 
-      if ((buf = (char *) malloc(size)) == NULL)
-      {
+      if ((buf = (char *) malloc(size)) == NULL) {
         ZE_LogSysError("malloc(%d)", size);
         goto url_domain_ok;
       }
@@ -520,7 +497,9 @@ check_rurlbl(id, ip, msg)
          */
       }
 
-      /* two empty lines end URL */
+      /*
+       * two empty lines end URL 
+       */
       {
         long                i;
 
@@ -528,12 +507,13 @@ check_rurlbl(id, ip, msg)
           buf[i] = '\0';
       }
 
-      /* delete useless characteres and chomp domainname */
+      /*
+       * delete useless characteres and chomp domainname 
+       */
       {
         char               *q, *r;
 
-        for (q = r = buf; *q != '\0'; q++)
-        {
+        for (q = r = buf; *q != '\0'; q++) {
           if (strchr(" \t\n\r", *q) == NULL)
             *r++ = *q;
         }
@@ -542,7 +522,9 @@ check_rurlbl(id, ip, msg)
         domain_chomp(buf);
       }
 
-      /* delete port number, if present */
+      /*
+       * delete port number, if present 
+       */
       {
         long                ia = 0;
 
@@ -550,7 +532,7 @@ check_rurlbl(id, ip, msg)
           buf[ia] = '\0';
       }
 
-      zeStr2Upper(buf);
+      zeStr2Lower(buf);
 
       ZE_MessageInfo(URLBL_LOG + 2, "%s DIR DOMAIN : %s", id, buf);
       revurl = zeStrDupRev(buf);
@@ -565,8 +547,7 @@ check_rurlbl(id, ip, msg)
       {
         char               *q;
 
-        for (q = revurl; *q != '\0'; q++)
-        {
+        for (q = revurl; *q != '\0'; q++) {
           if ((*q >= 'A') && (*q <= 'Z'))
             continue;
           if ((*q >= 'a') && (*q <= 'z'))
@@ -582,7 +563,9 @@ check_rurlbl(id, ip, msg)
 
       ZE_MessageInfo(URLBL_LOG + 2, "%s REV DOMAIN : %s", id, revurl);
 
-      /* Check if already handled... */
+      /*
+       * Check if already handled... 
+       */
       if (!linked_list_find(urllist, revurl))
         urllist = linked_list_add(urllist, revurl, 1, NULL, 0);
       else
@@ -597,20 +580,15 @@ check_rurlbl(id, ip, msg)
         /*
          ** URLs defined at ze-regex
          */
-        if ((q = (REGEX_REC *) j_table_get_first_ptr(&htbl)) != NULL)
-        {
-          do
-          {
-            if (q->where == MAIL_URLSTR)
-            {
+        if ((q = (REGEX_REC *) j_table_get_first_ptr(&htbl)) != NULL) {
+          do {
+            if (q->where == MAIL_URLSTR) {
               char               *sb;
 
               sb = q->revex;
 
-              if (sb != NULL)
-              {
-                if (strncasecmp(revurl, sb, strlen(sb)) == 0)
-                {
+              if (sb != NULL) {
+                if (strncasecmp(revurl, sb, strlen(sb)) == 0) {
                   ZE_MessageNotice(10, "%s URLSTR Found %s", id, q->regex);
                   url_found = TRUE;
                   result += q->score;
@@ -638,8 +616,7 @@ check_rurlbl(id, ip, msg)
         /*
          ** Check URLBL
          */
-        if (dirurl != NULL)
-        {
+        if (dirurl != NULL) {
           int                 v;
           char               *dest = NULL;
           size_t              size;
@@ -655,15 +632,14 @@ check_rurlbl(id, ip, msg)
             memset(dest, 0, size);
 
           if ((v = db_rurlbl_check(id, dirurl, dest, size, urlbl,
-                                   sizeof (urlbl))) > 0)
-          {
+                                   sizeof (urlbl))) > 0) {
             result += v;
 
             url_found = TRUE;
             (void) log_found_regex(id, ip, urlbl, 1, result, dest);
           }
           ZE_MessageInfo(URLBL_LOG, "%s DB  URLBL handling time = %ld ms", id,
-                       time_ms() - ti);
+                         time_ms() - ti);
           FREE(dest);
         }
 
@@ -673,8 +649,7 @@ check_rurlbl(id, ip, msg)
         /*
          ** Check DNS RURLBL
          */
-        if (dirurl != NULL)
-        {
+        if (dirurl != NULL) {
           time_t              ti = time_ms();
           uint32_t            flags;
 
@@ -684,8 +659,7 @@ check_rurlbl(id, ip, msg)
           memset(&rbl, 0, sizeof (rbl));
 
 #if 1
-          while (zeStrCountChar(p, '.') > 3)
-          {
+          while (zeStrCountChar(p, '.') > 3) {
             p = strchr(p, '.');
             if (p != NULL && *p != '\0')
               p++;
@@ -695,8 +669,7 @@ check_rurlbl(id, ip, msg)
 #else
           flags = check_urlbl_table(id, dirurl, &rbl);
 #endif
-          if (flags != 0)
-          {
+          if (flags != 0) {
             char                buf[256];
 
             result += rbl.score;
@@ -705,11 +678,11 @@ check_rurlbl(id, ip, msg)
             snprintf(buf, sizeof (buf), "DNSURLBL:%s", STREMPTY(rbl.bl, ""));
             (void) log_found_regex(id, ip, buf, 1, result, dirurl);
             ZE_MessageNotice(9, "%s DNSURLBL : %s : %.1f BLACKLISTED in %s",
-                           id, dirurl, rbl.score, rbl.bl);
+                             id, dirurl, rbl.score, rbl.bl);
           }
 
           ZE_MessageInfo(URLBL_LOG, "%s DNS URLBL handling time = %ld ms", id,
-                       time_ms() - ti);
+                         time_ms() - ti);
         }
         if (url_found || result >= score_min)
           goto url_domain_ok;
@@ -727,49 +700,49 @@ check_rurlbl(id, ip, msg)
     (void) linked_list_clear(urllist, NULL);
   }
 
-  /* extract URLs and fully check them */
-  if (result < score_min)
-  {
+  /*
+   * extract URLs and fully check them 
+   */
+  if (result < score_min) {
     long                pi, pf;
     char               *p;
 
     p = msg;
-    while (zeStrRegex(p, URL_FULL_EXPRESSION, &pi, &pf, TRUE))
-    {
+    while (zeStrRegex(p, URL_FULL_EXPRESSION, &pi, &pf, TRUE)) {
       size_t              size = pf - pi + 16;
       char               *buf = NULL;
 
-      if ((buf = (char *) malloc(size)) != NULL)
-      {
+      if ((buf = (char *) malloc(size)) != NULL) {
         long                i;
         REGEX_REC          *q;
 
         memset(buf, 0, size);
         memcpy(buf, p + pi, pf - pi);
 
-        /* two empty lines end URL */
+        /*
+         * two empty lines end URL 
+         */
         if (zeStrRegex(buf, "(\n\n|\r\r|\r\n\r|\n\r\n)", &i, NULL, TRUE))
           buf[i] = '\0';
 
-        /* Check here against MAIL_URLEXPR */
+        /*
+         * Check here against MAIL_URLEXPR 
+         */
 
-        /* To be filled up */
-        if ((q = (REGEX_REC *) j_table_get_first_ptr(&htbl)) != NULL)
-        {
-          do
-          {
-            if (q->where == MAIL_URLEXPR)
-            {
+        /*
+         * To be filled up 
+         */
+        if ((q = (REGEX_REC *) j_table_get_first_ptr(&htbl)) != NULL) {
+          do {
+            if (q->where == MAIL_URLEXPR) {
               bool                found = FALSE;
               char               *sb;
 
               sb = q->regex;
-              if (sb != NULL)
-              {
+              if (sb != NULL) {
                 ZE_MessageInfo(URLBL_LOG + 2, "%s Checking %s against %s", id,
-                             buf, q->regex);
-                if (zeStrRegex(buf, sb, NULL, NULL, TRUE))
-                {
+                               buf, q->regex);
+                if (zeStrRegex(buf, sb, NULL, NULL, TRUE)) {
                   ZE_MessageNotice(10, "%s URLEXPR : Found %s", id, q->regex);
                   found = TRUE;
                   result += q->score;
@@ -785,8 +758,7 @@ check_rurlbl(id, ip, msg)
             }
           } while ((q = (REGEX_REC *) j_table_get_next_ptr(&htbl)) != NULL);
         }
-      } else
-      {
+      } else {
         ZE_LogSysError("malloc(%d)", size);
         break;
       }
@@ -800,11 +772,11 @@ check_rurlbl(id, ip, msg)
     static int          n = 0;
     char               *env = getenv("URLBL_TIMING");
 
-    if (n < 500 && env != NULL && strcasecmp(env, "yes") == 0)
-    {
+    if (n < 500 && env != NULL && strcasecmp(env, "yes") == 0) {
       time_t              dt = time_ms() - ti;
 
-      ZE_MessageInfo(9, "%s URLBL total handling time = %ld ms (%ld)", id, dt, n);
+      ZE_MessageInfo(9, "%s URLBL total handling time = %ld ms (%ld)", id, dt,
+                     n);
     }
 
     n++;
@@ -820,7 +792,7 @@ check_rurlbl(id, ip, msg)
  *                                                                           *
  *                                                                           *
  *****************************************************************************/
-static ZEDB_T        hdb = ZEDB_INITIALIZER;
+static ZEDB_T       hdb = ZEDB_INITIALIZER;
 
 static              bool
 db_open_rurbl_database()
@@ -831,7 +803,9 @@ db_open_rurbl_database()
   char               *cfdir = NULL;
 
   memset(dbpath, 0, sizeof (dbpath));
-  /* JOE XXX */
+  /*
+   * JOE XXX 
+   */
   cfdir = cf_get_str(CF_CDBDIR);
   if (cfdir == NULL || strlen(cfdir) == 0)
     cfdir = ZE_CDBDIR;
@@ -876,7 +850,9 @@ db_reopen_rurbl_database()
   char               *cfdir = NULL;
 
   memset(dbpath, 0, sizeof (dbpath));
-  /* JOE XXX */
+  /*
+   * JOE XXX 
+   */
   cfdir = cf_get_str(CF_CDBDIR);
   if (cfdir == NULL || strlen(cfdir) == 0)
     cfdir = ZE_CDBDIR;
@@ -924,10 +900,8 @@ db_rurlbl_check(id, url, dest, size, urlbl, szurlbl)
     return 0;
 
   id = STRNULL(id, "NOID");
-  if (!zeDb_OK(&hdb))
-  {
-    if (!db_open_rurbl_database())
-    {
+  if (!zeDb_OK(&hdb)) {
+    if (!db_open_rurbl_database()) {
       db_error++;
       return 0;
     }
@@ -940,21 +914,18 @@ db_rurlbl_check(id, url, dest, size, urlbl, szurlbl)
   {
     char               *p;
 
-    if ((p = strdup(url)) != NULL)
-    {
+    if ((p = strdup(url)) != NULL) {
       char               *q = p;
 
       bool                isIPAddr = FALSE;
 
       isIPAddr = zeStrRegex(url, IPV4_ADDR_REGEX, NULL, NULL, TRUE);
 
-      while (strlen(q) > 0)
-      {
+      while (strlen(q) > 0) {
         snprintf(key, sizeof (key), "URLBL:%s", q);
 
         ZE_MessageInfo(URLBL_LOG + 2, " Will look for %s", key);
-        if (zeDb_GetRec(&hdb, key, value, sizeof (value)))
-        {
+        if (zeDb_GetRec(&hdb, key, value, sizeof (value))) {
           char               *r = strchr(key, ':');
 
           if (r == NULL)
@@ -973,28 +944,25 @@ db_rurlbl_check(id, url, dest, size, urlbl, szurlbl)
 
             n = zeStr2Tokens(value, DBBL_DIM, fields, ":");
 
-            if (fields[DBBL_SCORE] != NULL)
-            {
+            if (fields[DBBL_SCORE] != NULL) {
               res = atoi(fields[DBBL_SCORE]);
               if (res <= 0)
                 res = 1;
             }
-            if (fields[DBBL_ORIGIN] != NULL)
-            {
+            if (fields[DBBL_ORIGIN] != NULL) {
               snprintf(urlbl, szurlbl, "DBURLBL:%s", fields[DBBL_ORIGIN]);
-              ZE_MessageNotice(11, "%s Found in  %s", key, STRNULL(urlbl, "--"));
+              ZE_MessageNotice(11, "%s Found in  %s", key,
+                               STRNULL(urlbl, "--"));
             }
           }
 
           break;
         }
-        if (!isIPAddr)
-        {
+        if (!isIPAddr) {
           if ((q = strchr(q, '.')) == NULL)
             break;
           q++;
-        } else
-        {
+        } else {
           char               *r;
 
           if ((r = strrchr(q, '.')) == NULL)
@@ -1014,7 +982,8 @@ db_rurlbl_check(id, url, dest, size, urlbl, szurlbl)
       level = 9;
 
     ZE_MessageNotice(level, "%s DBURLBL : %s : %3d %s in %s", id, url, res,
-                   STRBOOL(res > 0, "BLACKLISTED", "OK"), STRNULL(urlbl, "--"));
+                     STRBOOL(res > 0, "BLACKLISTED", "OK"), STRNULL(urlbl,
+                                                                    "--"));
   }
 
   zeDb_Unlock(&hdb);
@@ -1037,8 +1006,7 @@ domain_chomp(s)
 
   n = strlen(s) - 1;
 
-  while ((n = strlen(s)) > 0)
-  {
+  while ((n = strlen(s)) > 0) {
     char                c = tolower(s[n - 1]);
 
     if ((c >= 'a') && (c <= 'z'))

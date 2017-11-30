@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -33,8 +34,7 @@
 #define             DEF_TUPLE         "NET,HOST,FULL"
 #define             DEF_TIMES         "0,1000,0,1000"
 
-struct conf_T
-{
+struct conf_T {
   bool                random;
   double              randrange;
   unsigned long       upperlimit;
@@ -82,22 +82,26 @@ main(argc, argv)
     const char         *args = "hvl:c:rR:U:";
     int                 c;
 
-    while ((c = getopt(argc, argv, args)) != -1)
-    {
-      switch (c)
-      {
-          /* help */
+    while ((c = getopt(argc, argv, args)) != -1) {
+      switch (c) {
+          /*
+           * help 
+           */
         case 'h':
           usage(argv[0]);
           exit(0);
           break;
 
-          /* verbose */
+          /*
+           * verbose 
+           */
         case 'v':
           ze_logLevel++;
           break;
 
-          /* log level */
+          /*
+           * log level 
+           */
         case 'l':
           ze_logLevel = atoi(optarg);
           break;
@@ -152,8 +156,7 @@ do_test(conf_T * cargs)
   hostname = "nowhere.foss.jose-marcio.org";
   to = "grey@foss.jose-marcio.org";
 
-  if (cargs->upperlimit < 10)
-  {
+  if (cargs->upperlimit < 10) {
     range = cargs->randrange * cargs->count;
     range = MAX(range, 10);
   } else
@@ -161,11 +164,10 @@ do_test(conf_T * cargs)
 
   atexit(remote_grey_quit);
 
-  memset(ipbuf, 0, sizeof(ipbuf));
+  memset(ipbuf, 0, sizeof (ipbuf));
   ti = time_ms();
   srandom(ti);
-  for (n = 0; n < cargs->count; n++)
-  {
+  for (n = 0; n < cargs->count; n++) {
     int                 r = GREY_OK;
     char               *s = NULL;
     bool                new = FALSE;
@@ -175,20 +177,16 @@ do_test(conf_T * cargs)
     if (cargs->random) {
       rind = random() % range;
 
-      snprintf(ipbuf, sizeof(ipbuf), "1.1.%d.%d",
-	       rind % 255,
-	       random() % 255);
+      snprintf(ipbuf, sizeof (ipbuf), "1.1.%d.%d", rind % 255, random() % 255);
       ip = ipbuf;
-    }
-    else
+    } else
       rind = n;
 
     snprintf(buf, sizeof (buf), "grey-%d@foss.jose-marcio.org", rind);
     to = buf;
 
     r = remote_grey_check(ip, from, to, hostname);
-    switch (r)
-    {
+    switch (r) {
       case GREY_OK:
         s = "OK";
         break;
@@ -202,9 +200,9 @@ do_test(conf_T * cargs)
         s = "REJECT";
         break;
     }
-    if (r == GREY_ERROR)
-    {
-      ZE_MessageInfo(1,"* %7d : Error : %s %s %s %s", n, ip, hostname, from, to);
+    if (r == GREY_ERROR) {
+      ZE_MessageInfo(1, "* %7d : Error : %s %s %s %s", n, ip, hostname, from,
+                     to);
       sleep(1);
     }
   }

@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -33,23 +34,19 @@
  **************************************************************************** */
 #define               DREF     32
 
-typedef struct
-{
+typedef struct {
   uint32_t            tref;
   int                 no;
   int                 npm;
-}
-dbblq_T;
+} dbblq_T;
 
-typedef struct
-{
+typedef struct {
   char                ip[48];
   dbblq_T             data[DREF];
-}
-dbbl_T;
+} dbbl_T;
 
 
-static ZEDB_T        hdb = ZEDB_INITIALIZER;
+static ZEDB_T       hdb = ZEDB_INITIALIZER;
 
 /* ****************************************************************************
  *                                                                            *
@@ -71,7 +68,9 @@ db_open_blacklist()
     res = zeDb_Open(&hdb, work_db_env, path, 0644, FALSE, TRUE, 0);
   zeDb_Unlock(&hdb);
 
-  /* atexit(db_close_blacklist); */
+  /*
+   * atexit(db_close_blacklist); 
+   */
 
   return res;
 }
@@ -118,20 +117,19 @@ db_check_blacklist(ip)
   zeDb_Lock(&hdb);
 
   snprintf(key, sizeof (key), "DNS:Connect:%s", ip);
-  if (zeDb_GetRec(&hdb, key, &value, sizeof (value)))
-  {
+  if (zeDb_GetRec(&hdb, key, &value, sizeof (value))) {
     int                 i;
 
-    for (i = 0; i < DREF; i++)
-    {
-      if (value.data[i].tref + DREF >= tref)
-      {
+    for (i = 0; i < DREF; i++) {
+      if (value.data[i].tref + DREF >= tref) {
         /*
          ** Count data for this... local evaluation 
          */
       }
     }
-    /* global evaluation */
+    /*
+     * global evaluation 
+     */
   }
 
   zeDb_Unlock(&hdb);
@@ -162,8 +160,7 @@ db_update_blacklist(ip, what)
 
   zeDb_Lock(&hdb);
 
-  if (zeDb_GetRec(&hdb, key, &value, sizeof (value)))
-  {
+  if (zeDb_GetRec(&hdb, key, &value, sizeof (value))) {
     if (value.data[iref].tref != tref)
       memset(&value.data[iref], 0, sizeof (value.data[iref]));
   } else
@@ -171,7 +168,9 @@ db_update_blacklist(ip, what)
 
   value.data[iref].tref = tref;
 
-  /* JOE - update rec */
+  /*
+   * JOE - update rec 
+   */
 
   res = zeDb_AddRec(&hdb, key, &value, sizeof (value));
 
@@ -203,23 +202,19 @@ db_blackliste_check(why, key, r)
   zeDb_Lock(&hdb);
 
   snprintf(k, sizeof (k), "%s:%s", why, key);
-  if (zeDb_GetRec(&hdb, k, &v, sizeof (v)))
-  {
+  if (zeDb_GetRec(&hdb, k, &v, sizeof (v))) {
     char               *s, *ptr;
     char               *fields[DIM_BL];
 
     found = TRUE;
     memset(fields, 0, sizeof (fields));
-    if ((r != NULL) && (strlen(v) > 0))
-    {
+    if ((r != NULL) && (strlen(v) > 0)) {
       int                 n = 0;
 
-      for (s = strtok_r(v, ":", &ptr); s != NULL; s = strtok_r(NULL, ":", &ptr))
-      {
+      for (s = strtok_r(v, ":", &ptr); s != NULL; s = strtok_r(NULL, ":", &ptr)) {
         int                 i;
 
-        switch (n)
-        {
+        switch (n) {
           case 0:
             i = atoi(s);
             r->weight = i;
@@ -269,12 +264,11 @@ typedef struct db_map_T
  **************************************************************************** */
 #define   SZPOOL        32
 
-typedef struct blpool_T
-{
+typedef struct blpool_T {
   bool                ok;
   pthread_mutex_t     mutex;
   char               *bl[SZPOOL];
-  ZEDB_T               hdb[SZPOOL];
+  ZEDB_T              hdb[SZPOOL];
 } blpool_T;
 
 static blpool_T     blpool = { FALSE, PTHREAD_MUTEX_INITIALIZER };
@@ -299,14 +293,12 @@ db_map_get_index(bl)
 {
   int                 i;
 
-  if ((bl == NULL) || (strlen(bl) == 0))
-  {
+  if ((bl == NULL) || (strlen(bl) == 0)) {
     ZE_MessageWarning(8, "Blacklist name empty or NULL pointer");
     return -1;
   }
 
-  for (i = 0; (i < SZPOOL) && (blpool.bl[i] != NULL); i++)
-  {
+  for (i = 0; (i < SZPOOL) && (blpool.bl[i] != NULL); i++) {
     if (strcasecmp(bl, blpool.bl[i]) == 0)
       break;
   }
@@ -330,8 +322,7 @@ db_map_open(bl)
   int                 i = 0;
 
 
-  if ((bl == NULL) || (strlen(bl) == 0))
-  {
+  if ((bl == NULL) || (strlen(bl) == 0)) {
     ZE_MessageWarning(8, "Blacklist name empty or NULL pointer");
     return FALSE;
   }
@@ -340,31 +331,27 @@ db_map_open(bl)
 
   i = db_map_get_index(bl);
 
-  if (i < 0)
-  {
+  if (i < 0) {
     ZE_MessageWarning(8,
-                    "Blacklist pool is xxxx - consider increasing it's size");
+                      "Blacklist pool is xxxx - consider increasing it's size");
     DATA_UNLOCK();
     return FALSE;
   }
 
-  if (i >= SZPOOL)
-  {
+  if (i >= SZPOOL) {
     ZE_MessageWarning(8,
-                    "Blacklist pool is full - consider increasing it's size");
+                      "Blacklist pool is full - consider increasing it's size");
     DATA_UNLOCK();
     return FALSE;
   }
 
-  if ((blpool.bl[i] != NULL) || zeDb_OK(&blpool.hdb[i]))
-  {
+  if ((blpool.bl[i] != NULL) || zeDb_OK(&blpool.hdb[i])) {
     ZE_MessageWarning(8, "Blacklist %s already open", bl);
     DATA_UNLOCK();
     return TRUE;
   }
 
-  if ((blpool.bl[i] = strdup(bl)) == NULL)
-  {
+  if ((blpool.bl[i] = strdup(bl)) == NULL) {
     DATA_UNLOCK();
     ZE_LogSysError("strdup(%s) error", bl);
     return FALSE;
@@ -395,8 +382,7 @@ db_map_close(bl)
   bool                res = TRUE;
   int                 i = 0;
 
-  if ((bl == NULL) || (strlen(bl) == 0))
-  {
+  if ((bl == NULL) || (strlen(bl) == 0)) {
     ZE_MessageWarning(8, "Blacklist name empty or NULL pointer");
     return FALSE;
   }
@@ -405,15 +391,13 @@ db_map_close(bl)
 
   i = db_map_get_index(bl);
 
-  if ((i < 0) || (i >= SZPOOL))
-  {
+  if ((i < 0) || (i >= SZPOOL)) {
     ZE_MessageWarning(8, "Blacklist not found");
     DATA_UNLOCK();
     return FALSE;
   }
 
-  if ((blpool.bl[i] == NULL) || !zeDb_OK(&blpool.hdb[i]))
-  {
+  if ((blpool.bl[i] == NULL) || !zeDb_OK(&blpool.hdb[i])) {
     ZE_MessageWarning(8, "Blacklist %s already closed", STRNULL(bl, "(null)"));
     DATA_UNLOCK();
     return TRUE;
@@ -444,8 +428,7 @@ db_map_close_all()
 
   DATA_LOCK();
 
-  for (i = 0; i < SZPOOL; i++)
-  {
+  for (i = 0; i < SZPOOL; i++) {
     FREE(blpool.bl[i]);
 
     if (!zeDb_OK(&blpool.hdb[i]))
@@ -481,44 +464,40 @@ db_map_check(bl, why, key, buf, sz)
   int                 imin = 0, imax = SZPOOL - 1;
   int                 i;
 
-  /* new ... */
-  if ((bl == NULL) || (strlen(bl) == 0))
-  {
+  /*
+   * new ... 
+   */
+  if ((bl == NULL) || (strlen(bl) == 0)) {
     ZE_MessageWarning(8, "Blacklist name empty or NULL pointer");
     return FALSE;
   }
 
   DATA_LOCK();
 
-  if ((bl != NULL) && (strlen(bl) > 0))
-  {
+  if ((bl != NULL) && (strlen(bl) > 0)) {
     i = db_map_get_index(bl);
 
-    if (i < 0)
-    {
+    if (i < 0) {
       ZE_MessageWarning(8,
-                      "Blacklist pool is xxxx - consider increasing it's size");
+                        "Blacklist pool is xxxx - consider increasing it's size");
       DATA_UNLOCK();
       return FALSE;
     }
 
-    if (i >= SZPOOL)
-    {
+    if (i >= SZPOOL) {
       ZE_MessageWarning(8,
-                      "Blacklist pool is full - consider increasing it's size");
+                        "Blacklist pool is full - consider increasing it's size");
       DATA_UNLOCK();
       return FALSE;
     }
     imin = imax = i;
   }
 
-  for (i = imin; i <= imax; i++)
-  {
+  for (i = imin; i <= imax; i++) {
     zeDb_Lock(&blpool.hdb[i]);
 
     snprintf(k, sizeof (k), "%s:%s", why, key);
-    if (zeDb_GetRec(&blpool.hdb[i], k, &v, sizeof (v)))
-    {
+    if (zeDb_GetRec(&blpool.hdb[i], k, &v, sizeof (v))) {
       strlcpy(buf, v, sz);
       found = TRUE;
     }
@@ -550,9 +529,10 @@ db_map_add(bl, why, key, buf)
   bool                ok = FALSE;
   int                 i;
 
-  /* new ... */
-  if ((bl == NULL) || (strlen(bl) == 0))
-  {
+  /*
+   * new ... 
+   */
+  if ((bl == NULL) || (strlen(bl) == 0)) {
     ZE_MessageWarning(8, "Blacklist name empty or NULL pointer");
     return FALSE;
   }
@@ -561,8 +541,7 @@ db_map_add(bl, why, key, buf)
 
   i = db_map_get_index(bl);
 
-  if ((i < 0) || (i >= SZPOOL))
-  {
+  if ((i < 0) || (i >= SZPOOL)) {
     ZE_MessageWarning(8, "Map %s not found !");
     DATA_UNLOCK();
     return FALSE;

@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -31,12 +32,10 @@
  **************************************************************************** */
 #define LOG_LEVEL       11
 
-typedef struct HStat_T
-{
+typedef struct HStat_T {
   time_t              date;
   int                 nb;
-}
-HStat_T;
+} HStat_T;
 
 
 
@@ -52,8 +51,7 @@ HStat_T;
 #define DIM_RAP           (DIM_HI / DIM_LO)
 
 
-struct ThrottleData
-{
+struct ThrottleData {
   bool                ok;
 
   pthread_mutex_t     mutex;
@@ -99,9 +97,10 @@ throttle_init()
 
   THROTTLE_LOCK();
 
-  if (!hdata.ok)
-  {
-    /* Initialisation of connection rate statistics */
+  if (!hdata.ok) {
+    /*
+     * Initialisation of connection rate statistics 
+     */
     memset(hdata.sec, 0, sizeof (hdata.sec));
     memset(hdata.min, 0, sizeof (hdata.min));
     hdata.ok = TRUE;
@@ -157,8 +156,7 @@ add_throttle_entry(t)
 
   i = t % DIM_HI;
 
-  if (hdata.sec[i].date != t)
-  {
+  if (hdata.sec[i].date != t) {
     hdata.sec[i].date = t;
     hdata.sec[i].nb = 0;
   }
@@ -167,8 +165,7 @@ add_throttle_entry(t)
   t >>= DIM_SHFT;
   i = t % DIM_LO;
 
-  if (hdata.min[i].date != t)
-  {
+  if (hdata.min[i].date != t) {
     hdata.min[i].date = t;
     hdata.min[i].nb = 0;
   }
@@ -203,11 +200,9 @@ update_throttle(t)
 
   t0 = t + 1 - DIM_HI;
 
-  for (ti = t0; ti < t + 1; ti++)
-  {
+  for (ti = t0; ti < t + 1; ti++) {
     i = ti % DIM_HI;
-    if (hdata.sec[i].date != ti)
-    {
+    if (hdata.sec[i].date != ti) {
       hdata.sec[i].date = ti;
       hdata.sec[i].nb = 0;
     }
@@ -225,9 +220,9 @@ update_throttle(t)
     kstats_update(&st_min, (double) hdata.min[i].nb);
 
   ZE_MessageInfo(12,
-               "THROTTLE : short=[%7.3f/%7.3f] long=[%7.3f/%7.3f] (mean/std dev)",
-               kmean(&st_sec), kstddev(&st_sec), kmean(&st_min),
-               kstddev(&st_min));
+                 "THROTTLE : short=[%7.3f/%7.3f] long=[%7.3f/%7.3f] (mean/std dev)",
+                 kmean(&st_sec), kstddev(&st_sec), kmean(&st_min),
+                 kstddev(&st_min));
 
   THROTTLE_UNLOCK();
 
@@ -277,31 +272,29 @@ update_throttle_dos()
   gmean = mean = kmean(&stats);
   stddev = kstddev(&stats);
 
-  /* shall see this again later */
+  /*
+   * shall see this again later 
+   */
   dos_current = FALSE;
 
   if (gmean < 10)
     gmean = 10;
 
-  if (last_mean > gmean + DOS_COEF * sqrt(gmean))
-  {
+  if (last_mean > gmean + DOS_COEF * sqrt(gmean)) {
     time_t              now = time(NULL);
 
     if (!dos_current)
       dos_start_time = now;
 
-    if ((dos_last_log == (time_t) 0) && (dos_last_log + HOLD_TIME < now))
-    {
+    if ((dos_last_log == (time_t) 0) && (dos_last_log + HOLD_TIME < now)) {
       ZE_MessageInfo(LOG_LEVEL, "*** DoS - THROTTLE : %7.3f %7.3f %7.3f",
-                    mean, stddev, last_mean);
+                     mean, stddev, last_mean);
       dos_last_log = now;
     }
     dos_current = TRUE;
     return TRUE;
-  } else
-  {
-    if (dos_last_log != (time_t) 0)
-    {
+  } else {
+    if (dos_last_log != (time_t) 0) {
       ZE_MessageInfo(LOG_LEVEL, "*** DoS - THROTTLE : END");
       dos_last_log = (time_t) 0;
     }
@@ -326,7 +319,7 @@ log_throttle_stats()
 
   if (cf_get_int(CF_LOG_THROTTLE) == OPT_YES)
     ZE_MessageInfo(9, "THROTTLE STAT : %7.3f %7.3f %7.3f", mean, stddev,
-                 last_mean);
+                   last_mean);
 }
 
 /* ****************************************************************************
@@ -343,8 +336,7 @@ poisson_upper_bound(lambda, prob)
 
   sum = tmp = exp(-lambda);
 
-  while (sum < prob)
-  {
+  while (sum < prob) {
     i++;
     tmp *= lambda / i;
     sum += tmp;

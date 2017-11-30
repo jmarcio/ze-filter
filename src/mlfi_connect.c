@@ -107,7 +107,7 @@ mlfi_connect(ctx, hostname, hostaddr)
 
     if (nx++ < 10)
       ZE_MessageInfo(10,
-                   "private storage area already allocated for this connection");
+                     "private storage area already allocated for this connection");
   }
 
 
@@ -207,10 +207,10 @@ mlfi_connect(ctx, hostname, hostaddr)
 
     if (cf_get_int(CF_CLUSTER) == OPT_YES)
       ZE_MessageNotice(9, "%s-%s : %s Connect from %s", CONNID_STR(priv->id),
-                     mailserver, daemon, buf);
+                       mailserver, daemon, buf);
     else
-      ZE_MessageNotice(9, "%s : %s Connect from %s", CONNID_STR(priv->id), daemon,
-                     buf);
+      ZE_MessageNotice(9, "%s : %s Connect from %s", CONNID_STR(priv->id),
+                       daemon, buf);
   }
 
   if (client_addr != NULL && client_ptr != NULL) {
@@ -218,7 +218,7 @@ mlfi_connect(ctx, hostname, hostaddr)
       if (STRCASEEQUAL(client_ptr, "localhost") ||
           STRNCASEEQUAL(client_ptr, "localhost.", strlen("localhost."))) {
         ZE_MessageNotice(9, "%s Fake localhost : ADDR=%s PTR=%s",
-                       CONNID_STR(priv->id), client_addr, client_ptr);
+                         CONNID_STR(priv->id), client_addr, client_ptr);
       }
     }
   }
@@ -259,8 +259,9 @@ mlfi_connect(ctx, hostname, hostaddr)
     res = SMFIS_TEMPFAIL;
 
     log_msg_context(ctx, MSG_NO_PEER_HOSTNAME);
-    ZE_MessageInfo(9, "%s %s : hostname parameter NULL : name=%s addr=%s ptr=%s",
-                 CONNID_STR(priv->id), ident, name, addr, ptr);
+    ZE_MessageInfo(9,
+                   "%s %s : hostname parameter NULL : name=%s addr=%s ptr=%s",
+                   CONNID_STR(priv->id), ident, name, addr, ptr);
 
     goto fin;
   }
@@ -279,8 +280,9 @@ mlfi_connect(ctx, hostname, hostaddr)
     res = SMFIS_TEMPFAIL;
 
     log_msg_context(ctx, "Can't get client IP address");
-    ZE_MessageInfo(9, "%s %s : hostname parameter NULL : name=%s addr=%s ptr=%s",
-                 CONNID_STR(priv->id), ident, name, addr, ptr);
+    ZE_MessageInfo(9,
+                   "%s %s : hostname parameter NULL : name=%s addr=%s ptr=%s",
+                   CONNID_STR(priv->id), ident, name, addr, ptr);
 
     goto fin;
   }
@@ -290,7 +292,7 @@ mlfi_connect(ctx, hostname, hostaddr)
    */
   {
     ZE_MessageInfo(15, "%s Let's get {client_resolve} value",
-                 CONNID_STR(priv->id));
+                   CONNID_STR(priv->id));
 
     res_resolve = RESOLVE_NULL;
     if (client_resolve != NULL) {
@@ -306,10 +308,11 @@ mlfi_connect(ctx, hostname, hostaddr)
         res_resolve = RESOLVE_TEMPFAIL;
       else
         ZE_MessageWarning(9, "%s {client_resolve} returned %s",
-                        CONNID_STR(priv->id), client_resolve);
+                          CONNID_STR(priv->id), client_resolve);
     }
     ZE_MessageInfo(15, "%s Resolve result : %s %s", CONNID_STR(priv->id),
-                 STRNULL(client_addr, "unknown"), STRNULL(client_resolve, ""));
+                   STRNULL(client_addr, "unknown"), STRNULL(client_resolve,
+                                                            ""));
     priv->resolve_res = res_resolve;
   }
 
@@ -331,7 +334,7 @@ mlfi_connect(ctx, hostname, hostaddr)
 
           if (!jinet_ntop(AF_INET, &sin->sin_addr, ip, sizeof (ip))) {
             ZE_MessageError(8, "%08lX mlfi_connect : inet_ntop : %s", conn_id,
-                          strerror(errno));
+                            strerror(errno));
             (void) jsmfi_setreply(ctx, "421", "4.5.1",
                                   "Unknown network error. Try again later !");
             res = SMFIS_TEMPFAIL;
@@ -347,7 +350,7 @@ mlfi_connect(ctx, hostname, hostaddr)
 
           if (!jinet_ntop(AF_INET6, &sin6->sin6_addr, ip, sizeof (ip))) {
             ZE_MessageError(8, "%08lX mlfi_connect : inet_ntop : %s", conn_id,
-                          strerror(errno));
+                            strerror(errno));
             (void) jsmfi_setreply(ctx, "421", "4.5.1",
                                   "Unknown network error. Try again later !");
             res = SMFIS_TEMPFAIL;
@@ -358,12 +361,12 @@ mlfi_connect(ctx, hostname, hostaddr)
         break;
       default:
         ZE_MessageWarning(10, "%s : Unknown address family : %d",
-                        CONNID_STR(priv->id), addr_family);
+                          CONNID_STR(priv->id), addr_family);
         break;
     }
     priv->addr_family = addr_family;
     ZE_MessageInfo(11, "%s Got IP : %s : family %d", CONNID_STR(priv->id), ip,
-                 addr_family);
+                   addr_family);
   }
 
   if ((strlen(ip) > 0) && ((priv->peer_addr = strdup(ip)) == NULL)) {
@@ -397,17 +400,17 @@ mlfi_connect(ctx, hostname, hostaddr)
     name = sm_macro_get_str(priv->sm, "{client_name}");
     if (name == NULL || strlen(name) == 0) {
       ZE_MessageInfo(11, "%-15s Can't get {client_name} macro value for : %-6s",
-                   CONNID_STR(priv->id), ip);
+                     CONNID_STR(priv->id), ip);
       name = hostname;
     }
     if (name == NULL || strlen(name) == 0) {
       ZE_MessageInfo(11, "%-15s Can't get hostname parameter value for : %-6s",
-                   CONNID_STR(priv->id), ip);
+                     CONNID_STR(priv->id), ip);
       name = sm_macro_get_str(priv->sm, "{client_ptr}");
     }
     if (name == NULL || strlen(name) == 0) {
       ZE_MessageInfo(11, "%-15s Can't get {client_ptr} macro value for : %-6s",
-                   CONNID_STR(priv->id), ip);
+                     CONNID_STR(priv->id), ip);
     }
 
     if (name != NULL && STRCASEEQUAL(name, "unknown")) {
@@ -454,10 +457,10 @@ mlfi_connect(ctx, hostname, hostaddr)
     if (badname) {
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
         ZE_MessageInfo(9, "%s SPAM CHECK - Invalid priv->peer_name %s",
-                     CONNID_STR(priv->id), priv->peer_name);
+                       CONNID_STR(priv->id), priv->peer_name);
       if (0) {
         ZE_MessageInfo(9, "%s - %s Invalid hostname %s",
-                     CONNID_STR(priv->id), priv->peer_addr, priv->peer_name);
+                       CONNID_STR(priv->id), priv->peer_addr, priv->peer_name);
 
         (void) jsmfi_setreply(ctx, "421", "4.5.1", "Invalid priv->peer_name !");
         res = SMFIS_TEMPFAIL;
@@ -495,9 +498,9 @@ hostname_check_ok:
     if (check_iprbwl_table(CONNID_STR(priv->id), ip, hostname, &priv->rbwl) !=
         0) {
       ZE_MessageInfo(12,
-                   "%s RBWL check list=(%s) code=(%s) class=(%s) addr=(%s) name=(%s)",
-                   CONNID_STR(priv->id), priv->rbwl.rbwl, priv->rbwl.code,
-                   priv->rbwl.netclass, ip, hostname);
+                     "%s RBWL check list=(%s) code=(%s) class=(%s) addr=(%s) name=(%s)",
+                     CONNID_STR(priv->id), priv->rbwl.rbwl, priv->rbwl.code,
+                     priv->rbwl.netclass, ip, hostname);
 
       strlcpy(priv->netclass.label, priv->rbwl.netclass,
               sizeof (priv->netclass.label));
@@ -538,7 +541,7 @@ hostname_check_ok:
 
     if (n++ < 1000)
       ZE_MessageInfo(11, "%s : %15s %-17s %s", CONNID_STR(priv->id),
-                   priv->netclass.label, ip, hostname);
+                     priv->netclass.label, ip, hostname);
   }
 
   /*
@@ -547,7 +550,7 @@ hostname_check_ok:
   serv_rate = smtprate_add_entry(RATE_CONN, ip, hostname, 1, conn_id);
   priv->serv_rate = serv_rate;
   ZE_MessageInfo(15, "%s Server connection rate : %d", CONNID_STR(priv->id),
-               serv_rate);
+                 serv_rate);
 
   /*
    ** Check global CPU load

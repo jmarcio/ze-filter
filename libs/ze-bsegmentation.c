@@ -378,7 +378,7 @@ extract_word_tokens(cf, prefix, separator, buf, kind, bm, level)
 
   level++;
 
-  zeStr2Upper(buf);
+  zeStr2Lower(buf);
 
   for (stok = strtok_r(buf, separator, &ptr); stok != NULL;
        stok = strtok_r(NULL, separator, &ptr))
@@ -891,7 +891,7 @@ extract_char_tokens(cf, prefix, separator, buf, kind, bm, level)
 
   level++;
 
-  zeStr2Upper(buf);
+  zeStr2Lower(buf);
   {
     char               *p, *q, cp, cc;
     bool                blank = FALSE;

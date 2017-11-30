@@ -464,7 +464,7 @@ smtprate_add_entry(which, key, name, nb, t)
   n = calc_bucket_rate(hdata.gres.Srate, which, t, rateDef[which].wsz);
 
   ZE_LogMsgInfo(DEBUG_LEVEL, "Global rate : %s : %d %d", key, n,
-               hdata.gres.rate[which]);
+                hdata.gres.rate[which]);
 
   DATA_UNLOCK();
 
@@ -571,7 +571,7 @@ smtprate_cleanup_table(now, win)
 
 #if _PERIODIC_DEBUG
   ZE_MessageInfo(9, "smtprate_cleanup_table : before  : %d nodes",
-               jbt_count(&hdata.db_rate));
+                 jbt_count(&hdata.db_rate));
 #endif
 
   if (!jbt_cleanup(&hdata.db_rate, cleanup_select, &win))
@@ -579,7 +579,7 @@ smtprate_cleanup_table(now, win)
 
 #if _PERIODIC_DEBUG
   ZE_MessageInfo(9, "smtprate_cleanup_table : after   : %d nodes",
-               jbt_count(&hdata.db_rate));
+                 jbt_count(&hdata.db_rate));
 #endif
 
   hdata.last_update = now;
@@ -618,7 +618,7 @@ smtprate_update_table(w_width)
 
 #if _PERIODIC_DEBUG
   ZE_MessageInfo(9, "smtprate_update_table : before  : %d nodes",
-               jbt_count(&hdata.db_rate));
+                 jbt_count(&hdata.db_rate));
 #endif
 
 #if 0
@@ -701,14 +701,14 @@ smtprate_update_table(w_width)
       continue;
 
     ZE_LogMsgInfo(DEBUG_LEVEL, "Global %-16s : %d",
-                 rateDef[which].name, hdata.gres.rate[which]);
+                  rateDef[which].name, hdata.gres.rate[which]);
   }
 
   ZE_LogMsgInfo(DEBUG_LEVEL, "SMTP Rates update OK !");
 
 #if _PERIODIC_DEBUG
   ZE_MessageInfo(9, "smtprate_update_table : after   : %d nodes",
-               jbt_count(&hdata.db_rate));
+                 jbt_count(&hdata.db_rate));
 #endif
 
   hdata.last = now;
@@ -760,7 +760,7 @@ smtprate_save_table(filename)
       continue;
 
     ZE_LogMsgInfo(DEBUG_LEVEL, "Saving \"%s\" history file : %s",
-                 rateDef[which].name, rateDef[which].fname);
+                  rateDef[which].name, rateDef[which].fname);
 
     snprintf(fname, sizeof (fname), "%s/%s", work_dir, rateDef[which].fname);
     if ((fd = open(fname, O_WRONLY | O_CREAT | O_TRUNC, 00644)) >= 0) {
@@ -813,7 +813,7 @@ smtprate_read_table(filename)
       continue;
 
     ZE_LogMsgInfo(DEBUG_LEVEL, "Reading \"%s\" history file : %s",
-                 rateDef[which].name, rateDef[which].fname);
+                  rateDef[which].name, rateDef[which].fname);
 
     snprintf(fname, sizeof (fname), "%s/%s", work_dir, rateDef[which].fname);
     if ((fd = open(fname, O_RDONLY)) >= 0) {
@@ -864,7 +864,7 @@ smtprate_log_table()
   for (i = 0; i < hdata.conn_nb; i++) {
     if (hdata.rate_res[i].nb > 5)
       ZE_MessageInfo(10, " CONN THROTTLE : %-16s %5d",
-                   hdata.rate_res[i].ip, hdata.rate_res[i].nb);
+                     hdata.rate_res[i].ip, hdata.rate_res[i].nb);
   }
 #endif
 }

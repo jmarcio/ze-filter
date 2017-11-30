@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -140,10 +141,8 @@ clean_tag_value(fname)
 
   p = q = fname;
 
-  while (*p)
-  {
-    switch (*p)
-    {
+  while (*p) {
+    switch (*p) {
       case '"':
       case '\r':
       case '\n':
@@ -172,11 +171,11 @@ clean_tag_value(fname)
 #endif
 
 #if 1
-# define   RE_CT "Content-type[ \t]*:"
-# define   RE_CD "Content-disposition[ \t]*:"
+#define   RE_CT "Content-type[ \t]*:"
+#define   RE_CD "Content-disposition[ \t]*:"
 #else
-# define   RE_CT "^Content-type[ \t]*:"
-# define   RE_CD "^Content-disposition[ \t]*:"
+#define   RE_CT "^Content-type[ \t]*:"
+#define   RE_CD "^Content-disposition[ \t]*:"
 #endif
 
 #if 1
@@ -185,16 +184,14 @@ clean_tag_value(fname)
 #define   RE_UU "^begin(-base64)?[ \t]{1,}[0]?[0-7]{3,3}[ \t]{1,}[^\t\r\n]{1,}"
 #endif
 
-typedef struct REGEX_T
-{
+typedef struct REGEX_T {
   bool                ok;
   pthread_mutex_t     mutex;
 
   regex_t             re_ct;
   regex_t             re_cd;
   regex_t             re_uu;
-}
-REGEX_T;
+} REGEX_T;
 
 static REGEX_T      RE = { FALSE, PTHREAD_MUTEX_INITIALIZER };
 
@@ -210,36 +207,31 @@ init_regex()
 {
   SCAN_REGEX_LOCK();
 
-  if (!RE.ok)
-  {
+  if (!RE.ok) {
     int                 r = 0;
     bool                ok = TRUE;
     char                sout[256];
 
     memset(sout, 0, sizeof (sout));
-    if ((r = regcomp(&RE.re_ct, RE_CT, REGCOMP_FLAGS)) != 0)
-    {
+    if ((r = regcomp(&RE.re_ct, RE_CT, REGCOMP_FLAGS)) != 0) {
       regerror(r, &RE.re_ct, sout, sizeof (sout));
       ZE_LogMsgError(0, "regcomp error : %d %s", r, sout);
       ok = FALSE;
     }
 
-    if ((r = regcomp(&RE.re_cd, RE_CD, REGCOMP_FLAGS)) != 0)
-    {
+    if ((r = regcomp(&RE.re_cd, RE_CD, REGCOMP_FLAGS)) != 0) {
       regerror(r, &RE.re_cd, sout, sizeof (sout));
       ZE_LogMsgError(0, "regcomp error : %d %s", r, sout);
       ok = FALSE;
     }
 
-    if ((r = regcomp(&RE.re_uu, RE_UU, REGCOMP_FLAGS)) != 0)
-    {
+    if ((r = regcomp(&RE.re_uu, RE_UU, REGCOMP_FLAGS)) != 0) {
       regerror(r, &RE.re_uu, sout, sizeof (sout));
       ZE_LogMsgError(0, "regcomp error : %d %s", r, sout);
       ok = FALSE;
     }
 
-    if (!ok)
-    {
+    if (!ok) {
       regfree(&RE.re_ct);
       regfree(&RE.re_cd);
       regfree(&RE.re_uu);
@@ -268,8 +260,7 @@ regex_lookup(re, buf, pi, pf)
     return FALSE;
 
   SCAN_REGEX_LOCK();
-  if ((ok = (regexec(re, buf, 1, &pm, REGEXEC_FLAGS) == 0)) == TRUE)
-  {
+  if ((ok = (regexec(re, buf, 1, &pm, REGEXEC_FLAGS) == 0)) == TRUE) {
     if (pi != NULL)
       *pi = pm.rm_so;
     if (pf != NULL)
@@ -311,11 +302,9 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
   if (id == NULL)
     id = "";
 
-  if (!RE.ok)
-  {
+  if (!RE.ok) {
     ZE_LogMsgInfo(11, "Initialising REGEX structure");
-    if (!init_regex())
-    {
+    if (!init_regex()) {
       ZE_LogMsgError(0, "Unable to initialise REGEX structure");
       return 9;
     }
@@ -324,8 +313,7 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
   nok = 0;
 
   p = new;
-  for (i = sz_new; i > 0; i--, p++)
-  {
+  for (i = sz_new; i > 0; i--, p++) {
     if (*p == '\0')
       *p = ' ';
   }
@@ -334,22 +322,19 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
   strncpy(old, chunk, sizeof (old) - 1);
 
 #if MALLOC_WORK == 1
-  if ((work = malloc(SZ_WORK + 1)) == NULL)
-  {
+  if ((work = malloc(SZ_WORK + 1)) == NULL) {
     ZE_LogSysError("%-12s : malloc work error", id);
     return 15;
   }
 #endif
 
   memset(work, 0, SZ_WORK + 1);
-  while (nok < sz_new)
-  {
+  while (nok < sz_new) {
     char               *last_rc;
 
-    if (strlen(old) > SZ_WORK)
-    {
+    if (strlen(old) > SZ_WORK) {
       ZE_LogMsgNotice(0, "%-12s scan_block : strlen(old) = %ld", id,
-                     (long) strlen(old));
+                      (long) strlen(old));
       *old = '\0';
       result = 3;
       break;
@@ -359,18 +344,20 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
     memset(old, 0, sizeof (old));
     *old = '\0';
 
-    /* a revoir ... */
+    /*
+     * a revoir ... 
+     */
     szc = (sz_new - nok) >= SZ_P ? SZ_P : sz_new - nok;
 
-    if (strlen(work) + szc > SZ_WORK)
-    {
-      /* Feb 24 00:30:08 paris ze-filter[19028]: [ID 447404 local5.warning] scan_block : 
-         strlen(work) + szc = 130975
-         Feb 24 00:30:08 paris sendmail[17502]: [ID 801593 mail.error] g1NNU6WZ017502:
-         milter_read(ze-filter): cmd read returned 0, expecting 5
+    if (strlen(work) + szc > SZ_WORK) {
+      /*
+       * Feb 24 00:30:08 paris ze-filter[19028]: [ID 447404 local5.warning] scan_block : 
+       * strlen(work) + szc = 130975
+       * Feb 24 00:30:08 paris sendmail[17502]: [ID 801593 mail.error] g1NNU6WZ017502:
+       * milter_read(ze-filter): cmd read returned 0, expecting 5
        */
       ZE_LogMsgNotice(0, "%-12s scan_block : strlen(work) + szc = %ld, %ld",
-                     id, (long) (strlen(work) + szc), (long) szc);
+                      id, (long) (strlen(work) + szc), (long) szc);
       last_rc = NULL;
       result = 4;
       break;
@@ -379,51 +366,55 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
     nok += szc;
     p[szc] = '\0';
 
-    if (strcspn(p, "\r\n") > SZ_FREE)
-    {
+    if (strcspn(p, "\r\n") > SZ_FREE) {
       ZE_LogMsgNotice(0, "%-12s scan_block : trying a buffer overflow ??? "
-                     "linelenght : %ld; strlen : %ld", id, (long) strcspn(p,
-                                                                          "\r\n"),
-                     (long) strlen(p));
+                      "linelenght : %ld; strlen : %ld", id, (long) strcspn(p,
+                                                                           "\r\n"),
+                      (long) strlen(p));
 
       last_rc = NULL;
       result = 5;
       break;
     }
 
-    /* trouver le dernier NL */
+    /*
+     * trouver le dernier NL 
+     */
     last_rc = strrchr(work, '\n');
-    /* s'il n'y a pas de NL, on cherche le dernier RC */
+    /*
+     * s'il n'y a pas de NL, on cherche le dernier RC 
+     */
     if (last_rc == NULL)
       last_rc = strrchr(work, '\r');
 
-    /* separer le buffer en deux : avant et apres le RC */
+    /*
+     * separer le buffer en deux : avant et apres le RC 
+     */
     if (last_rc != NULL)
       *last_rc = '\0';
 
-    if (last_rc == NULL && strlen(work) > SZ_P)
-    {
+    if (last_rc == NULL && strlen(work) > SZ_P) {
       ZE_LogMsgError(0, "ERROR : scanmail strlen(work) = %ld result = 6",
-                    (long) strlen(work));
+                     (long) strlen(work));
       result = 6;
       break;
     }
 
-    /* traiter la premiere partie */
+    /*
+     * traiter la premiere partie 
+     */
     p = work;
-    while (result == 0)
-    {
+    while (result == 0) {
       long                d1, d2, d3, d4, d;
       char                sout[MAX_LINE];
 
       if (p == NULL || *p == '\0')
         break;
 
-      /* 
+      /*
        ** ST_INIT
        */
-      if (*state == ST_INIT)
-      {
+      if (*state == ST_INIT) {
         regmatch_t          pm_cd, pm_ct, pm_uu;
         bool                ok_cd, ok_ct, ok_uu;
 
@@ -438,8 +429,7 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
         ok_uu = (regexec(&RE.re_uu, p, 1, &pm_uu, REGEXEC_FLAGS) == 0);
         SCAN_REGEX_UNLOCK();
 
-        if (ok_uu)
-        {
+        if (ok_uu) {
           long                duu, dcd, dct;
 
           duu = pm_uu.rm_so;
@@ -449,25 +439,27 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
             dcd = pm_cd.rm_so;
           if (ok_ct)
             dct = pm_ct.rm_so;
-          if (min3(duu, dcd, dct) == duu)
-          {
+          if (min3(duu, dcd, dct) == duu) {
             char               *t = sout;
             char                fname[MAX_LINE];
 
-            /* XXX */
+            /*
+             * XXX 
+             */
             zeSafeStrnCpy(sout, sizeof (sout), &p[pm_uu.rm_so],
-                         pm_uu.rm_eo - pm_uu.rm_so);
+                          pm_uu.rm_eo - pm_uu.rm_so);
             t += strcspn(t, " \t");
             t += strspn(t, " \t");
             t += strcspn(t, " \t");
             t += strspn(t, " \t");
             memset(fname, 0, sizeof (fname));
-            /* XXX */
+            /*
+             * XXX 
+             */
             zeSafeStrnCpy(fname, sizeof (fname), t, strcspn(t, " \t\r\n"));
 
             ZE_MessageInfo(10, "fname : %s", fname);
-            if (is_rfc2047_encoded(fname))
-            {
+            if (is_rfc2047_encoded(fname)) {
               char                tmp[MAX_LINE];
 
               decode_rfc2047(tmp, fname, sizeof (tmp));
@@ -475,8 +467,7 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
 
               ZE_MessageInfo(19, "fname 2047 : %s", fname);
             }
-            if (is_rfc2231_encoded(fname))
-            {
+            if (is_rfc2231_encoded(fname)) {
               char                tmp[MAX_LINE];
 
               decode_rfc2231(tmp, fname, sizeof (tmp));
@@ -486,8 +477,7 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
             }
             content->field_type = CT_UUFILE;
             content->value = strdup(fname);
-            if (content->value == NULL)
-            {
+            if (content->value == NULL) {
               ZE_LogSysError("Error strdup CT_UUFILE %s", fname);
             }
             p += pm_uu.rm_eo;
@@ -495,47 +485,39 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
           }
         }
 
-        if (ok_cd || ok_ct)
-        {
+        if (ok_cd || ok_ct) {
           int                 pi = 0;
 
           *state = ST_VALUE;
-          if (ok_cd)
-          {
+          if (ok_cd) {
             pi = pm_cd.rm_eo;
             content->field_type = CT_DISP;
           }
-          if (ok_ct)
-          {
+          if (ok_ct) {
             pi = pm_ct.rm_eo;
             content->field_type = CT_TYPE;
           }
-          if (ok_ct && ok_cd)
-          {
-            if (pm_cd.rm_eo < pm_ct.rm_eo)
-            {
+          if (ok_ct && ok_cd) {
+            if (pm_cd.rm_eo < pm_ct.rm_eo) {
               pi = pm_cd.rm_eo;
               content->field_type = CT_DISP;
-            } else
-            {
+            } else {
               pi = pm_ct.rm_eo;
               content->field_type = CT_TYPE;
             }
           }
           p += pi;
           continue;
-        } else
-        {
+        } else {
           p += strlen(p);
           break;
         }
       }
 
-      /* 
+      /*
        ** ST_VALUE
        */
-      if (*state == ST_VALUE)
-      {
+      if (*state == ST_VALUE) {
         ZE_MessageDebug(20, "STATE ---> ST_VALUE");
         p += strspn(p, " \t\r\n");
         if (*p == '\0')
@@ -543,68 +525,73 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
 
         d = strcspn(p, " \t\r\n;");
         if (d >= sizeof (sout))
-          ZE_LogMsgNotice(0, "%-12s scan_block : d >= sizeof(sout) = %ld", id, d);
+          ZE_LogMsgNotice(0, "%-12s scan_block : d >= sizeof(sout) = %ld", id,
+                          d);
         d = zeSafeStrnCpy(sout, sizeof (sout), p, d);
-        /*sout[d] = '\0'; */
+        /*
+         * sout[d] = '\0'; 
+         */
         p += d;
 
-        while (*state == ST_VALUE)
-        {
-          /* end of buffer */
-          if (*p == '\0')
-          {
+        while (*state == ST_VALUE) {
+          /*
+           * end of buffer 
+           */
+          if (*p == '\0') {
             *state = ST_CHECK;
             break;
           }
-          /* end of line */
-          if ((d = strspn(p, "\r\n")) > 0)
-          {
+          /*
+           * end of line 
+           */
+          if ((d = strspn(p, "\r\n")) > 0) {
             p += d;
             *state = ST_CHECK;
             break;
           }
-          /* another attribute */
-          if ((d = strcspn(p, ";")) == 0)
-          {
+          /*
+           * another attribute 
+           */
+          if ((d = strcspn(p, ";")) == 0) {
             p++;
             *state = ST_TOKEN;
             break;
           }
-          if ((d = strspn(p, " \t;")) > 0)
-          {
+          if ((d = strspn(p, " \t;")) > 0) {
             d1 = strspn(p, " \t");
             d2 = strspn(p, " \t;");
             d3 = strspn(p, " \t\r\n");
             d4 = strlen(p);
 
-            /* XXX */
+            /*
+             * XXX 
+             */
             d = min4(d1, d2, d3, d4);
-            if (d == d4)
-            {
+            if (d == d4) {
               *state = ST_CHECK;
               break;
             }
-            if (d == d3)
-            {
+            if (d == d3) {
               p += d;
               *state = ST_CHECK;
               break;
             }
-            if (d == d2)
-            {
+            if (d == d2) {
               p += d;
               *state = ST_TOKEN;
               break;
             }
             d = strlen(sout);
-            /* XXX a voir - JOE 31/01/02 */
-            if (d + d1 < sizeof (sout))
-            {
+            /*
+             * XXX a voir - JOE 31/01/02 
+             */
+            if (d + d1 < sizeof (sout)) {
               strncat(sout, p, d1);
               sout[d + d1] = '\0';
             } else
-              ZE_LogMsgNotice(0, "%-12s scan_block : d + d1 >= sizeof(sout) = %ld",
-                             id, d + d1);
+              ZE_LogMsgNotice(0,
+                              "%-12s scan_block : d + d1 >= sizeof(sout) = %ld",
+                              id, d + d1);
 
             content->value = strdup(sout);
             p += d;
@@ -620,21 +607,18 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
         continue;
       }
 
-      /* 
+      /*
        ** ST_CHECK
        */
-      if (*state == ST_CHECK)
-      {
+      if (*state == ST_CHECK) {
         ZE_MessageDebug(20, "STATE ---> ST_CHECK");
         d = strspn(p, " \t\r\n");
         p += d;
-        if (*p == '\0')
-        {
+        if (*p == '\0') {
           *state = ST_CHECK;
           continue;
         }
-        if (*p == ';')
-        {
+        if (*p == ';') {
           p++;
           *state = ST_TOKEN;
           continue;
@@ -643,11 +627,10 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
         continue;
       }
 
-      /* 
+      /*
        ** ST_TOKEN
        */
-      if (*state == ST_TOKEN)
-      {
+      if (*state == ST_TOKEN) {
         char                name[MAX_LINE];
         char                value[MAX_LINE];
 
@@ -658,27 +641,33 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
         d1 = strascii(p, TSPECIALS, "");
         d2 = strcspn(p, "=");
         d3 = strascii(p, TSPECIALS, "");
-        /* 27/07/2004 - bug from some virus - including spaces in tags... 8-( */
+        /*
+         * 27/07/2004 - bug from some virus - including spaces in tags... 8-( 
+         */
         d4 = strcspn(p, "\t");
         d = min4(d1, d2, d3, d4);
-        /* why ??? */
-        if (d == strlen(p))
-        {
+        /*
+         * why ??? 
+         */
+        if (d == strlen(p)) {
           p += d;
           continue;
         }
-        /* deux champs */
-        if (d == d2)
-        {
+        /*
+         * deux champs 
+         */
+        if (d == d2) {
           int                 rfc2231_code = 0;
 
           if (d >= sizeof (name))
-            ZE_LogMsgNotice(0, "%-12s scan_block : d >= sizeof(name) = %ld", id, d);
-          /* XXX */
+            ZE_LogMsgNotice(0, "%-12s scan_block : d >= sizeof(name) = %ld", id,
+                            d);
+          /*
+           * XXX 
+           */
           d = zeSafeStrnCpy(name, sizeof (name), p, d);
           name[d] = '\0';
-          if (name[d - 1] == '*')
-          {
+          if (name[d - 1] == '*') {
             rfc2231_code = 1;
             name[d - 1] = '\0';
           }
@@ -690,27 +679,27 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
           ZE_MessageDebug(20, "      NAME   : %s", name);
 
           p++;
-          /* decoder le deuxieme champs */
-          if (*p == '"')
-          {
+          /*
+           * decoder le deuxieme champs 
+           */
+          if (*p == '"') {
             p++;
             d = strcspn(p, "\"\r\n");
-          } else
-          {
+          } else {
             int                 dx = strcspn(p, "; \t\r\n");
 
             d = strascii(p, TSPECIALS, "");
             if (dx > d)
               d = dx;
-            /* bug de Klez */
-            if (1)
-            {
+            /*
+             * bug de Klez 
+             */
+            if (1) {
               int                 da, db;
 
               da = strcspn(p, "\r\n");
               db = strcspn(p, ";\r\n");
-              if (da == db && da > 0 && db > 0)
-              {
+              if (da == db && da > 0 && db > 0) {
                 char                tmpstr[MAX_LINE];
 
                 da = zeSafeStrnCpy(tmpstr, sizeof (tmpstr), p, da);
@@ -723,23 +712,21 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
             }
           }
           if (d >= sizeof (value))
-            ZE_LogMsgNotice(0, "%-12s scan_block : d >= sizeof(value) = %ld", id,
-                           d);
+            ZE_LogMsgNotice(0, "%-12s scan_block : d >= sizeof(value) = %ld",
+                            id, d);
           d = zeSafeStrnCpy(value, sizeof (value), p, d);
           value[d] = '\0';
           p += d;
           if (*p == '"')
             p++;
 
-          if (is_rfc2047_encoded(value))
-          {
+          if (is_rfc2047_encoded(value)) {
             char                sout[1024];
 
             decode_rfc2047(sout, value, sizeof (sout));
             strlcpy(value, sout, sizeof (value));
           }
-          if (is_rfc2231_encoded(value))
-          {
+          if (is_rfc2231_encoded(value)) {
             char                sout[1024];
 
             decode_rfc2231(sout, value, sizeof (sout));
@@ -753,12 +740,13 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
           continue;
         }
 
-        /* un seul champs */
-        if (d == d4)
-        {
+        /*
+         * un seul champs 
+         */
+        if (d == d4) {
           if (d >= sizeof (sout))
             ZE_LogMsgNotice(0, "%-12s scan_block : d >= sizeof(sout) = %ld (2)",
-                           id, d);
+                            id, d);
           d = zeSafeStrnCpy(sout, sizeof (sout), p, d);
           sout[d] = '\0';
 
@@ -775,17 +763,17 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
       break;
     }
 
-    /* retourner le reste dans old */
-    if (last_rc != NULL)
-    {
+    /*
+     * retourner le reste dans old 
+     */
+    if (last_rc != NULL) {
       size_t              sz;
 
       sz = strlen((char *) (last_rc + 1));
-      if (strlen((char *) (last_rc + 1)) >= sizeof (old))
-      {
+      if (strlen((char *) (last_rc + 1)) >= sizeof (old)) {
         strlcpy(old, "", sizeof (old));
         ZE_LogMsgNotice(0, "scan_block : strlen(last_rc + 1) = %ld > SZ_CHUNK",
-                       (long) sz);
+                        (long) sz);
         result = 7;
         break;
       }
@@ -799,7 +787,7 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
     strlcpy(chunk, old, sz_chunk);
   else
     ZE_LogMsgNotice(0, "scan_block : sizeof(old) = %ld > SZ_CHUNK",
-                   (long) strlen(old));
+                    (long) strlen(old));
 
 #if MALLOC_WORK == 1
   if (work != NULL)
@@ -822,8 +810,7 @@ old_scan_block(id, chunk, sz_chunk, new, sz_new, state, content, list)
 #define   NRE_CD "Content-disposition[ \t]*:"
 #define   NRE_UU "begin(-base64){0,1}[ \t]{1,}[0]{0,1}[0-7]{3,3}[ \t]{1,}[^\t\r\n]{1,}"
 
-struct scan_state_T
-{
+struct scan_state_T {
   char               *buf;
   size_t              szbuf;
   content_field_T    *list;
@@ -858,11 +845,9 @@ new_scan_block(id, old, sz_old, new, sz_new, state, content, list)
   if (id == NULL)
     id = "";
 
-  if (!RE.ok)
-  {
+  if (!RE.ok) {
     ZE_LogMsgInfo(10, "Initialising REGEX structure");
-    if (!init_regex())
-    {
+    if (!init_regex()) {
       ZE_LogMsgError(0, "Unable to initialise REGEX structure");
       return 9;
     }
@@ -874,28 +859,24 @@ new_scan_block(id, old, sz_old, new, sz_new, state, content, list)
     char               *p = new;
     size_t              i;
 
-    for (i = sz_new; i > 0; i--, p++)
-    {
+    for (i = sz_new; i > 0; i--, p++) {
       if (*p == '\0')
         *p = ' ';
     }
   }
 
-  if ((work = malloc(SZ_WORK + 1)) == NULL)
-  {
+  if ((work = malloc(SZ_WORK + 1)) == NULL) {
     ZE_LogSysError("%-12s : malloc work error", id);
     return 15;
   }
 
   memset(work, 0, SZ_WORK + 1);
 
-  while (sz_ok < sz_new)
-  {
+  while (sz_ok < sz_new) {
     size_t              work_len;
 
     work_len = strlen(old);
-    if (work_len > SZ_WORK)
-    {
+    if (work_len > SZ_WORK) {
       /*
        ** result = ERROR;
        ** LOG_MSG_ERROR
@@ -910,19 +891,16 @@ new_scan_block(id, old, sz_old, new, sz_new, state, content, list)
 
       dx = SZ_WORK - work_len;
 
-      if (dx < 0)
-        ;
+      if (dx < 0);
       memcpy(work + work_len, new + sz_ok, dx);
       sz_ok += dx;
     }
 
     wptr = work;
-    while ((lastcr = strrchr(wptr, '\n')) != NULL)
-    {
+    while ((lastcr = strrchr(wptr, '\n')) != NULL) {
       size_t              m = 0;
 
-      if (content->field_type == CT_NONE)
-      {
+      if (content->field_type == CT_NONE) {
         size_t              n1, n2, n3;
         size_t              pi, pf;
 
@@ -936,13 +914,13 @@ new_scan_block(id, old, sz_old, new, sz_new, state, content, list)
           n3 = pi;
 
         ZE_MessageInfo(18, "N = %d %d %d (%d)", n1, n2, n3, SZ_WORK);
-        if ((m = MIN3(n1, n2, n3)) < SZ_WORK)
-        {
+        if ((m = MIN3(n1, n2, n3)) < SZ_WORK) {
           wptr += m;
 
-          /* handle uuencode */
-          if (m == n1)
-          {
+          /*
+           * handle uuencode 
+           */
+          if (m == n1) {
             char               *s, *ptr;
             int                 i = 0;
 
@@ -953,9 +931,10 @@ new_scan_block(id, old, sz_old, new, sz_new, state, content, list)
 
             i = strcspn(wptr, "\r\n");
 
-            if (i >= MAX_LINE)
-            {
-              /* XXX */
+            if (i >= MAX_LINE) {
+              /*
+               * XXX 
+               */
             }
 
             strncpy(line, wptr, i);
@@ -965,10 +944,8 @@ new_scan_block(id, old, sz_old, new, sz_new, state, content, list)
             content->field_type = CT_UUFILE;
 
             for (s = strtok_r(line, " \t", &ptr), i = 0;
-                 s != NULL; s = strtok_r(NULL, " \t", &ptr), i++)
-            {
-              switch (i)
-              {
+                 s != NULL; s = strtok_r(NULL, " \t", &ptr), i++) {
+              switch (i) {
                 case 0:
                   break;
                 case 1:
@@ -979,17 +956,14 @@ new_scan_block(id, old, sz_old, new, sz_new, state, content, list)
               }
             }
 
-            if (strlen(fname) > 0)
-            {
-              if (is_rfc2047_encoded(fname))
-              {
+            if (strlen(fname) > 0) {
+              if (is_rfc2047_encoded(fname)) {
                 char                tmp[MAX_LINE];
 
                 decode_rfc2047(tmp, fname, sizeof (tmp));
                 strlcpy(fname, tmp, sizeof (fname));
               }
-              if (is_rfc2231_encoded(fname))
-              {
+              if (is_rfc2231_encoded(fname)) {
                 char                tmp[MAX_LINE];
 
                 decode_rfc2231(tmp, fname, sizeof (tmp));
@@ -1004,9 +978,9 @@ new_scan_block(id, old, sz_old, new, sz_new, state, content, list)
               if (content->value == NULL)
                 ZE_LogSysError("Error strdup CT_UUFILE %s", fname);
 
-              if (!add_content_field_attr(content, "name", fname))
-              {
-                ZE_LogMsgNotice(0, "add_content_field_attr call error : %s", fname);
+              if (!add_content_field_attr(content, "name", fname)) {
+                ZE_LogMsgNotice(0, "add_content_field_attr call error : %s",
+                                fname);
               }
 
               save_content_field(content, list);
@@ -1017,13 +991,13 @@ new_scan_block(id, old, sz_old, new, sz_new, state, content, list)
             wptr += strcspn(wptr, "\r\n");
           }
 
-          /* handle content-type */
-          if (m == n2)
-          {
+          /*
+           * handle content-type 
+           */
+          if (m == n2) {
             char               *p = strchr(wptr, ':');
 
-            if (p != NULL)
-            {
+            if (p != NULL) {
               char                str[256];
               int                 len;
 
@@ -1033,16 +1007,18 @@ new_scan_block(id, old, sz_old, new, sz_new, state, content, list)
 
               memset(str, 0, sizeof (str));
               len = strcspn(p, "; \t\r\n");
-              if (len >= sizeof (str))
-              {
-                /* XXX */
+              if (len >= sizeof (str)) {
+                /*
+                 * XXX 
+                 */
               }
               strncpy(str, p, len);
               ZE_MessageInfo(19, "CT_TYPE : %s", str);
               content->value = strdup(str);
-              if (content->value == NULL)
-              {
-                /* XXX */
+              if (content->value == NULL) {
+                /*
+                 * XXX 
+                 */
               }
               p += len;
               wptr = p;
@@ -1050,13 +1026,13 @@ new_scan_block(id, old, sz_old, new, sz_new, state, content, list)
               wptr++;
           }
 
-          /* handle content-disposition */
-          if (m == n3)
-          {
+          /*
+           * handle content-disposition 
+           */
+          if (m == n3) {
             char               *p = strchr(wptr, ':');
 
-            if (p != NULL)
-            {
+            if (p != NULL) {
               char                str[256];
               int                 len;
 
@@ -1066,46 +1042,46 @@ new_scan_block(id, old, sz_old, new, sz_new, state, content, list)
 
               memset(str, 0, sizeof (str));
               len = strcspn(p, "; \t\r\n");
-              if (len >= sizeof (str))
-              {
-                /* XXX */
+              if (len >= sizeof (str)) {
+                /*
+                 * XXX 
+                 */
               }
               strncpy(str, p, len);
               ZE_MessageInfo(19, "CT_DISP : %s", str);
               content->value = strdup(str);
-              if (content->value == NULL)
-              {
-                /* XXX */
+              if (content->value == NULL) {
+                /*
+                 * XXX 
+                 */
               }
               p += len;
               wptr = p;
             } else
               wptr++;
           }
-        } else
-        {
-          /* nor CD, CT or UUENCODE... */
+        } else {
+          /*
+           * nor CD, CT or UUENCODE... 
+           */
           if (*lastcr != '\0')
             lastcr++;
           wptr = lastcr;
           break;
         }
       }
-      switch (content->field_type)
-      {
+      switch (content->field_type) {
         case CT_NONE:
           break;
         case CT_TYPE:
-          if (decode_mime_content_tag(&wptr, content))
-          {
+          if (decode_mime_content_tag(&wptr, content)) {
             save_content_field(content, list);
             memset(content, 0, sizeof (*content));
             content->field_type = CT_NONE;
           }
           break;
         case CT_DISP:
-          if (decode_mime_content_tag(&wptr, content))
-          {
+          if (decode_mime_content_tag(&wptr, content)) {
             save_content_field(content, list);
             memset(content, 0, sizeof (*content));
             content->field_type = CT_NONE;
@@ -1118,12 +1094,10 @@ new_scan_block(id, old, sz_old, new, sz_new, state, content, list)
           break;
       }
     }
-    if (lastcr != NULL)
-    {
+    if (lastcr != NULL) {
       if (strlen(lastcr) + 1 <= sz_old)
         strlcpy(old, lastcr, sz_old);
-      else
-      {
+      else {
 
       }
     } else
@@ -1176,8 +1150,7 @@ decode_mime_content_tag(buf, content)
    **   -> end of analysis
    **   -> end of tag
    */
-  for (;;)
-  {
+  for (;;) {
     char               *ptr, *psep;
     long                pi, pf;
     char                key[256], val[256];
@@ -1187,27 +1160,26 @@ decode_mime_content_tag(buf, content)
     if ((*p == '\r') || (*p == '\n'))
       break;
 
-    if (strcspn(p, "\r\n") >= LINESZ)
-    {
-      /* XXX */
+    if (strcspn(p, "\r\n") >= LINESZ) {
+      /*
+       * XXX 
+       */
       break;
     }
     ps = p;
     p = buf_get_next_line(line, p, LINESZ);
-    if ((strlen(line) == 0) || ((*line != ';') && (*line != '\t')))
-    {
+    if ((strlen(line) == 0) || ((*line != ';') && (*line != '\t'))) {
       p = ps;
       break;
     }
-    zeStr2Upper(line);
+    zeStr2Lower(line);
     zeStrClearTrailingBlanks(line);
     ptr = line;
     ptr += strspn(ptr, " \t");
 
     ZE_MessageInfo(19, "-> LINE : %s", ptr);
 
-    while ((*ptr == ';') || (strlen(ptr) > 0))
-    {
+    while ((*ptr == ';') || (strlen(ptr) > 0)) {
       bool                doublequotes = FALSE;
       size_t              valLength;
 
@@ -1220,22 +1192,21 @@ decode_mime_content_tag(buf, content)
       if (zeStrRegex(ptr, "[a-z]*=", &pi, &pf, TRUE))
         ZE_MessageInfo(19, "-> TAG  : %s", ptr);
 
-      if (strchr(TSPECIALS, *ptr) != NULL)
-      {
+      if (strchr(TSPECIALS, *ptr) != NULL) {
         ptr++;
         continue;
       }
 
-      if ((psep = strchr(ptr, '=')) == NULL)
-      {
+      if ((psep = strchr(ptr, '=')) == NULL) {
         ptr++;
         continue;
       }
 
       n = strspn(ptr, "abcdefghijklmnopqrstuvwxyz");
-      if (n >= sizeof (key))
-      {
-        /* XXX */
+      if (n >= sizeof (key)) {
+        /*
+         * XXX 
+         */
         break;
       }
       memset(key, 0, sizeof (key));
@@ -1247,9 +1218,10 @@ decode_mime_content_tag(buf, content)
 
       ptr += strspn(ptr, " *=");
 
-      /* XXX */
-      if (*ptr == '"')
-      {
+      /*
+       * XXX 
+       */
+      if (*ptr == '"') {
         doublequotes = TRUE;
         ptr++;
       }
@@ -1270,11 +1242,11 @@ decode_mime_content_tag(buf, content)
       if (rfc2231)
         decode_rfc2231(val, ptr, sizeof (val));
 
-      if (!rfc2047 && !rfc2231)
-      {
-        if (valLength >= sizeof (val))
-        {
-          /* XXX */
+      if (!rfc2047 && !rfc2231) {
+        if (valLength >= sizeof (val)) {
+          /*
+           * XXX 
+           */
 
         }
         strncpy(val, ptr, valLength);
@@ -1295,92 +1267,89 @@ decode_mime_content_tag(buf, content)
 
       log_mime_attr_value(key, val, rfc2047, rfc2231);
 
-      if (!add_content_field_attr(content, key, val))
-      {
+      if (!add_content_field_attr(content, key, val)) {
         ZE_LogMsgNotice(0, "add_content_field_attr call error : %s", key);
       }
 
-      /* Cases to check
-       **    name=file.ext
-       **    name="file.ext"
-       **    name = file.ext
-       **    name = "file.ext"
-       **    name=file name.ext
-       **    name = file name.ext
-       **    name=file;width=300;toto=name[1].ext
-       **    name=file[1].ext
+      /*
+       * Cases to check
+       * **    name=file.ext
+       * **    name="file.ext"
+       * **    name = file.ext
+       * **    name = "file.ext"
+       * **    name=file name.ext
+       * **    name = file name.ext
+       * **    name=file;width=300;toto=name[1].ext
+       * **    name=file[1].ext
        */
-      if (!doublequotes && !rfc2231 && !rfc2047)
-      {
-        if (strcasecmp(key, "name") == 0 || strcasecmp(key, "filename") == 0)
-        {
+      if (!doublequotes && !rfc2231 && !rfc2047) {
+        if (strcasecmp(key, "name") == 0 || strcasecmp(key, "filename") == 0) {
           char               *pname[16];
           bool                already_there = FALSE;
 
           memset(pname, 0, sizeof (pname));
 
-          /* name = file name.ext */
-          if ((strchr(ptr, ' ') != NULL) && (strchr(ptr, ';') == NULL))
-          {
+          /*
+           * name = file name.ext 
+           */
+          if ((strchr(ptr, ' ') != NULL) && (strchr(ptr, ';') == NULL)) {
             pname[0] = ptr;
             ZE_MessageInfo(19, "Case 1 detected : %s", ptr);
             log_mime_attr_value(key, ptr, FALSE, FALSE);
-            if (!add_content_field_attr(content, key, ptr))
-            {
+            if (!add_content_field_attr(content, key, ptr)) {
               ZE_LogMsgNotice(0, "add_content_field_attr call error : %s", key);
             }
           }
 
-          /* name=file;width=300;toto=name[1].ext */
-          if ((strcspn(ptr, ";") < strlen(ptr)) && (strchr(ptr, ' ') == NULL))
-          {
+          /*
+           * name=file;width=300;toto=name[1].ext 
+           */
+          if ((strcspn(ptr, ";") < strlen(ptr)) && (strchr(ptr, ' ') == NULL)) {
             CHECK_DOUBLE_NAME(ptr);
             pname[1] = ptr;
-            if (!already_there)
-            {
+            if (!already_there) {
               ZE_MessageInfo(19, "Case 2 detected : %s", ptr);
               log_mime_attr_value(key, ptr, FALSE, FALSE);
-              if (!add_content_field_attr(content, key, ptr))
-              {
-                ZE_LogMsgNotice(0, "add_content_field_attr call error : %s", key);
+              if (!add_content_field_attr(content, key, ptr)) {
+                ZE_LogMsgNotice(0, "add_content_field_attr call error : %s",
+                                key);
               }
             }
           }
 
-          /* name=file;width=300;toto=name[1].ext */
-          if (strcspn(ptr, ";") < strlen(ptr))
-          {
+          /*
+           * name=file;width=300;toto=name[1].ext 
+           */
+          if (strcspn(ptr, ";") < strlen(ptr)) {
             char               *pwssep = strstr(ptr, " ;");
             char               *psepws = strstr(ptr, "; ");
 
-            if ((pwssep == NULL) && (psepws == NULL))
-            {
+            if ((pwssep == NULL) && (psepws == NULL)) {
               CHECK_DOUBLE_NAME(ptr);
               pname[2] = ptr;
-              if (!already_there)
-              {
+              if (!already_there) {
                 ZE_MessageInfo(19, "Case 3a detected : %s", ptr);
                 log_mime_attr_value(key, ptr, FALSE, FALSE);
-                if (!add_content_field_attr(content, key, ptr))
-                {
-                  ZE_LogMsgNotice(0, "add_content_field_attr call error : %s", key);
+                if (!add_content_field_attr(content, key, ptr)) {
+                  ZE_LogMsgNotice(0, "add_content_field_attr call error : %s",
+                                  key);
                 }
               }
             }
           }
 
-          /* name=file[1].ext */
-          if (!doublequotes && strcspn(ptr, TSPECIALS) < strlen(ptr))
-          {
+          /*
+           * name=file[1].ext 
+           */
+          if (!doublequotes && strcspn(ptr, TSPECIALS) < strlen(ptr)) {
             CHECK_DOUBLE_NAME(ptr);
             pname[3] = ptr;
-            if (!already_there)
-            {
+            if (!already_there) {
               ZE_MessageInfo(19, "Case 4 detected : %s", ptr);
               log_mime_attr_value(key, ptr, FALSE, FALSE);
-              if (!add_content_field_attr(content, key, ptr))
-              {
-                ZE_LogMsgNotice(0, "add_content_field_attr call error : %s", key);
+              if (!add_content_field_attr(content, key, ptr)) {
+                ZE_LogMsgNotice(0, "add_content_field_attr call error : %s",
+                                key);
               }
             }
           }

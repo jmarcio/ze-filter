@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -90,10 +91,8 @@ main(argc, argv)
     const char         *args = "P:K:I:H:F:T:htv";
     int                 c;
 
-    while ((c = getopt(argc, argv, args)) != -1)
-    {
-      switch (c)
-      {
+    while ((c = getopt(argc, argv, args)) != -1) {
+      switch (c) {
         case 'h':
           usage(argv[0]);
           exit(0);
@@ -131,14 +130,12 @@ main(argc, argv)
     }
   }
 
-  if (!policy_init())
-  {
+  if (!policy_init()) {
     ZE_MessageInfo(0, "Error opening policy database !");
     exit(1);
   }
 
-  if (triplet)
-  {
+  if (triplet) {
     bool                flag;
     char                class[256];
 
@@ -156,8 +153,7 @@ main(argc, argv)
     ZE_MessageInfo(0, "Checking = %s %s %s %s %s", prefix, ip, name, from, to);
     flag = check_policy_tuple(prefix, ip, name, class, from, to, TRUE);
     ZE_MessageInfo(0, "RESULT   = %s", STRBOOL(flag, "YES", "NO"));
-  } else
-  {
+  } else {
     bool                flag;
     char                buf[256];
 

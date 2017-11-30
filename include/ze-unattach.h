@@ -22,9 +22,9 @@
  */
 
 
-#ifndef __J_UNATTACH_H__
+#ifndef __ZE_UNATTACH_H__
 
 bool            unattach (char *, char *, char *, uint32_t *);
 
-#define __J_UNATTACH_H__
+#define __ZE_UNATTACH_H__
 #endif

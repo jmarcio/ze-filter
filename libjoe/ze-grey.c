@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -34,46 +35,46 @@
 #define BF_SZ   512
 
 #ifndef DT_GREY_SLEEP
-# define             DT_GREY_SLEEP  10
+#define             DT_GREY_SLEEP  10
 #endif             /* DT_GREY_SLEEP */
 
 #define DT_GREY_INTERVAL            (6 HOURS)
 
 #ifndef MIN_CNT_PER_DOMAIN
-# define             MIN_CNT_PER_DOMAIN       5
+#define             MIN_CNT_PER_DOMAIN       5
 #endif             /* MIN_CNT_PER_DOMAIN */
 
 #ifndef GREY_TP_MIN_NORM
-# define GREY_TP_MIN_NORM     10 MINUTES
+#define GREY_TP_MIN_NORM     10 MINUTES
 #endif             /* GREY_TP_MIN_NORM */
 #ifndef GREY_TP_MIN_NULL
-# define GREY_TP_MIN_NULL     10 MINUTES
+#define GREY_TP_MIN_NULL     10 MINUTES
 #endif             /* GREY_TP_MIN_NULL */
 #ifndef GREY_TP_MAX_NORM
-# define GREY_TP_MAX_NORM     3 DAYS
+#define GREY_TP_MAX_NORM     3 DAYS
 #endif             /* GREY_TP_MAX_NORM */
 #ifndef GREY_TP_MAX_NULL
-# define GREY_TP_MAX_NULL     4 HOURS
+#define GREY_TP_MAX_NULL     4 HOURS
 #endif             /* GREY_TP_MAX_NULL */
 
 #ifndef GREY_TV_MAX
-# define GREY_TV_MAX          7 DAYS
+#define GREY_TV_MAX          7 DAYS
 #endif             /* GREY_TV_MAX */
 #ifndef GREY_TW_MAX
-# define GREY_TW_MAX          21 DAYS
+#define GREY_TW_MAX          21 DAYS
 #endif             /* GREY_TW_MAX */
 #ifndef GREY_TB_MAX
-# define GREY_TB_MAX          7 DAYS
+#define GREY_TB_MAX          7 DAYS
 #endif             /* GREY_TB_MAX */
 
 #ifndef T_EXPIRE_BAD_MIN
-# define T_EXPIRE_BAD_MIN              6 HOURS
+#define T_EXPIRE_BAD_MIN              6 HOURS
 #endif             /* T_EXPIRE_BAD_MIN */
 #ifndef T_EXPIRE_PENDING_BAD_MAX
-# define T_EXPIRE_PENDING_BAD_MAX      24 HOURS
+#define T_EXPIRE_PENDING_BAD_MAX      24 HOURS
 #endif             /* T_EXPIRE_PENDING_BAD_MAX */
 #ifndef T_EXPIRE_VALID_BAD_MAX
-# define T_EXPIRE_VALID_BAD_MAX        5 DAYS
+#define T_EXPIRE_VALID_BAD_MAX        5 DAYS
 #endif             /* T_EXPIRE_VALID_BAD_MAX */
 
 static bool         grey_compat_domain_check = TRUE;
@@ -104,17 +105,16 @@ static int          select_rcpt = GREY_EMAIL_FULL;
 
 typedef struct grey_filter_T grey_filter_T;
 
-struct grey_filter_T
-{
+struct grey_filter_T {
   bool                ok;
 
-  ZEDB_T               gdbp;
+  ZEDB_T              gdbp;
   int                 nbp;
-  ZEDB_T               gdbv;
+  ZEDB_T              gdbv;
   int                 nbv;
-  ZEDB_T               gdbw;
+  ZEDB_T              gdbw;
   int                 nbw;
-  ZEDB_T               gdbb;
+  ZEDB_T              gdbb;
   int                 nbb;
 
 #if 0
@@ -154,47 +154,81 @@ static grey_filter_T gdata = {
   ZEDB_INITIALIZER, 0,
 
 #if 0
-  /* grey_compat_domain_check */
+  /*
+   * grey_compat_domain_check 
+   */
   TRUE,
 
-  /* rdonly */
+  /*
+   * rdonly 
+   */
   FALSE,
 
-  /* grey_mode */
+  /*
+   * grey_mode 
+   */
   GREY_STANDALONE,
 
-  /* grey_tp_min_norm */
+  /*
+   * grey_tp_min_norm 
+   */
   GREY_TP_MIN_NORM,
-  /* grey_tp_min_null */
+  /*
+   * grey_tp_min_null 
+   */
   GREY_TP_MIN_NULL,
-  /* grey_tp_min_no_match */
+  /*
+   * grey_tp_min_no_match 
+   */
   GREY_TP_MIN_NULL,
 
-  /* grey_tp_max_norm */
+  /*
+   * grey_tp_max_norm 
+   */
   GREY_TP_MAX_NORM,
-  /* grey_tp_max_null */
+  /*
+   * grey_tp_max_null 
+   */
   GREY_TP_MAX_NULL,
 
-  /* grey_tv_max */
+  /*
+   * grey_tv_max 
+   */
   GREY_TV_MAX,
-  /* grey_tw_max */
+  /*
+   * grey_tw_max 
+   */
   GREY_TW_MAX,
-  /* grey_tb_max */
+  /*
+   * grey_tb_max 
+   */
   GREY_TB_MAX,
 
-  /* max_pending_normal */
+  /*
+   * max_pending_normal 
+   */
   1000,
-  /* max_pending_null */
+  /*
+   * max_pending_null 
+   */
   100,
 
-  /* dt_grey_cleanup */
+  /*
+   * dt_grey_cleanup 
+   */
   2 MINUTES,
 
-  /* select_ip */
+  /*
+   * select_ip 
+   */
   GREY_ADDR_NET,
-  /* select_from */
+  /*
+   * select_from 
+   */
   GREY_EMAIL_HOST,
-  /* select_rcpt */
+  /*
+   * select_rcpt 
+   */
   GREY_EMAIL_FULL
 #endif
 };
@@ -231,8 +265,8 @@ static bool         grey_cursor_close(ZEDB_T *);
 
 typedef struct expire_st_T expire_st_T;
 
-static bool         grey_database_expire(ZEDB_T *, expire_st_T *, time_t, time_t,
-                                         int);
+static bool         grey_database_expire(ZEDB_T *, expire_st_T *, time_t,
+                                         time_t, int);
 
 void                grey_launch_thread();
 
@@ -242,13 +276,12 @@ static pthread_mutex_t grey_crit = PTHREAD_MUTEX_INITIALIZER;
 #define GREY_CRIT_UNLOCK()     MUTEX_UNLOCK(&grey_crit)
 
 #ifndef  DBG_LEVEL
-# define DBG_LEVEL     12
+#define DBG_LEVEL     12
 #endif
 
 typedef struct tuple_T tuple_T;
 
-struct tuple_T
-{
+struct tuple_T {
   char               *ip;
   char               *from;
   char               *to;
@@ -263,8 +296,7 @@ static bool         tuple_rec2str(char *, tuple_T *, size_t);
 #endif
 typedef struct grey_entry_T grey_entry_T;
 
-struct grey_entry_T
-{
+struct grey_entry_T {
   time_t              date_init;
   time_t              date_updt;
 
@@ -273,7 +305,9 @@ struct grey_entry_T
   char                from[256];
   char                rcpt[256];
 
-  /* value */
+  /*
+   * value 
+   */
   char                vip[256];
   char                vhostname[256];
   char                vfrom[256];
@@ -281,7 +315,9 @@ struct grey_entry_T
   int                 count;
   bool                resolve;
 
-  /* key */
+  /*
+   * key 
+   */
 #if 0
   char                kip[256];
   char                kfrom[256];
@@ -324,8 +360,7 @@ grey_set_tuples(ip, from, to)
   if (ip == NULL && from == NULL && to == NULL)
     return FALSE;
 
-  if (ip != NULL)
-  {
+  if (ip != NULL) {
     if (strcasecmp(ip, "NONE") == 0)
       select_ip = GREY_ADDR_NONE;
     if (strcasecmp(ip, "FULL") == 0)
@@ -333,8 +368,7 @@ grey_set_tuples(ip, from, to)
     if (strcasecmp(ip, "NET") == 0)
       select_ip = GREY_ADDR_NET;
   }
-  if (from != NULL)
-  {
+  if (from != NULL) {
     if (strcasecmp(from, "NONE") == 0)
       select_from = GREY_EMAIL_NONE;
     if (strcasecmp(from, "FULL") == 0)
@@ -344,8 +378,7 @@ grey_set_tuples(ip, from, to)
     if (strcasecmp(from, "HOST") == 0)
       select_from = GREY_EMAIL_HOST;
   }
-  if (to != NULL)
-  {
+  if (to != NULL) {
     if (strcasecmp(to, "NONE") == 0)
       select_rcpt = GREY_EMAIL_NONE;
     if (strcasecmp(to, "FULL") == 0)
@@ -447,6 +480,7 @@ grey_set_compat_domain_check(enable)
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
+
 /*
   ###   ####    #   #####
  #      #   #   #     #
@@ -481,7 +515,9 @@ grey_check(kAddr, kFrom, kRcpt, kName, new, can_validate)
 
   ip = from = rcpt = hostname = NULL;
 
-  /* normalize from and rcpt addresses */
+  /*
+   * normalize from and rcpt addresses 
+   */
   kAddr = STRNULL(kAddr, "-");
 
   if (ISNULLSENDER(kFrom))
@@ -491,12 +527,10 @@ grey_check(kAddr, kFrom, kRcpt, kName, new, can_validate)
   kName = STRNULL(kName, kAddr);
 
   ip = kAddr;
-  if (zeStrRegex(ip, IPV6_ADDR_REGEX, NULL, NULL, TRUE))
-  {
+  if (zeStrRegex(ip, IPV6_ADDR_REGEX, NULL, NULL, TRUE)) {
     ipv6_T              ipv6;
 
-    if (ipv6_str2rec(&ipv6, ip))
-    {
+    if (ipv6_str2rec(&ipv6, ip)) {
       ipv6_prefix_str(&ipv6, ipbuf, sizeof (ipbuf), 64);
       ip = ipbuf;
     }
@@ -523,12 +557,16 @@ grey_check(kAddr, kFrom, kRcpt, kName, new, can_validate)
 
   ZE_LogMsgInfo(DBG_LEVEL, "IP  : %s", ip);
 
-  /* check static whitelist database */
+  /*
+   * check static whitelist database 
+   */
   {
 
   }
 
-  /* check dynamic whitelist database */
+  /*
+   * check dynamic whitelist database 
+   */
   GREY_CRIT_LOCK();
   {
     char                buf_from[BF_SZ], *pf;
@@ -538,26 +576,21 @@ grey_check(kAddr, kFrom, kRcpt, kName, new, can_validate)
     memset(buf_from, 0, sizeof (buf_from));
 
     nullsender = ISNULLSENDER(from);
-    if (!nullsender)
-    {
+    if (!nullsender) {
       (void) extract_email_address(buf_from, from, sizeof (buf_from));
       pf = buf_from;
 
-      while (result != GREY_OK && pf != NULL && strlen(pf) > 0)
-      {
+      while (result != GREY_OK && pf != NULL && strlen(pf) > 0) {
         char               *p;
 
         key = grey_key_white(ip, pf);
-        if (key != NULL)
-        {
-          if (grey_get_rec(&gdata.gdbw, key, value, sizeof (value)))
-          {
+        if (key != NULL) {
+          if (grey_get_rec(&gdata.gdbw, key, value, sizeof (value))) {
             grey_entry_free(&entry);
             (void) grey_value_str2entry(&entry, value);
 
             ZE_MessageInfo(19, "date_updt/now : %ld/%ld", entry.date_updt, now);
-            if (entry.date_updt + DT_GREY_INTERVAL < now)
-            {
+            if (entry.date_updt + DT_GREY_INTERVAL < now) {
               entry.date_updt = now;
               entry.count++;
               (void) grey_value_entry2str(value, &entry, sizeof (value));
@@ -585,25 +618,26 @@ grey_check(kAddr, kFrom, kRcpt, kName, new, can_validate)
 
   key = grey_key(ip, from, rcpt, select_ip, select_from, select_rcpt);
 
-  if (key == NULL)
-  {
+  if (key == NULL) {
     result = GREY_ERROR;
     goto endlock;
   }
 
   ZE_MessageInfo(DBG_LEVEL, "KEY : %s", key);
 
-  /* check against valid entries database */
-  if (grey_get_rec(&gdata.gdbv, key, value, sizeof (value)))
-  {
+  /*
+   * check against valid entries database 
+   */
+  if (grey_get_rec(&gdata.gdbv, key, value, sizeof (value))) {
     grey_entry_free(&entry);
     (void) grey_value_str2entry(&entry, value);
 
-    /* XXX JOE - check if the entry is already expired */
+    /*
+     * XXX JOE - check if the entry is already expired 
+     */
 
     ZE_MessageInfo(19, "date_updt/now : %ld/%ld", entry.date_updt, now);
-    if (entry.date_updt + DT_GREY_INTERVAL < now)
-    {
+    if (entry.date_updt + DT_GREY_INTERVAL < now) {
       entry.date_updt = now;
       entry.count++;
       (void) grey_value_entry2str(value, &entry, sizeof (value));
@@ -620,10 +654,11 @@ grey_check(kAddr, kFrom, kRcpt, kName, new, can_validate)
 
   null_sender = ISNULLSENDER(from);
 
-  /* check against pending entries database */
+  /*
+   * check against pending entries database 
+   */
   memset(value, 0, sizeof (value));
-  if (grey_get_rec(&gdata.gdbp, key, value, sizeof (value)))
-  {
+  if (grey_get_rec(&gdata.gdbp, key, value, sizeof (value))) {
     time_t              last = 0;
     time_t              dt_min, dt_max;
 
@@ -631,13 +666,11 @@ grey_check(kAddr, kFrom, kRcpt, kName, new, can_validate)
     (void) grey_value_str2entry(&entry, value);
     last = entry.date_init;
 
-    if (last == 0)
-    {
+    if (last == 0) {
       char                tbuf[256];
       static int          nb = 0;
 
-      if (nb++ < 1000)
-      {
+      if (nb++ < 1000) {
         snprintf(tbuf, sizeof (tbuf), "%ld:%ld:%s:%s:%s:%s:%d:%s",
                  entry.date_init,
                  entry.date_updt,
@@ -652,52 +685,57 @@ grey_check(kAddr, kFrom, kRcpt, kName, new, can_validate)
       }
     }
 
-    /* XXX create new value - if shall update entry  */
+    /*
+     * XXX create new value - if shall update entry  
+     */
     entry.date_init = entry.date_updt = now;
 
-    if (null_sender)
-    {
+    if (null_sender) {
       dt_min = grey_tp_min_null;
       dt_max = grey_tp_max_null;
-    } else
-    {
+    } else {
       dt_min = grey_tp_min_norm;
       dt_max = grey_tp_max_norm;
 
 #if 1
       if (hostname != NULL)
         domain_ok = compatible_domainnames(from, hostname);
-      if (!domain_ok)
-      {
+      if (!domain_ok) {
         dt_min *= 2;
         dt_min = MAX(dt_min, 15 MINUTES);
       }
 #endif
     }
 
-    /* Check :
-     ** -> Compatible domains - add penalty to dt_min
-     ** -> spammer -> add penalty to dt_min
+    /*
+     * Check :
+     * ** -> Compatible domains - add penalty to dt_min
+     * ** -> spammer -> add penalty to dt_min
      */
 
-    /* not yet... */
-    if (last + dt_min > now)
-    {
+    /*
+     * not yet... 
+     */
+    if (last + dt_min > now) {
       result = GREY_WAIT;
       (void) grey_entry_free(&entry);
       goto endlock;
     }
 
-    /* OK - let's remove pending record */
+    /*
+     * OK - let's remove pending record 
+     */
     (void) grey_del_rec(&gdata.gdbp, key);
 
-    /* not too late */
-    if (last == 0 || last + dt_max > now)
-    {
-      /* don't validate null_senders */
+    /*
+     * not too late 
+     */
+    if (last == 0 || last + dt_max > now) {
+      /*
+       * don't validate null_senders 
+       */
 
-      if (!null_sender && can_validate)
-      {
+      if (!null_sender && can_validate) {
         entry.date_init = entry.date_updt = now;
         (void) grey_value_entry2str(value, &entry, sizeof (value));
         (void) grey_add_rec(&gdata.gdbv, key, value, strlen(value));
@@ -722,19 +760,19 @@ grey_check(kAddr, kFrom, kRcpt, kName, new, can_validate)
     else
       max_pending = max_pending_normal;
 
-    if (max_pending > 0)
-    {
+    if (max_pending > 0) {
       count = grey_count_pending(ip);
       ZE_MessageInfo(DBG_LEVEL, "COUNT  KEY : %-16s %d", key, count);
     }
 
-    if (max_pending == 0 || count < max_pending)
-    {
+    if (max_pending == 0 || count < max_pending) {
       bool                r = FALSE;
 
-      /* add entry to pending database */
+      /*
+       * add entry to pending database 
+       */
       ZE_MessageInfo(DBG_LEVEL, "ADDING KEY : %s %s %s", key, value,
-                   STRBOOL(r, "OK", "KO"));
+                     STRBOOL(r, "OK", "KO"));
 
       grey_entry_free(&entry);
       entry.date_init = entry.date_updt = now;
@@ -743,7 +781,9 @@ grey_check(kAddr, kFrom, kRcpt, kName, new, can_validate)
       strlcpy(entry.from, from, sizeof (entry.from));
       entry.count = 1;
 
-      /* XXX JOE define FLAGS - compatible_domains */
+      /*
+       * XXX JOE define FLAGS - compatible_domains 
+       */
 
       (void) grey_value_entry2str(value, &entry, sizeof (value));
 
@@ -774,6 +814,7 @@ end:
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
+
 /*
   ###   ####    #   #####
  #      #   #   #     #
@@ -797,11 +838,12 @@ grey_validate(kAddr, kFrom, kRcpt, kName)
 
   vkey = ip = from = rcpt = hostname = NULL;
 
-  /* normalize from and rcpt addresses */
+  /*
+   * normalize from and rcpt addresses 
+   */
   {
     kAddr = STRNULL(kAddr, "-");
-    if (ISNULLSENDER(kFrom))
-    {
+    if (ISNULLSENDER(kFrom)) {
       kFrom = "nullsender";
       goto end;
     }
@@ -810,12 +852,10 @@ grey_validate(kAddr, kFrom, kRcpt, kName)
     ip = from = rcpt = hostname = NULL;
 
     ip = kAddr;
-    if (zeStrRegex(ip, IPV6_ADDR_REGEX, NULL, NULL, TRUE))
-    {
+    if (zeStrRegex(ip, IPV6_ADDR_REGEX, NULL, NULL, TRUE)) {
       ipv6_T              ipv6;
 
-      if (ipv6_str2rec(&ipv6, ip))
-      {
+      if (ipv6_str2rec(&ipv6, ip)) {
         ipv6_prefix_str(&ipv6, ipbuf, sizeof (ipbuf), 64);
         ip = ipbuf;
       }
@@ -830,13 +870,11 @@ grey_validate(kAddr, kFrom, kRcpt, kName)
     hostname = kName;
   }
 
-  if (from == NULL || strlen(from) == 0)
-  {
+  if (from == NULL || strlen(from) == 0) {
     result = GREY_ERROR;
     goto end;
   }
-  if (rcpt == NULL || strlen(rcpt) == 0)
-  {
+  if (rcpt == NULL || strlen(rcpt) == 0) {
     result = GREY_ERROR;
     goto end;
   }
@@ -846,8 +884,7 @@ grey_validate(kAddr, kFrom, kRcpt, kName)
   now = time(NULL);
 
   vkey = grey_key(ip, from, rcpt, select_ip, select_from, select_rcpt);
-  if (vkey == NULL)
-  {
+  if (vkey == NULL) {
     result = GREY_ERROR;
     goto end;
   }
@@ -856,7 +893,9 @@ grey_validate(kAddr, kFrom, kRcpt, kName)
 
   GREY_CRIT_LOCK();
 
-  /* refresh whitelisted entries, if there are any */
+  /*
+   * refresh whitelisted entries, if there are any 
+   */
 #if 1
   {
     char               *pf = NULL;
@@ -865,22 +904,18 @@ grey_validate(kAddr, kFrom, kRcpt, kName)
     memset(&entry, 0, sizeof (entry));
 
     pf = from;
-    while (pf != NULL && strlen(pf) > 0)
-    {
+    while (pf != NULL && strlen(pf) > 0) {
       char               *p;
       char               *wkey = NULL;
 
       wkey = grey_key_white(ip, pf);
-      if (wkey != NULL)
-      {
-        if (grey_get_rec(&gdata.gdbw, wkey, value, sizeof (value)))
-        {
+      if (wkey != NULL) {
+        if (grey_get_rec(&gdata.gdbw, wkey, value, sizeof (value))) {
           grey_entry_free(&entry);
           (void) grey_value_str2entry(&entry, value);
 
           ZE_MessageInfo(19, "date_updt/now : %ld/%ld", entry.date_updt, now);
-          if (entry.date_updt + DT_GREY_INTERVAL < now)
-          {
+          if (entry.date_updt + DT_GREY_INTERVAL < now) {
             entry.date_updt = now;
             entry.count++;
             (void) grey_value_entry2str(value, &entry, sizeof (value));
@@ -900,20 +935,20 @@ grey_validate(kAddr, kFrom, kRcpt, kName)
   }
 #endif
 
-  /* refresh/create valid entry */
+  /*
+   * refresh/create valid entry 
+   */
 #if 1
   {
     grey_entry_T        entry;
 
     memset(&entry, 0, sizeof (entry));
 
-    if (grey_get_rec(&gdata.gdbv, vkey, value, sizeof (value)))
-    {
+    if (grey_get_rec(&gdata.gdbv, vkey, value, sizeof (value))) {
       grey_entry_free(&entry);
       (void) grey_value_str2entry(&entry, value);
 
-      if (entry.date_updt + DT_GREY_INTERVAL < now)
-      {
+      if (entry.date_updt + DT_GREY_INTERVAL < now) {
         entry.date_updt = now;
         entry.count++;
 
@@ -921,8 +956,7 @@ grey_validate(kAddr, kFrom, kRcpt, kName)
         (void) grey_entry_free(&entry);
         (void) grey_add_rec(&gdata.gdbv, vkey, value, strlen(value));
       }
-    } else
-    {
+    } else {
       entry.date_init = entry.date_updt = now;
       strlcpy(entry.ip, ip, sizeof (entry.ip));
       strlcpy(entry.hostname, hostname, sizeof (entry.hostname));
@@ -946,7 +980,9 @@ grey_validate(kAddr, kFrom, kRcpt, kName)
     strlcpy(entry.from, from, sizeof (entry.from));
     entry.count = 1;
 
-    /* XXX JOE define FLAGS - compatible_domains */
+    /*
+     * XXX JOE define FLAGS - compatible_domains 
+     */
 
     (void) grey_value_entry2str(value, &entry, sizeof (value));
     (void) grey_entry_free(&entry);
@@ -955,10 +991,13 @@ grey_validate(kAddr, kFrom, kRcpt, kName)
   }
 #endif
 
-  /* check against pending entries database */
-  if (grey_get_rec(&gdata.gdbp, vkey, value, sizeof (value)))
-  {
-    /* OK - let's remove pending record */
+  /*
+   * check against pending entries database 
+   */
+  if (grey_get_rec(&gdata.gdbp, vkey, value, sizeof (value))) {
+    /*
+     * OK - let's remove pending record 
+     */
     (void) grey_del_rec(&gdata.gdbp, vkey);
   }
 
@@ -1022,8 +1061,7 @@ grey_key(ip, from, rcpt, ipFlags, fromFlags, rcptFlags)
 
   sz = 3 * BF_SZ + 3;
 
-  if ((p = malloc(sz)) == NULL)
-  {
+  if ((p = malloc(sz)) == NULL) {
     ZE_LogSysError("malloc(%ld)", (long) sz);
     return NULL;
   }
@@ -1042,8 +1080,7 @@ grey_key(ip, from, rcpt, ipFlags, fromFlags, rcptFlags)
 
     nullsender = ISNULLSENDER(from);
 
-    if (zeStrRegex(ip, IPV6_ADDR_REGEX, NULL, NULL, TRUE))
-    {
+    if (zeStrRegex(ip, IPV6_ADDR_REGEX, NULL, NULL, TRUE)) {
       ipv6_T              ipv6;
 
       if (ipv6_str2rec(&ipv6, ip))
@@ -1058,24 +1095,24 @@ grey_key(ip, from, rcpt, ipFlags, fromFlags, rcptFlags)
       snprintf(buf_from, sizeof (buf_from), "nullsender");
 
     ZE_MessageInfo(DBG_LEVEL, "GREY FLAGS : %d %d %d", ipFlags, fromFlags,
-                 rcptFlags);
+                   rcptFlags);
 
-    switch (ipFlags)
-    {
+    switch (ipFlags) {
       case GREY_ADDR_NONE:
         *pf = '\0';
         break;
       case GREY_ADDR_FULL:
         break;
       case GREY_ADDR_NET:
-        /* IPV6 */
+        /*
+         * IPV6 
+         */
         if ((q = strrchr(buf_ip, '.')) != NULL)
           *q = '\0';
         break;
     }
 
-    switch (fromFlags)
-    {
+    switch (fromFlags) {
       case GREY_EMAIL_NONE:
         *pf = '\0';
         break;
@@ -1091,8 +1128,7 @@ grey_key(ip, from, rcpt, ipFlags, fromFlags, rcptFlags)
         break;
     }
 
-    switch (rcptFlags)
-    {
+    switch (rcptFlags) {
       case GREY_EMAIL_NONE:
         *pt = '\0';
         break;
@@ -1108,18 +1144,15 @@ grey_key(ip, from, rcpt, ipFlags, fromFlags, rcptFlags)
         break;
     }
 
-    for (q = pi; *q != '\0'; q++)
-    {
+    for (q = pi; *q != '\0'; q++) {
       if (iscntrl(*q) || isspace(*q) || (*q == ';') || (*q == '#'))
         *q = '_';
     }
-    for (q = pf; *q != '\0'; q++)
-    {
+    for (q = pf; *q != '\0'; q++) {
       if (iscntrl(*q) || isspace(*q) || (*q == ';') || (*q == '#'))
         *q = '_';
     }
-    for (q = pt; *q != '\0'; q++)
-    {
+    for (q = pt; *q != '\0'; q++) {
       if (iscntrl(*q) || isspace(*q) || (*q == ';') || (*q == '#'))
         *q = '_';
     }
@@ -1150,8 +1183,7 @@ grey_key_white(ip, from)
 
   sz = 3 * BF_SZ + 3;
 
-  if ((p = malloc(sz)) == NULL)
-  {
+  if ((p = malloc(sz)) == NULL) {
     ZE_LogSysError("malloc(%ld)", (long) sz);
     return NULL;
   }
@@ -1171,8 +1203,7 @@ grey_key_white(ip, from)
 
     nullsender = ISNULLSENDER(from);
 
-    if (zeStrRegex(ip, IPV6_ADDR_REGEX, NULL, NULL, TRUE))
-    {
+    if (zeStrRegex(ip, IPV6_ADDR_REGEX, NULL, NULL, TRUE)) {
       ipv6_T              ipv6;
 
       if (ipv6_str2rec(&ipv6, ip))
@@ -1188,14 +1219,12 @@ grey_key_white(ip, from)
     if ((q = strchr(buf_from, '@')) != NULL)
       pf = ++q;
 
-    for (q = pi; *q != '\0'; q++)
-    {
+    for (q = pi; *q != '\0'; q++) {
       if (iscntrl(*q) || isspace(*q) || (*q == '/') || (*q == ';')
           || (*q == '#'))
         *q = '_';
     }
-    for (q = pf; *q != '\0'; q++)
-    {
+    for (q = pf; *q != '\0'; q++) {
       if (iscntrl(*q) || isspace(*q) || (*q == '/') || (*q == ';')
           || (*q == '#'))
         *q = '_';
@@ -1220,8 +1249,7 @@ grey_count_pending(ip)
   if (ip == NULL)
     return 0;
 
-  if (grey_cursor_open(&gdata.gdbp, TRUE))
-  {
+  if (grey_cursor_open(&gdata.gdbp, TRUE)) {
     char                key[BF_SZ], data[BF_SZ];
     char                ipk[BF_SZ];
 
@@ -1231,8 +1259,7 @@ grey_count_pending(ip)
     memset(data, 0, sizeof (data));
 
     strlcpy(key, ip, sizeof (key));
-    switch (select_ip)
-    {
+    switch (select_ip) {
       case GREY_ADDR_NONE:
         *key = '\0';
         break;
@@ -1248,11 +1275,9 @@ grey_count_pending(ip)
     strlcpy(ipk, key, sizeof (ipk));
 
     if (grey_cursor_get_first
-        (&gdata.gdbp, key, sizeof (key), data, sizeof (data)))
-    {
+        (&gdata.gdbp, key, sizeof (key), data, sizeof (data))) {
       DB_BTREE_SEQ_START();
-      do
-      {
+      do {
         grey_entry_T        entry;
         bool                ok = TRUE;
 
@@ -1284,6 +1309,7 @@ grey_count_pending(ip)
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
+
 /*
 ** HI LEVEL DATABASE FUNCTIONS
 */
@@ -1305,21 +1331,25 @@ grey_init(workdir, rd, mode)
   static bool         ok = FALSE;
   bool                res;
 
-  if (!ok)
-  {
+  if (!ok) {
     atexit(grey_close);
     ok = TRUE;
   }
 
-  /* XXX JOE 
-   ** set values from configured options 
+  /*
+   * XXX JOE 
+   * ** set values from configured options 
    */
 
-  /* First of all, from configuration file */
+  /*
+   * First of all, from configuration file 
+   */
   {
   }
 
-  /* Now, from environnement variables */
+  /*
+   * Now, from environnement variables 
+   */
   {
   }
 
@@ -1340,6 +1370,7 @@ grey_init(workdir, rd, mode)
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
+
 /*
   ###   ####    #   #####
  #      #   #   #     #
@@ -1376,7 +1407,7 @@ grey_reload()
  **************************************************************************** */
 static              bool
 grey_add_rec(h, key, value, size)
-     ZEDB_T              *h;
+     ZEDB_T             *h;
      char               *key;
      void               *value;
      size_t              size;
@@ -1396,7 +1427,7 @@ grey_add_rec(h, key, value, size)
  **************************************************************************** */
 static              bool
 grey_get_rec(h, key, value, size)
-     ZEDB_T              *h;
+     ZEDB_T             *h;
      char               *key;
      void               *value;
      size_t              size;
@@ -1416,7 +1447,7 @@ grey_get_rec(h, key, value, size)
  **************************************************************************** */
 static              bool
 grey_del_rec(h, key)
-     ZEDB_T              *h;
+     ZEDB_T             *h;
      char               *key;
 {
   bool                res;
@@ -1432,6 +1463,7 @@ grey_del_rec(h, key)
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
+
 /*
   ###   ####    #   #####
  #      #   #   #     #
@@ -1458,7 +1490,7 @@ grey_flush()
  **************************************************************************** */
 static              bool
 grey_cursor_open(h, rdonly)
-     ZEDB_T              *h;
+     ZEDB_T             *h;
      bool                rdonly;
 {
   bool                res = FALSE;
@@ -1474,7 +1506,7 @@ grey_cursor_open(h, rdonly)
  **************************************************************************** */
 static              bool
 grey_cursor_close(h)
-     ZEDB_T              *h;
+     ZEDB_T             *h;
 {
   bool                res;
 
@@ -1489,7 +1521,7 @@ grey_cursor_close(h)
  **************************************************************************** */
 static              bool
 grey_cursor_get_first(h, k, ksz, v, vsz)
-     ZEDB_T              *h;
+     ZEDB_T             *h;
      char               *k;
      size_t              ksz;
      void               *v;
@@ -1508,7 +1540,7 @@ grey_cursor_get_first(h, k, ksz, v, vsz)
  **************************************************************************** */
 static              bool
 grey_cursor_get_next(h, k, ksz, v, vsz)
-     ZEDB_T              *h;
+     ZEDB_T             *h;
      char               *k;
      size_t              ksz;
      void               *v;
@@ -1527,7 +1559,7 @@ grey_cursor_get_next(h, k, ksz, v, vsz)
  **************************************************************************** */
 static              bool
 grey_cursor_del(h)
-     ZEDB_T              *h;
+     ZEDB_T             *h;
 {
   bool                res;
 
@@ -1541,6 +1573,7 @@ grey_cursor_del(h)
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
+
 /*
 **  MEDIUM LEVEL DATABASE FUNCTIONS
 **
@@ -1566,42 +1599,42 @@ db_grey_open(workdir, rd)
   mode = (rdonly ? 0444 : 0644);
 
   zeDb_Lock(&gdata.gdbp);
-  if (!zeDb_OK(&gdata.gdbp))
-  {
+  if (!zeDb_OK(&gdata.gdbp)) {
     snprintf(path, sizeof (path), "%s/%s", workdir, "ze-greypend.db");
 
     res = zeDb_Open(&gdata.gdbp, work_db_env, path, mode, rdonly, TRUE, 0);
-    ZE_MessageInfo(DBG_LEVEL, "PATH = %-32s, %s", path, STRBOOL(res, "OK", "KO"));
+    ZE_MessageInfo(DBG_LEVEL, "PATH = %-32s, %s", path,
+                   STRBOOL(res, "OK", "KO"));
   }
   zeDb_Unlock(&gdata.gdbp);
 
   zeDb_Lock(&gdata.gdbv);
-  if (!zeDb_OK(&gdata.gdbv))
-  {
+  if (!zeDb_OK(&gdata.gdbv)) {
     snprintf(path, sizeof (path), "%s/%s", workdir, "ze-greyvalid.db");
 
     res = zeDb_Open(&gdata.gdbv, work_db_env, path, mode, rdonly, TRUE, 0);
-    ZE_MessageInfo(DBG_LEVEL, "PATH = %-32s, %s", path, STRBOOL(res, "OK", "KO"));
+    ZE_MessageInfo(DBG_LEVEL, "PATH = %-32s, %s", path,
+                   STRBOOL(res, "OK", "KO"));
   }
   zeDb_Unlock(&gdata.gdbv);
 
   zeDb_Lock(&gdata.gdbw);
-  if (!zeDb_OK(&gdata.gdbw))
-  {
+  if (!zeDb_OK(&gdata.gdbw)) {
     snprintf(path, sizeof (path), "%s/%s", workdir, "ze-greywhitelist.db");
 
     res = zeDb_Open(&gdata.gdbw, work_db_env, path, mode, rdonly, TRUE, 0);
-    ZE_MessageInfo(DBG_LEVEL, "PATH = %-32s, %s", path, STRBOOL(res, "OK", "KO"));
+    ZE_MessageInfo(DBG_LEVEL, "PATH = %-32s, %s", path,
+                   STRBOOL(res, "OK", "KO"));
   }
   zeDb_Unlock(&gdata.gdbw);
 
   zeDb_Lock(&gdata.gdbb);
-  if (!zeDb_OK(&gdata.gdbb))
-  {
+  if (!zeDb_OK(&gdata.gdbb)) {
     snprintf(path, sizeof (path), "%s/%s", workdir, "ze-greyblacklist.db");
 
     res = zeDb_Open(&gdata.gdbb, work_db_env, path, mode, rdonly, TRUE, 0);
-    ZE_MessageInfo(DBG_LEVEL, "PATH = %-32s, %s", path, STRBOOL(res, "OK", "KO"));
+    ZE_MessageInfo(DBG_LEVEL, "PATH = %-32s, %s", path,
+                   STRBOOL(res, "OK", "KO"));
   }
   zeDb_Unlock(&gdata.gdbb);
 
@@ -1682,11 +1715,10 @@ db_grey_flush()
   if (zeDb_errno(&gdata.gdbp) == DB_RUNRECOVERY ||
       zeDb_errno(&gdata.gdbv) == DB_RUNRECOVERY ||
       zeDb_errno(&gdata.gdbw) == DB_RUNRECOVERY ||
-      zeDb_errno(&gdata.gdbb) == DB_RUNRECOVERY)
-  {
-    ZE_MessageWarning(8, "Reloading Greylisting databases after error (pending)");
-    if (!(res = grey_reload()))
-    {
+      zeDb_errno(&gdata.gdbb) == DB_RUNRECOVERY) {
+    ZE_MessageWarning(8,
+                      "Reloading Greylisting databases after error (pending)");
+    if (!(res = grey_reload())) {
       ZE_MessageWarning(8, "Reloading Greylisting error - restarting");
       kill(0, SIGTERM);
       sleep(1);
@@ -1701,6 +1733,7 @@ db_grey_flush()
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
+
 /*
 ** GREY DATABASE CLEANUP
 */
@@ -1715,14 +1748,12 @@ grey_launch_thread()
 {
   int                 r;
 
-  if (tid != SIGTID && (time(NULL) - tlast > 2 * dt_grey_cleanup))
-  {
+  if (tid != SIGTID && (time(NULL) - tlast > 2 * dt_grey_cleanup)) {
     ZE_LogSysWarning("grey_task thread not running ???");
     tid = SIGTID;
   }
 
-  if (tid == SIGTID)
-  {
+  if (tid == SIGTID) {
     ZE_MessageInfo(9, "*** Starting grey_task thread ...");
 
     if ((r = pthread_create(&tid, NULL, grey_task, (void *) NULL)) != 0)
@@ -1756,8 +1787,7 @@ grey_set_dewhite_flags(s, reset)
   if (strlen(s) == 0)
     return;
 
-  if ((ts = strdup(s)) == NULL)
-  {
+  if ((ts = strdup(s)) == NULL) {
     ZE_LogSysError("strdup(%s) error", s);
     return;
   }
@@ -1765,57 +1795,46 @@ grey_set_dewhite_flags(s, reset)
   memset(argv, 0, sizeof (argv));
   argc = zeStr2Tokens(s, 32, argv, " ,|");
 
-  for (i = 0; i < argc; i++)
-  {
-    if (strcasecmp(argv[i], "ALL") == 0)
-    {
+  for (i = 0; i < argc; i++) {
+    if (strcasecmp(argv[i], "ALL") == 0) {
       grey_dw_flags = GREY_DW_ALL;
       break;
     }
 
-    if (strcasecmp(argv[i], "NONE") == 0)
-    {
+    if (strcasecmp(argv[i], "NONE") == 0) {
       grey_dw_flags = GREY_DW_NONE;
       break;
     }
 
-    if (strcasecmp(argv[i], "NullSender") == 0)
-    {
+    if (strcasecmp(argv[i], "NullSender") == 0) {
       grey_dw_flags |= GREY_DW_NULLSENDER;
       continue;
     }
-    if (strcasecmp(argv[i], "BadResolve") == 0)
-    {
+    if (strcasecmp(argv[i], "BadResolve") == 0) {
       grey_dw_flags |= GREY_DW_BAD_RESOLVE;
       continue;
     }
-    if (strcasecmp(argv[i], "DomainMatch") == 0)
-    {
+    if (strcasecmp(argv[i], "DomainMatch") == 0) {
       grey_dw_flags |= GREY_DW_DOMAIN_MISMATCH;
       continue;
     }
-    if (strcasecmp(argv[i], "BadRCPT") == 0)
-    {
+    if (strcasecmp(argv[i], "BadRCPT") == 0) {
       grey_dw_flags |= GREY_DW_BAD_RCPT;
       continue;
     }
-    if (strcasecmp(argv[i], "SpamTrap") == 0)
-    {
+    if (strcasecmp(argv[i], "SpamTrap") == 0) {
       grey_dw_flags |= GREY_DW_SPAMTRAP;
       continue;
     }
-    if (strcasecmp(argv[i], "BadMX") == 0)
-    {
+    if (strcasecmp(argv[i], "BadMX") == 0) {
       grey_dw_flags |= GREY_DW_BAD_MX;
       continue;
     }
-    if (strcasecmp(argv[i], "BadClient") == 0)
-    {
+    if (strcasecmp(argv[i], "BadClient") == 0) {
       grey_dw_flags |= GREY_DW_BAD_CLIENT;
       continue;
     }
-    if (strcasecmp(argv[i], "Spammer") == 0)
-    {
+    if (strcasecmp(argv[i], "Spammer") == 0) {
       grey_dw_flags |= GREY_DW_BAD_CLIENT;
       continue;
     }
@@ -1845,8 +1864,7 @@ grey_set_dewhite_flags(s, reset)
   } while (0)
 
 
-struct expire_st_T
-{
+struct expire_st_T {
   char                key[3 * BF_SZ];
   long                nkt;
   long                nke;
@@ -1860,7 +1878,7 @@ struct expire_st_T
 */
 static              bool
 grey_database_expire(h, st, tmax_norm, tmax_null, gdb)
-     ZEDB_T              *h;
+     ZEDB_T             *h;
      expire_st_T        *st;
      time_t              tmax_norm;
      time_t              tmax_null;
@@ -1878,8 +1896,7 @@ grey_database_expire(h, st, tmax_norm, tmax_null, gdb)
   timems_T            dt_lock_max = 1000;
   char                kbuf[1024];
 
-  switch (gdb)
-  {
+  switch (gdb) {
     case GDB_PENDING:
       label = "Pending";
       break;
@@ -1903,16 +1920,14 @@ grey_database_expire(h, st, tmax_norm, tmax_null, gdb)
     char               *env = NULL;
     time_t              dt = dt_lock_max;
 
-    if ((env = getenv("GREY_CLEANUP_DT_LOCK_MAX")) != NULL)
-    {
+    if ((env = getenv("GREY_CLEANUP_DT_LOCK_MAX")) != NULL) {
       dt = zeStr2ulong(env, NULL, dt);
       if (dt >= 500)
         dt_lock_max = dt;
     }
   }
 
-  if (st != NULL)
-  {
+  if (st != NULL) {
     key = st->key;
     ksz = sizeof (st->key);
     if (strlen(key) == 0)
@@ -1924,8 +1939,7 @@ grey_database_expire(h, st, tmax_norm, tmax_null, gdb)
   TIMER_INIT(tims);
 
   memset(kbuf, 0, sizeof (kbuf));
-  if (grey_cursor_open(h, FALSE))
-  {
+  if (grey_cursor_open(h, FALSE)) {
     char                data[BF_SZ];
     char                ip[BF_SZ];
     bool                ip_bad = FALSE;
@@ -1955,8 +1969,7 @@ grey_database_expire(h, st, tmax_norm, tmax_null, gdb)
 
     DB_BTREE_SEQ_START();
     for (ok = grey_cursor_get_first(h, key, ksz, data, sizeof (data));
-         ok; ok = grey_cursor_get_next(h, key, ksz, data, sizeof (data)))
-    {
+         ok; ok = grey_cursor_get_next(h, key, ksz, data, sizeof (data))) {
       time_t              last;
       char               *argvk[GREY_ARGS];
       int                 argck;
@@ -1987,16 +2000,16 @@ grey_database_expire(h, st, tmax_norm, tmax_null, gdb)
       strlcpy(kbuf, key, sizeof (kbuf));
       argck = zeStr2Tokens(kbuf, GREY_ARGS, argvk, ";");
       if (argck == 0 || argvk[0] == NULL || argvk[1] == NULL
-          || argvk[2] == NULL)
-      {
-        /* XXX ??? */
+          || argvk[2] == NULL) {
+        /*
+         * XXX ??? 
+         */
       }
 
       separator = grey_separator(data);
       argcv = zeStr2Tokens(data, GREY_ARGS, argvv, separator);
 
-      if (argcv == 0)
-      {
+      if (argcv == 0) {
         ZE_MessageInfo(10, "key %s has empty value", key);
         (void) grey_cursor_del(h);
         if (st != NULL)
@@ -2007,31 +2020,38 @@ grey_database_expire(h, st, tmax_norm, tmax_null, gdb)
       if (argvv[ARG_DATE_UPDT] == NULL)
         continue;
 
-      /* utiliser entries data rec */
+      /*
+       * utiliser entries data rec 
+       */
       errno = 0;
       last = (time_t) zeStr2ulong(argvv[ARG_DATE_UPDT], NULL, 0);
 
-      if (gdb == GDB_WHITELIST)
-      {
-        /* XXX check if entry is too old and delete it if so */
+      if (gdb == GDB_WHITELIST) {
+        /*
+         * XXX check if entry is too old and delete it if so 
+         */
 
-        /* continue; */
+        /*
+         * continue; 
+         */
 
         goto endlabel;
       }
 
-      if (gdb == GDB_BLACKLIST)
-      {
-        /* XXX check if entry is too old and delete it if so */
+      if (gdb == GDB_BLACKLIST) {
+        /*
+         * XXX check if entry is too old and delete it if so 
+         */
 
-        /* continue; */
+        /*
+         * continue; 
+         */
 
         goto endlabel;
       }
 
       argvv[ARG_IP] = STRNULL(argvv[ARG_IP], "XXX");
-      if (strcasecmp(argvv[ARG_IP], ip) != 0)
-      {
+      if (strcasecmp(argvv[ARG_IP], ip) != 0) {
         ip_bad = FALSE;
 
         strlcpy(ip, argvv[ARG_IP], sizeof (ip));
@@ -2040,8 +2060,7 @@ grey_database_expire(h, st, tmax_norm, tmax_null, gdb)
           ip_bad = grey_check_bad_smtp_client(ip, grey_dw_flags);
       }
 
-      if (ip_bad)
-      {
+      if (ip_bad) {
         coef *= 4;
         why = "bad ip";
         ZE_MessageInfo(11, "* Removing %s (%s)", key, why);
@@ -2053,15 +2072,13 @@ grey_database_expire(h, st, tmax_norm, tmax_null, gdb)
 
       from = argvv[ARG_FROM];
       nullsender = ISNULLSENDER(from);
-      if (nullsender)
-      {
+      if (nullsender) {
         t_max = tmax_null;
 
         why = "nullsender";
       }
 
-      if (check_domain_match && !nullsender)
-      {
+      if (check_domain_match && !nullsender) {
         char               *pfrom, *pname;
 
         pfrom = strchr(from, '@');
@@ -2072,8 +2089,7 @@ grey_database_expire(h, st, tmax_norm, tmax_null, gdb)
 
         pname = argvv[ARG_HOSTNAME];
         if ((pname != NULL && strlen(pname) > 0) &&
-            !compatible_domainnames(pfrom, pname))
-        {
+            !compatible_domainnames(pfrom, pname)) {
           coef *= 2;
           why = "domain";
         }
@@ -2081,12 +2097,10 @@ grey_database_expire(h, st, tmax_norm, tmax_null, gdb)
 
     endlabel:
 
-      if (coef > 1)
-      {
+      if (coef > 1) {
         t_max /= coef;
         t_max = MAX(t_max, T_EXPIRE_BAD_MIN);
-        switch (gdb)
-        {
+        switch (gdb) {
           case GDB_PENDING:
             t_max = MIN(t_max, T_EXPIRE_PENDING_BAD_MAX);
             break;
@@ -2098,25 +2112,23 @@ grey_database_expire(h, st, tmax_norm, tmax_null, gdb)
         }
       }
 
-      if (last + t_max < now)
-      {
+      if (last + t_max < now) {
         why = STRNULL(why, "");
         if (strcmp(why, "") == 0)
           why = "too old";
 
-        if (FALSE && cf_get_int(CF_LOG_GREY_CLEANING) == OPT_YES)
-        {
+        if (FALSE && cf_get_int(CF_LOG_GREY_CLEANING) == OPT_YES) {
           char                logstr[1024];
           void                log_grey_expire(char *);
 
           ZE_MessageInfo(11, "* Removing %s %s (%s %s %s)",
-                       STRNULL(label, "-"), key, why, from, STRNULL(hostname,
-                                                                    "-"));
+                         STRNULL(label, "-"), key, why, from, STRNULL(hostname,
+                                                                      "-"));
 
           memset(logstr, 0, sizeof (logstr));
 
           /*
-             timestamp DB=(...) CREATED=(...) UPDATED=(...) IP=(...) FROM=(...) TO=(...) WHY=(...) 
+           * timestamp DB=(...) CREATED=(...) UPDATED=(...) IP=(...) FROM=(...) TO=(...) WHY=(...) 
            */
           snprintf(logstr, sizeof (logstr),
                    "DB=(%s) WHY=(%s) CREATED=(%s) UPDATED=(%s) IP=(%s) "
@@ -2125,8 +2137,7 @@ grey_database_expire(h, st, tmax_norm, tmax_null, gdb)
                    argvv[ARG_IP], argvv[ARG_HOSTNAME], argvv[ARG_FROM],
                    STRNULL(argvk[2], "-"),
                    STRNULL(argvk[0], "-"),
-                   STRNULL(argvk[1], "-"),
-                   STRNULL(argvk[2], "-"));
+                   STRNULL(argvk[1], "-"), STRNULL(argvk[2], "-"));
 
           log_grey_expire(logstr);
         }
@@ -2136,19 +2147,20 @@ grey_database_expire(h, st, tmax_norm, tmax_null, gdb)
           st->nke++;
       }
 
-      if (last + t_max > now)
-      {
+      if (last + t_max > now) {
 
       }
-      if ((ntp % 1000) == 0)
-      {
-        /* int n = smtprate_check(RATE_CONN, "", 600); */
-        /* check load - maybe... */
-        if (TIMER_NOW(tims) > dt_lock_max)
-        {
+      if ((ntp % 1000) == 0) {
+        /*
+         * int n = smtprate_check(RATE_CONN, "", 600); 
+         */
+        /*
+         * check load - maybe... 
+         */
+        if (TIMER_NOW(tims) > dt_lock_max) {
           ZE_MessageInfo(10,
-                       "Handling %s database : max delay expired : %d entries handled",
-                       label, ntp);
+                         "Handling %s database : max delay expired : %d entries handled",
+                         label, ntp);
 
           ok = TRUE;
           break;
@@ -2181,8 +2193,7 @@ count_members(s, sep)
   if (s == NULL || strlen(s) == 0)
     return 0;
 
-  while ((s = strchr(s, sep)) != NULL)
-  {
+  while ((s = strchr(s, sep)) != NULL) {
     nb++;
     s++;
   }
@@ -2193,14 +2204,13 @@ count_members(s, sep)
 
 static              bool
 grey_list2white(dbw, list)
-     ZEDB_T              *dbw;
+     ZEDB_T             *dbw;
      LISTR_T            *list;
 {
   LISTR_T            *lst;
   time_t              now = time(NULL);
 
-  for (lst = list; lst != NULL; lst = lst->next)
-  {
+  for (lst = list; lst != NULL; lst = lst->next) {
     char                wkey[256], wval[256];
     grey_entry_T        entry, *ep;
     LISTR_T            *p;
@@ -2217,26 +2227,31 @@ grey_list2white(dbw, list)
      */
     nbdomains = nbentries = nbhits = 0;
 
-    /* IPV6 - / or ; ? */
+    /*
+     * IPV6 - / or ; ? 
+     */
     n = strcspn(lst->key, ";");
-    if (n == strlen(lst->key))
-    {
-      /* Only IP ??? */
+    if (n == strlen(lst->key)) {
+      /*
+       * Only IP ??? 
+       */
       continue;
     }
     n++;
 
-    for (p = list; p != NULL; p = p->next)
-    {
+    for (p = list; p != NULL; p = p->next) {
       nbentries++;
-      if (strncasecmp(lst->key, p->key, n) == 0)
-      {
+      if (strncasecmp(lst->key, p->key, n) == 0) {
         nbdomains++;
         nbhits += p->count;
       }
     }
-    /* evaluate function(nbdomains, nbhits, lst->n, entry age */
-    /* XXX define function */
+    /*
+     * evaluate function(nbdomains, nbhits, lst->n, entry age 
+     */
+    /*
+     * XXX define function 
+     */
     if (nbentries == 0)
       continue;
     if (0)
@@ -2247,7 +2262,9 @@ grey_list2white(dbw, list)
      ** If not, then add this IP/domain to the whitelist
      */
 
-    /* XXX JOE : wkey = grey_key(GDB_WHITE, ...); */
+    /*
+     * XXX JOE : wkey = grey_key(GDB_WHITE, ...); 
+     */
     strlcpy(wkey, lst->key, sizeof (wkey));
 
     ZE_MessageInfo(10, "Adding to whitelist : %3d %s", lst->count, wkey);
@@ -2255,8 +2272,7 @@ grey_list2white(dbw, list)
     snprintf(wval, sizeof (wval), "%lu:%lu:%d", now, now, lst->count);
 
     ep = (grey_entry_T *) lst->data;
-    if (ep != NULL)
-    {
+    if (ep != NULL) {
       char               *p;
 
       strlcpy(entry.vip, STREMPTY(ep->vip, "0.0.0.0"), sizeof (entry.vip));
@@ -2297,8 +2313,8 @@ grey_list2white(dbw, list)
  **************************************************************************** */
 static              bool
 grey_database_whitelist(dba, dbb, st)
-     ZEDB_T              *dba;
-     ZEDB_T              *dbb;
+     ZEDB_T             *dba;
+     ZEDB_T             *dbb;
      expire_st_T        *st;
 {
   bool                ok = FALSE;
@@ -2307,10 +2323,11 @@ grey_database_whitelist(dba, dbb, st)
 
   GREY_CRIT_LOCK();
 
-  /* TIMER_INIT(); */
+  /*
+   * TIMER_INIT(); 
+   */
 
-  if (grey_cursor_open(dba, FALSE))
-  {
+  if (grey_cursor_open(dba, FALSE)) {
     char                data[BF_SZ];
     char                key[BF_SZ];
     size_t              ksz = sizeof (key);
@@ -2330,8 +2347,7 @@ grey_database_whitelist(dba, dbb, st)
 
     DB_BTREE_SEQ_START();
     for (ok = grey_cursor_get_first(dba, key, ksz, data, sizeof (data));
-         ok; ok = grey_cursor_get_next(dba, key, ksz, data, sizeof (data)))
-    {
+         ok; ok = grey_cursor_get_next(dba, key, ksz, data, sizeof (data))) {
       char               *argv[GREY_ARGS];
       int                 argc;
 
@@ -2341,8 +2357,9 @@ grey_database_whitelist(dba, dbb, st)
       if (argc < 3)
         continue;
 
-      /* Evaluate new prefix
-       **
+      /*
+       * Evaluate new prefix
+       * **
        */
       {
         char               *p;
@@ -2356,10 +2373,8 @@ grey_database_whitelist(dba, dbb, st)
         snprintf(new_prefix, sizeof (new_prefix), "%s;%s", argv[0], p);
       }
 
-      if (strcasecmp(cur_prefix, new_prefix) != 0)
-      {
-        if (cnt_prefix > 6)
-        {
+      if (strcasecmp(cur_prefix, new_prefix) != 0) {
+        if (cnt_prefix > 6) {
 
           nbw++;
         }
@@ -2374,7 +2389,9 @@ grey_database_whitelist(dba, dbb, st)
       } else
         cnt_prefix++;
 
-      /* update linked list */
+      /*
+       * update linked list 
+       */
       {
         grey_entry_T        entry;
         char                lkey[256], lval[256];
@@ -2386,8 +2403,7 @@ grey_database_whitelist(dba, dbb, st)
 
         ZE_MessageInfo(15, "DATA : %s", data);
 
-        if (grey_value_str2entry(&entry, data))
-        {
+        if (grey_value_str2entry(&entry, data)) {
           char               *p = entry.from;
 
           ZE_MessageInfo(15, "get_value_str2entry OK ");
@@ -2398,19 +2414,19 @@ grey_database_whitelist(dba, dbb, st)
             p = entry.from;
 
           ZE_MessageInfo(15, "ENTRY : from=%s p=%s vip=%s", entry.from, p,
-                       entry.ip);
+                         entry.ip);
           snprintf(lkey, sizeof (lkey), "%s;%s", entry.ip, p);
 
           nb = entry.count;
         } else
           continue;
 
-        /* check if already whitelisted, 
-         ** if yes, remove this entry 
-         ** and continue
+        /*
+         * check if already whitelisted, 
+         * ** if yes, remove this entry 
+         * ** and continue
          */
-        if (grey_get_rec(dbb, lkey, lval, sizeof (lval)))
-        {
+        if (grey_get_rec(dbb, lkey, lval, sizeof (lval))) {
           if (st != NULL)
             st->nke++;
           (void) grey_cursor_del(dba);
@@ -2418,37 +2434,48 @@ grey_database_whitelist(dba, dbb, st)
           continue;
         }
 
-        /* Don't use entries newer than 3 days - why 3 days ??? */
+        /*
+         * Don't use entries newer than 3 days - why 3 days ??? 
+         */
         if (entry.date_init + 3 DAYS > now)
           continue;
 
-        /* don't include entries if domains doesn't match */
+        /*
+         * don't include entries if domains doesn't match 
+         */
         {
           char                from[256];
 
           (void) extract_host_from_email_address(from, entry.from,
                                                  sizeof (from));
-          if (!compatible_domainnames(from, entry.hostname))
-          {
+          if (!compatible_domainnames(from, entry.hostname)) {
             continue;
           }
         }
 
-        /* No - let's add this record to linked list */
+        /*
+         * No - let's add this record to linked list 
+         */
         list = linked_list_add(list, lkey, nb, &entry, sizeof (entry));
       }
     }
     DB_BTREE_SEQ_END();
 
-    /* XXX only for valid database... */
-    /* browse is done ! */
+    /*
+     * XXX only for valid database... 
+     */
+    /*
+     * browse is done ! 
+     */
     grey_list2white(dbb, list);
     (void) linked_list_clear(list, NULL);
     list = NULL;
 
     (void) grey_cursor_close(dba);
   }
-  /* TIMER_LOG(); */
+  /*
+   * TIMER_LOG(); 
+   */
 
   GREY_CRIT_UNLOCK();
 
@@ -2467,13 +2494,13 @@ grey_database_whitelist(dba, dbb, st)
 #define ST_DONE               5
 
 #if 0
-# define CHECK_DELAY()				\
+#define CHECK_DELAY()				\
   {						\
     if (time(NULL) - now > 2)			\
       continue;					\
   }
 #else
-# define CHECK_DELAY()
+#define CHECK_DELAY()
 #endif
 
 static void        *
@@ -2501,8 +2528,7 @@ grey_task(data)
     char               *env = NULL;
     time_t              dt = dt_grey_sub;
 
-    if ((env = getenv("GREY_CLEANUP_SUB_INTERVAL")) != NULL)
-    {
+    if ((env = getenv("GREY_CLEANUP_SUB_INTERVAL")) != NULL) {
       dt = zeStr2time(env, NULL, dt);
       if (dt >= 1 MINUTES)
         dt_grey_sub = dt;
@@ -2512,8 +2538,7 @@ grey_task(data)
   tbase = now;
 
   tbase = thlast = 0;
-  for (;;)
-  {
+  for (;;) {
     tlast = now;
 
     ZE_MessageInfo(12, "%s running : %ld", ZE_FUNCTION, time(NULL));
@@ -2522,10 +2547,8 @@ grey_task(data)
 
     now = time(NULL);
 
-    if (tbase + dt_grey_cleanup <= now)
-    {
-      if (upd_state == ST_IDLE)
-      {
+    if (tbase + dt_grey_cleanup <= now) {
+      if (upd_state == ST_IDLE) {
         upd_state = ST_PENDING;
         tbase = now;
       }
@@ -2534,41 +2557,42 @@ grey_task(data)
     if (upd_state == ST_IDLE)
       continue;
 
-    if ((thlast + dt_grey_sub) <= now)
-    {
+    if ((thlast + dt_grey_sub) <= now) {
       thlast = now;
 
-      /* pending entries database */
-      if (upd_state == ST_PENDING)
-      {
+      /*
+       * pending entries database 
+       */
+      if (upd_state == ST_PENDING) {
         bool                done;
 
         ZE_MessageInfo(12, "GREY_TASK state = %d; key   : %s", upd_state,
-                     p_st.key);
+                       p_st.key);
         done =
           grey_database_expire(&gdata.gdbp, &p_st, grey_tp_max_norm,
                                grey_tp_max_null, GDB_PENDING);
-        if (done)
-        {
+        if (done) {
           gdata.nbp = p_st.nkt;
           memset(p_st.key, 0, sizeof (p_st.key));
           upd_state = ST_VALID;
         }
       }
-      /* CHECK_DELAY(); */
+      /*
+       * CHECK_DELAY(); 
+       */
 
-      /* valid entries database */
-      if (upd_state == ST_VALID)
-      {
+      /*
+       * valid entries database 
+       */
+      if (upd_state == ST_VALID) {
         bool                done;
 
         ZE_MessageInfo(12, "GREY_TASK state = %d; key   : %s", upd_state,
-                     v_st.key);
+                       v_st.key);
         done =
           grey_database_expire(&gdata.gdbv, &v_st, grey_tv_max, 12 HOURS,
                                GDB_VALID);
-        if (done)
-        {
+        if (done) {
 
           (void) grey_database_whitelist(&gdata.gdbv, &gdata.gdbw, &v_st);
 
@@ -2577,57 +2601,64 @@ grey_task(data)
           upd_state = ST_WHITE;
         }
       }
-      /* CHECK_DELAY(); */
+      /*
+       * CHECK_DELAY(); 
+       */
 
-      /* whitelist */
-      if (upd_state == ST_WHITE)
-      {
+      /*
+       * whitelist 
+       */
+      if (upd_state == ST_WHITE) {
         bool                done;
 
         ZE_MessageInfo(12, "GREY_TASK state = %d; key   : %s", upd_state,
-                     w_st.key);
+                       w_st.key);
         done =
           grey_database_expire(&gdata.gdbw, &w_st, grey_tw_max, 12 HOURS,
                                GDB_WHITELIST);
-        if (done)
-        {
+        if (done) {
           gdata.nbw = w_st.nkt;
           memset(w_st.key, 0, sizeof (w_st.key));
           upd_state = ST_BLACK;
         }
       }
-      /* CHECK_DELAY(); */
+      /*
+       * CHECK_DELAY(); 
+       */
 
-      /* blacklist */
-      if (upd_state == ST_BLACK)
-      {
+      /*
+       * blacklist 
+       */
+      if (upd_state == ST_BLACK) {
         bool                done = FALSE;
 
         ZE_MessageInfo(12, "GREY_TASK state = %d; key   : %s", upd_state,
-                     b_st.key);
+                       b_st.key);
         done =
           grey_database_expire(&gdata.gdbb, &b_st, grey_tb_max, 12 HOURS,
                                GDB_BLACKLIST);
-        if (done)
-        {
+        if (done) {
           gdata.nbb = b_st.nkt;
           memset(b_st.key, 0, sizeof (b_st.key));
           upd_state = ST_DONE;
         }
       }
-      /* CHECK_DELAY(); */
+      /*
+       * CHECK_DELAY(); 
+       */
 
-      if (upd_state == ST_DONE)
-      {
+      if (upd_state == ST_DONE) {
         ZE_MessageInfo(10,
-                     "GREY database cleanup : pending=%d/%d valid=%d/%d white=%d/%d",
-                     p_st.nke, p_st.nkt, v_st.nke, v_st.nkt, w_st.nke,
-                     w_st.nkt);
+                       "GREY database cleanup : pending=%d/%d valid=%d/%d white=%d/%d",
+                       p_st.nke, p_st.nkt, v_st.nke, v_st.nkt, w_st.nke,
+                       w_st.nkt);
         p_st.nke = p_st.nkt = v_st.nke = v_st.nkt = w_st.nke = w_st.nkt = 0;
 
         upd_state = ST_IDLE;
       }
-      /* CHECK_DELAY(); */
+      /*
+       * CHECK_DELAY(); 
+       */
     }
   }
 
@@ -2643,6 +2674,7 @@ fin:
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
+
 /*
   ###   ####    #   #####
  #      #   #   #     #
@@ -2656,7 +2688,7 @@ grey_dump(fd, which, dt)
      time_t              dt;
 {
   int                 nb = 0;
-  ZEDB_T              *db = NULL;
+  ZEDB_T             *db = NULL;
 
   if (which == NULL)
     return 0;
@@ -2675,9 +2707,10 @@ grey_dump(fd, which, dt)
 
   GREY_CRIT_LOCK();
 
-  /* lock ??? */
-  if (grey_cursor_open(db, TRUE))
-  {
+  /*
+   * lock ??? 
+   */
+  if (grey_cursor_open(db, TRUE)) {
     char                key[BF_SZ], data[BF_SZ];
     time_t              now;
 
@@ -2686,19 +2719,16 @@ grey_dump(fd, which, dt)
 
     now = time(NULL);
     errno = 0;
-    if (grey_cursor_get_first(db, key, sizeof (key), data, sizeof (data)))
-    {
+    if (grey_cursor_get_first(db, key, sizeof (key), data, sizeof (data))) {
       char               *argvv[GREY_ARGS];
       int                 argcv;
       char                buf[256];
 
       DB_BTREE_SEQ_START();
-      do
-      {
+      do {
         DB_BTREE_SEQ_CHECK(key, db->database);
 
-        if (dt > 0)
-        {
+        if (dt > 0) {
           time_t              t;
 
           strlcpy(buf, data, sizeof (buf));
@@ -2720,7 +2750,9 @@ grey_dump(fd, which, dt)
     }
     (void) grey_cursor_close(db);
   }
-  /* unlock ??? */
+  /*
+   * unlock ??? 
+   */
 
   GREY_CRIT_UNLOCK();
 
@@ -2731,6 +2763,7 @@ grey_dump(fd, which, dt)
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
+
 /*
   ###   ####    #   #####
  #      #   #   #     #
@@ -2743,7 +2776,7 @@ grey_upload(fname, which)
      char               *which;
 {
   int                 nb = 0;
-  ZEDB_T              *db = NULL;
+  ZEDB_T             *db = NULL;
 
   if (which == NULL)
     return 0;
@@ -2762,24 +2795,22 @@ grey_upload(fname, which)
 
   GREY_CRIT_LOCK();
 
-  /* lock ??? */
-  if (grey_cursor_open(db, TRUE))
-  {
+  /*
+   * lock ??? 
+   */
+  if (grey_cursor_open(db, TRUE)) {
     char                key[BF_SZ], data[BF_SZ];
 
     memset(key, 0, sizeof (key));
     memset(data, 0, sizeof (data));
 
     errno = 0;
-    if (grey_cursor_get_first(db, key, sizeof (key), data, sizeof (data)))
-    {
+    if (grey_cursor_get_first(db, key, sizeof (key), data, sizeof (data))) {
       DB_BTREE_SEQ_START();
-      do
-      {
+      do {
         DB_BTREE_SEQ_CHECK(key, db->database);
 #if 0
-        if (0)
-        {
+        if (0) {
           time_t              t;
           char               *argvv[GREY_ARGS];
           int                 argcv;
@@ -2800,7 +2831,9 @@ grey_upload(fname, which)
     }
     (void) grey_cursor_close(db);
   }
-  /* unlock ??? */
+  /*
+   * unlock ??? 
+   */
 
   GREY_CRIT_UNLOCK();
 
@@ -2817,13 +2850,11 @@ grey_separator(s)
 {
   static char        *sep = ";";
 
-  if (s != NULL && strlen(s) > 0)
-  {
+  if (s != NULL && strlen(s) > 0) {
     int                 l;
 
     l = strspn(s, "0123456789");
-    switch (s[l])
-    {
+    switch (s[l]) {
       case ':':
         sep = ":";
         break;
@@ -2856,18 +2887,18 @@ grey_value_str2entry(entry, s)
 
   char               *separator = ";";
 
-  /*memset(entry, 0, sizeof (*entry)); */
+  /*
+   * memset(entry, 0, sizeof (*entry)); 
+   */
 
-  if ((tstr = strdup(s)) == NULL)
-  {
+  if ((tstr = strdup(s)) == NULL) {
     ZE_LogSysError("strdup(%s) error", s);
     return FALSE;
   }
 
   separator = grey_separator(s);
   argc = zeStr2Tokens(tstr, GREY_ARGS, argv, separator);
-  if (argc > ARG_DATE_INIT)
-  {
+  if (argc > ARG_DATE_INIT) {
     time_t              t;
 
     errno = 0;
@@ -2878,8 +2909,7 @@ grey_value_str2entry(entry, s)
       ZE_LogSysWarning("Conversion %s to DATE_INIT error", argv[ARG_DATE_INIT]);
   }
 
-  if (argc > ARG_DATE_UPDT)
-  {
+  if (argc > ARG_DATE_UPDT) {
     time_t              t;
 
     errno = 0;
@@ -2890,35 +2920,30 @@ grey_value_str2entry(entry, s)
       ZE_LogSysWarning("Conversion %s to DATE_UPDT error", argv[ARG_DATE_UPDT]);
   }
 
-  if (argc > ARG_IP)
-  {
+  if (argc > ARG_IP) {
     strlcpy(entry->ip, STRNULL(argv[ARG_IP], "0.0.0.0"), sizeof (entry->ip));
     strlcpy(entry->vip, STRNULL(argv[ARG_IP], "0.0.0.0"), sizeof (entry->vip));
   }
 
-  if (argc > ARG_HOSTNAME)
-  {
+  if (argc > ARG_HOSTNAME) {
     strlcpy(entry->hostname, STRNULL(argv[ARG_HOSTNAME], "unknown"),
             sizeof (entry->hostname));
     strlcpy(entry->vhostname, STRNULL(argv[ARG_HOSTNAME], "unknown"),
             sizeof (entry->vhostname));
   }
 
-  if (argc > ARG_FROM)
-  {
+  if (argc > ARG_FROM) {
     strlcpy(entry->from, STRNULL(argv[ARG_FROM], "nullsender"),
             sizeof (entry->from));
     strlcpy(entry->vfrom, STRNULL(argv[ARG_FROM], "nullsender"),
             sizeof (entry->vfrom));
   }
 
-  if (argc > ARG_RESOLVE)
-  {
+  if (argc > ARG_RESOLVE) {
     entry->resolve = strcasecmp(argv[ARG_RESOLVE], "RESOLVE_OK") == 0;
   }
 
-  if (argc > ARG_COUNT)
-  {
+  if (argc > ARG_COUNT) {
     int                 t;
 
     errno = 0;
@@ -2995,6 +3020,7 @@ grey_entry_value(s, size, date_init, date_updt, ip, hostname, from, to, count,
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
+
 /*
 ** Server
 **   Remove entries
@@ -3021,8 +3047,7 @@ grey_dbcount(which)
      int                 which;
 {
 
-  switch (which)
-  {
+  switch (which) {
     case GDB_NONE:
       break;
     case GDB_PENDING:
@@ -3086,25 +3111,21 @@ recursive_compatible_domainnames(da, db, level)
   if (da == NULL || db == NULL)
     goto end;
 
-  if (strchr(da, '[') != NULL || strchr(da, ']') != NULL)
-  {
+  if (strchr(da, '[') != NULL || strchr(da, ']') != NULL) {
     ok = FALSE;
     goto end;
   }
-  if (strchr(db, '[') != NULL || strchr(db, ']') != NULL)
-  {
+  if (strchr(db, '[') != NULL || strchr(db, ']') != NULL) {
     ok = FALSE;
     goto end;
   }
 
-  if ((ta = strdup(da)) == NULL)
-  {
+  if ((ta = strdup(da)) == NULL) {
     ZE_LogSysError("strdup() error");
     goto error;
   }
 
-  if ((tb = strdup(db)) == NULL)
-  {
+  if ((tb = strdup(db)) == NULL) {
     ZE_LogSysError("strdup() error");
     goto error;
   }
@@ -3118,7 +3139,9 @@ recursive_compatible_domainnames(da, db, level)
   if ((p = strchr(tb, '@')) != NULL)
     *p = '\0';
 
-  /* if (ta != NULL && tb != NULL) */
+  /*
+   * if (ta != NULL && tb != NULL) 
+   */
   {
     int                 argca, argcb, m;
     char               *argva[DOM_DIM], *argvb[DOM_DIM];
@@ -3131,14 +3154,12 @@ recursive_compatible_domainnames(da, db, level)
 
     m = MIN(argca, argcb);
 
-    if (m > 1)
-    {
+    if (m > 1) {
       for (nbe = 0; nbe < m; nbe++)
         if (strcasecmp(argva[nbe], argvb[nbe]) != 0)
           break;
 
-      switch (nbe)
-      {
+      switch (nbe) {
         case 0:
           if (strcasecmp(argva[1], argvb[1]) == 0)
             ok = TRUE;
@@ -3151,10 +3172,8 @@ recursive_compatible_domainnames(da, db, level)
             char              **p = seclev;
 
             ok = TRUE;
-            for (p = seclev; *p != NULL; p++)
-            {
-              if (strcasecmp(argva[1], *p) == 0)
-              {
+            for (p = seclev; *p != NULL; p++) {
+              if (strcasecmp(argva[1], *p) == 0) {
                 ok = FALSE;
                 break;
               }
@@ -3171,21 +3190,17 @@ recursive_compatible_domainnames(da, db, level)
   if (++level > 2)
     goto end;
 
-  if (!ok)
-  {
+  if (!ok) {
     char                buf[256];
     int                 argc;
     char               *argv[32];
     int                 i;
 
     memset(buf, 0, sizeof (buf));
-    if (lookup_policy("GreyEquivDomain", da, buf, sizeof (buf), FALSE))
-    {
-      if (strlen(buf) > 0)
-      {
+    if (lookup_policy("GreyEquivDomain", da, buf, sizeof (buf), FALSE)) {
+      if (strlen(buf) > 0) {
         argc = zeStr2Tokens(buf, 32, argv, ", ");
-        for (i = 0; i < argc; i++)
-        {
+        for (i = 0; i < argc; i++) {
           ok = recursive_compatible_domainnames(db, argv[i], level);
           if (ok)
             break;
@@ -3196,13 +3211,10 @@ recursive_compatible_domainnames(da, db, level)
       goto end;
 
     memset(buf, 0, sizeof (buf));
-    if (lookup_policy("GreyEquivDomain", db, buf, sizeof (buf), FALSE))
-    {
-      if (strlen(buf) > 0)
-      {
+    if (lookup_policy("GreyEquivDomain", db, buf, sizeof (buf), FALSE)) {
+      if (strlen(buf) > 0) {
         argc = zeStr2Tokens(buf, 32, argv, ", ");
-        for (i = 0; i < argc; i++)
-        {
+        for (i = 0; i < argc; i++) {
           ok = recursive_compatible_domainnames(da, argv[i], level);
           if (ok)
             break;

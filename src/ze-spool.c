@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -72,8 +73,7 @@ spool_file_create(priv)
   if ((p = cf_get_str(CF_SPOOLDIR)) == NULL)
     p = ZE_SPOOLDIR;
 
-  if (cf_get_int(CF_CLUSTER) == OPT_YES)
-  {
+  if (cf_get_int(CF_CLUSTER) == OPT_YES) {
     char               *server = NULL;
 
     server = STRNULL(priv->mailserver, "SERVER");
@@ -81,16 +81,14 @@ spool_file_create(priv)
     snprintf(fname, sizeof (fname), "%s/%s.%s.%04X", p, server,
              CONNID_STR(priv->id), priv->nb_msgs);
 
-  } else
-  {
+  } else {
     snprintf(fname, sizeof (fname), "%s/%s.%04X", p, CONNID_STR(priv->id),
              priv->nb_msgs);
   }
 
   fd = open(fname, O_WRONLY | O_APPEND | O_CREAT, 0640);
 
-  if (fd < 0)
-  {
+  if (fd < 0) {
     ZE_LogSysError("can't create spool file (%s)", fname);
     fd = -1;
     return FALSE;
@@ -105,25 +103,26 @@ spool_file_create(priv)
   if ((priv->fname = strdup(fname)) == NULL)
     ZE_LogSysError("strdup(%s) error", fname);
 
-  /* Let's add a fake From line */
-  if (cf_get_int(CF_QUARANTINE_ADD_FROM_LINE) == OPT_YES)
-  {
+  /*
+   * Let's add a fake From line 
+   */
+  if (cf_get_int(CF_QUARANTINE_ADD_FROM_LINE) == OPT_YES) {
     char                s[256];
     char                t[256];
     time_t              tid = CONNID_INT(priv->id);
 
 #if HAVE_CTIME_R
-# ifdef _POSIX_PTHREAD_SEMANTICS
+#ifdef _POSIX_PTHREAD_SEMANTICS
     ctime_r(&tid, t);
-# else
-    ctime_r(&tid, t, sizeof (t));
-# endif
 #else
-# if HAVE_CTIME
+    ctime_r(&tid, t, sizeof (t));
+#endif
+#else
+#if HAVE_CTIME
     strlcpy(t, ctime(&tid, sizeof (t));
-# else
+#else
     strlcpy(t, "-", sizeof (t));
-# endif
+#endif
 #endif
 
     if ((p = strchr(t, '\r')) != NULL)
@@ -139,62 +138,57 @@ spool_file_create(priv)
 
     if (write(priv->fd, s, strlen(s)) != strlen(s))
       ZE_LogSysError("can't write fake From: line to %s", priv->fname);
-   }
+  }
 
-   if (1)
-   {
-     char rbuf[512];
-     char *mac_srv_name = NULL;
-     char *mac_cl_addr = NULL;
-     char *mac_cl_ptr = NULL;
-     char *mac_cl_name = NULL;
-     char *mac_qid = NULL;
+  if (1) {
+    char                rbuf[512];
+    char               *mac_srv_name = NULL;
+    char               *mac_cl_addr = NULL;
+    char               *mac_cl_ptr = NULL;
+    char               *mac_cl_name = NULL;
+    char               *mac_qid = NULL;
 
-     mac_srv_name = sm_macro_get_str(priv->sm, "j");
-     mac_srv_name = STREMPTY(mac_srv_name, my_hostname);
-     mac_cl_addr = sm_macro_get_str(priv->sm, "{client_addr}");
-     mac_cl_addr = STREMPTY(mac_cl_addr, "null");
-     mac_cl_ptr = sm_macro_get_str(priv->sm, "{client_ptr}");
-     mac_cl_ptr = STREMPTY(mac_cl_ptr, "null");
-     mac_cl_name = sm_macro_get_str(priv->sm, "{client_name}");
-     mac_cl_name = STREMPTY(mac_cl_name, "null");
-     mac_qid = sm_macro_get_str(priv->sm, "i");
-     mac_qid = STREMPTY(mac_qid, "null");
+    mac_srv_name = sm_macro_get_str(priv->sm, "j");
+    mac_srv_name = STREMPTY(mac_srv_name, my_hostname);
+    mac_cl_addr = sm_macro_get_str(priv->sm, "{client_addr}");
+    mac_cl_addr = STREMPTY(mac_cl_addr, "null");
+    mac_cl_ptr = sm_macro_get_str(priv->sm, "{client_ptr}");
+    mac_cl_ptr = STREMPTY(mac_cl_ptr, "null");
+    mac_cl_name = sm_macro_get_str(priv->sm, "{client_name}");
+    mac_cl_name = STREMPTY(mac_cl_name, "null");
+    mac_qid = sm_macro_get_str(priv->sm, "i");
+    mac_qid = STREMPTY(mac_qid, "null");
 
 /*
 Received: from qxxge.proxad.net (sge78-3-82-247-96-164.fbx.proxad.net [82.247.96.164])
 	by paris.ensmp.fr (8.14.4/8.14.4/JMMC-31/May/2010) with SMTP id o73Ed8Cs001045
 	for <dns@ensmp.fr>; Tue, 3 Aug 2010 16:39:09 +0200 (MEST)
 */
-     snprintf(rbuf, sizeof(rbuf), 
-	      "Received: from %s (%s [%s])%s\tby %s with SMTP id %s%s",
-	     mac_cl_ptr, 
-	     mac_cl_name,
-	     mac_cl_addr,
-	     rc,
-	     mac_srv_name,
-	     mac_qid,
-	     rc);
+    snprintf(rbuf, sizeof (rbuf),
+             "Received: from %s (%s [%s])%s\tby %s with SMTP id %s%s",
+             mac_cl_ptr,
+             mac_cl_name, mac_cl_addr, rc, mac_srv_name, mac_qid, rc);
 
     if (write(priv->fd, rbuf, strlen(rbuf)) != strlen(rbuf))
       ZE_LogSysError("can't write fake Received: line to %s", priv->fname);
 
-    snprintf(rbuf, sizeof (rbuf), 
-	     "X-ze-filter-Enveloppe: %s from %s/%s/%s/%s/%s%s",
-	     CONNID_STR(priv->id),
+    snprintf(rbuf, sizeof (rbuf),
+             "X-ze-filter-Enveloppe: %s from %s/%s/%s/%s/%s%s",
+             CONNID_STR(priv->id),
              mac_cl_name, mac_cl_ptr, mac_cl_addr,
-	     priv->helohost, priv->env_from, rc);
+             priv->helohost, priv->env_from, rc);
     /*
-    snprintf(rbuf, sizeof(rbuf), 
-	     "X-Received: from %s (%s [%s])%s",
-	     mac_cl_ptr, 
-	     mac_cl_name,
-	     mac_cl_addr,
-	     rc);
-    */
+     * snprintf(rbuf, sizeof(rbuf), 
+     * "X-Received: from %s (%s [%s])%s",
+     * mac_cl_ptr, 
+     * mac_cl_name,
+     * mac_cl_addr,
+     * rc);
+     */
     if (write(priv->fd, rbuf, strlen(rbuf)) != strlen(rbuf))
-      ZE_LogSysError("can't write fake X-ze-filter-Enveloppe: line to %s", priv->fname);
-   }
+      ZE_LogSysError("can't write fake X-ze-filter-Enveloppe: line to %s",
+                     priv->fname);
+  }
 
   return TRUE;
 }
@@ -212,8 +206,7 @@ spool_file_write(priv, buf, size)
   if (priv->fd < 0)
     return TRUE;
 
-  if (write(priv->fd, buf, size) != size)
-  {
+  if (write(priv->fd, buf, size) != size) {
     ZE_LogSysError("Error writing on spool file %s", priv->fname);
     return FALSE;
   }
@@ -233,8 +226,7 @@ spool_file_close(priv)
     return TRUE;
 
   priv->fp_open = FALSE;
-  if (close(priv->fd) < 0)
-  {
+  if (close(priv->fd) < 0) {
     ZE_LogSysError("error closing spool file");
     priv->fd = -1;
     return FALSE;
@@ -262,8 +254,7 @@ spool_file_forget(priv)
   if (priv->fname == NULL)
     goto fin;
 
-  if (!priv->save_msg)
-  {
+  if (!priv->save_msg) {
     unlink(priv->fname);
     goto fin;
   }
@@ -272,8 +263,7 @@ spool_file_forget(priv)
   sz = strlen(priv->fname) + strlen(suffix) + 4;
 
   filename = (char *) malloc(sz);
-  if (filename != NULL)
-  {
+  if (filename != NULL) {
     snprintf(filename, sz, "%s%s", priv->fname, suffix);
     if (rename(priv->fname, filename) == 0)
       SWAP_PTR(filename, priv->fname);
@@ -282,7 +272,7 @@ spool_file_forget(priv)
   } else
     ZE_LogSysError("Quarantine file name malloc error : %s", priv->fname);
   ZE_MessageInfo(11, "%-12s : quarantine file %s", CONNID_STR(priv->id),
-               priv->fname);
+                 priv->fname);
 
 fin:
   priv->fsuffix = NULL;

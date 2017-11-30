@@ -1110,7 +1110,7 @@ learn_callback(i, cargs, margs)
 
       memset(argv, 0, sizeof (argv));
       strlcpy(ebuf, s, sizeof (ebuf));
-      argc = str2tokens(ebuf, 8, argv, ",; ");
+      argc = zeStr2Tokens(ebuf, 8, argv, ",; ");
       if (argv[0] != NULL)
         srate = atof(argv[0]);
       if (argv[1] != NULL)
@@ -1277,9 +1277,9 @@ pile_sort(pile)
  **************************************************************************** */
 #define OPTION_BOOL(args, v)					\
   {								\
-    if (strexpr((args), "^yes|true|ok$", NULL, NULL, TRUE))	\
+    if (zeStrRegex((args), "^yes|true|ok$", NULL, NULL, TRUE))	\
       (v) = TRUE;						\
-    if (strexpr((args), "^no|false|ko$", NULL, NULL, TRUE))	\
+    if (zeStrRegex((args), "^no|false|ko$", NULL, NULL, TRUE))	\
       (v) = FALSE;						\
   }
 
@@ -1307,7 +1307,7 @@ decode_lr_options(lrOpts, cliOpt, optarg)
     return FALSE;
 
   strlcpy(buf, optarg, sizeof buf);
-  argc = str2tokens(buf, 4, argv, "=");
+  argc = zeStr2Tokens(buf, 4, argv, "=");
   if (argc < 2)
     return FALSE;
 

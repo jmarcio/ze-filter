@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -35,8 +36,7 @@ mlfi_helo(ctx, helohost)
 
   INIT_CALLBACK_DELAY();
 
-  if (priv == NULL)
-  {
+  if (priv == NULL) {
     result = SMFIS_TEMPFAIL;
     goto fin;
   }
@@ -53,19 +53,15 @@ mlfi_helo(ctx, helohost)
   FREE(priv->helohost);
   priv->helohost = NULL;
 
-  if ((priv->helohost = strdup(helohost)) == NULL)
-  {
+  if ((priv->helohost = strdup(helohost)) == NULL) {
     ZE_LogSysError("strdup(helohost) error");
     result = SMFIS_TEMPFAIL;
 
     goto fin;
   }
-
 #if _FFR_DELAYED_REJECT
-  if (priv->delayed_result.result != SMFIS_CONTINUE)
-  {
-    if (priv->callback >= priv->delayed_result.callback)
-    {
+  if (priv->delayed_result.result != SMFIS_CONTINUE) {
+    if (priv->callback >= priv->delayed_result.callback) {
       (void) jsmfi_setreply(ctx, "550", "5.7.1", priv->delayed_result.reply);
       log_msg_context(ctx, priv->delayed_result.why);
       goto fin;
@@ -75,8 +71,7 @@ mlfi_helo(ctx, helohost)
 
   result = check_cpu_load(ctx, CONNID_STR(priv->id), priv->peer_addr,
                           priv->netclass.class);
-  if (result != SMFIS_CONTINUE)
-  {
+  if (result != SMFIS_CONTINUE) {
     log_msg_context(ctx, "Global load control reject");
 
     goto fin;
@@ -84,8 +79,7 @@ mlfi_helo(ctx, helohost)
 
   result = check_filter_open_connections(ctx, CONNID_STR(priv->id),
                                          priv->peer_addr, priv->netclass.class);
-  if (result != SMFIS_CONTINUE)
-  {
+  if (result != SMFIS_CONTINUE) {
     log_msg_context(ctx, "Global open connections limit");
 
     goto fin;
@@ -98,7 +92,7 @@ mlfi_helo(ctx, helohost)
     goto fin;
 
 #if _FFR_MODULES
-  /* 
+  /*
    ** ze-filter modules
    **
    */
@@ -112,6 +106,8 @@ mlfi_helo(ctx, helohost)
 fin:
   CHECK_CALLBACK_DELAY();
 
-  /* continue processing */
+  /*
+   * continue processing 
+   */
   return result;
 }

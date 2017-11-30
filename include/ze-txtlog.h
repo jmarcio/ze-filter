@@ -127,7 +127,7 @@ int            log_error(LOG_T *);
   do {									\
     char *name = NULL;							\
     name = (fname != NULL && strlen(fname) > 0) ? fname : defval;	\
-    if (strexpr(name, LOGNAME_REGEX, NULL, NULL, TRUE)) {		\
+    if (zeStrRegex(name, LOGNAME_REGEX, NULL, NULL, TRUE)) {		\
       strlcpy(path, name, sizeof(path));				\
     } else {								\
       strcpy(path, "");							\

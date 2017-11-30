@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -49,8 +50,7 @@ int                 sm_macro_get_int(sm_mac_T *, char *);
  *                                                                           *
  *                                                                           *
  *****************************************************************************/
-struct sm_mac_T
-{
+struct sm_mac_T {
   char               *name;
   char               *value;
   char               *label;
@@ -117,8 +117,7 @@ sm_macro_new()
 
   ZE_MessageInfo(19, "sizeof smmac : %d", sizeof smmac);
 
-  if ((p = malloc(sizeof smmac)) != NULL)
-  {
+  if ((p = malloc(sizeof smmac)) != NULL) {
     memcpy(p, smmac, sizeof (smmac));
   } else;
 
@@ -159,8 +158,7 @@ sm_macro_update(ctx, sm)
   callback = callback_name(priv->callback_id);
   callback = STRNULL(callback, "CALLBACK");
 
-  for (p = sm; p != NULL && p->name != NULL; p++)
-  {
+  for (p = sm; p != NULL && p->name != NULL; p++) {
     char               *s;
 
     if (strlen(p->name) == 0)
@@ -169,21 +167,18 @@ sm_macro_update(ctx, sm)
 #if 1
     FREE(p->value);
 #endif
-    if ((s = smfi_getsymval(ctx, p->name)) != NULL)
-    {
+    if ((s = smfi_getsymval(ctx, p->name)) != NULL) {
       FREE(p->value);
-      if (s != NULL)
-      {
+      if (s != NULL) {
         p->value = strdup(s);
         if (p->value == NULL)
           ZE_LogSysError("strdup(%s)", s);
       }
     }
 
-    if (log_sm_macros && p->value != NULL)
-    {
+    if (log_sm_macros && p->value != NULL) {
       ZE_MessageInfo(9, "%s : %-9s : SM Macro %-15s %s", CONNID_STR(priv->id),
-                   callback, p->name, STRNULL(p->value, "(null)"));
+                     callback, p->name, STRNULL(p->value, "(null)"));
     }
   }
 }
@@ -199,8 +194,7 @@ sm_macro_get_str(sm, name)
 {
   sm_mac_T           *p = sm;
 
-  for (p = sm; p != NULL && p->name != NULL; p++)
-  {
+  for (p = sm; p != NULL && p->name != NULL; p++) {
     if (strcasecmp(name, p->name) == 0)
       return p->value;
   }
@@ -218,10 +212,8 @@ sm_macro_get_int(sm, name)
 {
   sm_mac_T           *p = sm;
 
-  for (p = sm; p != NULL && p->name != NULL; p++)
-  {
-    if (strcasecmp(name, p->name) == 0)
-    {
+  for (p = sm; p != NULL && p->name != NULL; p++) {
+    if (strcasecmp(name, p->name) == 0) {
       if (p->value != NULL)
         return atoi(p->value);
     }
@@ -242,11 +234,10 @@ sm_macro_log_all(id, sm)
 
   id = STRNULL(id, "NOID");
 
-  for (p = sm; p != NULL && p->name != NULL; p++)
-  {
+  for (p = sm; p != NULL && p->name != NULL; p++) {
     if (strlen(p->name) > 0)
       ZE_MessageInfo(9, "%s : %-15s - %s", id, p->name,
-                   STRNULL(p->value, "(null)"));
+                     STRNULL(p->value, "(null)"));
   }
 }
 

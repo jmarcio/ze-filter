@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -30,7 +31,7 @@
 static void         resolve_cache_close();
 static void        *resolve_cache_clean(void *);
 
-static ZEMAP_T        map = ZEMAP_INITIALIZER;
+static ZEMAP_T      map = ZEMAP_INITIALIZER;
 
 static char        *mapname = ZE_WDBDIR "/ze-res-cache.db";
 static size_t       mapcachesize = 2 * 1024 * 1024;
@@ -85,14 +86,14 @@ resolve_cache_check(prefix, key, value, size)
     goto fin;
 
   sz = strlen(prefix) + strlen(key) + 4;
-  if ((s = malloc(sz)) != NULL)
-  {
-    /* XXX Add record creation and update time stamps */
+  if ((s = malloc(sz)) != NULL) {
+    /*
+     * XXX Add record creation and update time stamps 
+     */
 
     snprintf(s, sz, "%s:%s", prefix, key);
     res = zeMap_Lookup(&map, s, buf, sizeof (buf));
-    if (res)
-    {
+    if (res) {
       char               *argv[8];
       int                 argc;
 
@@ -138,8 +139,7 @@ resolve_cache_add(prefix, key, value)
     goto fin;
 
   sz = strlen(prefix) + strlen(key) + 4;
-  if ((s = malloc(sz)) != NULL)
-  {
+  if ((s = malloc(sz)) != NULL) {
     char                buf[VALUE_LEN_MAX];
     time_t              first, last, now;
     char               *hostname = value;
@@ -147,13 +147,14 @@ resolve_cache_add(prefix, key, value)
     first = now = time(NULL);
     last = 0;
 
-    /* XXX Add record creation and update time stamps */
+    /*
+     * XXX Add record creation and update time stamps 
+     */
 
     memset(buf, 0, sizeof (buf));
     snprintf(s, sz, "%s:%s", prefix, key);
 
-    if (zeMap_Lookup(&map, s, buf, sizeof (buf)))
-    {
+    if (zeMap_Lookup(&map, s, buf, sizeof (buf))) {
       char               *argv[8];
       int                 argc;
       char               *name = NULL;
@@ -169,10 +170,11 @@ resolve_cache_add(prefix, key, value)
       hostname = argv[2];
     }
 
-    if (last + dt_refresh < now || !STRCASEEQUAL(value, hostname))
-    {
+    if (last + dt_refresh < now || !STRCASEEQUAL(value, hostname)) {
       last = now;
-      /* snprintf(s, sz, "%s:%s", prefix, key); */
+      /*
+       * snprintf(s, sz, "%s:%s", prefix, key); 
+       */
       snprintf(buf, sizeof (buf), "%lu;%lu;%s", first, last, value);
       res = zeMap_Add(&map, s, buf, strlen(buf) + 1);
     }
@@ -220,8 +222,7 @@ resolve_cache_init(dbdir, rwmode)
 {
   bool                res = TRUE;
 
-  if (!zeMap_OK(&map))
-  {
+  if (!zeMap_OK(&map)) {
     bool                rdonly;
     char                name[512];
 
@@ -233,8 +234,7 @@ resolve_cache_init(dbdir, rwmode)
 
     res = zeMap_Open(&map, work_db_env, name, rdonly, mapcachesize);
 
-    if (!rdonly)
-    {
+    if (!rdonly) {
       (void) atexit(resolve_cache_close);
 
       memset(browsekey, 0, sizeof (browsekey));
@@ -309,8 +309,7 @@ clean_up_cache(key, val, arg)
     if (argv[1] != NULL)
       last = zeStr2ulong(argv[1], NULL, 0);
 
-    if (last + dt_expire < *now)
-    {
+    if (last + dt_expire < *now) {
       ZE_MessageInfo(11, "Resolve cache entry expired %s %lu %lu", key, last);
       r |= ZEMAP_BROWSE_DELETE;
     }
@@ -343,24 +342,23 @@ resolve_cyclic_task(arg)
 
   zeMap_Lock(&map);
 
-  if (last_check + dt_check <= now)
-  {
+  if (last_check + dt_check <= now) {
     timems_T            ti, tf;
 
     ti = time_ms();
 
-    zeMap_Browse(&map, clean_up_cache, &now, browsekey, sizeof (browsekey), 1000);
+    zeMap_Browse(&map, clean_up_cache, &now, browsekey, sizeof (browsekey),
+                 1000);
     last_check = now;
 
-    if (resolve_cache_show_cyclic_task)
-    {
+    if (resolve_cache_show_cyclic_task) {
       tf = time_ms();
-      ZE_MessageInfo(10, "Cleaning up resolve cache map dt = %lu", (long) (tf - ti));
+      ZE_MessageInfo(10, "Cleaning up resolve cache map dt = %lu",
+                     (long) (tf - ti));
     }
   }
 #if 0
-  if (last_sync + dt_sync <= now)
-  {
+  if (last_sync + dt_sync <= now) {
     timems_T            ti, tf;
     static int          i = 0;
 
@@ -369,10 +367,10 @@ resolve_cyclic_task(arg)
     resolve_cache_sync();
     last_sync = now;
 
-    if (resolve_cache_show_cyclic_task && (++i % 6) == 0)
-    {
+    if (resolve_cache_show_cyclic_task && (++i % 6) == 0) {
       tf = time_ms();
-      ZE_MessageInfo(10, "Syncing resolve cache map dt = %lu", (long) (tf - ti));
+      ZE_MessageInfo(10, "Syncing resolve cache map dt = %lu",
+                     (long) (tf - ti));
     }
   }
 #endif

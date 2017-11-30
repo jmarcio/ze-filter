@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -41,8 +42,7 @@ main(argc, argv)
 
   memset(tok, 0, sizeof (tok));
 
-  for (i = 0; i < 1000000 && fgets(sin, sizeof (sin), stdin) != NULL; i++)
-  {
+  for (i = 0; i < 1000000 && fgets(sin, sizeof (sin), stdin) != NULL; i++) {
     if ((tok[i] = strdup(sin)) == NULL)
       break;
   }
@@ -50,8 +50,7 @@ main(argc, argv)
 
 
   ti = time_ms();
-  for (i = 0; i < 1000000 && tok[i] != NULL; i++)
-  {
+  for (i = 0; i < 1000000 && tok[i] != NULL; i++) {
     char                sout[256];
 
     jmc_str2md5(sout, (unsigned char *) tok[i], sizeof (sout));
@@ -63,8 +62,7 @@ main(argc, argv)
   printf(" * MD5  = %4ld ms elapsed\n", tf - ti);
 
   ti = time_ms();
-  for (i = 0; i < 1000000 && tok[i] != NULL; i++)
-  {
+  for (i = 0; i < 1000000 && tok[i] != NULL; i++) {
     char                sout[256];
 
     jmc_str2sha1(sout, (unsigned char *) tok[i], sizeof (sout));
@@ -75,8 +73,7 @@ main(argc, argv)
   tf = time_ms();
   printf(" * SHA1 = %4d ms elapsed\n", tf - ti);
 
-  if (0)
-  {
+  if (0) {
     char                sout[256];
     char               *s;
 

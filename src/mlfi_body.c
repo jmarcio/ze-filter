@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -45,8 +46,7 @@ mlfi_body(ctx, bodyp, bodylen)
 
   stats_inc(STAT_BYTES, bodylen);
 
-  if (priv == NULL)
-  {
+  if (priv == NULL) {
     result = SMFIS_TEMPFAIL;
     goto fin;
   }
@@ -57,26 +57,27 @@ mlfi_body(ctx, bodyp, bodylen)
    ** Add here spool file creation
    ** or better, uncomment this...
    */
-  if (!spool_file_is_open(priv))
-  {
-    /* open a file to store this message */
-    if (!spool_file_create(priv))
-    {
+  if (!spool_file_is_open(priv)) {
+    /*
+     * open a file to store this message 
+     */
+    if (!spool_file_create(priv)) {
       result = SMFIS_TEMPFAIL;
 
       goto fin;
     }
   }
 #if 0
-  /* Message with passport ??? */
+  /*
+   * Message with passport ??? 
+   */
   if (priv->nb_rcpt == 1 && priv->pass_ok)
     goto fin;
 #endif
 
   sm_macro_update(ctx, priv->sm);
 
-  if (bodyp == NULL)
-  {
+  if (bodyp == NULL) {
     ZE_MessageError(9, "%s : bodyp = NULL", CONNID_STR(priv->id));
     result = SMFIS_TEMPFAIL;
 
@@ -91,9 +92,10 @@ mlfi_body(ctx, bodyp, bodylen)
   bodylen = buf_clean_rc((char *) bodyp, bodylen);
 #endif
 
-  /* output body block to spool file */
-  if (!spool_file_write(priv, (char *) bodyp, bodylen))
-  {
+  /*
+   * output body block to spool file 
+   */
+  if (!spool_file_write(priv, (char *) bodyp, bodylen)) {
     ZE_LogMsgWarning(0, "%s spool_file_write error", CONNID_STR(priv->id));
     (void) spool_file_forget(priv);
   }
@@ -103,14 +105,13 @@ mlfi_body(ctx, bodyp, bodylen)
 #endif
 
 
-  if (priv->body_nb == 0 && IS_UNKNOWN(priv->netclass.class))
-  {
+  if (priv->body_nb == 0 && IS_UNKNOWN(priv->netclass.class)) {
     char                buf[256];
     header_T           *h = priv->headers;
     int                 i;
     bool                doit = FALSE;
 
-    if (bodylen > sizeof(buf) - 1)
+    if (bodylen > sizeof (buf) - 1)
       goto ok;
 
     if (cf_get_int(CF_REJECT_SHORT_BODIES) != OPT_YES)
@@ -123,8 +124,7 @@ mlfi_body(ctx, bodyp, bodylen)
     memcpy(buf, bodyp + i, bodylen - i);
     buf[bodylen - i] = '\0';
 
-    while ((i = strlen(buf)) > 0)
-    {
+    while ((i = strlen(buf)) > 0) {
       if (!isspace(buf[i - 1]))
         break;
       buf[i - 1] = '\0';
@@ -136,21 +136,18 @@ mlfi_body(ctx, bodyp, bodylen)
     {
       char              **cmd;
 
-      for (cmd = SYMPA_CMDS; (*cmd != NULL); cmd++)
-      {
+      for (cmd = SYMPA_CMDS; (*cmd != NULL); cmd++) {
         ZE_MessageInfo(12, "Checking body : %s %s", buf, *cmd);
         if (zeStrRegex(buf, *cmd, NULL, NULL, TRUE))
           goto ok;
       }
 
       h = priv->headers;
-      while ((h = get_msgheader_next(h, "Subject")) != NULL)
-      {
+      while ((h = get_msgheader_next(h, "Subject")) != NULL) {
         if (h->value == NULL)
           continue;
 
-        for (cmd = SYMPA_CMDS; (*cmd != NULL); cmd++)
-        {
+        for (cmd = SYMPA_CMDS; (*cmd != NULL); cmd++) {
           ZE_MessageInfo(12, "Checking Subject %s %s", h->value, *cmd);
           if (zeStrRegex(h->value, *cmd, NULL, NULL, TRUE))
             goto ok;
@@ -158,17 +155,16 @@ mlfi_body(ctx, bodyp, bodylen)
       }
     }
 
-    /* autres ??? */
+    /*
+     * autres ??? 
+     */
 #if 0
-    if (0)
-    {
+    if (0) {
       char               *p, *q;
       int                 i;
 
-      while (p != NULL && *p != '\0')
-      {
-        if ((p = strpbrk(p, " \t\n")) != NULL)
-        {
+      while (p != NULL && *p != '\0') {
+        if ((p = strpbrk(p, " \t\n")) != NULL) {
           i++;
           p++;
           continue;
@@ -178,7 +174,7 @@ mlfi_body(ctx, bodyp, bodylen)
 #endif
 
     ZE_MessageInfo(12, "%s : This is a short message...",
-                 CONNID_STR(priv->id), strlen(buf));
+                   CONNID_STR(priv->id), strlen(buf));
     priv->msg_short = TRUE;
   }
 
@@ -189,17 +185,14 @@ ok:
    **
    */
   ZE_MessageInfo(12, "%s : Check X-files : %s",
-               CONNID_STR(priv->id),
-               ((cf_get_int(CF_XFILES) != OPT_OK) ? "YES" : "NO"));
+                 CONNID_STR(priv->id),
+                 ((cf_get_int(CF_XFILES) != OPT_OK) ? "YES" : "NO"));
   extract_attachments = (cf_get_int(CF_XFILES) != OPT_OK) ||
     (cf_get_int(CF_SCANNER_ACTION) != OPT_OK) ||
     (cf_get_int(CF_LOG_ATTACHMENTS) == OPT_YES);
-  if (extract_attachments)
-  {
-    if ((bodyp != NULL) && (bodylen > 0))
-    {
-      if (priv->body_res_scan == 0)
-      {
+  if (extract_attachments) {
+    if ((bodyp != NULL) && (bodylen > 0)) {
+      if (priv->body_res_scan == 0) {
         priv->body_res_scan = scan_block(CONNID_STR(priv->id),
                                          priv->body_chunk,
                                          SZ_CHUNK,
@@ -208,12 +201,11 @@ ok:
                                          &priv->body_scan_state,
                                          &priv->tcontent, &priv->lcontent);
         ZE_MessageInfo(12, "%s : Check X-files : %s",
-                     CONNID_STR(priv->id),
-                     cf_get_int(CF_XFILES) != OPT_OK ? "YES" : "NO");
-        if (priv->body_res_scan != 0)
-        {
+                       CONNID_STR(priv->id),
+                       cf_get_int(CF_XFILES) != OPT_OK ? "YES" : "NO");
+        if (priv->body_res_scan != 0) {
           ZE_MessageWarning(11, "%-12s - scan_chunk res = %d",
-                          CONNID_STR(priv->id), priv->body_res_scan);
+                            CONNID_STR(priv->id), priv->body_res_scan);
           result = SMFIS_REJECT;
           (void) jsmfi_setreply(ctx, "554", "5.7.1", "Binary message");
           log_msg_context(ctx, MSG_BINARY_MESSAGE);
@@ -228,7 +220,8 @@ fin:
   MUTEX_LOCK(&st_mutex);
   kstats_update(&st_time, (double) (tfms - tims));
   MUTEX_UNLOCK(&st_mutex);
-  /* continue processing */
+  /*
+   * continue processing 
+   */
   return result;
 }
-

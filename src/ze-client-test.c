@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -33,8 +34,7 @@
 #define             DEF_TUPLE         "NET,HOST,FULL"
 #define             DEF_TIMES         "0,1000,0,1000"
 
-struct conf_T
-{
+struct conf_T {
   char               *workdir;
   int                 count;
 
@@ -77,27 +77,33 @@ main(argc, argv)
     const char         *args = "ht:dvw:n:l:c:";
     int                 c;
 
-    while ((c = getopt(argc, argv, args)) != -1)
-    {
-      switch (c)
-      {
-          /* help */
+    while ((c = getopt(argc, argv, args)) != -1) {
+      switch (c) {
+          /*
+           * help 
+           */
         case 'h':
           usage(argv[0]);
           exit(0);
           break;
 
-          /* time constants */
+          /*
+           * time constants 
+           */
         case 't':
           tconst = optarg;
           break;
 
-          /* verbose */
+          /*
+           * verbose 
+           */
         case 'v':
           ze_logLevel++;
           break;
 
-          /* group */
+          /*
+           * group 
+           */
         case 'l':
           ze_logLevel = atoi(optarg);
           break;
@@ -106,7 +112,9 @@ main(argc, argv)
           cargs.count = atoi(optarg);
           break;
 
-          /* Work directory */
+          /*
+           * Work directory 
+           */
         case 'w':
           workdir = optarg;
           break;
@@ -127,59 +135,56 @@ main(argc, argv)
   configure("ze-client-test", conf_file, FALSE);
 
   {
-    client_T client = CLIENT_INITIALIZER;
-    char  buf[1024];
-    int i;
-    int fd;
-    char fname[512];
-    int tfd;
-    FILE *fin;
+    client_T            client = CLIENT_INITIALIZER;
+    char                buf[1024];
+    int                 i;
+    int                 fd;
+    char                fname[512];
+    int                 tfd;
+    FILE               *fin;
 
     printf("* Connect \n");
     if (!client_connect(&client, "inet:2012@127.0.0.1", 10))
       goto fin;
 
     printf("* Receive \n");
-    memset(buf, 0, sizeof(buf));
-    if (!client_recv(&client, buf, sizeof(buf)))
-      ;
+    memset(buf, 0, sizeof (buf));
+    if (!client_recv(&client, buf, sizeof (buf)));
 
     printf("* Send \n");
-    strlcpy(buf, "download pending\r\n", sizeof(buf));
-    if (!client_send(&client, buf, strlen(buf)))
-      ;
+    strlcpy(buf, "download pending\r\n", sizeof (buf));
+    if (!client_send(&client, buf, strlen(buf)));
 
     printf("* Receive \n");
-    strlcpy(fname, "pending.XXXXXX", sizeof(fname));
+    strlcpy(fname, "pending.XXXXXX", sizeof (fname));
     fd = mkstemp(fname);
     for (;;) {
-      memset(buf, 0, sizeof(buf));
-      if (!client_recv(&client, buf, sizeof(buf)))
-	break;
+      memset(buf, 0, sizeof (buf));
+      if (!client_recv(&client, buf, sizeof (buf)))
+        break;
       printf("%s", buf);
       write(fd, buf, strlen(buf));
     }
     close(fd);
 
     printf("* Send \n");
-    strlcpy(buf, "download valid\r\n", sizeof(buf));
-    if (!client_send(&client, buf, strlen(buf)))
-      ;
+    strlcpy(buf, "download valid\r\n", sizeof (buf));
+    if (!client_send(&client, buf, strlen(buf)));
 
     printf("* Receive \n");
-    strlcpy(fname, "valid.XXXXXX", sizeof(fname));
+    strlcpy(fname, "valid.XXXXXX", sizeof (fname));
     fd = mkstemp(fname);
     for (;;) {
-      memset(buf, 0, sizeof(buf));
+      memset(buf, 0, sizeof (buf));
 #if 1
-      if (!client_readln(&client, buf, sizeof(buf)))
-	break;
+      if (!client_readln(&client, buf, sizeof (buf)))
+        break;
       printf("%s\n", buf);
       write(fd, buf, strlen(buf));
       write(fd, "\n", 1);
 #else
-      if (!client_recv(&client, buf, sizeof(buf)))
-	break;
+      if (!client_recv(&client, buf, sizeof (buf)))
+        break;
       printf("%s", buf);
       write(fd, buf, strlen(buf));
 #endif
@@ -187,26 +192,24 @@ main(argc, argv)
     close(fd);
 
     printf("* Send \n");
-    strlcpy(buf, "download white\r\n", sizeof(buf));
-    if (!client_send(&client, buf, strlen(buf)))
-      ;
+    strlcpy(buf, "download white\r\n", sizeof (buf));
+    if (!client_send(&client, buf, strlen(buf)));
 
     printf("* Receive \n");
-    strlcpy(fname, "white.XXXXXX", sizeof(fname));
+    strlcpy(fname, "white.XXXXXX", sizeof (fname));
     fd = mkstemp(fname);
     for (;;) {
-      memset(buf, 0, sizeof(buf));
-      if (!client_recv(&client, buf, sizeof(buf)))
-	break;
+      memset(buf, 0, sizeof (buf));
+      if (!client_recv(&client, buf, sizeof (buf)))
+        break;
       printf("%s", buf);
       write(fd, buf, strlen(buf));
     }
     close(fd);
 
     printf("* Send \n");
-    strlcpy(buf, "quit\r\n", sizeof(buf));
-    if (!client_send(&client, buf, strlen(buf)))
-      ;
+    strlcpy(buf, "quit\r\n", sizeof (buf));
+    if (!client_send(&client, buf, strlen(buf)));
 
   fin:
     client_disconnect(&client, FALSE);
@@ -236,8 +239,7 @@ do_test(conf_T * cargs)
   to = "grey@foss.jose-marcio.org";
 
   ti = time_ms();
-  for (n = 0; n < cargs->count; n++)
-  {
+  for (n = 0; n < cargs->count; n++) {
     int                 r = GREY_OK;
     char               *s = NULL;
     bool                new = FALSE;
@@ -247,8 +249,7 @@ do_test(conf_T * cargs)
     to = buf;
 
     r = remote_grey_check(ip, from, to, hostname);
-    switch (r)
-    {
+    switch (r) {
       case GREY_OK:
         s = "OK";
         break;

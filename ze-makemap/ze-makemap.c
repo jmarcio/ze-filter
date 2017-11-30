@@ -365,8 +365,8 @@ add_db_rec(vk, vv)
     if (v == NULL)
       v = "";
 
-    (void) zeStr2Upper(k);
-    (void) zeStr2Upper(v);
+    (void) zeStr2Lower(k);
+    (void) zeStr2Lower(v);
 
     if ((db_updt_mode & MDB_SKIP) != 0) {
       char                buf[BFSZ];

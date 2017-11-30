@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -758,8 +759,7 @@ dump_j_conf(fd)
 
   FD_PRINTF(fd, "Joe's ze-filter configuration : %s\n", PACKAGE);
 
-  if (cf_opt.arg_v > 1)
-  {
+  if (cf_opt.arg_v > 1) {
 
     FD_PRINTF(fd, "\n");
     FD_PRINTF(fd, "---> ze-filter compile-time configuration\n");
@@ -768,11 +768,9 @@ dump_j_conf(fd)
 
     s = compileConf;
     *str = '\0';
-    while (*s)
-    {
+    while (*s) {
       sprintf(str, "%s %-26s", str, *s);
-      if (strlen(str) > 48)
-      {
+      if (strlen(str) > 48) {
         FD_PRINTF(fd, "      %s\n", str);
         *str = '\0';
       }
@@ -786,38 +784,31 @@ dump_j_conf(fd)
 
   FD_PRINTF(fd, "--> ze-filter command line options\n");
   *str = '\0';
-  if (cf_opt.arg_h)
-  {
+  if (cf_opt.arg_h) {
     strcat(str, " -h");
   }
-  if (cf_opt.arg_v)
-  {
+  if (cf_opt.arg_v) {
     strcat(str, " -v");
   }
   FD_PRINTF(fd, "\n");
 
-  if (cf_opt.arg_p != NULL)
-  {
+  if (cf_opt.arg_p != NULL) {
     strcat(str, " -p ");
     strcat(str, cf_opt.arg_p);
   }
-  if (cf_opt.arg_i != NULL)
-  {
+  if (cf_opt.arg_i != NULL) {
     strcat(str, " -i ");
     strcat(str, cf_opt.arg_i);
   }
-  if (cf_opt.arg_u != NULL)
-  {
+  if (cf_opt.arg_u != NULL) {
     strcat(str, " -u ");
     strcat(str, cf_opt.arg_u);
   }
-  if (cf_opt.arg_c != NULL)
-  {
+  if (cf_opt.arg_c != NULL) {
     strcat(str, " -c ");
     strcat(str, cf_opt.arg_c);
   }
-  if (cf_opt.arg_l != NULL)
-  {
+  if (cf_opt.arg_l != NULL) {
     strcat(str, " -l ");
     strcat(str, cf_opt.arg_l);
   }
@@ -834,8 +825,7 @@ dump_j_conf(fd)
   FD_PRINTF(fd, "\n");
 
 #if HAVE_GETRLIMIT
-  if (getrlimit(RLIMIT_NOFILE, &rlp) == 0)
-  {
+  if (getrlimit(RLIMIT_NOFILE, &rlp) == 0) {
     FD_PRINTF(fd, "       RLIMIT_NOFILE    : %6ld (soft) - %6ld (hard)\n",
               (long) rlp.rlim_cur, (long) rlp.rlim_max);
     FD_PRINTF(fd, "       FD_SETSIZE       : %6ld\n", (long) FD_SETSIZE);

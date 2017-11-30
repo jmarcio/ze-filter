@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -38,8 +39,7 @@ mlfi_unknown(ctx, cmd)
   int                 ip_class;
 
   INIT_CALLBACK_DELAY();
-  if (priv == NULL)
-  {
+  if (priv == NULL) {
     result = SMFIS_TEMPFAIL;
     return result;
   }
@@ -49,11 +49,10 @@ mlfi_unknown(ctx, cmd)
   ip_class = priv->netclass.class;
   sm_macro_update(ctx, priv->sm);
   ZE_MessageInfo(9, "%s : %s Unknown command : %s", CONNID_STR(priv->id),
-               priv->peer_addr, STRNULL(cmd, "NULL"));
+                 priv->peer_addr, STRNULL(cmd, "NULL"));
 
   priv->nb_unknown_cmd++;
-  if (IS_UNKNOWN(ip_class) && priv->nb_unknown_cmd > MAX_UNKNOWN_CMD)
-  {
+  if (IS_UNKNOWN(ip_class) && priv->nb_unknown_cmd > MAX_UNKNOWN_CMD) {
     char                buf[256];
 
     (void) jsmfi_setreply(ctx, "421", "4.5.1", "Too many errors");
@@ -73,7 +72,7 @@ mlfi_unknown(ctx, cmd)
    **
    */
 #if _FFR_MODULES
-  /* 
+  /*
    ** ze-filter modules
    **
    */

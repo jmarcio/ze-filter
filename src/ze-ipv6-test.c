@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -34,14 +35,12 @@ ipv6_init_nets()
   char               *env;
 
   env = getenv("IPV6NET");
-  if (env != NULL)
-  {
+  if (env != NULL) {
     int                 argc;
     char               *argv[8];
 
     argc = zeStr2Tokens(env, 8, argv, ",");
-    if (argc >= 3)
-    {
+    if (argc >= 3) {
       v6net_lo = atoi(argv[0]);
       v6net_hi = atoi(argv[1]);
       v6net_step = atoi(argv[2]);
@@ -84,31 +83,27 @@ main(argc, argv)
 
   s = "2001:660:3312::1::2/64";
   printf(" * IN     %s\n", s);
-  if (ipv6_str2rec(&ipv6, s))
-  {
+  if (ipv6_str2rec(&ipv6, s)) {
     ipv6_rec2str(buf, &ipv6, sizeof (buf));
     printf(" * PARSED %s\n", buf);
   }
 
   s = "2001:660:33122::1/64";
   printf(" * IN     %s\n", s);
-  if (ipv6_str2rec(&ipv6, s))
-  {
+  if (ipv6_str2rec(&ipv6, s)) {
     ipv6_rec2str(buf, &ipv6, sizeof (buf));
     printf(" * PARSED %s\n", buf);
   }
 
   s = "2001:660:3312:ffff::1/64";
   printf(" * IN     %s\n", s);
-  if (ipv6_str2rec(&ipv6, s))
-  {
+  if (ipv6_str2rec(&ipv6, s)) {
     int                 i;
 
     ipv6_rec2str(buf, &ipv6, sizeof (buf));
     printf(" * PARSED %s\n", buf);
 
-    for (i = v6net_hi; i >= v6net_lo; i -= v6net_step)
-    {
+    for (i = v6net_hi; i >= v6net_lo; i -= v6net_step) {
       ipv6_prefix_str(&ipv6, buf, sizeof (buf), i);
 
       printf(" * NET    %s\n", buf);

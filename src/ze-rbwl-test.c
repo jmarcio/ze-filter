@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -53,10 +54,8 @@ main(argc, argv)
     ip = "0.0.0.0";
     name = "localhost";
 
-    while ((c = getopt(argc, argv, args)) != -1)
-    {
-      switch (c)
-      {
+    while ((c = getopt(argc, argv, args)) != -1) {
+      switch (c) {
         case 'i':
           ip = optarg;
           break;
@@ -75,8 +74,7 @@ main(argc, argv)
       }
     }
 
-    if (ze_logLevel > 11)
-    {
+    if (ze_logLevel > 11) {
 #if 0
 #define HOSTNAME_REGEX         "^[a-z0-9.-]+\\.[a-z]{2,6}$"
 #else

@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -110,15 +111,13 @@ log_quarantine(ctx, files)
   why = priv->save_why;
 
 #if 0
-  if (!log_ready(&tlog))
-  {
+  if (!log_ready(&tlog)) {
     if (!log_open(&tlog, logname))
       goto fin;
   }
 #endif
 
-  if (log_ready(&tlog))
-  {
+  if (log_ready(&tlog)) {
     rcpt_addr_T        *rcpt;
     char                msgid[256];
     char               *suffix = NULL;
@@ -145,9 +144,10 @@ log_quarantine(ctx, files)
     }
 
     if (priv->hdr_subject != NULL) {
-      char *p;
+      char               *p;
+
       while ((p = strpbrk(priv->hdr_subject, "\r\n")) != NULL) {
-	*p = ' ';
+        *p = ' ';
       }
     }
     log_printf(&tlog, "%-18s SUBJ     %s\n", msgid,
@@ -169,23 +169,20 @@ log_quarantine(ctx, files)
     if (strcasecmp(suffix, SUFFIX_SPAM) == 0)
 #endif
     {
-      if (priv->score_str != NULL && !STRCASEEQUAL(priv->score_str,""))
+      if (priv->score_str != NULL && !STRCASEEQUAL(priv->score_str, ""))
         log_printf(&tlog, "%-18s SCORE    %s\n", msgid, priv->score_str);
-      if (priv->status_str != NULL && !STRCASEEQUAL(priv->status_str,""))
+      if (priv->status_str != NULL && !STRCASEEQUAL(priv->status_str, ""))
         log_printf(&tlog, "%-18s STATUS   %s\n", msgid, priv->status_str);
     }
 
-    if (strcasecmp(suffix, SUFFIX_VIRUS) == 0)
-    {
+    if (strcasecmp(suffix, SUFFIX_VIRUS) == 0) {
       log_printf(&tlog, "%-18s VIRUS    %s\n", msgid,
                  STRNULL(priv->msg.virus, "UNKNOWN"));
     }
 
-    if (TRUE || strcasecmp(suffix, SUFFIX_QUARANTINE) != 0)
-    {
+    if (TRUE || strcasecmp(suffix, SUFFIX_QUARANTINE) != 0) {
       p = files;
-      while (p != NULL)
-      {
+      while (p != NULL) {
         char               *serror = "???";
 
         if ((p->name == NULL) || (strlen(p->name) == 0))

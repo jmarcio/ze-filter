@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -49,7 +50,7 @@ mlfi_close(ctx)
 #endif
   now = time(NULL);
 #if _FFR_MODULES
-  /* 
+  /*
    ** ze-filter modules
    **
    */
@@ -58,10 +59,8 @@ mlfi_close(ctx)
   if (result != SMFIS_CONTINUE)
     goto fin;
 #endif             /* _FFR_MODULES */
-  if ((priv->peer_addr != NULL) &&
-      (strlen(priv->peer_addr) > 0)
-      && !STRCASEEQUAL(priv->peer_addr, "unknown"))
-  {
+  if ((priv->peer_addr != NULL) && (strlen(priv->peer_addr) > 0)
+      && !STRCASEEQUAL(priv->peer_addr, "unknown")) {
 #if HAVE_GETHRTIME
     long                dtms =
       (long) ((priv->t_close - priv->t_open) / 1000000);
@@ -71,7 +70,9 @@ mlfi_close(ctx)
     if (dtms > tlongconn * 1000)
       (void) livehistory_add_entry(priv->peer_addr, now, 1, LH_LONGCONN);
     (void) raw_history_add_entry(ctx);
-    /* Let's update open connections for this address */
+    /*
+     * Let's update open connections for this address 
+     */
     (void) connopen_check_host(priv->peer_addr, priv->peer_name, -1);
     /*
      ** If this is an empty connection, update records

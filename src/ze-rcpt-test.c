@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -47,14 +48,12 @@ main(argc, argv)
   zeLog_SetOutput(FALSE, TRUE);
   ze_logLevel = 10;
 
-  if (!policy_init())
-  {
+  if (!policy_init()) {
     ZE_MessageInfo(0, "Error opening policy database !");
     exit(1);
   }
 
-  if (!rcpt_init())
-  {
+  if (!rcpt_init()) {
     ZE_MessageInfo(0, "Error opening rcpt database !");
     exit(1);
   }
@@ -73,10 +72,8 @@ main(argc, argv)
     name = "localhost";
     to = "nobody@localdomain";
 
-    while ((c = getopt(argc, argv, args)) != -1)
-    {
-      switch (c)
-      {
+    while ((c = getopt(argc, argv, args)) != -1) {
+      switch (c) {
         case 'i':
           ip = optarg;
           break;
@@ -104,7 +101,7 @@ main(argc, argv)
     ZE_MessageInfo(0, "Client hostname   : %s", name);
     ZE_MessageInfo(0, "Recipient         : %s", to);
     ZE_MessageInfo(0, "Client NET class  : %02X %s", netclass,
-                 NET_CLASS_LABEL(netclass));
+                   NET_CLASS_LABEL(netclass));
 
     flag = check_rcpt(to, ip, name, netclass);
 

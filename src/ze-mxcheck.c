@@ -35,16 +35,14 @@
  ******************************************************************************/
 #define               SZ_NAME  64
 
-typedef struct MX_T
-{
+typedef struct MX_T {
   char                domain[SZ_NAME];
   char                mx[SZ_NAME];
   time_t              last_update;
   time_t              last_query;
 } MX__T;
 
-static struct
-{
+static struct {
   bool                ok;
   time_t              last;
   int                 nb;
@@ -52,9 +50,7 @@ static struct
   pthread_mutex_t     mutex;
 
   JBT_T               db_open;
-}
-hdata =
-{
+} hdata = {
 FALSE, (time_t) 0, 0, PTHREAD_MUTEX_INITIALIZER, JBT_INITIALIZER};
 
 #define MX_OK(x)     (strcasecmp(x, "OK") == 0)
@@ -88,17 +84,15 @@ check_sender_mx(ctx, mail_host)
   if (mail_host == NULL || strlen(mail_host) == 0)
     return SMFIS_CONTINUE;
   ZE_MessageInfo(11, "%s Checking MXs for domain %s", CONNID_STR(priv->id),
-               mail_host);
+                 mail_host);
 
   if (IS_KNOWN(ip_class))
     goto fin;
 
-  if (mx_check_level < 0)
-  {
+  if (mx_check_level < 0) {
     char               *env;
 
-    if ((env = getenv("MXCHECKLEVEL")) != NULL)
-    {
+    if ((env = getenv("MXCHECKLEVEL")) != NULL) {
       int                 i;
 
       i = zeStr2long(env, NULL, 1);
@@ -114,12 +108,13 @@ check_sender_mx(ctx, mail_host)
     goto fin;
 
 #if _FFR_USE_MX_CACHE
-  /* Let's check if this guy is already in cache... */
+  /*
+   * Let's check if this guy is already in cache... 
+   */
   {
     char                buf[256];
 
-    if (res_cache_check("mx", mail_host, buf, sizeof (buf)))
-    {
+    if (res_cache_check("mx", mail_host, buf, sizeof (buf))) {
 
     }
   }
@@ -135,10 +130,8 @@ check_sender_mx(ctx, mail_host)
     char                buf[256];
     smtp_reply_T        r;
 
-    if (check_policy("BadMX", mail_host, buf, sizeof (buf), FALSE))
-    {
-      if (!MX_OK(buf))
-      {
+    if (check_policy("BadMX", mail_host, buf, sizeof (buf), FALSE)) {
+      if (!MX_OK(buf)) {
         MSG_BAD_MX(mail_host, mail_host);
 
         jc_string2reply(&r, buf);
@@ -154,26 +147,27 @@ check_sender_mx(ctx, mail_host)
     memset(&mx, 0, sizeof (mx));
     res = dns_get_mx(mail_host, &mx);
 
-    /* some MXs found : let's check them */
-    if (res > 0)
-    {
-      for (i = 0; i < mx.count; i++)
-      {
+    /*
+     * some MXs found : let's check them 
+     */
+    if (res > 0) {
+      for (i = 0; i < mx.count; i++) {
         nchk++;
 
         ZE_MessageInfo(11, "%s -> MX %3d %-16s %s\n",
-                     CONNID_STR(priv->id),
-                     mx.host[i].pref,
-                     STRNULL(mx.host[i].ip, ""), STRNULL(mx.host[i].name, ""));
+                       CONNID_STR(priv->id),
+                       mx.host[i].pref,
+                       STRNULL(mx.host[i].ip, ""), STRNULL(mx.host[i].name,
+                                                           ""));
 
         memset(buf, 0, sizeof (buf));
-        if (check_policy("BadMX", mx.host[i].ip, buf, sizeof (buf), FALSE))
-        {
-          if (!MX_OK(buf))
-          {
+        if (check_policy("BadMX", mx.host[i].ip, buf, sizeof (buf), FALSE)) {
+          if (!MX_OK(buf)) {
             MSG_BAD_MX(mail_host, mx.host[i].ip);
 
-            /* Found at database - let's decode */
+            /*
+             * Found at database - let's decode 
+             */
             jc_string2reply(&r, buf);
             (void) jsmfi_setreply(ctx, r.rcode, r.xcode, r.msg);
             result = r.result;
@@ -181,13 +175,13 @@ check_sender_mx(ctx, mail_host)
             result = SMFIS_CONTINUE;
           break;
         }
-        if (check_policy("BadMX", mx.host[i].name, buf, sizeof (buf), FALSE))
-        {
-          if (!MX_OK(buf))
-          {
+        if (check_policy("BadMX", mx.host[i].name, buf, sizeof (buf), FALSE)) {
+          if (!MX_OK(buf)) {
             MSG_BAD_MX(mail_host, mx.host[i].name);
 
-            /* Found at database - let's decode */
+            /*
+             * Found at database - let's decode 
+             */
             jc_string2reply(&r, buf);
             (void) jsmfi_setreply(ctx, r.rcode, r.xcode, r.msg);
             result = r.result;
@@ -202,31 +196,30 @@ check_sender_mx(ctx, mail_host)
     if (result != SMFIS_UNDEF)
       goto fin;
 
-    /* No MX found - let's look for IP address associated to the domain part */
-    if (nchk == 0)
-    {
+    /*
+     * No MX found - let's look for IP address associated to the domain part 
+     */
+    if (nchk == 0) {
       memset(&mx, 0, sizeof (mx));
       res = dns_get_a(mail_host, &mx);
-      if (res > 0)
-      {
-        for (i = 0; i < mx.count; i++)
-        {
+      if (res > 0) {
+        for (i = 0; i < mx.count; i++) {
           nchk++;
 
           ZE_MessageInfo(11, "%s -> A  %3d %-16s %s\n",
-                       CONNID_STR(priv->id),
-                       mx.host[i].pref,
-                       STRNULL(mx.host[i].ip, ""), STRNULL(mx.host[i].name,
-                                                           ""));
+                         CONNID_STR(priv->id),
+                         mx.host[i].pref,
+                         STRNULL(mx.host[i].ip, ""), STRNULL(mx.host[i].name,
+                                                             ""));
 
           memset(buf, 0, sizeof (buf));
-          if (check_policy("BadMX", mx.host[i].ip, buf, sizeof (buf), FALSE))
-          {
-            if (!MX_OK(buf))
-            {
+          if (check_policy("BadMX", mx.host[i].ip, buf, sizeof (buf), FALSE)) {
+            if (!MX_OK(buf)) {
               MSG_BAD_MX(mail_host, mx.host[i].ip);
 
-              /* Found at database - let's decode */
+              /*
+               * Found at database - let's decode 
+               */
               jc_string2reply(&r, buf);
               (void) jsmfi_setreply(ctx, r.rcode, r.xcode, r.msg);
               result = r.result;
@@ -241,13 +234,14 @@ check_sender_mx(ctx, mail_host)
       if (result != SMFIS_UNDEF)
         goto fin;
 
-      /* NO IP associated with this domain name ??? */
-      if (nchk == 0)
-      {
+      /*
+       * NO IP associated with this domain name ??? 
+       */
+      if (nchk == 0) {
         char               *reply = NULL;
 
         ZE_MessageInfo(10, "%s Domain %s doesn't resolve", CONNID_STR(priv->id),
-                     mail_host);
+                       mail_host);
 
         reply = cf_get_str(CF_DEFAULT_BAD_MX_REPLY);
         if (reply == NULL || strlen(reply) == 0)
@@ -255,15 +249,13 @@ check_sender_mx(ctx, mail_host)
 
         strlcpy(buf, reply, sizeof (buf));
 
-        if (jc_string2reply(&r, buf) != SMFIS_CONTINUE)
-        {
+        if (jc_string2reply(&r, buf) != SMFIS_CONTINUE) {
           (void) jsmfi_setreply(ctx, r.rcode, r.xcode, r.msg);
           result = r.result;
         }
       }
 
-      if (res < 0)
-      {
+      if (res < 0) {
       }
     }
   }
@@ -273,8 +265,7 @@ fin:
     result = SMFIS_CONTINUE;
 
   tf = time_ms();
-  if (ti != 0 && tf > ti)
-  {
+  if (ti != 0 && tf > ti) {
     static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
     static kstats_T     st = KSTATS_INITIALIZER;
     static int          ns = 0;
@@ -287,20 +278,22 @@ fin:
 
     kstats_update(&st, dt);
 
-    if ((++ns % 1000) == 0)
-    {
+    if ((++ns % 1000) == 0) {
       ZE_MessageInfo(10,
-                   "MX CHECK delay : nb=%d min=%5.3f mean=%5.3f max=%5.3f stddev=%5.3f ",
-                   ns, kmin(&st), kmean(&st), kmax(&st), kstddev(&st));
+                     "MX CHECK delay : nb=%d min=%5.3f mean=%5.3f max=%5.3f stddev=%5.3f ",
+                     ns, kmin(&st), kmean(&st), kmax(&st), kstddev(&st));
       kstats_reset(&st);
       ns = 0;
     }
 
-    /* add to resolve cache map */
-    if (dt >= 1000 || result != SMFIS_CONTINUE)
-    {
+    /*
+     * add to resolve cache map 
+     */
+    if (dt >= 1000 || result != SMFIS_CONTINUE) {
 #if _FFR_USE_MX_CACHE
-      /* don't know what exactly add to the map... */
+      /*
+       * don't know what exactly add to the map... 
+       */
       res_cache_add("mx", mail_host, "xxx");
 #endif             /* _FFR_USE_MX_CACHE */
     }
@@ -308,8 +301,7 @@ fin:
     MUTEX_UNLOCK(&mutex);
   }
 
-  if (result != SMFIS_CONTINUE)
-  {
+  if (result != SMFIS_CONTINUE) {
     char                logbuf[256];
 
     priv->rej_badmx++;

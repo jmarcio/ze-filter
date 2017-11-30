@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -29,19 +30,19 @@
 
 bool
 read_conf_data_file(cfdir, fname, dfile, func)
-     char          *cfdir;
-     char          *fname;
-     char          *dfile;
+     char               *cfdir;
+     char               *fname;
+     char               *dfile;
      read_conf_data_file_F func;
 {
-  char           path[1024];
+  char                path[1024];
 
-  int            i;
-  int            argc;
-  char          *argv[32];
-  char           fbuf[1024];
+  int                 i;
+  int                 argc;
+  char               *argv[32];
+  char                fbuf[1024];
 
-  bool           result = TRUE;
+  bool                result = TRUE;
 
   ASSERT(func != NULL);
 
@@ -53,16 +54,15 @@ read_conf_data_file(cfdir, fname, dfile, func)
   argc = zeStr2Tokens(fbuf, 32, argv, " ,");
 
   result = TRUE;
-  for (i = 0; i < argc && result; i++)
-  {
-    char          *tag;
+  for (i = 0; i < argc && result; i++) {
+    char               *tag;
 
     tag = strchr(argv[i], ':');
     if (tag != NULL)
       *tag++ = '\0';
     ADJUST_FILENAME(path, argv[i], cfdir, dfile);
     ZE_MessageInfo(11, "  * Loading file path=(%s) tag=(%s)",
-                 path, STRNULL(tag, "(null)"));
+                   path, STRNULL(tag, "(null)"));
 
     result = func(path, tag);
     if (!result)

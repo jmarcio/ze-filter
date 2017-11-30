@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -47,25 +48,21 @@ jsmfi_setreply_from_access(ctx, msg)
 
   tag = rcode = xcode = rmsg = NULL;
   {
-    if ((s = strdup(msg)) != NULL)
-    {
+    if ((s = strdup(msg)) != NULL) {
       p = tag = s;
 
       p = strchr(p, ':');
-      if (p != NULL)
-      {
+      if (p != NULL) {
         *p++ = '\0';
         rcode = p;
 
         p = strchr(p, ':');
-        if (p != NULL)
-        {
+        if (p != NULL) {
           *p++ = '\0';
           xcode = p;
 
           p = strchr(p, ':');
-          if (p != NULL)
-          {
+          if (p != NULL) {
             *p++ = '\0';
             rmsg = p;
           }
@@ -79,15 +76,14 @@ jsmfi_setreply_from_access(ctx, msg)
   xcode = STRNULL(xcode, "4.5.0");
 
   sout = rmsg;
-  if ((url != NULL) && (strlen(url) > 0))
-  {
+  if ((url != NULL) && (strlen(url) > 0)) {
     snprintf(buf, sizeof (buf), "%s - See %s", rmsg, url);
     sout = buf;
   }
 
   if ((res = smfi_setreply(ctx, rcode, xcode, sout)) != MI_SUCCESS)
     ZE_MessageWarning(9, "%s smfi_setreply returned MI_FAILURE",
-                    CONNID_STR(priv->id));
+                      CONNID_STR(priv->id));
 
   FREE(s);
 
@@ -113,15 +109,14 @@ jsmfi_setreply(ctx, ca, cb, msg)
 
   sout = msg;
 
-  if ((url != NULL) && (strlen(url) > 0))
-  {
+  if ((url != NULL) && (strlen(url) > 0)) {
     snprintf(buf, sizeof (buf), "%s - See %s", msg, url);
     sout = buf;
   }
 
   if ((res = smfi_setreply(ctx, ca, cb, sout)) != MI_SUCCESS)
     ZE_MessageWarning(9, "%s smfi_setreply returned MI_FAILURE",
-                    CONNID_STR(priv->id));
+                      CONNID_STR(priv->id));
 
   {
     size_t              sz;

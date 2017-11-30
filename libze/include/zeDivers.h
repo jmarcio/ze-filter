@@ -26,29 +26,7 @@
 
 int                 count_uint32bits(uint32_t);
 
-char               *jstrdup(char *);
-void               *jmalloc(size_t);
-
-char               *strtolower(char *);
-char               *strtoupper(char *);
-
-void                center_string(char *, char *, int);
-
-char               *strset(char *, int, int);
-
-void                strchknull(char *, int);
-
-size_t              strclean(char *, size_t);
-
-char               *strnoblanks(char *, size_t);
-
-char               *str_clear_trailing_blanks(char *);
-
-bool                strexpr(char *, char *, long *, long *, bool);
-
 int                 nb_valid_pointer(char *, char *, char *);
-
-int                 str2tokens(char *, int, char **, char *);
 
 char               *j_basename(char *, char *, size_t);
 

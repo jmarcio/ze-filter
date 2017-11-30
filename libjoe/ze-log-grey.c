@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -33,28 +34,27 @@
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 
-void           log_grey_expire(char *);
-bool           log_grey_expire_reopen();
+void                log_grey_expire(char *);
+bool                log_grey_expire_reopen();
 
 
 /* ****************************************************************************
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
-static LOG_T   logt = LOG_INITIALIZER;
+static LOG_T        logt = LOG_INITIALIZER;
 
 bool
 log_grey_expire_reopen()
 {
-  bool           res = TRUE;
+  bool                res = TRUE;
 
   MUTEX_LOCK(&mutex);
 
-  if (!log_ready(&logt))
-  {
-    char           path[1024];
-    char          *wkdir = cf_get_str(CF_WORKDIR);
-    char          *logname = cf_get_str(CF_GREY_LOG_FILE);
+  if (!log_ready(&logt)) {
+    char                path[1024];
+    char               *wkdir = cf_get_str(CF_WORKDIR);
+    char               *logname = cf_get_str(CF_GREY_LOG_FILE);
 
     ADJUST_LOG_NAME(path, logname, wkdir, "none:");
 
@@ -73,10 +73,10 @@ log_grey_expire_reopen()
  **************************************************************************** */
 void
 log_grey_expire(rec)
-     char          *rec;
+     char               *rec;
 {
-  time_t         t = time(NULL);
-  int            r;
+  time_t              t = time(NULL);
+  int                 r;
 
   if (!log_ready(&logt) && !log_grey_expire_reopen())
     return;

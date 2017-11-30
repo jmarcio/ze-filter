@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -41,6 +42,7 @@ int                 policy_log_level = 9;
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
+
 /*
 ** policy_check vs policy_lookup
 */
@@ -56,8 +58,7 @@ lookup_policy(prefix, key, buf, szbuf, chkdefault)
   char                bufout[256];
   bool                ok = FALSE;
 
-  if (key == NULL)
-  {
+  if (key == NULL) {
     if (chkdefault)
       key = "default";
     else
@@ -67,8 +68,7 @@ lookup_policy(prefix, key, buf, szbuf, chkdefault)
   ZE_MessageInfo(15, "Checking %s:%s", prefix, key);
 
   memset(bufout, 0, sizeof (bufout));
-  if (db_policy_check(prefix, key, bufout, sizeof (bufout)))
-  {
+  if (db_policy_check(prefix, key, bufout, sizeof (bufout))) {
     if (strlen(bufout) > 0)
       ZE_MessageInfo(15, " -> Got : %s:%-15s %s\n", prefix, key, bufout);
     strlcpy(buf, bufout, szbuf);
@@ -78,10 +78,8 @@ lookup_policy(prefix, key, buf, szbuf, chkdefault)
     goto fin;
   }
 
-  if (chkdefault)
-  {
-    if (db_policy_check(prefix, "default", bufout, sizeof (bufout)))
-    {
+  if (chkdefault) {
+    if (db_policy_check(prefix, "default", bufout, sizeof (bufout))) {
       if (strlen(buf) > 0)
         ZE_MessageInfo(15, " -> Got : %s:%-15s %s\n", prefix, "DEFAULT", buf);
       strlcpy(buf, bufout, szbuf);
@@ -90,8 +88,7 @@ lookup_policy(prefix, key, buf, szbuf, chkdefault)
 
       goto fin;
     }
-    if (db_policy_check(prefix, "*", bufout, sizeof (bufout)))
-    {
+    if (db_policy_check(prefix, "*", bufout, sizeof (bufout))) {
       if (strlen(buf) > 0)
         ZE_MessageInfo(15, " -> Got : %s:%-15s %s\n", prefix, "*", buf);
       strlcpy(buf, bufout, szbuf);
@@ -129,8 +126,7 @@ check_policy(prefix, key, buf, szbuf, chkdefault)
   char                bufout[256];
   bool                ok = FALSE;
 
-  if (key == NULL)
-  {
+  if (key == NULL) {
     if (chkdefault)
       key = "";
     else
@@ -140,8 +136,7 @@ check_policy(prefix, key, buf, szbuf, chkdefault)
   ZE_MessageInfo(15, "Checking %s:%s", prefix, key);
 
   memset(bufout, 0, sizeof (bufout));
-  if (db_policy_check(prefix, key, bufout, sizeof (bufout)))
-  {
+  if (db_policy_check(prefix, key, bufout, sizeof (bufout))) {
     if (strlen(bufout) > 0)
       ZE_MessageInfo(15, " -> Got : %s:%-15s %s\n", prefix, key, bufout);
     strlcpy(buf, bufout, szbuf);
@@ -153,12 +148,10 @@ check_policy(prefix, key, buf, szbuf, chkdefault)
 
   if (zeStrRegex(key, IPV4_ADDR_REGEX, NULL, NULL, TRUE) ||
       zeStrRegex(key, IPV6_ADDR_REGEX, NULL, NULL, TRUE) ||
-      zeStrRegex(key, DOMAINNAME_REGEX, NULL, NULL, TRUE))
-  {
+      zeStrRegex(key, DOMAINNAME_REGEX, NULL, NULL, TRUE)) {
     char                tb[256];
 
-    if (ze_logLevel > 10)
-    {
+    if (ze_logLevel > 10) {
       if (zeStrRegex(key, IPV4_ADDR_REGEX, NULL, NULL, TRUE))
         ZE_MessageInfo(15, " -> IP     : %s", key);
       if (zeStrRegex(key, IPV6_ADDR_REGEX, NULL, NULL, TRUE))
@@ -167,12 +160,10 @@ check_policy(prefix, key, buf, szbuf, chkdefault)
         ZE_MessageInfo(15, " -> DOMAIN : %s", key);
     }
 
-    if (db_policy_check("NetClass", key, tb, sizeof (tb)))
-    {
+    if (db_policy_check("NetClass", key, tb, sizeof (tb))) {
       if (strlen(tb) > 0)
         ZE_MessageInfo(15, " -> Got : %s:%-15s %s\n", "NetClass", key, tb);
-      if (db_policy_check(prefix, tb, bufout, sizeof (bufout)))
-      {
+      if (db_policy_check(prefix, tb, bufout, sizeof (bufout))) {
         if (strlen(bufout) > 0)
           ZE_MessageInfo(15, " -> Got : %s:%-15s %s\n", prefix, tb, bufout);
         strlcpy(buf, bufout, szbuf);
@@ -183,10 +174,8 @@ check_policy(prefix, key, buf, szbuf, chkdefault)
     }
   }
 
-  if (chkdefault)
-  {
-    if (db_policy_check(prefix, "default", bufout, sizeof (bufout)))
-    {
+  if (chkdefault) {
+    if (db_policy_check(prefix, "default", bufout, sizeof (bufout))) {
       if (strlen(bufout) > 0)
         ZE_MessageInfo(15, " -> Got : %s:%-15s %s\n", prefix, "DEFAULT", buf);
       strlcpy(buf, bufout, szbuf);
@@ -194,8 +183,7 @@ check_policy(prefix, key, buf, szbuf, chkdefault)
 
       goto fin;
     }
-    if (db_policy_check(prefix, "*", bufout, sizeof (bufout)))
-    {
+    if (db_policy_check(prefix, "*", bufout, sizeof (bufout))) {
       if (strlen(bufout) > 0)
         ZE_MessageInfo(15, " -> Got : %s:%-15s %s\n", prefix, "*", buf);
       strlcpy(buf, bufout, szbuf);
@@ -230,20 +218,19 @@ check_host_policy(prefix, addr, name, class, buf, size, cdef)
   if (addr != NULL)
     ok = lookup_policy(prefix, addr, buf, size, FALSE);
   ZE_MessageInfo(11, "Prefix : %s; Addr  : %s; Buf : %s",
-               prefix, STRNULL(addr, "???"), buf);
+                 prefix, STRNULL(addr, "???"), buf);
   if (ok)
     goto fin;
 
   if (name != NULL)
     ok = lookup_policy(prefix, name, buf, size, FALSE);
   ZE_MessageInfo(11, "Prefix : %s; Name  : %s; Buf : %s",
-               prefix, STRNULL(name, "???"), buf);
+                 prefix, STRNULL(name, "???"), buf);
   if (ok)
     goto fin;
 
   memset(lclass, 0, sizeof (lclass));
-  if (class == NULL || strlen(class) == 0)
-  {
+  if (class == NULL || strlen(class) == 0) {
     if (addr != NULL && strlen(addr) > 0)
       ok = lookup_policy("NetClass", addr, lclass, sizeof (lclass), FALSE);
     if (!ok && name != NULL && strlen(name) > 0)
@@ -256,7 +243,7 @@ check_host_policy(prefix, addr, name, class, buf, size, cdef)
 
   ok = lookup_policy(prefix, lclass, buf, size, cdef);
   ZE_MessageInfo(11, "Prefix : %s; Class : %s; Buf : %s",
-               prefix, STRNULL(class, "???"), buf);
+                 prefix, STRNULL(class, "???"), buf);
 
 fin:
   return ok;
@@ -324,10 +311,8 @@ check_policy_tuple(prefix, ip, name, netclass, from, to, result)
    ** Checking CONNECT
    */
   snprintf(tag, sizeof (tag), "%sConnect", prefix);
-  if (check_host_policy(tag, ip, name, netclass, value, sizeof (value), TRUE))
-  {
-    switch (access_decode(value))
-    {
+  if (check_host_policy(tag, ip, name, netclass, value, sizeof (value), TRUE)) {
+    switch (access_decode(value)) {
       case ACCESS_YES:
         result = TRUE;
         break;
@@ -353,8 +338,7 @@ check_policy_tuple(prefix, ip, name, netclass, from, to, result)
     char               *token = NULL;
 
     token = cf_get_str(CF_FROM_PASS_TOKEN);
-    if (token != NULL && strlen(token) > 0)
-    {
+    if (token != NULL && strlen(token) > 0) {
       char               *argv[MAX_TOKENS];
       int                 argc;
 
@@ -365,15 +349,11 @@ check_policy_tuple(prefix, ip, name, netclass, from, to, result)
 
       snprintf(tag, sizeof (tag), "%sFrom", prefix);
       argc = zeStr2Tokens(token, MAX_TOKENS, argv, " ");
-      for (i = 0; i < argc; i++)
-      {
+      for (i = 0; i < argc; i++) {
         ZE_MessageInfo(11, " Checking %s:%s", tag, argv[i]);
-        if ((p = strstr(from, argv[i])) != NULL)
-        {
-          if (check_policy(tag, p, value, sizeof (value), FALSE))
-          {
-            switch (access_decode(value))
-            {
+        if ((p = strstr(from, argv[i])) != NULL) {
+          if (check_policy(tag, p, value, sizeof (value), FALSE)) {
+            switch (access_decode(value)) {
               case ACCESS_YES:
                 result = TRUE;
                 break;
@@ -394,10 +374,8 @@ check_policy_tuple(prefix, ip, name, netclass, from, to, result)
   }
 
   snprintf(tag, sizeof (tag), "%sFrom", prefix);
-  if (check_policy(tag, from, value, sizeof (value), TRUE))
-  {
-    switch (access_decode(value))
-    {
+  if (check_policy(tag, from, value, sizeof (value), TRUE)) {
+    switch (access_decode(value)) {
       case ACCESS_YES:
         result = TRUE;
         break;
@@ -423,8 +401,7 @@ check_policy_tuple(prefix, ip, name, netclass, from, to, result)
     char               *token = NULL;
 
     token = cf_get_str(CF_TO_PASS_TOKEN);
-    if (token != NULL && strlen(token) > 0)
-    {
+    if (token != NULL && strlen(token) > 0) {
       char               *argv[MAX_TOKENS];
       int                 argc;
 
@@ -435,15 +412,11 @@ check_policy_tuple(prefix, ip, name, netclass, from, to, result)
 
       snprintf(tag, sizeof (tag), "%sTo", prefix);
       argc = zeStr2Tokens(token, MAX_TOKENS, argv, " ,");
-      for (i = 0; i < argc; i++)
-      {
+      for (i = 0; i < argc; i++) {
         ZE_MessageInfo(11, " Checking %s:%s", tag, argv[i]);
-        if ((p = strstr(from, argv[i])) != NULL)
-        {
-          if (check_policy(tag, p, value, sizeof (value), FALSE))
-          {
-            switch (access_decode(value))
-            {
+        if ((p = strstr(from, argv[i])) != NULL) {
+          if (check_policy(tag, p, value, sizeof (value), FALSE)) {
+            switch (access_decode(value)) {
               case ACCESS_YES:
                 result = TRUE;
                 break;
@@ -465,10 +438,8 @@ check_policy_tuple(prefix, ip, name, netclass, from, to, result)
 
   snprintf(tag, sizeof (tag), "%sTo", prefix);
   ZE_MessageInfo(20, "TAG : %s %s", tag, to);
-  if (check_policy(tag, to, value, sizeof (value), TRUE))
-  {
-    switch (access_decode(value))
-    {
+  if (check_policy(tag, to, value, sizeof (value), TRUE)) {
+    switch (access_decode(value)) {
       case ACCESS_YES:
         result = TRUE;
         break;
@@ -486,7 +457,7 @@ check_policy_tuple(prefix, ip, name, netclass, from, to, result)
 
 fin:
   ZE_MessageInfo(15, "TUPLE %s %s %s %s : %s", ip, name, send, rcpt,
-               STRBOOL(result, "YES", "NO"));
+                 STRBOOL(result, "YES", "NO"));
   return result;
 }
 
@@ -511,8 +482,7 @@ check_policy_all_rcpts(prefix, ip, name, netclass, from, rcpt, result, conflict)
   rcpt_addr_T        *p = NULL;
   int                 nok = 0, nko = 0;
 
-  for (p = rcpt; p != NULL; p = p->next)
-  {
+  for (p = rcpt; p != NULL; p = p->next) {
     bool                ok;
 
     if (p->access != RCPT_OK)
@@ -525,10 +495,8 @@ check_policy_all_rcpts(prefix, ip, name, netclass, from, rcpt, result, conflict)
       nko++;
   }
   doit = (nok > 0) ? result : !result;
-  if (nko > 0 && nok > 0)
-  {
-    switch (conflict)
-    {
+  if (nko > 0 && nok > 0) {
+    switch (conflict) {
       case OPT_ONE_WIN:
         doit = (nko > 0) ? !result : result;
         break;
@@ -599,8 +567,7 @@ check_limit_tuple(prefix, ip, name, netclass, from, to, result)
    */
 
   snprintf(tag, sizeof (tag), "%sConnect", prefix);
-  if (check_host_policy(tag, ip, name, netclass, buffer, sizeof (buffer), TRUE))
-  {
+  if (check_host_policy(tag, ip, name, netclass, buffer, sizeof (buffer), TRUE)) {
     VAL2LIMIT(result, buffer);
   }
 
@@ -614,8 +581,7 @@ check_limit_tuple(prefix, ip, name, netclass, from, to, result)
     char               *token = NULL;
 
     token = cf_get_str(CF_FROM_PASS_TOKEN);
-    if (token != NULL && strlen(token) > 0)
-    {
+    if (token != NULL && strlen(token) > 0) {
       char               *argv[MAX_TOKENS];
       int                 argc;
 
@@ -626,13 +592,10 @@ check_limit_tuple(prefix, ip, name, netclass, from, to, result)
 
       snprintf(tag, sizeof (tag), "%sFrom", prefix);
       argc = zeStr2Tokens(token, MAX_TOKENS, argv, " ");
-      for (i = 0; i < argc; i++)
-      {
+      for (i = 0; i < argc; i++) {
         ZE_MessageInfo(11, " Checking %s:%s", tag, argv[i]);
-        if ((p = strstr(from, argv[i])) != NULL)
-        {
-          if (check_policy(tag, p, buffer, sizeof (buffer), FALSE))
-          {
+        if ((p = strstr(from, argv[i])) != NULL) {
+          if (check_policy(tag, p, buffer, sizeof (buffer), FALSE)) {
             VAL2LIMIT(result, buffer);
           }
         }
@@ -641,8 +604,7 @@ check_limit_tuple(prefix, ip, name, netclass, from, to, result)
   }
 
   snprintf(tag, sizeof (tag), "%sFrom", prefix);
-  if (check_policy(tag, from, buffer, sizeof (buffer), TRUE))
-  {
+  if (check_policy(tag, from, buffer, sizeof (buffer), TRUE)) {
     VAL2LIMIT(result, buffer);
   }
 
@@ -656,8 +618,7 @@ check_limit_tuple(prefix, ip, name, netclass, from, to, result)
     char               *token = NULL;
 
     token = cf_get_str(CF_TO_PASS_TOKEN);
-    if (token != NULL && strlen(token) > 0)
-    {
+    if (token != NULL && strlen(token) > 0) {
       char               *argv[MAX_TOKENS];
       int                 argc;
 
@@ -668,13 +629,10 @@ check_limit_tuple(prefix, ip, name, netclass, from, to, result)
 
       snprintf(tag, sizeof (tag), "%sTo", prefix);
       argc = zeStr2Tokens(token, MAX_TOKENS, argv, " ,");
-      for (i = 0; i < argc; i++)
-      {
+      for (i = 0; i < argc; i++) {
         ZE_MessageInfo(11, " Checking %s:%s", tag, argv[i]);
-        if ((p = strstr(from, argv[i])) != NULL)
-        {
-          if (check_policy(tag, p, buffer, sizeof (buffer), FALSE))
-          {
+        if ((p = strstr(from, argv[i])) != NULL) {
+          if (check_policy(tag, p, buffer, sizeof (buffer), FALSE)) {
             VAL2LIMIT(result, buffer);
           }
         }
@@ -684,8 +642,7 @@ check_limit_tuple(prefix, ip, name, netclass, from, to, result)
 
   snprintf(tag, sizeof (tag), "%sTo", prefix);
   ZE_MessageInfo(20, "TAG : %s %s", tag, to);
-  if (check_policy(tag, to, buffer, sizeof (buffer), TRUE))
-  {
+  if (check_policy(tag, to, buffer, sizeof (buffer), TRUE)) {
     VAL2LIMIT(result, buffer);
   }
 
@@ -713,17 +670,14 @@ check_limit_all_rcpts(prefix, ip, name, netclass, from, rcpt, defval)
 
   rcpt_addr_T        *p = NULL;
 
-  for (p = rcpt; p != NULL; p = p->next)
-  {
+  for (p = rcpt; p != NULL; p = p->next) {
     long                v;
 
     v = check_limit_tuple(prefix, ip, name, netclass, from, p->rcpt, result);
     v = MAX(0, v);
-    if (result <= 0)
-    {
+    if (result <= 0) {
       result = v;
-    } else
-    {
+    } else {
       result = MIN(v, result);
     }
   }
@@ -826,4 +780,3 @@ access_decode(s)
 
   return ACCESS_UNDEF;
 }
-

@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -30,12 +31,12 @@
  *                                                                           *
  *                                                                           *
  *****************************************************************************/
-bool           mailregexlog2file = TRUE;
+bool                mailregexlog2file = TRUE;
 
-static int     nberr = 0;
+static int          nberr = 0;
 
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-static LOG_T   logt = LOG_INITIALIZER;
+static LOG_T        logt = LOG_INITIALIZER;
 
 #ifdef MAX_ERR
 #undef MAX_ERR
@@ -50,10 +51,10 @@ static LOG_T   logt = LOG_INITIALIZER;
 bool
 log_regex_reopen()
 {
-  bool           result = TRUE;
-  char           path[1024];
-  char          *wkdir = cf_get_str(CF_WORKDIR);
-  char          *logname = cf_get_str(CF_REGEX_LOG_FILE);
+  bool                result = TRUE;
+  char                path[1024];
+  char               *wkdir = cf_get_str(CF_WORKDIR);
+  char               *logname = cf_get_str(CF_REGEX_LOG_FILE);
 
   ADJUST_LOG_NAME(path, logname, wkdir, "none:");
 
@@ -76,17 +77,17 @@ log_regex_reopen()
  *****************************************************************************/
 bool
 log_found_regex(id, ip, tag, nb, score, expr)
-     char          *id;
-     char          *ip;
-     char          *tag;
-     int            nb;
-     int            score;
-     char          *expr;
+     char               *id;
+     char               *ip;
+     char               *tag;
+     int                 nb;
+     int                 score;
+     char               *expr;
 {
-  char          *logname = cf_get_str(CF_REGEX_LOG_FILE);
-  char           sout[256];
-  time_t         now = time(NULL);
-  bool           res = TRUE;
+  char               *logname = cf_get_str(CF_REGEX_LOG_FILE);
+  char                sout[256];
+  time_t              now = time(NULL);
+  bool                res = TRUE;
 
   if (!mailregexlog2file)
     return TRUE;
@@ -108,17 +109,13 @@ log_found_regex(id, ip, tag, nb, score, expr)
   if (tag == NULL)
     tag = "NOTAG";
 
-  if (mailregexlog2file && log_ready(&logt))
-  {
-    static time_t  lasterror = (time_t) 0;
+  if (mailregexlog2file && log_ready(&logt)) {
+    static time_t       lasterror = (time_t) 0;
 
 #if 0
-    if (!log_ready(&logt))
-    {
-      if (nberr < MAX_ERR || lasterror + 60 < now)
-      {
-        if ((logname == NULL) || (strlen(logname) == 0))
-        {
+    if (!log_ready(&logt)) {
+      if (nberr < MAX_ERR || lasterror + 60 < now) {
+        if ((logname == NULL) || (strlen(logname) == 0)) {
           ZE_LogMsgError(0, "CF_REGEX_LOG : bad filename");
           nberr++;
 
@@ -133,16 +130,14 @@ log_found_regex(id, ip, tag, nb, score, expr)
 #endif
 
     if (!log_printf(&logt, "%10ld %12s IP=(%s) TAG=(%s) %3d %3d %s\n",
-                    (long) now, id, ip, tag, nb, score, expr))
-    {
+                    (long) now, id, ip, tag, nb, score, expr)) {
       log_close(&logt);
       nberr++;
     } else
       nberr = 0;
-  } else
-  {
+  } else {
     ZE_MessageInfo(9, "%12s %-12s  - %3d %3d %s",
-                 id, STRNULL(tag, "NOTAG"), nb, score, expr);
+                   id, STRNULL(tag, "NOTAG"), nb, score, expr);
     nberr = 0;
   }
 

@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -51,8 +52,7 @@ chomp_filename(s)
   {
     int                 d;
 
-    for (d = strlen(s) - 1; d >= 0; d--)
-    {
+    for (d = strlen(s) - 1; d >= 0; d--) {
       if (strchr(' .\t', s[d]) != NULL)
         s[d] = '\0';
       else
@@ -61,10 +61,8 @@ chomp_filename(s)
     return s;
   }
 #else
-  while ((n = strlen(s)) > 0)
-  {
-    if ((p = strchr(". \t,", s[n - 1])) != NULL)
-    {
+  while ((n = strlen(s)) > 0) {
+    if ((p = strchr(". \t,", s[n - 1])) != NULL) {
       s[n - 1] = '\0';
       continue;
     }
@@ -90,20 +88,17 @@ add_content_field_attr(c, name, value)
     return FALSE;
   if ((name == NULL) || (value == NULL))
     return FALSE;
-  for (i = 0; i < NB_ATTR; i++)
-  {
+  for (i = 0; i < NB_ATTR; i++) {
     if ((c->attr[i].name != NULL) || (c->attr[i].value != NULL))
       continue;
 
-    if (strlen(name) > 0)
-    {
+    if (strlen(name) > 0) {
       c->attr[i].name = strdup(name);
       if (c->attr[i].name == NULL)
         ZE_LogSysError("strdup(name) error");
     }
 
-    if (strlen(value) > 0)
-    {
+    if (strlen(value) > 0) {
       c->attr[i].value = strdup(value);
       if (c->attr[i].value == NULL)
         ZE_LogSysError("strdup(value) error");
@@ -127,16 +122,14 @@ save_content_field(buf, head)
   if ((buf == NULL) || (head == NULL))
     return NULL;
 
-  if ((new = (content_field_T *) malloc(sizeof (content_field_T))) == NULL)
-  {
+  if ((new = (content_field_T *) malloc(sizeof (content_field_T))) == NULL) {
     ZE_LogSysError("malloc (content_field)");
     return NULL;
   }
 
   *new = *buf;
 
-  if (*head != NULL)
-  {
+  if (*head != NULL) {
     content_field_T    *p = *head;
 
     while (p->next != NULL)
@@ -166,8 +159,7 @@ free_content_field(p)
 
   if (p->value != NULL)
     FREE(p->value);
-  for (i = 0; i < NB_ATTR; i++)
-  {
+  for (i = 0; i < NB_ATTR; i++) {
     if (p->attr[i].name != NULL)
       FREE(p->attr[i].name);
     if (p->attr[i].value != NULL)
@@ -192,8 +184,7 @@ free_content_field_rec(p)
   if (p->value != NULL)
     FREE(p->value);
 
-  for (i = 0; i < NB_ATTR; i++)
-  {
+  for (i = 0; i < NB_ATTR; i++) {
     if (p->attr[i].name != NULL)
       FREE(p->attr[i].name);
     if (p->attr[i].value != NULL)
@@ -212,8 +203,7 @@ free_content_field_list(head)
 {
   content_field_T    *p = head;
 
-  while (head != NULL)
-  {
+  while (head != NULL) {
     p = head->next;
     free_content_field(head);
     head = p;
@@ -230,8 +220,7 @@ free_attachment_list(head)
 {
   attachment_T       *p = head;
 
-  while (head != NULL)
-  {
+  while (head != NULL) {
     p = head->next;
     if (head->name != NULL)
       FREE(head->name);
@@ -261,8 +250,7 @@ add_attachment(file, head)
   if (file == NULL)
     return *head;
 
-  if (*head != NULL)
-  {
+  if (*head != NULL) {
     attachment_T       *p = *head;
 
     while (p->next != NULL)
@@ -290,8 +278,7 @@ get_attachment(filename, head)
   if ((filename == NULL) || (head == NULL))
     return NULL;
 
-  while (p != NULL)
-  {
+  while (p != NULL) {
     if ((p->name != NULL) && (strcasecmp(filename, p->name) == 0))
       return p;
     p = p->next;
@@ -319,16 +306,13 @@ is_attachment(mimetype, attr, value)
   if ((strcasecmp("filename", attr) == 0) && (strlen(value) > 0))
     return TRUE;
 
-  if (mimetype != NULL)
-  {
-    if (strcasecmp("message/partial", mimetype) == 0)
-    {
+  if (mimetype != NULL) {
+    if (strcasecmp("message/partial", mimetype) == 0) {
       if (strcasecmp("id", attr) == 0)
         return TRUE;
     }
 
-    if (strcasecmp("message/external-body", mimetype) == 0)
-    {
+    if (strcasecmp("message/external-body", mimetype) == 0) {
       if (strcasecmp("name", attr) == 0)
         return TRUE;
     }
@@ -357,12 +341,9 @@ extract_attachments(chead, ahead)
    ** Content-Type
    **
    */
-  for (p = chead; p != NULL; p = p->next)
-  {
-    if (p->field_type == CT_TYPE)
-    {
-      for (i = 0; i < NB_ATTR; i++)
-      {
+  for (p = chead; p != NULL; p = p->next) {
+    if (p->field_type == CT_TYPE) {
+      for (i = 0; i < NB_ATTR; i++) {
         attachment_T       *file;
         char                filename[2048];
 
@@ -373,29 +354,25 @@ extract_attachments(chead, ahead)
           continue;
 
         file = (attachment_T *) malloc(sizeof (attachment_T));
-        if (file == NULL)
-        {
+        if (file == NULL) {
           ZE_LogSysError("file = malloc...");
           continue;
         }
         file->name = strdup(p->attr[i].value);
-        if (file->name == NULL)
-        {
+        if (file->name == NULL) {
           ZE_LogSysError("file->name = strdup(p->attr[i].value)");
           FREE(file);
           continue;
         }
         file->mimetype = strdup(p->value);
-        if (file->mimetype == NULL)
-        {
+        if (file->mimetype == NULL) {
           ZE_LogSysError("file->mimetype = strdup(p->value)");
           FREE(file);
           continue;
         }
         get_file_disposition(chead, p->attr[i].value, buf, sizeof (buf));
         file->disposition = strdup(buf);
-        if (file->disposition == NULL)
-        {
+        if (file->disposition == NULL) {
           ZE_LogSysError("file->disposition = strdup(buf)");
           FREE(file->name);
           FREE(file->mimetype);
@@ -408,17 +385,21 @@ extract_attachments(chead, ahead)
         else
           strlcpy(filename, p->attr[i].value, sizeof (filename));
 
-        /* Look if filename ends with a "." */
+        /*
+         * Look if filename ends with a "." 
+         */
         chomp_filename(filename);
 
 #if _FFR_FILENAME_7BIT
-	convert_filename_8to7(file->name);
+        convert_filename_8to7(file->name);
 #endif
 
         file->xfile = check_filename_xfile(filename);
 
 #undef _FFR_RFC2046_MSGS_ARE_XFILES
-        /* RFC 2046 */
+        /*
+         * RFC 2046 
+         */
 #if _FFR_RFC2046_MSGS_ARE_XFILES == 1
         if ((file->mimetype != NULL) &&
             ((strcasecmp(file->mimetype, "message/partial") == 0) ||
@@ -436,13 +417,12 @@ extract_attachments(chead, ahead)
    **
    */
 
-  /* Now, it's time too look at Content-Disposition tags */
-  for (p = chead; p != NULL; p = p->next)
-  {
-    if (p->field_type == CT_DISP)
-    {
-      for (i = 0; i < NB_ATTR; i++)
-      {
+  /*
+   * Now, it's time too look at Content-Disposition tags 
+   */
+  for (p = chead; p != NULL; p = p->next) {
+    if (p->field_type == CT_DISP) {
+      for (i = 0; i < NB_ATTR; i++) {
         attachment_T       *file;
         char                filename[2048];
 
@@ -456,21 +436,18 @@ extract_attachments(chead, ahead)
           continue;
 
         file = (attachment_T *) malloc(sizeof (attachment_T));
-        if (file == NULL)
-        {
+        if (file == NULL) {
           ZE_LogSysError("file = malloc...");
           continue;
         }
         file->name = strdup(p->attr[i].value);
-        if (file->name == NULL)
-        {
+        if (file->name == NULL) {
           ZE_LogSysError("file->name = strdup(p->attr[i].value)");
           FREE(file);
           continue;
         }
         file->disposition = strdup(p->value);
-        if (file->disposition == NULL)
-        {
+        if (file->disposition == NULL) {
           ZE_LogSysError("file->disposition = strdup(p->disposition)");
           FREE(file->name);
           FREE(file);
@@ -483,11 +460,13 @@ extract_attachments(chead, ahead)
         else
           strlcpy(filename, p->attr[i].value, sizeof (filename));
 
-        /* Look if filename ends with a "." */
+        /*
+         * Look if filename ends with a "." 
+         */
         chomp_filename(filename);
 
 #if _FFR_FILENAME_7BIT
-	convert_filename_8to7(file->name);
+        convert_filename_8to7(file->name);
 #endif
 
         file->xfile = check_filename_xfile(filename);
@@ -502,27 +481,24 @@ extract_attachments(chead, ahead)
    ** UUencoded files
    **
    */
-  /* Last but not least, uuencoded files */
-  for (p = chead; p != NULL; p = p->next)
-  {
-    if (p->field_type == CT_UUFILE)
-    {
+  /*
+   * Last but not least, uuencoded files 
+   */
+  for (p = chead; p != NULL; p = p->next) {
+    if (p->field_type == CT_UUFILE) {
       attachment_T       *file;
 
-      if (p->value == NULL || strlen(p->value) == 0)
-      {
+      if (p->value == NULL || strlen(p->value) == 0) {
         continue;
       }
 
       file = (attachment_T *) malloc(sizeof (attachment_T));
-      if (file == NULL)
-      {
+      if (file == NULL) {
         ZE_LogSysError("file = malloc...");
         continue;
       }
       file->name = strdup(p->value);
-      if (file->name == NULL)
-      {
+      if (file->name == NULL) {
         ZE_LogSysError("file->name = strdup(p->value)");
         FREE(file);
         continue;
@@ -530,15 +506,16 @@ extract_attachments(chead, ahead)
 
       file->mimetype = NULL;
       file->disposition = strdup("uuencoded");
-      if (file->disposition == NULL)
-      {
+      if (file->disposition == NULL) {
         ZE_LogSysError("file->disposition = strdup(uuencoded)");
         FREE(file->name);
         FREE(file);
         continue;
       }
 
-      /* Look if filename ends with a "." */
+      /*
+       * Look if filename ends with a "." 
+       */
       chomp_filename(file->name);
 
 #if _FFR_FILENAME_7BIT
@@ -570,17 +547,16 @@ new_extract_attachments(chead, ahead)
 
   content_field_T    *p;
 
-  /* Let's take a look at Content-Type tags */
-  for (p = chead; p != NULL; p = p->next)
-  {
-    if (p->field_type == CT_UUFILE)
-    {
+  /*
+   * Let's take a look at Content-Type tags 
+   */
+  for (p = chead; p != NULL; p = p->next) {
+    if (p->field_type == CT_UUFILE) {
 
       continue;
     }
 
-    for (i = 0; i < NB_ATTR; i++)
-    {
+    for (i = 0; i < NB_ATTR; i++) {
       attachment_T       *file;
       char                filename[2048];
 
@@ -595,22 +571,20 @@ new_extract_attachments(chead, ahead)
       else
         strlcpy(filename, p->attr[i].value, sizeof (filename));
 
-      /* Look if filename ends with a "." */
+      /*
+       * Look if filename ends with a "." 
+       */
       chomp_filename(filename);
 
-      if ((file = get_attachment(filename, *ahead)) != NULL)
-      {
-        switch (p->field_type)
-        {
+      if ((file = get_attachment(filename, *ahead)) != NULL) {
+        switch (p->field_type) {
           case CT_TYPE:
-            if (file->disposition == NULL)
-            {
+            if (file->disposition == NULL) {
 
             }
             break;
           case CT_DISP:
-            if (file->mimetype == NULL)
-            {
+            if (file->mimetype == NULL) {
 
             }
             break;
@@ -621,31 +595,27 @@ new_extract_attachments(chead, ahead)
       }
 
       file = (attachment_T *) malloc(sizeof (attachment_T));
-      if (file == NULL)
-      {
+      if (file == NULL) {
         ZE_LogSysError("file = malloc...");
         continue;
       }
       memset(file, 0, sizeof (*file));
       file->name = strdup(filename);
-      if (file->name == NULL)
-      {
+      if (file->name == NULL) {
         ZE_LogSysError("file->name = strdup(filename)");
         FREE(file);
         continue;
       }
 
       file->mimetype = strdup(p->value);
-      if (file->mimetype == NULL)
-      {
+      if (file->mimetype == NULL) {
         ZE_LogSysError("file->mimetype = strdup(p->value)");
         FREE(file);
         continue;
       }
       get_file_disposition(chead, p->attr[i].value, buf, sizeof (buf));
       file->disposition = strdup(buf);
-      if (file->disposition == NULL)
-      {
+      if (file->disposition == NULL) {
         ZE_LogSysError("file->disposition = strdup(buf)");
         FREE(file->name);
         FREE(file->mimetype);
@@ -660,23 +630,22 @@ new_extract_attachments(chead, ahead)
     }
   }
 
-  /* Last but not least, uuencoded files */
-  for (p = chead; p != NULL; p = p->next)
-  {
+  /*
+   * Last but not least, uuencoded files 
+   */
+  for (p = chead; p != NULL; p = p->next) {
     attachment_T       *file;
 
     if (p->field_type != CT_UUFILE)
       continue;
 
     file = (attachment_T *) malloc(sizeof (attachment_T));
-    if (file == NULL)
-    {
+    if (file == NULL) {
       ZE_LogSysError("file = malloc...");
       continue;
     }
     file->name = strdup(p->value);
-    if (file->name == NULL)
-    {
+    if (file->name == NULL) {
       ZE_LogSysError("file->name = strdup(p->value)");
       FREE(file);
       continue;
@@ -684,15 +653,16 @@ new_extract_attachments(chead, ahead)
 
     file->mimetype = NULL;
     file->disposition = strdup("uuencoded");
-    if (file->disposition == NULL)
-    {
+    if (file->disposition == NULL) {
       ZE_LogSysError("file->disposition = strdup(uuencoded)");
       FREE(file->name);
       FREE(file);
       continue;
     }
 
-    /* Look if filename ends with a "." */
+    /*
+     * Look if filename ends with a "." 
+     */
     chomp_filename(file->name);
 
     file->xfile = check_filename_xfile(file->name);
@@ -722,24 +692,20 @@ get_file_disposition(head, name, value, sz)
   *value = '\0';
   if (head == NULL)
     return 0;
-  while (p != NULL)
-  {
-    if (p->field_type != CT_DISP)
-    {
+  while (p != NULL) {
+    if (p->field_type != CT_DISP) {
       p = p->next;
       continue;
     }
-    if (p->value == NULL)
-    {
+    if (p->value == NULL) {
       p = p->next;
       continue;
     }
-    for (i = 0; i < NB_ATTR; i++)
-    {
+    for (i = 0; i < NB_ATTR; i++) {
       if ((p->attr[i].name != NULL) &&
           (strcasecmp(p->attr[i].name, "filename") == 0) &&
-          (p->attr[i].value != NULL) && (strcasecmp(p->attr[i].value, name) == 0))
-      {
+          (p->attr[i].value != NULL)
+          && (strcasecmp(p->attr[i].value, name) == 0)) {
         strlcpy(value, STRNULL(p->value, ""), sz);
         return 1;
       }

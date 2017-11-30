@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -51,8 +52,7 @@ unsigned int        statistics_interval = 300;
 
 time_t              last_reconf_date = (time_t) 0;
 
-struct jcfrec_T
-{
+struct jcfrec_T {
   int                 id;
   char                name[64];
   int                 kind;
@@ -62,8 +62,7 @@ struct jcfrec_T
   char               *sv;
   char              **opt;
   char                strval[64];
-}
-jcfrec_T;
+} jcfrec_T;
 
 static struct jcfrec_T cf[DIM_CF];
 
@@ -135,8 +134,7 @@ cf_sort()
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
-typedef struct
-{
+typedef struct {
   int                 id;       /* parameter ID */
   int                 type;     /* type : STR, INT, ENUM or DOUBLE */
 
@@ -149,8 +147,7 @@ typedef struct
   char               *desc;     /* variable description */
   char               *syntax;
   char               *cfdefault;  /* default value */
-}
-cfvar_t;
+} cfvar_t;
 
 #include "cfc-defs.h"
 
@@ -1034,7 +1031,7 @@ cf_read_file(fname)
       }
       if (res <= 0) {
         ZE_MessageWarning(7, "# line %4d : Error setting parameter value : %s",
-                        lineno, value);
+                          lineno, value);
       }
     } else
       ZE_MessageWarning(7, "# line %4d : UNKNOWN KEY : %s", lineno, key);
@@ -1119,7 +1116,9 @@ configure_after(app)
   char               *p;
 
   app = STRNULL(app, "ze-filter");
-  /* Log level */
+  /*
+   * Log level 
+   */
   ze_logSeverity = cf_get_int(CF_LOG_SEVERITY) != OPT_NO;
   ze_logLevel = cf_get_int(CF_LOG_LEVEL);
 
@@ -1140,7 +1139,9 @@ configure_after(app)
     }
   }
 
-  /* Log facility */
+  /*
+   * Log facility 
+   */
   {
     int                 opt = CF_LOG_FACILITY;
 
@@ -1156,7 +1157,7 @@ configure_after(app)
         closelog();
         openlog(app, LOG_PID | LOG_NOWAIT | LOG_NDELAY, ze_logFacility);
         ZE_MessageInfo(11, "NEW FACILITY : %d - %s",
-                     ze_logFacility, zeLog_FacilityName(ze_logFacility));
+                       ze_logFacility, zeLog_FacilityName(ze_logFacility));
       }
     }
   }
@@ -1219,7 +1220,8 @@ configure(app, fname, only_cf)
   ZE_MessageInfo(10, "Loading default values");
   cf_defaults();
 
-  ZE_MessageInfo(9, "Reading configuration file : %s", STRNULL(fname, "(NULL)"));
+  ZE_MessageInfo(9, "Reading configuration file : %s",
+                 STRNULL(fname, "(NULL)"));
   cf_read_file(fname);
 
   configure_after(app);

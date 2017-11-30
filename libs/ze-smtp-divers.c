@@ -162,7 +162,7 @@ extract_email_address(dst, org, sz)
 
     ZE_MessageInfo(19, "KO %s %s", org, dst);
   }
-  zeStr2Upper(dst);
+  zeStr2Lower(dst);
 
   return dst;
 }
@@ -204,7 +204,7 @@ extract_host_from_email_address(dst, org, sz)
       sz = pf - pi - 1;
 
     strlcpy(dst, org + pi + 1, sz);
-    zeStr2Upper(dst);
+    zeStr2Lower(dst);
   } else
   {
     char               *p = strchr(org, '@');

@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -42,28 +43,23 @@ create_pid_file(fname)
 {
   FILE               *fpid;
 
-  if (fname == NULL || strlen(fname) == 0)
-  {
+  if (fname == NULL || strlen(fname) == 0) {
     ZE_MessageInfo(0, "pid_file : NULL pointer");
     return FALSE;
   }
 
-  if (access(fname, F_OK) == 0)
-  {
+  if (access(fname, F_OK) == 0) {
     bool                running = FALSE;
 
-    if ((fpid = fopen(fname, "r")) != NULL)
-    {
+    if ((fpid = fopen(fname, "r")) != NULL) {
       char                buf[256];
 
-      if (fgets(buf, sizeof (buf), fpid) != NULL)
-      {
+      if (fgets(buf, sizeof (buf), fpid) != NULL) {
         long                pid;
 
         errno = 0;
         pid = strtol(buf, NULL, 10);
-        if (errno == 0 && pid > 0)
-        {
+        if (errno == 0 && pid > 0) {
           if (kill(pid, 0) == 0)
             running = TRUE;
         }
@@ -71,21 +67,19 @@ create_pid_file(fname)
       fclose(fpid);
     }
 
-    if (!running)
-    {
+    if (!running) {
       ZE_LogMsgWarning(0, "PID_FILE %s exists, but ze-filter isn't running !",
-                      fname);
+                       fname);
       (void) remove(fname);
-    } else
-    {
-      ZE_LogMsgError(0, "PID_FILE %s exists. Is there another ze-filter running ?",
-                    fname);
+    } else {
+      ZE_LogMsgError(0,
+                     "PID_FILE %s exists. Is there another ze-filter running ?",
+                     fname);
       exit(EX_SOFTWARE);
     }
   }
 
-  if ((fpid = fopen(fname, "w")) != NULL)
-  {
+  if ((fpid = fopen(fname, "w")) != NULL) {
     fprintf(fpid, "%d\n", (int) getpid());
     fclose(fpid);
 
@@ -122,13 +116,14 @@ remove_pid_file()
   if (pid_file == NULL || strlen(pid_file) == 0)
     return;
 
-  /* check if contents of pid_file equals to pid */
+  /*
+   * check if contents of pid_file equals to pid 
+   */
   if ((fpid = fopen(pid_file, "r")) == NULL)
     return;
 
   memset(buf, 0, sizeof (buf));
-  if (fgets(buf, sizeof (buf), fpid) == NULL)
-    ;
+  if (fgets(buf, sizeof (buf), fpid) == NULL);
 
   fclose(fpid);
 
@@ -159,19 +154,19 @@ remove_milter_sock()
   if (strncasecmp(sock_file, "local:", strlen("local:")) == 0)
     sock_file += strlen("local:");
 
-  if (strlen(sock_file) > 0 && *sock_file == '/')
-  {
+  if (strlen(sock_file) > 0 && *sock_file == '/') {
     struct stat         buf;
 
-    if (lstat(sock_file, &buf) == 0)
-    {
+    if (lstat(sock_file, &buf) == 0) {
       ZE_MessageWarning(9, "Removing SOCK_FILE : %s", sock_file);
       remove(sock_file);
     }
   }
 
 end:
-  /* milter_sock_file = NULL; */
+  /*
+   * milter_sock_file = NULL; 
+   */
   return;
 }
 

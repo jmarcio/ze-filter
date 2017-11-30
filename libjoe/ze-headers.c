@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -46,41 +47,34 @@ add_to_msgheader_list(head, attr, value)
   if (strlen(attr) == 0)
     return FALSE;
 
-  if ((p = (header_T *) malloc(sizeof (header_T))) == NULL)
-  {
+  if ((p = (header_T *) malloc(sizeof (header_T))) == NULL) {
     ZE_LogSysError("malloc header_T error");
     return FALSE;
   }
   memset(p, 0, sizeof (header_T));
 
-  if (attr != NULL)
-  {
+  if (attr != NULL) {
     p->attr = strdup(attr);
-    if (p->attr == NULL)
-    {
+    if (p->attr == NULL) {
       ZE_LogSysError("strdup(attr) error");
       res = FALSE;
     }
   } else
     p->attr = attr;
 
-  if (value != NULL)
-  {
+  if (value != NULL) {
     p->value = strdup(value);
-    if (p->value == NULL)
-    {
+    if (p->value == NULL) {
       ZE_LogSysError("strdup(value) error");
       res = FALSE;
     }
   } else
     p->value = value;
 
-  if (res)
-  {
+  if (res) {
     p->next = *head;
     *head = p;
-  } else
-  {
+  } else {
     FREE(p->attr);
     FREE(p->value);
     FREE(p);
@@ -102,8 +96,7 @@ clear_msgheader_list(head)
   if (head == NULL)
     return NULL;
 
-  while (head != NULL)
-  {
+  while (head != NULL) {
     header_T           *p = head;
 
     head = p->next;
@@ -130,10 +123,8 @@ count_msgheader_attr(head, attr)
   if ((head == NULL) || (attr == NULL))
     return 0;
 
-  for (p = head; p != NULL; p = p->next)
-  {
-    if (strlen(attr) == 0)
-    {
+  for (p = head; p != NULL; p = p->next) {
+    if (strlen(attr) == 0) {
       nb++;
       continue;
     }
@@ -163,10 +154,9 @@ get_msgheader(head, attr)
     return head;
 
   ZE_LogMsgInfo(19, "Looking for ATTR = %s %s", attr,
-               (head == NULL ? "NULL" : "NOTNULL"));
+                (head == NULL ? "NULL" : "NOTNULL"));
 
-  for (p = head; p != NULL; p = p->next)
-  {
+  for (p = head; p != NULL; p = p->next) {
     if (p->attr == NULL)
       continue;
 
@@ -209,10 +199,9 @@ get_msgheader_index(head, attr)
     return i;
 
   ZE_LogMsgInfo(19, "Looking for ATTR = %s %s", attr,
-               (head == NULL ? "NULL" : "NOTNULL"));
+                (head == NULL ? "NULL" : "NOTNULL"));
 
-  for (p = head; p != NULL; p = p->next)
-  {
+  for (p = head; p != NULL; p = p->next) {
     i++;
     if (p->attr == NULL)
       continue;
@@ -241,16 +230,14 @@ get_msgheader_index_2(head, attr, index)
     return NULL;
 
   ZE_LogMsgInfo(19, "Looking for ATTR = %s %s", attr,
-               (head == NULL ? "NULL" : "NOTNULL"));
+                (head == NULL ? "NULL" : "NOTNULL"));
 
-  for (p = head; p != NULL; p = p->next)
-  {
+  for (p = head; p != NULL; p = p->next) {
     if (p->attr == NULL)
       continue;
 
     ZE_MessageInfo(19, "ATTR = %-32s %s ", attr, p->attr);
-    if (strcasecmp(attr, p->attr) == 0)
-    {
+    if (strcasecmp(attr, p->attr) == 0) {
       i++;
       if (i == index)
         return p;
@@ -287,7 +274,7 @@ get_msgheader_attribute(header, attr, value, size)
     return FALSE;
 
   ZE_MessageInfo(15, "Looking for %s, in %s = %s", attr,
-               STRNULL(header->attr, "ATTR"), header->value);
+                 STRNULL(header->attr, "ATTR"), header->value);
 
   if (!zeStrRegex(header->value, attr, NULL, &pf, TRUE))
     return FALSE;
@@ -300,8 +287,7 @@ get_msgheader_attribute(header, attr, value, size)
   if (strlen(p) == 0)
     return FALSE;
 
-  if (*p == '\"')
-  {
+  if (*p == '\"') {
     p++;
     n = strcspn(p, "\"\t\r\n");
   } else

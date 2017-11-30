@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -62,8 +63,7 @@ GetClientNetClass(ip, name, class, label, sz)
   if (ip == NULL)
     return NET_UNKNOWN;
 
-  if (STREQUAL(ip, "127.0.0.1"))
-  {
+  if (STREQUAL(ip, "127.0.0.1")) {
     SET_LABEL(label, sz, "LOCAL");
     return NET_LOCAL;
   }
@@ -72,8 +72,7 @@ GetClientNetClass(ip, name, class, label, sz)
     ip += strlen("ipv6:");
 
 #if 0
-  if (STREQUAL(ip, "::1"))
-  {
+  if (STREQUAL(ip, "::1")) {
     SET_LABEL(label, sz, "OTHER");
     return NET_OTHER;
   }
@@ -86,11 +85,14 @@ GetClientNetClass(ip, name, class, label, sz)
   if (!found)
     return NET_UNKNOWN;
 
-  /* ret = NET_OTHER; */
+  /*
+   * ret = NET_OTHER; 
+   */
 
   SET_LABEL(label, sz, bClass);
 
-  ZE_MessageInfo(12, " NetClass      : %s %s %s", ip, STRNULL(name, "-"), bClass);
+  ZE_MessageInfo(12, " NetClass      : %s %s %s", ip, STRNULL(name, "-"),
+                 bClass);
 
   ret = DecodeNetClass(bClass, NULL, 0);
   if (ret != NET_UNKNOWN)
@@ -106,7 +108,8 @@ GetClientNetClass(ip, name, class, label, sz)
     return NET_UNKNOWN;
 
   ret = DecodeNetClass(bEquiv, NULL, 0);
-  ZE_MessageInfo(12, " NetClassEquiv : %s %s 0x%04x %s %s", ip, STRNULL(name, "-"), ret, bClass, bEquiv);
+  ZE_MessageInfo(12, " NetClassEquiv : %s %s 0x%04x %s %s", ip,
+                 STRNULL(name, "-"), ret, bClass, bEquiv);
   if (ret != NET_UNKNOWN)
     return ret;
 
@@ -136,15 +139,13 @@ DecodeNetClass(class, label, sz)
     return NET_UNKNOWN;
 
   tclass = strdup(class);
-  if (tclass == NULL)
-  {
+  if (tclass == NULL) {
     ZE_LogSysError("Can't strdup(class = %s) error");
     return NET_UNKNOWN;
   }
 
   argc = zeStr2Tokens(class, 32, argv, "+, ");
-  for (i = 0; i < argc && code == NET_UNKNOWN; i++)
-  {
+  for (i = 0; i < argc && code == NET_UNKNOWN; i++) {
     if ((i == 0) && (label != NULL))
       SET_LABEL(label, sz, argv[i]);
 
@@ -172,8 +173,7 @@ DecodeNetClass(class, label, sz)
  *                                                                           * 
  *                                                                           *
  *****************************************************************************/
-typedef struct
-{
+typedef struct {
   bool                ok;
   int                 netcode;
   char               *buf;

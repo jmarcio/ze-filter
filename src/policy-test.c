@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -81,8 +82,7 @@ main(argc, argv)
 
   }
 
-  if (1)
-  {
+  if (1) {
     char               *prefix, *ip, *name, *from, *to;
     bool                flag;
 
@@ -96,8 +96,7 @@ main(argc, argv)
 
     ZE_MessageInfo(0, "Checking = %s %s %s %s", ip, name, from, to);
 
-    if (db_policy_open(TRUE))
-    {
+    if (db_policy_open(TRUE)) {
       flag = check_policy_tuple(prefix, ip, name, NULL, from, to, FALSE);
 
       ZE_MessageInfo(0, "RESULT = %s", STRBOOL(flag, "YES", "NO"));
@@ -118,24 +117,27 @@ main(argc, argv)
     printf("ARGC = %d\n", argc);
 
     gethostname(hostname, sizeof (hostname));
-    /*strcpy(hostname, "minho"); */
+    /*
+     * strcpy(hostname, "minho"); 
+     */
     ip = STRBOOL(argc > 1, argv[1], "1.2.3.4");
     from = STRBOOL(argc > 2, argv[2], "martins@ensmp.fr");
     to = STRBOOL(argc > 3, argv[3], "joe@ensmp.fr");
 
     res = grey_init(FALSE);
     ZE_MessageInfo(0, "GREY_INIT : %s %s %s %s : %s",
-                 STRNULL(ip, "IP"),
-                 STRNULL(from, "FROM"),
-                 STRNULL(to, "TO"),
-                 STRNULL(hostname, "HOSTNAME"), STRBOOL(res, "TRUE", "FALSE"));
+                   STRNULL(ip, "IP"),
+                   STRNULL(from, "FROM"),
+                   STRNULL(to, "TO"),
+                   STRNULL(hostname, "HOSTNAME"), STRBOOL(res, "TRUE",
+                                                          "FALSE"));
 
     res = grey_check(ip, from, to, hostname);
 
     ZE_MessageInfo(0, "GREY_CHECK : %s %s %s : %s",
-                 STRNULL(ip, "IP"),
-                 STRNULL(from, "FROM"),
-                 STRNULL(to, "TO"), STRBOOL(res, "TRUE", "FALSE"));
+                   STRNULL(ip, "IP"),
+                   STRNULL(from, "FROM"),
+                   STRNULL(to, "TO"), STRBOOL(res, "TRUE", "FALSE"));
 
     ZE_MessageInfo(0, "TIME %ld", time(NULL));
     grey_close();
@@ -144,8 +146,7 @@ main(argc, argv)
   }
 #endif
 
-  if (db_policy_open(TRUE))
-  {
+  if (db_policy_open(TRUE)) {
     long                pi, pf;
     char               *s, *expr;
     bool                found;
@@ -214,8 +215,7 @@ shall_notify_user(user_addr, to)
   char                buf[256];
 
   memset(buf, 0, sizeof (buf));
-  if (check_policy("NotifyUser", user_addr, buf, sizeof (buf), FALSE))
-  {
+  if (check_policy("NotifyUser", user_addr, buf, sizeof (buf), FALSE)) {
     if (strcasecmp(buf, "NO") == 0)
       return FALSE;
     if (strcasecmp(buf, "YES") == 0)

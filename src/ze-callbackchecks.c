@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -72,13 +73,12 @@ check_helo_myself(ip, hostname, helo)
   char               *myself = cf_get_str(CF_MYSELF);
   char               *s, *ptr, *x = NULL;
 
-  if (myself != NULL)
-  {
-    if ((x = strdup(myself)) != NULL)
-    {
-      for (s = strtok_r(x, " ", &ptr); s != NULL; s = strtok_r(NULL, " ", &ptr))
-      {
-        /* s */
+  if (myself != NULL) {
+    if ((x = strdup(myself)) != NULL) {
+      for (s = strtok_r(x, " ", &ptr); s != NULL; s = strtok_r(NULL, " ", &ptr)) {
+        /*
+         * s 
+         */
 
       }
     } else
@@ -102,8 +102,7 @@ passport_ok(to, key)
   long                pi, pf;
   bool                ok = FALSE;
 
-  if (zeStrRegex(to, "[+][0-9]{6,6}-.+@", &pi, &pf, TRUE))
-  {
+  if (zeStrRegex(to, "[+][0-9]{6,6}-.+@", &pi, &pf, TRUE)) {
     time_t              now;
     struct tm           tm;
     char                tstr[64];
@@ -121,8 +120,7 @@ passport_ok(to, key)
     if (strncasecmp(ri, tstr, strlen(tstr)) == 0)
       ok = TRUE;
 
-    if (!ok)
-    {
+    if (!ok) {
       now -= 86400;
       if (gmtime_r(&now, &tm) == NULL)
         goto fin;
@@ -373,129 +371,118 @@ check_msg_contents(ctx)
    ** Some preliminary oracle checks...
    */
 
-  /* check postmaster... XXX */
+  /*
+   * check postmaster... XXX 
+   */
   postmaster =
     check_valid_postmaster(priv->env_from, priv->hdr_from, priv->env_nb_rcpt);
 
-  if (priv->rawScores.do_oracle)
-  {
-    switch (priv->resolve_res)
-    {
+  if (priv->rawScores.do_oracle) {
+    switch (priv->resolve_res) {
       case RESOLVE_FAIL:
         SET_BIT(checks->flags.conn, SPAM_CONN_RESOLVE_FAIL);
         if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
           ZE_MessageInfo(10, "%s SPAM CHECK - C%02d SMTP client resolve failed",
-                       CONNID_STR(priv->id), SPAM_CONN_RESOLVE_FAIL);
+                         CONNID_STR(priv->id), SPAM_CONN_RESOLVE_FAIL);
         break;
       case RESOLVE_FORGED:
         SET_BIT(checks->flags.conn, SPAM_CONN_RESOLVE_FORGED);
         if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
           ZE_MessageInfo(10, "%s SPAM CHECK - C%02d SMTP client resolve forged",
-                       CONNID_STR(priv->id), SPAM_CONN_RESOLVE_FORGED);
+                         CONNID_STR(priv->id), SPAM_CONN_RESOLVE_FORGED);
         break;
       case RESOLVE_TEMPFAIL:
         SET_BIT(checks->flags.conn, SPAM_CONN_RESOLVE_TEMPFAIL);
         if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
           ZE_MessageInfo(10,
-                       "%s SPAM CHECK - C%02d SMTP client resolve tempfail",
-                       CONNID_STR(priv->id), SPAM_CONN_RESOLVE_TEMPFAIL);
+                         "%s SPAM CHECK - C%02d SMTP client resolve tempfail",
+                         CONNID_STR(priv->id), SPAM_CONN_RESOLVE_TEMPFAIL);
         break;
       default:
         break;
     }
 
-    if (priv->rbwl.odds > 1)
-    {
+    if (priv->rbwl.odds > 1) {
       SET_BIT(checks->flags.conn, SPAM_CONN_RBL);
 
       ZE_MessageInfo(10, "%s SPAM CHECK - C%02d SMTP client blacklisted %s %s",
-                   CONNID_STR(priv->id), SPAM_CONN_RBL,
-                   priv->peer_addr, priv->peer_name);
-    }
-
-    if ((strcasecmp(priv->peer_name, "localhost") == 0) &&
-        (strcasecmp(priv->peer_addr, "127.0.0.1") != 0))
-    {
-      SET_BIT(checks->flags.conn, SPAM_CONN_FALSE_LOCALHOST);
-      if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
-        ZE_MessageInfo(10,
-                     "%s SPAM CHECK - C%02d false DNS declared localhost %s/%s ",
-                     CONNID_STR(priv->id), SPAM_CONN_FALSE_LOCALHOST,
+                     CONNID_STR(priv->id), SPAM_CONN_RBL,
                      priv->peer_addr, priv->peer_name);
     }
 
-    switch (postmaster)
-    {
+    if ((strcasecmp(priv->peer_name, "localhost") == 0) &&
+        (strcasecmp(priv->peer_addr, "127.0.0.1") != 0)) {
+      SET_BIT(checks->flags.conn, SPAM_CONN_FALSE_LOCALHOST);
+      if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
+        ZE_MessageInfo(10,
+                       "%s SPAM CHECK - C%02d false DNS declared localhost %s/%s ",
+                       CONNID_STR(priv->id), SPAM_CONN_FALSE_LOCALHOST,
+                       priv->peer_addr, priv->peer_name);
+    }
+
+    switch (postmaster) {
       case POSTMASTER_OK:
         break;
       case POSTMASTER_FORGED:
-        if (IS_UNKNOWN(ip_class))
-        {
+        if (IS_UNKNOWN(ip_class)) {
           SET_BIT(checks->flags.msg, SPAM_MSG_FORGED_POSTMASTER);
           if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
             ZE_MessageInfo(10, "%s SPAM CHECK - M%02d Forged postmaster",
-                         CONNID_STR(priv->id), SPAM_MSG_FORGED_POSTMASTER);
+                           CONNID_STR(priv->id), SPAM_MSG_FORGED_POSTMASTER);
         }
         break;
       default:
         break;
     }
 
-    if (checks->nb_badrcpt > 0)
-    {
+    if (checks->nb_badrcpt > 0) {
       SET_BIT(checks->flags.msg, SPAM_MSG_HAS_BADRCPT);
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
         ZE_MessageInfo(10,
-                     "%s SPAM CHECK - M%02d message with bad recipients (%d)",
-                     CONNID_STR(priv->id), SPAM_MSG_HAS_BADRCPT,
-                     checks->nb_badrcpt);
+                       "%s SPAM CHECK - M%02d message with bad recipients (%d)",
+                       CONNID_STR(priv->id), SPAM_MSG_HAS_BADRCPT,
+                       checks->nb_badrcpt);
     }
 
-    if (priv->dbrcpt_conn_spamtrap > 0)
-    {
+    if (priv->dbrcpt_conn_spamtrap > 0) {
       SET_BIT(checks->flags.msg, SPAM_MSG_HAS_SPAMTRAP);
       if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
         ZE_MessageInfo(10,
-                     "%s SPAM CHECK - M%02d message with spamtrap rcpt (%d)",
-                     CONNID_STR(priv->id), SPAM_MSG_HAS_SPAMTRAP,
-                     priv->dbrcpt_conn_spamtrap);
+                       "%s SPAM CHECK - M%02d message with spamtrap rcpt (%d)",
+                       CONNID_STR(priv->id), SPAM_MSG_HAS_SPAMTRAP,
+                       priv->dbrcpt_conn_spamtrap);
     }
 
-    if (IS_UNKNOWN(ip_class))
-    {
-      if (priv->msg_size < 16)
-      {
+    if (IS_UNKNOWN(ip_class)) {
+      if (priv->msg_size < 16) {
         SET_BIT(checks->flags.msg, SPAM_MSG_TOO_SHORT);
         if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
           ZE_MessageInfo(10,
-                       "%s SPAM CHECK - M%02d too short message - length = %d",
-                       CONNID_STR(priv->id), SPAM_MSG_TOO_SHORT,
-                       priv->msg_size);
+                         "%s SPAM CHECK - M%02d too short message - length = %d",
+                         CONNID_STR(priv->id), SPAM_MSG_TOO_SHORT,
+                         priv->msg_size);
       }
     }
 
-    if (IS_UNKNOWN(ip_class))
-    {
+    if (IS_UNKNOWN(ip_class)) {
       int                 n;
 
-      if ((n = livehistory_check_host(priv->peer_addr, 3600, LH_SPAMTRAP)) > 0)
-      {
+      if ((n = livehistory_check_host(priv->peer_addr, 3600, LH_SPAMTRAP)) > 0) {
         SET_BIT(checks->flags.conn, SPAM_CONN_BL_SPAMTRAP);
         if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
           ZE_MessageInfo(10,
-                       "%s SPAM CHECK - M%02d client sending to spamtrap (%d)",
-                       CONNID_STR(priv->id), SPAM_CONN_BL_SPAMTRAP, n);
+                         "%s SPAM CHECK - M%02d client sending to spamtrap (%d)",
+                         CONNID_STR(priv->id), SPAM_CONN_BL_SPAMTRAP, n);
       }
     }
 
     {
-      if ((priv->env_nb_rcpt > 1) && (strstr(priv->env_from, "<>") != NULL))
-      {
+      if ((priv->env_nb_rcpt > 1) && (strstr(priv->env_from, "<>") != NULL)) {
         SET_BIT(checks->flags.conn, SPAM_MSG_BAD_NULL_SENDER);
         if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
           ZE_MessageInfo(10, "%s SPAM CHECK - M%02d NULL sender with %d RCPTS",
-                       CONNID_STR(priv->id), SPAM_MSG_BAD_NULL_SENDER,
-                       priv->env_nb_rcpt);
+                         CONNID_STR(priv->id), SPAM_MSG_BAD_NULL_SENDER,
+                         priv->env_nb_rcpt);
       }
     }
 
@@ -538,27 +525,23 @@ check_condition(cond, header, rScore)
     char               *p = cond;
     int                 i;
 
-    for (p = cond, i = 0; *p != '\0' && i < BCONDSZ - 1; p++)
-    {
+    for (p = cond, i = 0; *p != '\0' && i < BCONDSZ - 1; p++) {
       if (*p != ' ')
         buf[i++] = *p;
     }
     buf[i] = '\0';
   }
   argc = zeStr2Tokens(buf, 32, argv, ";");
-  for (i = 0; i < argc && !result; i++)
-  {
+  for (i = 0; i < argc && !result; i++) {
     char               *pcond;
 
     pcond = argv[i];
 
     ZE_MessageInfo(19, "Checking %2d %s", i, pcond);
 
-    if (rScore != NULL)
-    {
+    if (rScore != NULL) {
       s = "score";
-      if (STRNCASEEQUAL(pcond, s, strlen(s)))
-      {
+      if (STRNCASEEQUAL(pcond, s, strlen(s))) {
         double              value;
 
         pcond += strlen(s);
@@ -569,8 +552,7 @@ check_condition(cond, header, rScore)
         value = strtod(pcond + 1, NULL);
         if (errno != 0)
           continue;
-        switch (*pcond)
-        {
+        switch (*pcond) {
           case '>':
             if ((double) rScore->combined > value)
               result = TRUE;
@@ -587,8 +569,7 @@ check_condition(cond, header, rScore)
       }
 
       s = "bayes";
-      if (STRNCASEEQUAL(pcond, s, strlen(s)))
-      {
+      if (STRNCASEEQUAL(pcond, s, strlen(s))) {
         double              value;
 
         pcond += strlen(s);
@@ -599,8 +580,7 @@ check_condition(cond, header, rScore)
         value = strtod(pcond + 1, NULL);
         if (errno != 0)
           continue;
-        switch (*pcond)
-        {
+        switch (*pcond) {
           case '>':
             if ((double) rScore->bayes > value)
               result = TRUE;
@@ -617,8 +597,7 @@ check_condition(cond, header, rScore)
       }
 
       s = "regex+urlbl";
-      if (STRNCASEEQUAL(pcond, s, strlen(s)))
-      {
+      if (STRNCASEEQUAL(pcond, s, strlen(s))) {
         double              value;
 
         pcond += strlen(s);
@@ -630,8 +609,7 @@ check_condition(cond, header, rScore)
         if (errno != 0)
           continue;
 
-        switch (*pcond)
-        {
+        switch (*pcond) {
           case '>':
             if ((double) (rScore->body + rScore->headers + rScore->urlbl) >
                 value)
@@ -650,8 +628,7 @@ check_condition(cond, header, rScore)
       }
 
       s = "urlbl+regex";
-      if (STRNCASEEQUAL(pcond, s, strlen(s)))
-      {
+      if (STRNCASEEQUAL(pcond, s, strlen(s))) {
         double              value;
 
         pcond += strlen(s);
@@ -663,8 +640,7 @@ check_condition(cond, header, rScore)
         if (errno != 0)
           continue;
 
-        switch (*pcond)
-        {
+        switch (*pcond) {
           case '>':
             if ((double) (rScore->body + rScore->headers + rScore->urlbl) >
                 value)
@@ -683,8 +659,7 @@ check_condition(cond, header, rScore)
       }
 
       s = "urlbl";
-      if (STRNCASEEQUAL(pcond, s, strlen(s)))
-      {
+      if (STRNCASEEQUAL(pcond, s, strlen(s))) {
         double              value;
 
         pcond += strlen(s);
@@ -696,8 +671,7 @@ check_condition(cond, header, rScore)
         if (errno != 0)
           continue;
 
-        switch (*pcond)
-        {
+        switch (*pcond) {
           case '>':
             if ((double) rScore->urlbl > value)
               result = TRUE;
@@ -714,8 +688,7 @@ check_condition(cond, header, rScore)
       }
 
       s = "regex";
-      if (STRNCASEEQUAL(pcond, s, strlen(s)))
-      {
+      if (STRNCASEEQUAL(pcond, s, strlen(s))) {
         double              value;
 
         pcond += strlen(s);
@@ -727,8 +700,7 @@ check_condition(cond, header, rScore)
         if (errno != 0)
           continue;
 
-        switch (*pcond)
-        {
+        switch (*pcond) {
           case '>':
             if ((double) (rScore->body + rScore->headers) > value)
               result = TRUE;
@@ -746,8 +718,7 @@ check_condition(cond, header, rScore)
     }
 
     s = "header~";
-    if (STRNCASEEQUAL(pcond, s, strlen(s)))
-    {
+    if (STRNCASEEQUAL(pcond, s, strlen(s))) {
       pcond += strlen(s);
       if (*pcond == '\0')
         continue;
@@ -760,8 +731,7 @@ check_condition(cond, header, rScore)
       continue;
     }
 
-    if (header != NULL || strlen(header) > 0)
-    {
+    if (header != NULL || strlen(header) > 0) {
       if (zeStrRegex(header, pcond, NULL, NULL, TRUE))
         result = TRUE;
     }
@@ -802,7 +772,9 @@ evaluate_message_score(ctx, do_log)
   if (do_log != NULL)
     *do_log = FALSE;
 
-  /* Compute oracle score... */
+  /*
+   * Compute oracle score... 
+   */
   if (priv->rawScores.do_oracle)
     oracle_stats_update(priv->rawScores.oracle);
   else
@@ -811,8 +783,7 @@ evaluate_message_score(ctx, do_log)
   if (!priv->rawScores.do_urlbl)
     priv->rawScores.urlbl = 0;
 
-  if (!priv->rawScores.do_regex)
-  {
+  if (!priv->rawScores.do_regex) {
 #if 1
     if (priv->rawScores.body + priv->rawScores.headers > 0)
       priv->rawScores.do_regex = TRUE;
@@ -826,7 +797,7 @@ evaluate_message_score(ctx, do_log)
     priv->rawScores.bayes = 0.;
 
 #if 0 && _FFR_MODULES
-  /* 
+  /*
    ** ze-filter modules
    **
    */
@@ -874,8 +845,7 @@ evaluate_message_score(ctx, do_log)
 
     xspam = cf_get_str(CF_XSTATUS_QUARANTINE_CONDITION);
     doit = check_condition(xspam, sbufold, &priv->rawScores);
-    if (doit)
-    {
+    if (doit) {
 #if 0
       if ((priv->score_str = strdup(sbufnew)) == NULL)
         ZE_LogSysError("strdup(%s)", sbufnew);
@@ -893,8 +863,7 @@ evaluate_message_score(ctx, do_log)
 
     xspam = cf_get_str(CF_XSTATUS_REJECT_CONDITION);
     doit = check_condition(xspam, sbufold, &priv->rawScores);
-    if (doit)
-    {
+    if (doit) {
       (void) jsmfi_setreply(ctx, "550", "5.7.1", MSG_BODY_CONTENTS);
       priv->rej_regex++;
       result = SMFIS_REJECT;
@@ -912,22 +881,21 @@ evaluate_message_score(ctx, do_log)
 
     xspam = cf_get_str(CF_XSTATUS_HEADER_HI_CONDITION);
     doit = check_condition(xspam, sbufold, &priv->rawScores);
-    if (doit)
-    {
+    if (doit) {
       smfi_addheader(ctx, xstatus, "Spam HI");
       FREE(priv->status_str);
       if ((priv->status_str = strdup("Spam HI")) == NULL)
         ZE_LogSysError("strdup(%s)", "Spam HI");
 
-      /* add tag to subject ??? */
-      if (cf_get_int(CF_SCORE_ON_SUBJECT) == OPT_YES)
-      {
+      /*
+       * add tag to subject ??? 
+       */
+      if (cf_get_int(CF_SCORE_ON_SUBJECT) == OPT_YES) {
         char               *tag = cf_get_str(CF_SCORE_ON_SUBJECT_TAG);
         char                buf[32];
         char               *p = NULL;
 
-        if (tag == NULL || strlen(tag) == 0)
-        {
+        if (tag == NULL || strlen(tag) == 0) {
           snprintf(buf, sizeof (buf), "[J-%s]", sScoreStr);
           p = buf;
         } else
@@ -946,8 +914,7 @@ evaluate_message_score(ctx, do_log)
 
     xspam = cf_get_str(CF_XSTATUS_HEADER_LO_CONDITION);
     doit = check_condition(xspam, sbufold, &priv->rawScores);
-    if (doit)
-    {
+    if (doit) {
       smfi_addheader(ctx, xstatus, "Spam LO");
       FREE(priv->status_str);
       if ((priv->status_str = strdup("Spam LO")) == NULL)
@@ -960,8 +927,7 @@ evaluate_message_score(ctx, do_log)
 
     xspam = cf_get_str(CF_XSTATUS_HEADER_UNSURE_CONDITION);
     doit = check_condition(xspam, sbufold, &priv->rawScores);
-    if (doit)
-    {
+    if (doit) {
       smfi_addheader(ctx, xstatus, "Unsure");
       FREE(priv->status_str);
       if ((priv->status_str = strdup("Unsure")) == NULL)
@@ -974,8 +940,7 @@ evaluate_message_score(ctx, do_log)
 
     xspam = cf_get_str(CF_XSTATUS_HEADER_HAM_CONDITION);
     doit = check_condition(xspam, sbufold, &priv->rawScores);
-    if (doit)
-    {
+    if (doit) {
       smfi_addheader(ctx, xstatus, "Ham");
       FREE(priv->status_str);
       if ((priv->status_str = strdup("Ham")) == NULL)
@@ -992,21 +957,21 @@ ok:
   ;
 
 fin:
-  /* update stats */
+  /*
+   * update stats 
+   */
   if (priv->rawScores.do_regex && (priv->rawScores.body > 0))
     stats_inc(STAT_PATTERN_MATCHING, 1);
 
   if (priv->rawScores.do_urlbl && (priv->rawScores.urlbl > 0))
     stats_inc(STAT_URLBL, 1);
 
-  if (priv->rawScores.do_oracle && (priv->rawScores.oracle > 0))
-  {
+  if (priv->rawScores.do_oracle && (priv->rawScores.oracle > 0)) {
     priv->nb_oracle++;
     stats_inc(STAT_ORACLE, 1);
   }
 
-  if (priv->rawScores.do_bayes)
-  {
+  if (priv->rawScores.do_bayes) {
     if (priv->rawScores.bayes > BSCORE_HI)
       stats_inc(STAT_BAYES_SPAM, 1);
     if (priv->rawScores.bayes < BSCORE_LO)
@@ -1020,8 +985,7 @@ fin:
     priv->nb_spams++;
 
 #if 0
-  if (log_it && ze_logLevel >= 8)
-  {
+  if (log_it && ze_logLevel >= 8) {
     char                logbuf[256];
 
     snprintf(logbuf, sizeof (logbuf), "%s : B=%.3f U=%d R=%d O=%d -> G=%.3f",
@@ -1066,35 +1030,31 @@ check_spamtrap_rcpt(id, ip, from, rcpt, ip_class)
     return FALSE;
 
   ZE_MessageInfo(12, "%s : Checking spamtrap from %s %s %s : %s",
-               STRNULL(id, "00000000.000"),
-               STRNULL(ip, "IP"),
-               STRNULL(from, "FROM"),
-               STRNULL(rcpt, "TO"), STRBOOL(result, "YES", "NO"));
+                 STRNULL(id, "00000000.000"),
+                 STRNULL(ip, "IP"),
+                 STRNULL(from, "FROM"),
+                 STRNULL(rcpt, "TO"), STRBOOL(result, "YES", "NO"));
 
-  if (IS_UNKNOWN(ip_class))
-  {
+  if (IS_UNKNOWN(ip_class)) {
     char                buf[256];
 
-    if (check_policy("SpamTrap", rcpt, buf, sizeof (buf), FALSE))
-    {
+    if (check_policy("SpamTrap", rcpt, buf, sizeof (buf), FALSE)) {
       result = (strcasecmp(buf, "NO") != 0);
       ZE_MessageInfo(10, "SPAMTRAP - %s found at policy database", rcpt);
     }
   }
 
-  if (result)
-  {
+  if (result) {
     (void) livehistory_add_entry(ip, time(NULL), 1, LH_SPAMTRAP);
     result = TRUE;
   }
 
-  if (result || (ze_logLevel > 12))
-  {
+  if (result || (ze_logLevel > 12)) {
     ZE_MessageInfo(11, "%s : Checked spamtrap from %s %s %s : %s",
-                 STRNULL(id, "00000000.000"),
-                 STRNULL(ip, "IP"),
-                 STRNULL(from, "FROM"),
-                 STRNULL(rcpt, "TO"), STRBOOL(result, "YES", "NO"));
+                   STRNULL(id, "00000000.000"),
+                   STRNULL(ip, "IP"),
+                   STRNULL(from, "FROM"),
+                   STRNULL(rcpt, "TO"), STRBOOL(result, "YES", "NO"));
   }
 
   return result;
@@ -1151,14 +1111,12 @@ check_ehlo_value(ctx)
   if (IS_KNOWN(ip_class))
     return ehlo_flags;
 
-  if (last_update < last_reconf_date)
-  {
+  if (last_update < last_reconf_date) {
     char               *checks = NULL;
     int                 nok = 0;
 
     checks = cf_get_str(CF_BADEHLO_CHECKS);
-    if (checks != NULL && strlen(checks) > 0)
-    {
+    if (checks != NULL && strlen(checks) > 0) {
       char               *argv[32];
       int                 argc = 0, i;
       int                 id;
@@ -1167,11 +1125,9 @@ check_ehlo_value(ctx)
       memset(argv, 0, sizeof (argv));
       argc = zeStr2Tokens(checks, 32, argv, " ,");
 
-      for (i = 0; i < argc; i++)
-      {
+      for (i = 0; i < argc; i++) {
         id = get_id_by_name(ehlo_checks, argv[i]);
-        switch (id)
-        {
+        switch (id) {
           case EHLO_INVALID_CHAR:
           case EHLO_FORGED_IP:
           case EHLO_IP_NO_BRACKET:
@@ -1202,21 +1158,19 @@ check_ehlo_value(ctx)
   if (ISSTREMPTY(priv->helohost))
     return 0;
 
-  if ((helohost = strdup(priv->helohost)) == NULL)
-  {
+  if ((helohost = strdup(priv->helohost)) == NULL) {
     ZE_LogSysError("helohost : strdup(%s)", priv->helohost);
     goto fin;
   }
 
-  /* 
+  /*
    ** remove brackets if there are at beginning and end
    */
   {
     int                 len;
 
     len = strlen(helohost);
-    if (helohost[0] == '[' && helohost[len - 1] == ']')
-    {
+    if (helohost[0] == '[' && helohost[len - 1] == ']') {
       int                 i;
 
       for (i = 0; i < len - 2; i++)
@@ -1232,76 +1186,76 @@ check_ehlo_value(ctx)
   /*
    ** Invalid characters
    */
-  if (zeStrRegex(helohost, "[^a-z0-9:.-]+", NULL, NULL, TRUE))
-  {
+  if (zeStrRegex(helohost, "[^a-z0-9:.-]+", NULL, NULL, TRUE)) {
     ehlo_flags |= EHLO_INVALID_CHAR;
     SET_BIT(ehlo_res, SPAM_CONN_BAD_EHLO);
     ZE_MessageInfo(10, "%s SPAM CHECK - C%02d EHLO : Invalid character %s",
-		 CONNID_STR(priv->id), SPAM_CONN_BAD_EHLO, helohost);
+                   CONNID_STR(priv->id), SPAM_CONN_BAD_EHLO, helohost);
   }
 
   /*
    **
    */
-  if (is_ipv4 && !STREQUAL(helohost, priv->peer_addr))
-  {
+  if (is_ipv4 && !STREQUAL(helohost, priv->peer_addr)) {
     ehlo_flags |= EHLO_FORGED_IP;
     SET_BIT(ehlo_res, SPAM_CONN_FORGED_EHLO);
     ZE_MessageInfo(10,
-		 "%s SPAM CHECK - C%02d EHLO : doesn't match peer addr %s/%s",
-		 CONNID_STR(priv->id), SPAM_CONN_FORGED_EHLO, helohost,
-		 priv->peer_addr);
+                   "%s SPAM CHECK - C%02d EHLO : doesn't match peer addr %s/%s",
+                   CONNID_STR(priv->id), SPAM_CONN_FORGED_EHLO, helohost,
+                   priv->peer_addr);
   }
 
-  if ((is_ipv4 || is_ipv6) && !is_bracketed)
-  {
+  if ((is_ipv4 || is_ipv6) && !is_bracketed) {
     ehlo_flags |= EHLO_IP_NO_BRACKET;
     SET_BIT(ehlo_res, SPAM_CONN_BAD_EHLO);
     ZE_MessageInfo(10, "%s SPAM CHECK - C%02d EHLO : IP without brackets %s",
-		 CONNID_STR(priv->id), SPAM_CONN_BAD_EHLO, helohost);
+                   CONNID_STR(priv->id), SPAM_CONN_BAD_EHLO, helohost);
   }
 
-  if (!is_ipv4 && !is_ipv6 && strchr(helohost, '.') == NULL)
-  {
-    /* Non FQDN */
+  if (!is_ipv4 && !is_ipv6 && strchr(helohost, '.') == NULL) {
+    /*
+     * Non FQDN 
+     */
     ehlo_flags |= EHLO_NOT_FQDN;
     SET_BIT(ehlo_res, SPAM_CONN_BAD_EHLO);
     ZE_MessageInfo(10, "%s SPAM CHECK - C%02d EHLO : non FQDN parameter %s",
-		 CONNID_STR(priv->id), SPAM_CONN_BAD_EHLO, helohost);
+                   CONNID_STR(priv->id), SPAM_CONN_BAD_EHLO, helohost);
   }
 
-  /* Check against localhost */
-  if (is_ipv6 && zeStrRegex(helohost, "(::1)", NULL, NULL, TRUE))
-  {
-    ehlo_flags |= EHLO_FAKE_LOCALHOST;
-    SET_BIT(ehlo_res, SPAM_CONN_FORGED_EHLO);
-    ZE_MessageInfo(10,
-		 "%s SPAM CHECK - C%02d EHLO : presents as being localhost %s/%s",
-		 CONNID_STR(priv->id), SPAM_CONN_FORGED_EHLO,
-		 priv->peer_addr, helohost);
-  }
-
-  if (is_ipv4 && STRNCASEEQUAL(helohost, "127.", strlen("127.")))
-  {
-    ehlo_flags |= EHLO_FAKE_LOCALHOST;
-    SET_BIT(ehlo_res, SPAM_CONN_FORGED_EHLO);
-    ZE_MessageInfo(10,
-		 "%s SPAM CHECK - C%02d EHLO : presents as being localhost %s/%s",
-		 CONNID_STR(priv->id), SPAM_CONN_FORGED_EHLO,
-		 priv->peer_addr, helohost);
-  }
-
-  if (!is_ipv4 && !is_ipv6 && zeStrRegex(helohost, "^localhost", NULL, NULL, TRUE))
-  {
+  /*
+   * Check against localhost 
+   */
+  if (is_ipv6 && zeStrRegex(helohost, "(::1)", NULL, NULL, TRUE)) {
     ehlo_flags |= EHLO_FAKE_LOCALHOST;
     SET_BIT(ehlo_res, SPAM_CONN_FORGED_EHLO);
     ZE_MessageInfo(10,
                    "%s SPAM CHECK - C%02d EHLO : presents as being localhost %s/%s",
-		 CONNID_STR(priv->id), SPAM_CONN_FORGED_EHLO,
-		 priv->peer_addr, helohost);
+                   CONNID_STR(priv->id), SPAM_CONN_FORGED_EHLO,
+                   priv->peer_addr, helohost);
   }
 
-  /* Check against myself */
+  if (is_ipv4 && STRNCASEEQUAL(helohost, "127.", strlen("127."))) {
+    ehlo_flags |= EHLO_FAKE_LOCALHOST;
+    SET_BIT(ehlo_res, SPAM_CONN_FORGED_EHLO);
+    ZE_MessageInfo(10,
+                   "%s SPAM CHECK - C%02d EHLO : presents as being localhost %s/%s",
+                   CONNID_STR(priv->id), SPAM_CONN_FORGED_EHLO,
+                   priv->peer_addr, helohost);
+  }
+
+  if (!is_ipv4 && !is_ipv6
+      && zeStrRegex(helohost, "^localhost", NULL, NULL, TRUE)) {
+    ehlo_flags |= EHLO_FAKE_LOCALHOST;
+    SET_BIT(ehlo_res, SPAM_CONN_FORGED_EHLO);
+    ZE_MessageInfo(10,
+                   "%s SPAM CHECK - C%02d EHLO : presents as being localhost %s/%s",
+                   CONNID_STR(priv->id), SPAM_CONN_FORGED_EHLO,
+                   priv->peer_addr, helohost);
+  }
+
+  /*
+   * Check against myself 
+   */
   {
     char               *myself = NULL;
     char                tme[2048];
@@ -1315,53 +1269,55 @@ check_ehlo_value(ctx)
     strlcpy(tme, myself, sizeof (tme));
 
     argc = zeStr2Tokens(tme, 64, argv, ", ");
-    for (i = 0; i < argc; i++)
-    {
+    for (i = 0; i < argc; i++) {
       char               *expr = argv[i];
 
-      if (STRCASEEQUAL(expr, "HOSTNAME") && (strlen(my_hostname) > 0)) {	
-	if (!STRCASEEQUAL(my_hostname, "localhost") && strchr(my_hostname, '.') == NULL)
-	  continue;
+      if (STRCASEEQUAL(expr, "HOSTNAME") && (strlen(my_hostname) > 0)) {
+        if (!STRCASEEQUAL(my_hostname, "localhost")
+            && strchr(my_hostname, '.') == NULL)
+          continue;
         expr = my_hostname;
       }
 
       ZE_MessageInfo(19, "Checking helo %s against %s", helohost, expr);
 
       if (zeStrRegex(helohost, expr, NULL, NULL, TRUE)
-          /* && (strlen(helohost) - strlen(expr) <= 2) */ )
-      {
+          /*
+           * && (strlen(helohost) - strlen(expr) <= 2) 
+           */
+        ) {
         ehlo_flags |= EHLO_IDENTITY_THEFT;
         SET_BIT(ehlo_res, SPAM_CONN_FORGED_EHLO);
-	ZE_MessageInfo(10,
-		     "%s SPAM CHECK - C%02d EHLO : presents as being myself %s/%s",
-		     CONNID_STR(priv->id), SPAM_CONN_FORGED_EHLO,
-		     priv->peer_addr, helohost);
+        ZE_MessageInfo(10,
+                       "%s SPAM CHECK - C%02d EHLO : presents as being myself %s/%s",
+                       CONNID_STR(priv->id), SPAM_CONN_FORGED_EHLO,
+                       priv->peer_addr, helohost);
         break;
       }
     }
   }
 
-  /* Check against regular expression */
-  if ((ehlo_check_rules & EHLO_REGEX) != 0)
-  {
+  /*
+   * Check against regular expression 
+   */
+  if ((ehlo_check_rules & EHLO_REGEX) != 0) {
     int                 score;
 
     score =
       check_regex(CONNID_STR(priv->id), priv->peer_addr, helohost, MAIL_HELO);
 
-    if (score > 1)
-    {
+    if (score > 1) {
       ehlo_flags |= EHLO_REGEX;
       SET_BIT(ehlo_res, SPAM_CONN_BAD_EHLO);
       ZE_MessageInfo(10,
-		   "%s SPAM CHECK - C%02d EHLO (%s) matches regular expression",
-		   CONNID_STR(priv->id), SPAM_CONN_BAD_EHLO, helohost);
+                     "%s SPAM CHECK - C%02d EHLO (%s) matches regular expression",
+                     CONNID_STR(priv->id), SPAM_CONN_BAD_EHLO, helohost);
     }
   }
 
   if (ehlo_res != 0)
     ZE_MessageInfo(9, "%s EHLO CHECK - Bad value ip/value = %s/%s (%08X)",
-                 CONNID_STR(priv->id), priv->peer_addr, helohost, ehlo_flags);
+                   CONNID_STR(priv->id), priv->peer_addr, helohost, ehlo_flags);
 
 fin:
   FREE(helohost);
@@ -1392,8 +1348,7 @@ fin:
 #define DKF_STATUS_NONPART      7
 #define DKF_STATUS_UNKNOWN      8
 
-struct lookup
-{
+struct lookup {
   char               *str;
   int                 code;
 };
@@ -1435,12 +1390,13 @@ check_domainkeys(ctx)
 
   int                 dkresult = DKF_STATUS_UNKNOWN;
 
-  /* DomainKeys check */
+  /*
+   * DomainKeys check 
+   */
   {
     header_T           *h;
 
-    if ((h = get_msgheader(priv->headers, "DomainKey-Status")) != NULL)
-    {
+    if ((h = get_msgheader(priv->headers, "DomainKey-Status")) != NULL) {
       int                 iStatus, iSignature;
 
       dkresult = decode_dk_result(h->value);
@@ -1448,15 +1404,12 @@ check_domainkeys(ctx)
       iStatus = get_msgheader_index(priv->headers, "DomainKey-Status");
       iSignature = get_msgheader_index(priv->headers, "DomainKey-Signature");
 
-      if (iStatus >= 0 && iSignature < 0)
-      {
+      if (iStatus >= 0 && iSignature < 0) {
         ZE_MessageNotice(9, "DK Status without DK Signature");
       }
 
-      if ((iStatus >= 0) && (iSignature >= 0))
-      {
-        if (iStatus > iSignature)
-        {
+      if ((iStatus >= 0) && (iSignature >= 0)) {
+        if (iStatus > iSignature) {
           ZE_MessageNotice(9, "DK Status inserted after DK Signature");
         }
       }
@@ -1470,6 +1423,7 @@ check_domainkeys(ctx)
  *                                                                            *
  *                                                                            *
  ******************************************************************************/
+
 /*
 ** Shall check
 **      user
@@ -1491,8 +1445,7 @@ shall_notify_user(user_addr, to)
   char                buf[256];
 
   memset(buf, 0, sizeof (buf));
-  if (check_policy("NotifyUser", user_addr, buf, sizeof (buf), FALSE))
-  {
+  if (check_policy("NotifyUser", user_addr, buf, sizeof (buf), FALSE)) {
     if (strcasecmp(buf, "NO") == 0)
       return FALSE;
     if (strcasecmp(buf, "YES") == 0)

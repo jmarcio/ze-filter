@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -26,7 +27,7 @@
 #include <ze-filter.h>
 #include <ze-databases.h>
 
-ZEDB_ENV_T          *work_db_env = NULL;
+ZEDB_ENV_T         *work_db_env = NULL;
 char               *work_db_dir = NULL;
 
 void                close_work_db_env();
@@ -43,8 +44,7 @@ open_work_db_env(cfdir, defdir, rdonly)
 {
   char               *home = NULL;
 
-  if (work_db_env != NULL)
-  {
+  if (work_db_env != NULL) {
     ZE_MessageInfo(9, "Work database environnement already initialized");
     return TRUE;
   }
@@ -56,8 +56,7 @@ open_work_db_env(cfdir, defdir, rdonly)
 
   work_db_env = zeDb_EnvOpen(home, rdonly, 60);
 
-  if (work_db_env != NULL)
-  {
+  if (work_db_env != NULL) {
     (void) atexit(close_work_db_env);
     work_db_dir = strdup(home);
     if (work_db_dir == NULL)

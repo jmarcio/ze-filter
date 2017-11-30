@@ -22,7 +22,7 @@
  */
 
 
-#ifndef __J_REGEX_H__
+#ifndef __ZE_REGEX_H__
 
 
 struct jregex_t
@@ -57,5 +57,5 @@ char               *jreg_error(jregex_t *);
 
 
 
-#define __J_REGEX_H__
+#define __ZE_REGEX_H__
 #endif

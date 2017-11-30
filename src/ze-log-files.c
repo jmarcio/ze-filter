@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -47,8 +48,7 @@ log_attached_files_reopen()
 
   MUTEX_LOCK(&mutex);
 
-  if (!log_ready(&logt))
-  {
+  if (!log_ready(&logt)) {
     char                path[1024];
     char               *wkdir = cf_get_str(CF_WORKDIR);
     char               *logname = cf_get_str(CF_XFILES_LOG_FILE);
@@ -92,11 +92,9 @@ log_attached_files(id, ip, files)
 
   MUTEX_LOCK(&mutex);
 
-  if (log_ready(&logt))
-  {
+  if (log_ready(&logt)) {
     p = files;
-    while (p != NULL)
-    {
+    while (p != NULL) {
       char               *serror = "???";
 
       if ((p->name == NULL) || (strlen(p->name) == 0))

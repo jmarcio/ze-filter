@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -46,14 +47,18 @@ mlfi_eoh(ctx)
 
   ip_class = priv->netclass.class;
 #if 0
-  /* Message with passport ??? */
+  /*
+   * Message with passport ??? 
+   */
   if (priv->nb_rcpt == 1 && priv->pass_ok)
     goto fin;
 #endif
 
   sm_macro_update(ctx, priv->sm);
 
-  /* write the header to the spool file */
+  /*
+   * write the header to the spool file 
+   */
 #if defined(_FFR_CLEAN_MSG_BUF)
   (void) spool_file_write(priv, "\n", strlen("\n"));
 #else
@@ -64,8 +69,7 @@ mlfi_eoh(ctx)
 
   priv->nb_rcpt += nb_rcpt;
 
-  if (priv->peer_addr == NULL)
-  {
+  if (priv->peer_addr == NULL) {
     ZE_LogMsgError(0, "peer_addr is NULL ???");
     result = SMFIS_TEMPFAIL;
 
@@ -78,12 +82,10 @@ mlfi_eoh(ctx)
 #endif             /* HAVE_XXFI_DATA */
 
   if (result == SMFIS_CONTINUE
-      && priv->hdr_content_encoding != MIME_ENCODE_NONE)
-  {
+      && priv->hdr_content_encoding != MIME_ENCODE_NONE) {
     char               *s = MSG_ENCODED_BODY;
 
-    switch (priv->hdr_content_encoding)
-    {
+    switch (priv->hdr_content_encoding) {
       case MIME_ENCODE_7BIT:
         break;
       case MIME_ENCODE_8BIT:
@@ -91,7 +93,7 @@ mlfi_eoh(ctx)
       case MIME_ENCODE_BINARY:
         s = MSG_BODY_ENCODED_BINARY;
         ZE_LogMsgInfo(12, "HEADER ENCODE : BINARY %d",
-                     priv->hdr_content_encoding);
+                      priv->hdr_content_encoding);
         break;
       case MIME_ENCODE_BASE64:
         s = MSG_BODY_ENCODED_BASE64;
@@ -103,39 +105,34 @@ mlfi_eoh(ctx)
         break;
       default:
         ZE_LogMsgInfo(12, "HEADER ENCODE : OTHER %d",
-                     priv->hdr_content_encoding);
+                      priv->hdr_content_encoding);
         break;
     }
   }
 
-  if (result == SMFIS_CONTINUE)
-  {
+  if (result == SMFIS_CONTINUE) {
     header_T           *h;
     char               *s = "HEADERS PB";
 
-    if ((cf_get_int(CF_NO_HEADERS) != OPT_OK) && (priv->headers == NULL))
-    {
+    if ((cf_get_int(CF_NO_HEADERS) != OPT_OK) && (priv->headers == NULL)) {
       s = MSG_NO_HEADERS;
       result = SMFIS_REJECT;
     }
 
     if ((cf_get_int(CF_NO_FROM_HEADERS) != OPT_OK) &&
-        ((h = get_msgheader(priv->headers, "From")) == NULL))
-    {
+        ((h = get_msgheader(priv->headers, "From")) == NULL)) {
       s = MSG_NO_FROM_HEADER;
       result = SMFIS_REJECT;
     }
 
     if ((cf_get_int(CF_NO_TO_HEADERS) != OPT_OK) &&
         ((h = get_msgheader(priv->headers, "To")) == NULL) &&
-        ((h = get_msgheader(priv->headers, "Cc")) == NULL))
-    {
+        ((h = get_msgheader(priv->headers, "Cc")) == NULL)) {
       s = MSG_NO_RCPT_HEADER;
       result = SMFIS_REJECT;
     }
 
-    if (result != SMFIS_CONTINUE)
-    {
+    if (result != SMFIS_CONTINUE) {
 
       (void) jsmfi_setreply(ctx, "550", "5.7.1", s);
 
@@ -145,18 +142,17 @@ mlfi_eoh(ctx)
     }
   }
 #if 1
-  /* check header contents */
-  if (cf_get_int(CF_SPAM_REGEX) == OPT_YES)
-  {
+  /*
+   * check header contents 
+   */
+  if (cf_get_int(CF_SPAM_REGEX) == OPT_YES) {
     ZE_LogMsgDebug(15, "check_header_content");
-    if (shall_check_content(ctx))
-    {
+    if (shall_check_content(ctx)) {
       int                 score = 0;
       int                 where = MAIL_HEADERS;
       header_T           *h = NULL;
 
-      for (h = priv->headers; h != NULL; h = h->next)
-      {
+      for (h = priv->headers; h != NULL; h = h->next) {
         if (h->value == NULL || strlen(h->value) == 0)
           continue;
 
@@ -178,15 +174,13 @@ mlfi_eoh(ctx)
   /*
    ** Date in a coherent time window
    */
-  if (result == SMFIS_CONTINUE && priv->headers != NULL)
-  {
+  if (result == SMFIS_CONTINUE && priv->headers != NULL) {
     int                 nerr_past, nerr_future;
     header_T           *h = priv->headers;
     time_t              now = time(NULL);
 
     nerr_past = nerr_future = 0;
-    while ((h = get_msgheader_next(h, "Date")) != NULL)
-    {
+    while ((h = get_msgheader_next(h, "Date")) != NULL) {
       time_t              date_secs;
 
       if (h->value == NULL)
@@ -196,43 +190,37 @@ mlfi_eoh(ctx)
       if (date_secs < 1000)
         continue;
 
-      if (date_secs > (now + 48 HOURS))
-      {
+      if (date_secs > (now + 48 HOURS)) {
         if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
           ZE_MessageInfo(10, "%s SPAM CHECK - DATE IN THE FUTUR : %s",
-                       CONNID_STR(priv->id), h->value);
+                         CONNID_STR(priv->id), h->value);
         nerr_future++;
         continue;
       }
 
-      if ((date_secs + 12 MONTHS) < now)
-      {
+      if ((date_secs + 12 MONTHS) < now) {
         if (cf_get_int(CF_LOG_LEVEL_ORACLE) >= 2)
           ZE_MessageInfo(10, "%s SPAM CHECK - DATE IN THE PAST : %s",
-                       CONNID_STR(priv->id), h->value);
+                         CONNID_STR(priv->id), h->value);
         nerr_past++;
         continue;
       }
     }
 
-    if (IS_UNKNOWN(priv->netclass.class))
-    {
+    if (IS_UNKNOWN(priv->netclass.class)) {
       char               *msg = NULL;
 
-      if (cf_get_int(CF_REJECT_DATE_IN_FUTURE) != OPT_NO)
-      {
+      if (cf_get_int(CF_REJECT_DATE_IN_FUTURE) != OPT_NO) {
         if (nerr_future > 0)
           msg = "Date in the future ???";
       }
 
-      if (cf_get_int(CF_REJECT_DATE_IN_PAST) != OPT_NO)
-      {
+      if (cf_get_int(CF_REJECT_DATE_IN_PAST) != OPT_NO) {
         if (nerr_past > 0)
           msg = "Date in remote past ???";
       }
 
-      if (msg != NULL)
-      {
+      if (msg != NULL) {
         result = SMFIS_REJECT;
         (void) jsmfi_setreply(ctx, "550", "5.7.1", msg);
         log_msg_context(ctx, msg);
@@ -243,10 +231,14 @@ mlfi_eoh(ctx)
   if (result != SMFIS_CONTINUE)
     goto fin;
 
-  /* end... */
+  /*
+   * end... 
+   */
 fin:
   CHECK_CALLBACK_DELAY();
 
-  /* continue processing */
+  /*
+   * continue processing 
+   */
   return result;
 }

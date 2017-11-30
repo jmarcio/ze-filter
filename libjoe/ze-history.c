@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -38,8 +39,7 @@
 
 static long         HISTORY_ENTRIES = 0x8000L;
 
-struct HistRaw_T
-{
+struct HistRaw_T {
   uint32_t            signature;
   time_t              conn_id;
   char                ip[SZ_IP];
@@ -97,7 +97,9 @@ struct HistRaw_T
 
   uint32_t            connect_flags;
 
-  /* not yet... */
+  /*
+   * not yet... 
+   */
   short               score_oracle;
   short               score_urlbl;
   short               score_regex;
@@ -114,8 +116,7 @@ struct HistRaw_T
 };
 
 
-struct HistRes_T
-{
+struct HistRes_T {
   char                ip[SZ_IP];
 #if 0
   in_addr_t           addr;
@@ -185,8 +186,7 @@ struct HistRes_T
 static void         ctx2histraw(HistRaw_T *, CTXPRIV_T *);
 static void         histraw2histres(HistRes_T *, HistRaw_T *);
 
-struct History_T
-{
+struct History_T {
   size_t              nb;
   JBT_T               jdbh;
   HistRes_T           glob;
@@ -206,8 +206,7 @@ HistRes_T          *res_history_lookup(History_T *, char *);
  **************************************************************************** */
 
 
-struct RawData_T
-{
+struct RawData_T {
   int                 fd;
   long                ptr;
   pthread_mutex_t     st_mutex;
@@ -235,21 +234,20 @@ raw_history_open(ronly)
   ZE_MessageInfo(15, "sizeof RawHist_T : %d", sizeof (HistRaw_T));
 
   ZE_MessageInfo(15, "HISTORY_ENTRIES = %6ld; cf = %6ld\n", HISTORY_ENTRIES,
-               (long) history_entries);
+                 (long) history_entries);
 
   if (history_entries > 0)
     HISTORY_ENTRIES = history_entries * 1024;
 
   ZE_MessageInfo(15, "HISTORY_ENTRIES = %6ld; cf = %6ld\n", HISTORY_ENTRIES,
-               (long) history_entries);
+                 (long) history_entries);
 
   if (work_dir == NULL)
     work_dir = ZE_WORKDIR;
   snprintf(fname, sizeof (fname), "%s/%s", work_dir, "ze-history");
 
   HISTORY_LOCK();
-  if (hfile.fd < 0)
-  {
+  if (hfile.fd < 0) {
     HistRaw_T           h;
     size_t              ind;
     time_t              idmax;
@@ -259,18 +257,15 @@ raw_history_open(ronly)
     int                 oflag;
 
     mode = (S_IRUSR | S_IRGRP | S_IROTH);
-    if (ronly)
-    {
+    if (ronly) {
       oflag = O_RDONLY;
-    } else
-    {
+    } else {
       mode |= S_IWUSR;
       oflag = (O_RDWR | O_CREAT);
     }
 
     hfile.fd = open(fname, oflag, mode);
-    if (hfile.fd < 0)
-    {
+    if (hfile.fd < 0) {
       ZE_LogSysError("error opening history file");
       HISTORY_UNLOCK();
       return FALSE;
@@ -278,10 +273,8 @@ raw_history_open(ronly)
 
     ind = 0;
     idmax = 0;
-    while ((r = read(hfile.fd, &h, sizeof (h))) == sizeof (h))
-    {
-      if (h.conn_id > idmax)
-      {
+    while ((r = read(hfile.fd, &h, sizeof (h))) == sizeof (h)) {
+      if (h.conn_id > idmax) {
         idmax = h.conn_id;
         hfile.ptr = ind;
       }
@@ -331,17 +324,16 @@ raw_history_add_entry(ctx)
     (void) raw_history_open(FALSE);
 
   HISTORY_LOCK();
-  if (hfile.fd >= 0)
-  {
+  if (hfile.fd >= 0) {
     ctx2histraw(&history, priv);
 
     if (lseek(hfile.fd, hfile.ptr * sizeof (history), SEEK_SET) == (off_t) - 1)
       ZE_LogSysError("%08lX : lseek error on history file %d",
-                    (long) priv->conn_id, hfile.fd);
+                     (long) priv->conn_id, hfile.fd);
 
     if (write(hfile.fd, &history, sizeof (history)) < 0)
       ZE_LogSysError("%08lX : write error on history file %d",
-                    (long) priv->conn_id, hfile.fd);
+                     (long) priv->conn_id, hfile.fd);
 
     hfile.ptr++;
     hfile.ptr = (hfile.ptr % HISTORY_ENTRIES);
@@ -392,8 +384,7 @@ ctx2histraw(dst, src)
 
   dst->rej_greyrcpt = src->rej_greyreply;
   dst->rej_greymsgs = src->rej_greymsgs;
-  if (src->rej_greyrcpt > 0)
-  {
+  if (src->rej_greyrcpt > 0) {
     static int          n = 0;
 
     if (n++ < 10)
@@ -449,8 +440,7 @@ histraw2histres(dst, src)
   if ((dst == NULL) || (src == NULL))
     return;
 
-  if (strlen(dst->ip) == 0)
-  {
+  if (strlen(dst->ip) == 0) {
     in_addr_t           addr;
 
     strlcpy(dst->ip, src->ip, sizeof (dst->ip));
@@ -499,8 +489,7 @@ histraw2histres(dst, src)
   dst->dbrcpt_unknown += src->dbrcpt_unknown;
   dst->dbrcpt_spamtrap += src->dbrcpt_spamtrap;
 
-  if (dst->resolve_res != RESOLVE_OK)
-  {
+  if (dst->resolve_res != RESOLVE_OK) {
     if (dst->resolve_res != src->resolve_res)
       dst->resolve_res = RESOLVE_NULL;
   } else
@@ -509,10 +498,8 @@ histraw2histres(dst, src)
   dst->ip_class = src->ip_class;
 
   dst->rej_resolve += src->rej_resolve;
-  if (src->rej_resolve)
-  {
-    switch (src->resolve_res)
-    {
+  if (src->rej_resolve) {
+    switch (src->resolve_res) {
       case RESOLVE_FAIL:
         dst->rej_resolve_failed++;
         break;
@@ -538,7 +525,9 @@ histraw2histres(dst, src)
 
   dst->rej_greyrcpt += src->rej_greyrcpt;
   dst->rej_greymsgs += src->rej_greymsgs;
-  /*printf( "  %-20s GREY : %d\n", dst->ip, src->rej_greyrcpt);  */
+  /*
+   * printf( "  %-20s GREY : %d\n", dst->ip, src->rej_greyrcpt);  
+   */
 
   dst->rej_badmx += src->rej_badmx;
   dst->rej_spamtrap += src->rej_spamtrap;
@@ -546,8 +535,7 @@ histraw2histres(dst, src)
 #if 1
   if (src->rej_regex || src->rej_conn_rate || src->rej_resolve ||
       src->rej_rcpt || src->rej_luser || src->rej_open ||
-      src->rej_empty || src->rej_badrcpt)
-  {
+      src->rej_empty || src->rej_badrcpt) {
     dst->nb_reject++;
   }
 #else
@@ -602,19 +590,16 @@ res_history_add_noeud(c, h, verbose)
 
   ptr = jbt_get(&c->jdbh, &buf);
 
-  if (ptr != NULL)
-  {
+  if (ptr != NULL) {
     histraw2histres(ptr, h);
-  } else
-  {
+  } else {
     HistRes_T           buf;
 
     memset(&buf, 0, sizeof (buf));
     histraw2histres(&buf, h);
     c->nb++;
 
-    if (!jbt_add(&c->jdbh, &buf))
-    {
+    if (!jbt_add(&c->jdbh, &buf)) {
       ZE_LogMsgWarning(0, "Can't add record to tree...");
     }
   }
@@ -672,20 +657,19 @@ res_history_update(hst, ip, tf, dt, verbose)
   if (tf <= (time_t) 0)
     tf = time(NULL);
   ti = tf - dt;
-  ZE_LogMsgDebug(15, " ti tf dt : %ld %ld %ld\n", (long) ti, (long) tf, (long) dt);
+  ZE_LogMsgDebug(15, " ti tf dt : %ld %ld %ld\n", (long) ti, (long) tf,
+                 (long) dt);
 
   HISTORY_LOCK();
 
-  for (p = 0;; p++)
-  {
+  for (p = 0;; p++) {
     ptr = p * sizeof (buf);
 
 #if HAVE_PREAD
     if (pread(fd, &buf, sizeof (buf), ptr) != sizeof (buf))
       break;
 #else
-    if (lseek(fd, ptr, SEEK_SET) == (off_t) - 1)
-    {
+    if (lseek(fd, ptr, SEEK_SET) == (off_t) - 1) {
       ZE_LogSysError("lseek error");
       return FALSE;
     }
@@ -718,8 +702,7 @@ res_history_update(hst, ip, tf, dt, verbose)
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
-typedef struct log_history_T
-{
+typedef struct log_history_T {
   bool                hostnames;
   int                 type;
   int                 nbrecs;
@@ -740,8 +723,7 @@ print_noeud_summary(void *rec, void *arg)
   log_history_T      *log = (log_history_T *) arg;
 #endif
 
-  if (log_hostnames)
-  {
+  if (log_hostnames) {
     s = nodename;
     *s = '\0';
     CACHE_GETHOSTNAMEBYADDR(p->ip, nodename, sizeof (nodename), FALSE);
@@ -847,7 +829,8 @@ print_global_summary(data, arg)
   printf(" Last Connection   : %s \n", sout);
   printf(" Connections       : %7d\n", p->nb_conn);
   printf(" Gateways          : %7d\n", hst->nb);
-  printf(" Throttle Max      : %7d / 10 min (for the server)\n", p->serv_rate_max);
+  printf(" Throttle Max      : %7d / 10 min (for the server)\n",
+         p->serv_rate_max);
   printf(" Throttle Max      : %7d / 10 min (for a single gateway)\n",
          p->throttle_max);
   printf
@@ -919,8 +902,7 @@ print_noeud_data(void *rec, void *arg)
   if (p == NULL)
     return 0;
 
-  switch (log_type)
-  {
+  switch (log_type) {
     case H_EMPTY:
       if (p->nb_empty == 0)
         return 0;
@@ -983,16 +965,14 @@ print_noeud_data(void *rec, void *arg)
   if (log != NULL)
     log->count++;
 
-  if (log_hostnames)
-  {
+  if (log_hostnames) {
     s = nodename;
     *s = '\0';
     CACHE_GETHOSTNAMEBYADDR(p->ip, nodename, sizeof (nodename), FALSE);
   } else
     s = "";
 
-  switch (log_type)
-  {
+  switch (log_type) {
     case H_EMPTY:
     case H_REJ_EMPTY:
     case H_BADRCPT:
@@ -1025,7 +1005,8 @@ print_noeud_data(void *rec, void *arg)
       break;
     case H_REJ_REGEX:
       printf(". %-20s : %7d %7d %7d %7d %7d %7d : %s\n", p->ip, p->nb_conn,
-             p->nb_msgs, p->rej_regex, p->rej_oracle, p->nb_bspam, p->nb_bham, s);
+             p->nb_msgs, p->rej_regex, p->rej_oracle, p->nb_bspam, p->nb_bham,
+             s);
       res = 1;
       break;
     case H_XFILES:
@@ -1094,8 +1075,7 @@ res_history_summary(hst, ip, tf, dt, verbose, hostnames, type, nbrecs)
 
   name = (ip != NULL ? ip : "HOSTNAME");
 
-  switch (log_type)
-  {
+  switch (log_type) {
     case H_SUMMARY:
       printf("*** Summary\n\n");
       break;
@@ -1154,7 +1134,8 @@ res_history_summary(hst, ip, tf, dt, verbose, hostnames, type, nbrecs)
       break;
     case H_XFILES:
       printf("*** Gateways sending X-Files or Virus\n");
-      printf(". IP ADDRESS           : CONNECT    XFILES     VIRUS : %s\n", name);
+      printf(". IP ADDRESS           : CONNECT    XFILES     VIRUS : %s\n",
+             name);
       break;
     case H_SPAMTRAP:
       printf("*** Gateways sending messages to Spam traps\n\n");
@@ -1171,8 +1152,7 @@ res_history_summary(hst, ip, tf, dt, verbose, hostnames, type, nbrecs)
       break;
   }
 
-  switch (log_type)
-  {
+  switch (log_type) {
     case H_SUMMARY:
       if (verbose || (ip != NULL))
         nb = jbt_browse(&hst->jdbh, print_noeud_summary, &log);
@@ -1217,8 +1197,7 @@ load_live_history(hst, tf, dt)
   if (hst == NULL)
     hst = &history;
 
-  if (hfile.fd < 0)
-  {
+  if (hfile.fd < 0) {
     (void) raw_history_open(FALSE);
   }
 
@@ -1231,20 +1210,19 @@ load_live_history(hst, tf, dt)
 
   ti = tf - dt;
 
-  ZE_LogMsgDebug(15, " ti tf dt : %ld %ld %ld\n", (long) ti, (long) tf, (long) dt);
+  ZE_LogMsgDebug(15, " ti tf dt : %ld %ld %ld\n", (long) ti, (long) tf,
+                 (long) dt);
 
   HISTORY_LOCK();
 
-  for (p = 0;; p++)
-  {
+  for (p = 0;; p++) {
     ptr = p * sizeof (buf);
 
 #if HAVE_PREAD
     if (pread(fd, &buf, sizeof (buf), ptr) != sizeof (buf))
       break;
 #else
-    if (lseek(fd, ptr, SEEK_SET) == (off_t) - 1)
-    {
+    if (lseek(fd, ptr, SEEK_SET) == (off_t) - 1) {
       ZE_LogSysError("lseek error");
       return FALSE;
     }

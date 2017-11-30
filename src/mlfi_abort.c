@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -42,7 +43,7 @@ mlfi_abort(ctx)
   sm_macro_update(ctx, priv->sm);
   priv->nb_abort++;
 #if _FFR_MODULES
-  /* 
+  /*
    ** ze-filter modules
    **
    */
@@ -51,8 +52,7 @@ mlfi_abort(ctx)
   if (result != SMFIS_CONTINUE)
     goto fin;
 #endif             /* _FFR_MODULES */
-  if (priv->rej_greyrcpt > 0)
-  {
+  if (priv->rej_greyrcpt > 0) {
     priv->rej_greymsgs++;
     stats_inc(STAT_GREY_MSGS, 1);
   }
@@ -72,4 +72,3 @@ fin:
   CHECK_CALLBACK_DELAY();
   return result;
 }
-

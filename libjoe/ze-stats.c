@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -32,16 +33,14 @@
 #define MAX_SCORE  32
 #define STATE_FILE        "ze-state"
 
-static struct
-{
+static struct {
   int                 nb;
   pthread_mutex_t     mutex;
   int                 ora[MAX_SCORE + 2];
   int                 reg[MAX_SCORE + 2];
   int                 msg[MAX_SCORE + 2];
   int                 bay[MAX_SCORE + 2];
-} msg_score =
-{
+} msg_score = {
 0, PTHREAD_MUTEX_INITIALIZER};
 
 
@@ -68,19 +67,18 @@ msg_score_stats_update(scores)
 
   SCORE_LOCK();
 
-  if (msg_score.nb == 0)
-  {
+  if (msg_score.nb == 0) {
     memset(msg_score.ora, 0, sizeof (msg_score.ora));
     memset(msg_score.reg, 0, sizeof (msg_score.reg));
     memset(msg_score.msg, 0, sizeof (msg_score.msg));
     memset(msg_score.bay, 0, sizeof (msg_score.bay));
   }
 
-  if (msg_sc >= 0 || bay_sc >= 0.75)
-  {
+  if (msg_sc >= 0 || bay_sc >= 0.75) {
     int                 x;
 
-    /* *** JOE XXX */
+    /*
+     *** JOE XXX */
     x = bay_sc * MAX_SCORE;
     if (x < 0)
       x = 0;
@@ -121,8 +119,7 @@ msg_score_stats_print(fd, which)
      int                 fd;
      int                 which;
 {
-  if (fd >= 0)
-  {
+  if (fd >= 0) {
     int                 i = 0, j;
     int                 cnt = 0;
     int                 max = 0;
@@ -132,11 +129,9 @@ msg_score_stats_print(fd, which)
 
     SCORE_LOCK();
 
-    for (i = 0; i < MAX_SCORE + 2; i++)
-    {
+    for (i = 0; i < MAX_SCORE + 2; i++) {
       v = 0;
-      switch (which)
-      {
+      switch (which) {
         case 0:
           v = msg_score.msg[i];
           break;
@@ -155,17 +150,14 @@ msg_score_stats_print(fd, which)
         max = v;
     }
 
-    if (cnt > 0)
-    {
+    if (cnt > 0) {
       FD_PRINTF(fd, "\nMESSAGES : %7d\n", cnt);
 
       FD_PRINTF(fd, "\n");
       sum = 0;
-      for (i = 0; i < MAX_SCORE + 2; i++)
-      {
+      for (i = 0; i < MAX_SCORE + 2; i++) {
         v = 0;
-        switch (which)
-        {
+        switch (which) {
           case 0:
             v = msg_score.msg[i];
             break;
@@ -294,8 +286,7 @@ fill_counters_buffer(buf, bufsz)
   snprintf(str, sizeof (str), "BAYESHAM=(%lld) ",
            (long long) m_stats.glob.value[STAT_BAYES_HAM]);
   strlcat(buf, str, bufsz);
-  if (cf_get_int(CF_SCANNER_ACTION) != OPT_OK)
-  {
+  if (cf_get_int(CF_SCANNER_ACTION) != OPT_OK) {
     snprintf(str, sizeof (str), "VIRUS=(%lld) ",
              (long long) m_stats.glob.value[STAT_VIRUS]);
     strlcat(buf, str, bufsz);
@@ -303,20 +294,17 @@ fill_counters_buffer(buf, bufsz)
              (long long) m_stats.glob.value[STAT_POLICY]);
     strlcat(buf, str, bufsz);
   }
-  if (m_stats.glob.value[STAT_BADMX] > 0)
-  {
+  if (m_stats.glob.value[STAT_BADMX] > 0) {
     snprintf(str, sizeof (str), "BADMX=(%lld) ",
              (long long) m_stats.glob.value[STAT_BADMX]);
     strlcat(buf, str, bufsz);
   }
-  if (m_stats.glob.value[STAT_GREY_MSGS] > 0)
-  {
+  if (m_stats.glob.value[STAT_GREY_MSGS] > 0) {
     snprintf(str, sizeof (str), "GREYMSGS=(%lld) ",
              (long long) m_stats.glob.value[STAT_GREY_MSGS]);
     strlcat(buf, str, bufsz);
   }
-  if (m_stats.glob.value[STAT_GREY_RCPT] > 0)
-  {
+  if (m_stats.glob.value[STAT_GREY_RCPT] > 0) {
     snprintf(str, sizeof (str), "GREYRCPT=(%lld) ",
              (long long) m_stats.glob.value[STAT_GREY_RCPT]);
     strlcat(buf, str, bufsz);
@@ -349,20 +337,18 @@ log_counters(fd, dump)
   char                path[1024];
   char               *wkdir = NULL;
 
-  if (fd >= 0)
-  {
+  if (fd >= 0) {
     char                buf[2048];
 
     memset(buf, 0, sizeof (buf));
-    snprintf(buf, sizeof(buf), "DATA ");
-    if (fill_counters_buffer(buf, sizeof(buf)))
+    snprintf(buf, sizeof (buf), "DATA ");
+    if (fill_counters_buffer(buf, sizeof (buf)))
       FD_PRINTF(fd, "%s", buf);
 
     return;
   }
 
-  if (fd < 0)
-  {
+  if (fd < 0) {
     wkdir = cf_get_str(CF_WORKDIR);
     if (wkdir == NULL || strlen(wkdir) == 0)
       wkdir = ZE_WORKDIR;
@@ -371,18 +357,16 @@ log_counters(fd, dump)
 
     ADJUST_LOG_NAME(path, fname, wkdir, "none:");
 
-    if (strlen(path) == 0)
-    {
+    if (strlen(path) == 0) {
       ZE_LogMsgError(0, "undefined state file");
       return;
     }
 
-    if (log_check_and_open(&st_log, path))
-    {
+    if (log_check_and_open(&st_log, path)) {
       char                buf[2048];
 
       memset(buf, 0, sizeof (buf));
-      if (fill_counters_buffer(buf, sizeof(buf)))
+      if (fill_counters_buffer(buf, sizeof (buf)))
         log_write(&st_log, buf);
     }
     return;
@@ -424,8 +408,7 @@ stats_inc(which, n)
 
   STATS_LOCK();
 
-  switch (which)
-  {
+  switch (which) {
     case STAT_BYTES:
       m_stats.glob.value[STAT_BYTES] += (n >> 6);
       m_stats.proc.value[STAT_BYTES] += (n >> 6);
@@ -459,14 +442,12 @@ save_state()
 
   ADJUST_FILENAME(path, fname, wkdir, STATE_FILE);
 
-  if (strlen(path) == 0)
-  {
+  if (strlen(path) == 0) {
     ZE_LogMsgError(0, "undefined state file");
     return;
   }
 
-  if ((fd = open(path, O_WRONLY | O_CREAT, 00644)) >= 0)
-  {
+  if ((fd = open(path, O_WRONLY | O_CREAT, 00644)) >= 0) {
     STATS_LOCK();
     m_stats.last_save = now;
     STATS_UNLOCK();
@@ -498,14 +479,12 @@ read_state()
 
   ADJUST_FILENAME(path, fname, wkdir, STATE_FILE);
 
-  if (strlen(path) == 0)
-  {
+  if (strlen(path) == 0) {
     ZE_LogMsgError(0, "undefined state file");
     return;
   }
 
-  if ((fd = open(path, O_RDONLY)) >= 0)
-  {
+  if ((fd = open(path, O_RDONLY)) >= 0) {
     STATS_LOCK();
     if (read(fd, &m_stats, sizeof (m_stats)) != sizeof (m_stats))
       ZE_LogSysError("error reading %s file", STRNULL(path, "NULL"));
@@ -525,7 +504,9 @@ init_proc_state()
   time_t              now = time(NULL);
 
   read_state();
-  /* save_state (); */
+  /*
+   * save_state (); 
+   */
 
   STATS_LOCK();
 
@@ -581,8 +562,7 @@ print_state(ofd)
 
   ADJUST_FILENAME(path, fname, wkdir, STATE_FILE);
 
-  if (strlen(path) == 0)
-  {
+  if (strlen(path) == 0) {
     ZE_LogMsgError(0, "undefined state file");
     return 1;
   }
@@ -590,10 +570,8 @@ print_state(ofd)
   if (ofd < 0)
     ofd = STDOUT_FILENO;
 
-  if ((fd = open(path, O_RDONLY)) >= 0)
-  {
-    if (read(fd, &st, sizeof (st)) == sizeof (st))
-    {
+  if ((fd = open(path, O_RDONLY)) >= 0) {
+    if (read(fd, &st, sizeof (st)) == sizeof (st)) {
       char                out[256];
 
       close(fd);
@@ -648,14 +626,12 @@ print_state(ofd)
                 st.proc.value[STAT_NO_FROM_HEADERS]);
       FD_PRINTF(ofd, "%-30s : %ld\n", "# Reject Exceed Max RCPT",
                 st.proc.value[STAT_MAX_RCPT]);
-    } else
-    {
+    } else {
       close(fd);
       FD_PRINTF(ofd, "Error reading %s file : %s\n", path, strerror(errno));
       return 1;
     }
-  } else
-  {
+  } else {
     FD_PRINTF(ofd, "Error opening %s file : %s\n", path, strerror(errno));
     return 1;
   }
@@ -667,13 +643,11 @@ print_state(ofd)
  *                                                                            *
  **************************************************************************** */
 
-typedef struct _code
-{
+typedef struct _code {
   int                 c_val;
   int                 order;
   char               *c_name;
-}
-CODE;
+} CODE;
 
 static CODE         stat_names[] = {
   {
@@ -813,8 +787,7 @@ stats_title(code)
   if (code < 0)
     return NULL;
 
-  while (p->c_name)
-  {
+  while (p->c_name) {
     if (code == p->c_val)
       return p->c_name;
     p++;
@@ -847,7 +820,9 @@ print_p_stats(ofd, st, title, c, all)
   if ((p = strchr(out, '\n')) != NULL)
     *p = '\0';
   FD_PRINTF(ofd, "%c %-30s : %s\n", c, "Start", out);
-  /* FD_PRINTF(ofd, "%c %-30s : %10ld\n", c, "# Start-up", st->value[STAT_RESTART]); */
+  /*
+   * FD_PRINTF(ofd, "%c %-30s : %10ld\n", c, "# Start-up", st->value[STAT_RESTART]); 
+   */
   FD_PRINTF(ofd, "%c %-30s : %10ld\n", c, "# Messages", st->value[STAT_MSGS]);
   FD_PRINTF(ofd, "%c %-30s : %10lu\n", c, "# KBytes",
             ((unsigned long) (st->value[STAT_BYTES]) >> 4));
@@ -934,12 +909,9 @@ print_p_stats_all(ofd, sta, titlea, stb, titleb, all, nf)
   FD_PRINTF(ofd, "%-40s   : %10ld  %10ld\n",
             "# Connect", sta->value[STAT_CONNECT], stb->value[STAT_CONNECT]);
 
-  if (nf)
-  {
-    for (i = STAT_ABORT; i < DIM_STATS; i++)
-    {
-      if (sta->value[i] > 0 || stb->value[i] > 0)
-      {
+  if (nf) {
+    for (i = STAT_ABORT; i < DIM_STATS; i++) {
+      if (sta->value[i] > 0 || stb->value[i] > 0) {
         char               *p = stats_title(i);
 
         if (p != NULL)
@@ -947,8 +919,7 @@ print_p_stats_all(ofd, sta, titlea, stb, titleb, all, nf)
                     stb->value[i]);
       }
     }
-  } else
-  {
+  } else {
     FD_PRINTF(ofd, "# %-40s : %10ld  %10ld\n",
               "Abort", sta->value[STAT_ABORT], stb->value[STAT_ABORT]);
     FD_PRINTF(ofd, "# %-40s : %10ld  %10ld\n",
@@ -1121,8 +1092,7 @@ dump_state(ofd, jp, jg, all, nf)
 
   ADJUST_FILENAME(path, fname, wkdir, STATE_FILE);
 
-  if (strlen(path) == 0)
-  {
+  if (strlen(path) == 0) {
     ZE_LogMsgError(0, "undefined state file");
     return 1;
   }
@@ -1130,10 +1100,8 @@ dump_state(ofd, jp, jg, all, nf)
   if (ofd < 0)
     ofd = STDOUT_FILENO;
 
-  if ((fd = open(path, O_RDONLY)) >= 0)
-  {
-    if (read(fd, &st, sizeof (st)) == sizeof (st))
-    {
+  if ((fd = open(path, O_RDONLY)) >= 0) {
+    if (read(fd, &st, sizeof (st)) == sizeof (st)) {
       char                out[256];
 
       close(fd);
@@ -1158,14 +1126,12 @@ dump_state(ofd, jp, jg, all, nf)
         print_p_stats_all(ofd, &st.proc,
                           "*** PROCESSUS DATA ***",
                           &st.glob, "*** GLOBAL DATA ***", all, nf);
-    } else
-    {
+    } else {
       close(fd);
       ZE_LogSysError("Error reading %s file", path);
       return 1;
     }
-  } else
-  {
+  } else {
     ZE_LogSysError("Error opening %s file", path);
     return 1;
   }
@@ -1180,7 +1146,9 @@ void
 print_filter_stats_summary()
 {
 
-  /* XXX Joe */
+  /*
+   * XXX Joe 
+   */
 
   char                out[256];
   char               *p;
@@ -1196,48 +1164,53 @@ print_filter_stats_summary()
   if ((p = strchr(out, '\n')) != NULL)
     *p = '\0';
   ZE_MessageInfo(9, "%c %-30s : %s", c, "Start", out);
-  /* ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# Start-up", st->value[STAT_RESTART]); */
+  /*
+   * ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# Start-up", st->value[STAT_RESTART]); 
+   */
   ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# Messages", st->value[STAT_MSGS]);
   ZE_MessageInfo(9, "%c %-30s : %10lu", c, "# KBytes",
-               ((unsigned long) (st->value[STAT_BYTES]) >> 4));
-  ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# Connect", st->value[STAT_CONNECT]);
+                 ((unsigned long) (st->value[STAT_BYTES]) >> 4));
+  ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# Connect",
+                 st->value[STAT_CONNECT]);
   ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# Abort", st->value[STAT_ABORT]);
   ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# Close", st->value[STAT_CLOSE]);
   if (st->value[STAT_ENVTO] > 0)
-    ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# ENV RCPT", st->value[STAT_ENVTO]);
+    ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# ENV RCPT",
+                   st->value[STAT_ENVTO]);
   if (st->value[STAT_FILES] > 0)
     ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# Attached files",
-                 st->value[STAT_FILES]);
+                   st->value[STAT_FILES]);
   if (st->value[STAT_XFILES] > 0)
-    ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# X-Files", st->value[STAT_XFILES]);
+    ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# X-Files",
+                   st->value[STAT_XFILES]);
   if (st->value[STAT_VIRUS] > 0)
     ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# Virus", st->value[STAT_VIRUS]);
   if (st->value[STAT_LUSERS] > 0)
     ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# Reject Local Users",
-                 st->value[STAT_LUSERS]);
+                   st->value[STAT_LUSERS]);
   if (st->value[STAT_NO_TO_HEADERS] > 0)
     ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# Reject No RCPT Headers",
-                 st->value[STAT_NO_TO_HEADERS]);
+                   st->value[STAT_NO_TO_HEADERS]);
   if (st->value[STAT_NO_FROM_HEADERS] > 0)
     ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# Reject No Senders ",
-                 st->value[STAT_NO_FROM_HEADERS]);
+                   st->value[STAT_NO_FROM_HEADERS]);
   if (st->value[STAT_MAX_RCPT] > 0)
     ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# Reject Exceed Max RCPT",
-                 st->value[STAT_MAX_RCPT]);
+                   st->value[STAT_MAX_RCPT]);
   if (st->value[STAT_RCPT_RATE] > 0)
     ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# Reject Exceed rcpt rate",
-                 st->value[STAT_RCPT_RATE]);
+                   st->value[STAT_RCPT_RATE]);
   if (st->value[STAT_CONN_RATE] > 0)
     ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# Reject Exceed conn rate",
-                 st->value[STAT_CONN_RATE]);
+                   st->value[STAT_CONN_RATE]);
   if (st->value[STAT_RESOLVE_FAIL] > 0)
     ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# Resolve FAIL",
-                 st->value[STAT_RESOLVE_FAIL]);
+                   st->value[STAT_RESOLVE_FAIL]);
   if (st->value[STAT_RESOLVE_FORGED] > 0)
     ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# Resolve FORGED",
-                 st->value[STAT_RESOLVE_FORGED]);
+                   st->value[STAT_RESOLVE_FORGED]);
   if (st->value[STAT_BADMX] > 0)
     ZE_MessageInfo(9, "%c %-30s : %10ld", c, "# Sender with bad MX",
-                 st->value[STAT_BADMX]);
+                   st->value[STAT_BADMX]);
 
 }

@@ -28,6 +28,7 @@
 #include <zeString.h>
 #include <zeStrings.h>
 #include <zeStrConvert.h>
+#include <zeDivers.h>
 #include <ze-linkedlist.h>
 #include <zeDb.h>
 #include <zeMap.h>

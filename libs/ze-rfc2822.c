@@ -306,7 +306,7 @@ line2header(line)
   p->value = c;
 #if 0
   if (p->value != NULL)
-    zeStr2Upper(p->value);
+    zeStr2Lower(p->value);
 #endif
 fin:
   return p;

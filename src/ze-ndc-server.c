@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -58,8 +59,7 @@ control_handler(name)
   p = cf_get_str(CF_CTRL_SOCKET);
 
   memset(&server, 0, sizeof (server));
-  if ((listenfd = server_listen(p, &server)) < 0)
-  {
+  if ((listenfd = server_listen(p, &server)) < 0) {
     ZE_MessageError(10, "Error setting up control channel");
     return NULL;
   }
@@ -69,16 +69,15 @@ control_handler(name)
 
   errs = 0;
 
-  ZE_MessageInfo(12, "sd : %d len : %d domain %d", listenfd, addrlen, sockdomain);
+  ZE_MessageInfo(12, "sd : %d len : %d domain %d", listenfd, addrlen,
+                 sockdomain);
 
-  if ((clisock = (struct sockaddr *) malloc(addrlen)) == NULL)
-  {
+  if ((clisock = (struct sockaddr *) malloc(addrlen)) == NULL) {
     ZE_LogSysError("malloc(addrlen) error");
     return NULL;
   }
 
-  for (;;)
-  {
+  for (;;) {
     char                client_addr[64], client_name[256];
     char               *s;
     int                 nerr = 0;
@@ -87,11 +86,9 @@ control_handler(name)
 
     connfd = accept(listenfd, clisock, &len);
 
-    if (connfd < 0)
-    {
+    if (connfd < 0) {
       ZE_LogSysError("accept error");
-      if (nerr > 256)
-      {
+      if (nerr > 256) {
         ZE_MessageError(6, "Control channel thread exiting - too many errors");
         break;
       }
@@ -99,8 +96,7 @@ control_handler(name)
     }
     nerr = 0;
 
-    if (sockdomain == AF_INET || sockdomain == AF_INET6)
-    {
+    if (sockdomain == AF_INET || sockdomain == AF_INET6) {
       char               *addr, *name, *user;
 
       addr = name = user = NULL;
@@ -109,8 +105,7 @@ control_handler(name)
       memset(client_name, 0, sizeof (client_name));
 #if 1
       if (get_hostbysock(clisock, len, client_addr, sizeof (client_addr),
-                         client_name, sizeof (client_name)))
-      {
+                         client_name, sizeof (client_name))) {
         addr = client_addr;
         name = client_name;
       }
@@ -123,12 +118,11 @@ control_handler(name)
 #endif
 
       ZE_MessageInfo(9, "Connect from %s (%s) on control channel",
-                   STRNULL(addr, ""), STRNULL(name, ""));
-
-      if (!check_control_access(addr, name, user))
-      {
-        ZE_MessageInfo(9, "Access denied to %s (%s) on control channel",
                      STRNULL(addr, ""), STRNULL(name, ""));
+
+      if (!check_control_access(addr, name, user)) {
+        ZE_MessageInfo(9, "Access denied to %s (%s) on control channel",
+                       STRNULL(addr, ""), STRNULL(name, ""));
         FD_PRINTF(connfd, "500 Access denied\n");
         shutdown(connfd, SHUT_RDWR);
         close(connfd);
@@ -138,37 +132,33 @@ control_handler(name)
 
     FD_PRINTF(connfd, "200 OK - Waiting for commands !\n");
 
-    if (jfd_ready(connfd, ZE_SOCK_READ, CTRL_TO) == ZE_SOCK_READY)
-    {
+    if (jfd_ready(connfd, ZE_SOCK_READ, CTRL_TO) == ZE_SOCK_READY) {
       char                buf[1024];
       size_t              sz;
       char               *argv[MAX_ARGS];
       int                 argc;
 
       memset(buf, 0, sizeof (buf));
-      if ((sz = read(connfd, buf, sizeof (buf) - 1)) > 0)
-      {
+      if ((sz = read(connfd, buf, sizeof (buf) - 1)) > 0) {
         char               *ptr;
 
         zeStrChomp(buf);
-        strtoupper(buf);
         zeStr2Upper(buf);
+        zeStr2Lower(buf);
 
         ZE_MessageInfo(9, "CTRL CHAN CMD : %s", buf);
 
         argc = 0;
         memset(argv, 0, sizeof (argv));
         for (s = strtok_r(buf, " \t", &ptr);
-             argc < MAX_ARGS && s != NULL; s = strtok_r(NULL, " \t", &ptr))
-        {
+             argc < MAX_ARGS && s != NULL; s = strtok_r(NULL, " \t", &ptr)) {
           argv[argc++] = s;
         }
 
         if (do_control(connfd, argc, argv))
           ZE_MessageInfo(9, "Command accepted on control channel");
       }
-    } else
-    {
+    } else {
       ZE_MessageWarning(9, "Read timeout on control channel");
       FD_PRINTF(connfd, "500 Read timeout on control channel\r\n");
     }
@@ -222,8 +212,7 @@ do_control(sd, argc, argv)
   if (argv == NULL || argc == 0 || argv[0] == 0)
     return FALSE;
 
-  if (strcasecmp(argv[0], "help") == 0)
-  {
+  if (strcasecmp(argv[0], "help") == 0) {
     help = TRUE;
     argv++;
     argc--;
@@ -237,8 +226,7 @@ do_control(sd, argc, argv)
    **
    */
 
-  if (argc == 0 || help)
-  {
+  if (argc == 0 || help) {
     ndc_help(sd, NULL, help, argc, argv);
 
     return help;
@@ -248,12 +236,10 @@ do_control(sd, argc, argv)
    **
    **
    */
-  if (strcasecmp(cmd, "VERSION") == 0)
-  {
+  if (strcasecmp(cmd, "VERSION") == 0) {
     helpstr = "  VERSION - writes ze-filter version and exit";
 
-    if (help)
-    {
+    if (help) {
       ndc_help(sd, helpstr, help, argc, argv);
 
       return TRUE;
@@ -263,8 +249,7 @@ do_control(sd, argc, argv)
     return TRUE;
   }
 
-  if (help)
-  {
+  if (help) {
     ndc_help(sd, " You've asked for help !", help, argc, argv);
 
     return TRUE;
@@ -274,17 +259,15 @@ do_control(sd, argc, argv)
    **
    **
    */
-  if (strcasecmp(cmd, "DUMPCF") == 0)
-  {
+  if (strcasecmp(cmd, "DUMPCF") == 0) {
     char               *scmd = NULL;
     char               *prmt;
     int                 pi;
-    int mkcf = MK_CF_RUNNING;
+    int                 mkcf = MK_CF_RUNNING;
 
     helpstr = "  VERSION - writes ze-filter version and exit";
 
-    if (help)
-    {
+    if (help) {
       ndc_help(sd, helpstr, help, argc, argv);
       return TRUE;
     }
@@ -292,8 +275,7 @@ do_control(sd, argc, argv)
     FD_PRINTF(sd, "200 OK for %s !\r\n", cmd);
 
     prmt = argc > 2 ? argv[2] : NULL;
-    if (arg != NULL)
-    {
+    if (arg != NULL) {
       if (STRCASEEQUAL(arg, "running"))
         mkcf = MK_CF_RUNNING;
       if (STRCASEEQUAL(arg, "default"))
@@ -301,8 +283,7 @@ do_control(sd, argc, argv)
       if (STRCASEEQUAL(arg, "short"))
         mkcf = MK_CF_NONE;
     }
-    switch (mkcf)
-    {
+    switch (mkcf) {
       case MK_CF_NONE:
         dump_j_conf(sd);
         break;
@@ -321,8 +302,7 @@ do_control(sd, argc, argv)
    **
    **
    */
-  if (strcasecmp(cmd, "SETCF") == 0)
-  {
+  if (strcasecmp(cmd, "SETCF") == 0) {
     char               *scmd = NULL;
     char               *prmt;
     int                 pi;
@@ -334,8 +314,7 @@ do_control(sd, argc, argv)
 
     prmt = argc > 2 ? argv[2] : NULL;
 
-    if (prmt != NULL)
-    {
+    if (prmt != NULL) {
       int                 id = cf_get_id(arg);
 
       FD_PRINTF(sd, "200 OK for %s %s %s !\r\n", cmd, arg, prmt);
@@ -344,11 +323,9 @@ do_control(sd, argc, argv)
       if (id > 0)
         pi = cf_set_val(id, prmt);
 
-      if (pi == id)
-      {
+      if (pi == id) {
 
-        switch (id)
-        {
+        switch (id) {
           case CF_LOG_LEVEL:
             ze_logLevel = atoi(prmt);
             break;
@@ -369,8 +346,7 @@ do_control(sd, argc, argv)
     return help;
   }
 
-  if (strcasecmp(cmd, "SETORACLE") == 0)
-  {
+  if (strcasecmp(cmd, "SETORACLE") == 0) {
     char               *prmt;
 
     helpstr = "............\r\n";
@@ -380,18 +356,15 @@ do_control(sd, argc, argv)
 
     prmt = argc > 2 ? argv[2] : NULL;
 
-    if (prmt != NULL)
-    {
+    if (prmt != NULL) {
       int                 type = -1, ind = 0;
       double              value;
       char               *p = arg;
 
       FD_PRINTF(sd, "200 OK for %s %s %s !\r\n", cmd, arg, prmt);
 
-      if (zeStrRegex(p, "[rcmhp][0-9]{2,2}", NULL, NULL, TRUE))
-      {
-        switch (*arg)
-        {
+      if (zeStrRegex(p, "[rcmhp][0-9]{2,2}", NULL, NULL, TRUE)) {
+        switch (*arg) {
           case 'c':
           case 'C':
             type = ORACLE_TYPE_CONN;
@@ -436,8 +409,7 @@ do_control(sd, argc, argv)
    **
    **
    */
-  if (strcasecmp(cmd, "SET") == 0)
-  {
+  if (strcasecmp(cmd, "SET") == 0) {
     char               *scmd = NULL;
     char               *prmt;
 
@@ -450,8 +422,7 @@ do_control(sd, argc, argv)
     prmt = STRNULL(argv[2], "");
 
     scmd = "URLBLTIME";
-    if (strncasecmp(arg, scmd, strlen(scmd)) == 0)
-    {
+    if (strncasecmp(arg, scmd, strlen(scmd)) == 0) {
       pt = zeStr2time(prmt, NULL, 3600);
 
       FD_PRINTF(sd, "200 OK for %s %s %ld s !\r\n", cmd, arg, pt);
@@ -461,8 +432,7 @@ do_control(sd, argc, argv)
     }
 
     scmd = "LOGLEVEL";
-    if (strncasecmp(arg, scmd, strlen(scmd)) == 0)
-    {
+    if (strncasecmp(arg, scmd, strlen(scmd)) == 0) {
       pi = atoi(prmt);
 
       FD_PRINTF(sd, "200 OK for %s %s %ld s !\r\n", cmd, arg, pi);
@@ -475,8 +445,7 @@ do_control(sd, argc, argv)
     }
 
     scmd = "LOG_SM_MACROS";
-    if (strncasecmp(arg, scmd, strlen(scmd)) == 0)
-    {
+    if (strncasecmp(arg, scmd, strlen(scmd)) == 0) {
       extern bool         log_sm_macros;
 
       if (strcasecmp(prmt, "YES") == 0)
@@ -491,8 +460,7 @@ do_control(sd, argc, argv)
     }
 
     scmd = "MXCHECKLEVEL";
-    if (strncasecmp(arg, scmd, strlen(scmd)) == 0)
-    {
+    if (strncasecmp(arg, scmd, strlen(scmd)) == 0) {
       extern int          mx_check_level;
 
       pi = atoi(prmt);
@@ -507,8 +475,7 @@ do_control(sd, argc, argv)
     }
 
     scmd = "TLONGCONN";
-    if (strncasecmp(arg, scmd, strlen(scmd)) == 0)
-    {
+    if (strncasecmp(arg, scmd, strlen(scmd)) == 0) {
       extern time_t       tlongconn;
 
       pi = atoi(prmt);
@@ -526,16 +493,14 @@ do_control(sd, argc, argv)
     }
 
     scmd = "GREYDELAYS";
-    if (strncasecmp(arg, scmd, strlen(scmd)) == 0)
-    {
+    if (strncasecmp(arg, scmd, strlen(scmd)) == 0) {
       int                 i;
       time_t              delays[4];
       bool                ok;
 
       memset(delays, 0, sizeof (delays));
 
-      for (i = 0; i < 4; i++)
-      {
+      for (i = 0; i < 4; i++) {
         if (argc > i + 2)
           delays[i] = zeStr2time(argv[i + 2], NULL, 3600);
       }
@@ -547,16 +512,14 @@ do_control(sd, argc, argv)
     }
 
     scmd = "GREYLIFETIME";
-    if (strncasecmp(arg, scmd, strlen(scmd)) == 0)
-    {
+    if (strncasecmp(arg, scmd, strlen(scmd)) == 0) {
       int                 i;
       time_t              lifetime[4];
       bool                ok;
 
       memset(lifetime, 0, sizeof (lifetime));
 
-      for (i = 0; i < 4; i++)
-      {
+      for (i = 0; i < 4; i++) {
         if (argc > i + 2)
           lifetime[i] = zeStr2time(argv[i + 2], NULL, 3600);
       }
@@ -568,16 +531,14 @@ do_control(sd, argc, argv)
     }
 
     scmd = "GREYPENDING";
-    if (strncasecmp(arg, scmd, strlen(scmd)) == 0)
-    {
+    if (strncasecmp(arg, scmd, strlen(scmd)) == 0) {
       int                 i;
       int                 nb[4];
       bool                ok;
 
       memset(nb, 0, sizeof (nb));
 
-      for (i = 0; i < 2; i++)
-      {
+      for (i = 0; i < 2; i++) {
         if (argc > i + 2)
           nb[i] = zeStr2long(argv[i + 2], NULL, 0);
       }
@@ -589,16 +550,14 @@ do_control(sd, argc, argv)
     }
 
     scmd = "GREYTUPLE";
-    if (strncasecmp(arg, scmd, strlen(scmd)) == 0)
-    {
+    if (strncasecmp(arg, scmd, strlen(scmd)) == 0) {
       int                 i;
       char               *tuple[3];
       bool                ok;
 
       memset(tuple, 0, sizeof (tuple));
 
-      for (i = 0; i < 3; i++)
-      {
+      for (i = 0; i < 3; i++) {
         tuple[i] = (argc > i + 2) ? argv[i + 2] : NULL;
       }
 
@@ -609,13 +568,11 @@ do_control(sd, argc, argv)
     }
 
     scmd = "GREYCLEANUP";
-    if (strncasecmp(arg, scmd, strlen(scmd)) == 0)
-    {
+    if (strncasecmp(arg, scmd, strlen(scmd)) == 0) {
       time_t              dt = 0;
       bool                ok;
 
-      if (argc > 2)
-      {
+      if (argc > 2) {
         dt = zeStr2time(argv[2], NULL, 3600);
 
         FD_PRINTF(sd, "200 OK for %s %s %ld !\r\n", cmd, arg, dt);
@@ -630,13 +587,11 @@ do_control(sd, argc, argv)
     }
 
     scmd = "GREY_DEWHITE_THRESHOLD";
-    if (strncasecmp(arg, scmd, strlen(scmd)) == 0)
-    {
+    if (strncasecmp(arg, scmd, strlen(scmd)) == 0) {
       double              t;
 
       t = zeStr2double(prmt, NULL, 0);
-      if (errno != ERANGE && errno != EINVAL && t >= 0)
-      {
+      if (errno != ERANGE && errno != EINVAL && t >= 0) {
         FD_PRINTF(sd, "200 OK for %s %s %5.2f !\r\n", cmd, arg, t);
         set_grey_dewhitelist_threshold(t);
       }
@@ -651,14 +606,12 @@ do_control(sd, argc, argv)
    **
    **
    */
-  if (strcasecmp(cmd, "BAYES") == 0)
-  {
+  if (strcasecmp(cmd, "BAYES") == 0) {
     char               *scmd = NULL;
 
     helpstr = "200 Not yet implemented !!!\r\n";
 
-    if (help)
-    {
+    if (help) {
       ndc_help(sd, helpstr, help, argc, argv);
       return TRUE;
     }
@@ -667,8 +620,7 @@ do_control(sd, argc, argv)
       return FALSE;
 
     scmd = "REOPEN";
-    if (strncasecmp(arg, scmd, strlen(scmd)) == 0)
-    {
+    if (strncasecmp(arg, scmd, strlen(scmd)) == 0) {
       FD_PRINTF(sd, "200 OK for %s %s !\r\n", cmd, arg);
       bfilter_db_reopen();
       FD_PRINTF(sd, "200 %s %s done !\r\n", cmd, arg);
@@ -683,14 +635,12 @@ do_control(sd, argc, argv)
    **
    **
    */
-  if (strcasecmp(cmd, "GREYDELETE") == 0)
-  {
+  if (strcasecmp(cmd, "GREYDELETE") == 0) {
     char               *db, *key;
 
     helpstr = "200 Not yet implemented !!!\r\n";
 
-    if (help)
-    {
+    if (help) {
       ndc_help(sd, helpstr, help, argc, argv);
       return TRUE;
     }
@@ -711,19 +661,16 @@ do_control(sd, argc, argv)
    **
    **
    */
-  if (strcasecmp(cmd, "SHOW") == 0)
-  {
+  if (strcasecmp(cmd, "SHOW") == 0) {
     if (arg == NULL)
       return FALSE;
 
-    if (help)
-    {
+    if (help) {
       ndc_help(sd, helpstr, help, argc, argv);
       return TRUE;
     }
 
-    if (strcasecmp(arg, "RUN") == 0)
-    {
+    if (strcasecmp(arg, "RUN") == 0) {
       FD_PRINTF(sd, "200 OK for %s %s !\r\n", cmd, arg);
       dump_j_conf(sd);
       FD_PRINTF(sd, "200 %s %s done !\r\n", cmd, arg);
@@ -738,35 +685,30 @@ do_control(sd, argc, argv)
    **
    **
    */
-  if (strcasecmp(cmd, "STATS") == 0)
-  {
+  if (strcasecmp(cmd, "STATS") == 0) {
     if (arg == NULL)
       return FALSE;
 
-    if (strcasecmp(arg, "ORACLE") == 0)
-    {
+    if (strcasecmp(arg, "ORACLE") == 0) {
       FD_PRINTF(sd, "200 OK for %s %s !\r\n", cmd, arg);
       oracle_dump_counters(sd, TRUE);
       FD_PRINTF(sd, "200 %s %s done !\r\n", cmd, arg);
       return TRUE;
     }
 
-    if (strcasecmp(arg, "THROTTLE") == 0)
-    {
+    if (strcasecmp(arg, "THROTTLE") == 0) {
       FD_PRINTF(sd, "200 OK for %s %s !\r\n", cmd, arg);
       smtprate_print_table(sd, 0, FALSE, FALSE, 3600, -1, 0);
       FD_PRINTF(sd, "200 %s %s done !\r\n", cmd, arg);
       return TRUE;
     }
 
-    if (strcasecmp(arg, "SMTPRATE") == 0)
-    {
+    if (strcasecmp(arg, "SMTPRATE") == 0) {
       uint32_t            flags;
       char               *prmt = STRNULL(argv[2], "");
 
       flags = smtprate_str2flags(prmt);
-      if (flags == 0)
-      {
+      if (flags == 0) {
         SET_BIT(flags, RATE_CONN);
         SET_BIT(flags, RATE_RCPT);
       }
@@ -779,80 +721,70 @@ do_control(sd, argc, argv)
       return TRUE;
     }
 
-    if (strcasecmp(arg, "CONNOPEN") == 0)
-    {
+    if (strcasecmp(arg, "CONNOPEN") == 0) {
       FD_PRINTF(sd, "200 OK for %s %s !\r\n", cmd, arg);
       connopen_print_table(sd);
       FD_PRINTF(sd, "200 %s %s done !\r\n", cmd, arg);
       return TRUE;
     }
 
-    if (strcasecmp(arg, "HTIMES") == 0)
-    {
+    if (strcasecmp(arg, "HTIMES") == 0) {
       FD_PRINTF(sd, "200 OK for %s %s !\r\n", cmd, arg);
       callback_stats_dump(sd, FALSE);
       FD_PRINTF(sd, "200 %s %s done !\r\n", cmd, arg);
       return TRUE;
     }
 
-    if (strcasecmp(arg, "RAWHTIMES") == 0)
-    {
+    if (strcasecmp(arg, "RAWHTIMES") == 0) {
       FD_PRINTF(sd, "200 OK for %s %s !\r\n", cmd, arg);
       callback_stats_dump(sd, TRUE);
       FD_PRINTF(sd, "200 %s %s done !\r\n", cmd, arg);
       return TRUE;
     }
 
-    if (strcasecmp(arg, "COUNTERS") == 0)
-    {
+    if (strcasecmp(arg, "COUNTERS") == 0) {
       FD_PRINTF(sd, "200 OK for %s %s !\r\n", cmd, arg);
       dump_state(sd, 1, 1, FALSE, FALSE);
       FD_PRINTF(sd, "200 %s %s done !\r\n", cmd, arg);
       return TRUE;
     }
 
-    if (strcasecmp(arg, "RAWCOUNTERS") == 0)
-    {
+    if (strcasecmp(arg, "RAWCOUNTERS") == 0) {
       FD_PRINTF(sd, "200 OK for %s %s !\r\n", cmd, arg);
       log_counters(sd, cf_get_int(CF_DUMP_COUNTERS));
       FD_PRINTF(sd, "200 %s %s done !\r\n", cmd, arg);
       return TRUE;
     }
 
-    if (strcasecmp(arg, "SCORES") == 0)
-    {
+    if (strcasecmp(arg, "SCORES") == 0) {
       FD_PRINTF(sd, "200 OK for %s %s !\r\n", cmd, arg);
       msg_score_stats_print(sd, 0);
       FD_PRINTF(sd, "200 %s %s done !\r\n", cmd, arg);
       return TRUE;
     }
 
-    if (strcasecmp(arg, "ORASCORE") == 0)
-    {
+    if (strcasecmp(arg, "ORASCORE") == 0) {
       FD_PRINTF(sd, "200 OK for %s %s !\r\n", cmd, arg);
       msg_score_stats_print(sd, 2);
       FD_PRINTF(sd, "200 %s %s done !\r\n", cmd, arg);
       return TRUE;
     }
 
-    if (strcasecmp(arg, "REGSCORE") == 0)
-    {
+    if (strcasecmp(arg, "REGSCORE") == 0) {
       FD_PRINTF(sd, "200 OK for %s %s !\r\n", cmd, arg);
       msg_score_stats_print(sd, 1);
       FD_PRINTF(sd, "200 %s %s done !\r\n", cmd, arg);
       return TRUE;
     }
 
-    if (strcasecmp(arg, "LIVEHISTORY") == 0)
-    {
+    if (strcasecmp(arg, "LIVEHISTORY") == 0) {
       FD_PRINTF(sd, "200 OK for %s %s !\r\n", cmd, arg);
       livehistory_log_table(sd, FALSE);
       FD_PRINTF(sd, "200 %s %s done !\r\n", cmd, arg);
       return TRUE;
     }
 
-    if (strcasecmp(arg, "LIVEHISTORY_R") == 0)
-    {
+    if (strcasecmp(arg, "LIVEHISTORY_R") == 0) {
       FD_PRINTF(sd, "200 OK for %s %s !\r\n", cmd, arg);
       livehistory_log_table(sd, TRUE);
       FD_PRINTF(sd, "200 %s %s done !\r\n", cmd, arg);
@@ -867,8 +799,7 @@ do_control(sd, argc, argv)
    **
    **
    */
-  if (strcasecmp(cmd, "RECONFIG") == 0)
-  {
+  if (strcasecmp(cmd, "RECONFIG") == 0) {
     arg = STRNULL(arg, "");
 
     FD_PRINTF(sd, "200 OK for %s %s !\r\n", cmd, arg);
@@ -882,21 +813,18 @@ do_control(sd, argc, argv)
    **
    **
    */
-  if (strcasecmp(cmd, "RELOAD") == 0 || strcasecmp(cmd, "REOPEN") == 0)
-  {
+  if (strcasecmp(cmd, "RELOAD") == 0 || strcasecmp(cmd, "REOPEN") == 0) {
     if (arg == NULL)
       return FALSE;
 
-    if (strcasecmp(arg, "TABLES") == 0)
-    {
+    if (strcasecmp(arg, "TABLES") == 0) {
       FD_PRINTF(sd, "200 OK for %s %s !\r\n", cmd, arg);
       reload_cf_tables();
       FD_PRINTF(sd, "200 %s %s done !\r\n", cmd, arg);
       return TRUE;
     }
 
-    if (strcasecmp(arg, "DATABASES") == 0)
-    {
+    if (strcasecmp(arg, "DATABASES") == 0) {
       bool                ok = FALSE;
 
       FD_PRINTF(sd, "200 OK for %s %s !\r\n", cmd, arg);
@@ -909,7 +837,9 @@ do_control(sd, argc, argv)
       ok = bfilter_db_reopen();
       FD_PRINTF(sd, "200 BAYES  : %s\n", STRBOOL(ok, "OK", "ERROR"));
 #if 0
-      /* shall not reopen grey databases - may cause corruption */
+      /*
+       * shall not reopen grey databases - may cause corruption 
+       */
       ok = grey_reload();
       FD_PRINTF(sd, "200 GREY   : %s\n", STRBOOL(ok, "OK", "ERROR"));
 #endif
@@ -917,16 +847,14 @@ do_control(sd, argc, argv)
       return TRUE;
     }
 
-    if (strcasecmp(arg, "LRDATA") == 0)
-    {
+    if (strcasecmp(arg, "LRDATA") == 0) {
       FD_PRINTF(sd, "200 OK for %s %s !\r\n", cmd, arg);
       lr_data_load(TRUE);
       FD_PRINTF(sd, "200 %s %s done !\r\n", cmd, arg);
       return TRUE;
     }
 
-    if (strcasecmp(arg, "LOGFILES") == 0)
-    {
+    if (strcasecmp(arg, "LOGFILES") == 0) {
       bool                ok = FALSE;
 
       FD_PRINTF(sd, "200 OK for %s %s !\r\n", cmd, arg);
@@ -944,13 +872,11 @@ do_control(sd, argc, argv)
    **
    **
    */
-  if (strcasecmp(cmd, "RESET") == 0)
-  {
+  if (strcasecmp(cmd, "RESET") == 0) {
     if (arg == NULL)
       return FALSE;
 
-    if (strcasecmp(arg, "STATS") == 0)
-    {
+    if (strcasecmp(arg, "STATS") == 0) {
       FD_PRINTF(sd, "200 OK for %s %s !\r\n", cmd, arg);
       reset_state();
       save_state();
@@ -958,8 +884,7 @@ do_control(sd, argc, argv)
       return TRUE;
     }
 
-    if (strcasecmp(arg, "GREYERRORS") == 0)
-    {
+    if (strcasecmp(arg, "GREYERRORS") == 0) {
       FD_PRINTF(sd, "200 OK for %s %s !\r\n", cmd, arg);
       grey_channel_error_clear();
       FD_PRINTF(sd, "200 %s %s done !\r\n", cmd, arg);
@@ -974,8 +899,7 @@ do_control(sd, argc, argv)
    **
    **
    */
-  if (strcasecmp(cmd, "RESTART") == 0)
-  {
+  if (strcasecmp(cmd, "RESTART") == 0) {
     FD_PRINTF(sd, "200 OK for %s %s !\r\n", cmd, arg);
     kill(0, SIGTERM);
     sleep(1);
@@ -1003,8 +927,7 @@ check_control_access(addr, name, user)
 {
   bool                res = FALSE;
 
-  switch (cf_get_int(CF_CTRL_ACCESS))
-  {
+  switch (cf_get_int(CF_CTRL_ACCESS)) {
     case OPT_NONE:
       res = TRUE;
       break;
@@ -1013,10 +936,8 @@ check_control_access(addr, name, user)
         char                buf[256];
 
         memset(buf, 0, sizeof (buf));
-        if (check_policy("CtrlChan", addr, buf, sizeof (buf), TRUE))
-        {
-          switch (policy_decode(buf))
-          {
+        if (check_policy("CtrlChan", addr, buf, sizeof (buf), TRUE)) {
+          switch (policy_decode(buf)) {
             case JC_OK:
               res = TRUE;
               break;
@@ -1025,12 +946,11 @@ check_control_access(addr, name, user)
               break;
           }
         }
-        if (!res)
-        {
+        if (!res) {
           ZE_MessageInfo(9, "addr=(%s)", addr);
           ZE_MessageWarning(8,
-                          "Control access denied for %s (%s) by access rules",
-                          STRNULL(addr, "UNKNOWN"), STRNULL(name, "UNKNOWN"));
+                            "Control access denied for %s (%s) by access rules",
+                            STRNULL(addr, "UNKNOWN"), STRNULL(name, "UNKNOWN"));
         }
       }
       break;
@@ -1042,10 +962,8 @@ check_control_access(addr, name, user)
 #if 0
 
 *********************************************************************if
-  (strcasecmp(cmd, "HELP") == 0)
-{
-  if (strcasecmp(arg, "GET") == 0)
-  {
+  (strcasecmp(cmd, "HELP") == 0) {
+  if (strcasecmp(arg, "GET") == 0) {
     char               *hlpstr = "  Commands : HELP GET\r\n" "  GET \r\n";
 
     FD_PRINTF(sd, "200 %s\r\n", PACKAGE);
@@ -1055,8 +973,7 @@ check_control_access(addr, name, user)
     return TRUE;
   }
 
-  if (strcasecmp(arg, "VERSION") == 0)
-  {
+  if (strcasecmp(arg, "VERSION") == 0) {
     char               *hlpstr =
       "  Commands : HELP VERSION\r\n" "  VERSION \r\n";
 
@@ -1067,8 +984,7 @@ check_control_access(addr, name, user)
     return TRUE;
   }
 
-  if (strcasecmp(arg, "SET") == 0)
-  {
+  if (strcasecmp(arg, "SET") == 0) {
     char               *hlpstr =
       "  Commands : HELP SET \r\n"
       "  SET \r\n"
@@ -1090,8 +1006,7 @@ check_control_access(addr, name, user)
     return TRUE;
   }
 
-  if (strcasecmp(arg, "SETCF") == 0)
-  {
+  if (strcasecmp(arg, "SETCF") == 0) {
     char               *hlpstr =
       "  Commands : HELP SETCF \r\n" "  SETCF VAR VALUE\r\n";
 
@@ -1102,8 +1017,7 @@ check_control_access(addr, name, user)
     return TRUE;
   }
 
-  if (strcasecmp(arg, "SETORACLE") == 0)
-  {
+  if (strcasecmp(arg, "SETORACLE") == 0) {
     char               *hlpstr =
       "  Commands : HELP SETORACLE\r\n" "  SETORACLE XNN VALUE \r\n";
 
@@ -1114,8 +1028,7 @@ check_control_access(addr, name, user)
     return TRUE;
   }
 
-  if (strcasecmp(arg, "SHOW") == 0)
-  {
+  if (strcasecmp(arg, "SHOW") == 0) {
     char               *hlpstr =
       "  Commands : HELP SHOW \r\n" "  SHOW \r\n" "    CONF \r\n";
 
@@ -1126,8 +1039,7 @@ check_control_access(addr, name, user)
     return TRUE;
   }
 
-  if (strcasecmp(arg, "STATS") == 0)
-  {
+  if (strcasecmp(arg, "STATS") == 0) {
     char               *hlpstr =
       "  Commands : HELP STATS\r\n"
       "  STATS \r\n"
@@ -1147,8 +1059,7 @@ check_control_access(addr, name, user)
     return TRUE;
   }
 
-  if (strcasecmp(arg, "RECONFIG") == 0)
-  {
+  if (strcasecmp(arg, "RECONFIG") == 0) {
     char               *hlpstr =
       "  Commands : HELP RECONFIG \r\n" "  RECONFIG \r\n";
 
@@ -1159,8 +1070,7 @@ check_control_access(addr, name, user)
     return TRUE;
   }
 
-  if (strcasecmp(arg, "RELOAD") == 0)
-  {
+  if (strcasecmp(arg, "RELOAD") == 0) {
     char               *hlpstr =
       "  Commands : HELP RELOAD | REOPAN\r\n"
       "  RELOAD | REOPEN \r\n"
@@ -1173,8 +1083,7 @@ check_control_access(addr, name, user)
     return TRUE;
   }
 
-  if (strcasecmp(arg, "RESTART") == 0)
-  {
+  if (strcasecmp(arg, "RESTART") == 0) {
     char               *hlpstr =
       "  Commands : HELP RESTART \r\n" "  RESTART \r\n";
 
@@ -1185,8 +1094,7 @@ check_control_access(addr, name, user)
     return TRUE;
   }
 
-  if (strcasecmp(arg, "RESET") == 0)
-  {
+  if (strcasecmp(arg, "RESET") == 0) {
     char               *hlpstr =
       "  Commands : HELP RESET \r\n"
       "  RESET \r\n" "    STATS\r\n" "    GREYERRORS\r\n";

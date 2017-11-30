@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -36,8 +37,7 @@ typedef             bool(*MOD_CALL_F) (int, int, mod_ctx_T *);
 typedef             bool(*MOD_SERVICE_F) (int);
 
 /* information about a module */
-typedef struct
-{
+typedef struct {
   bool                ok;
   char               *name;
   char               *fname;
@@ -99,8 +99,7 @@ load_module(modp, fname, modsys)
   ADJUST_FILENAME(path, fname, modsys->moddir, NULL);
 
   handle = dlopen(path, RTLD_LAZY);
-  if (handle == NULL)
-  {
+  if (handle == NULL) {
     ZE_LogSysError("%s", dlerror());
     goto fin;
   }
@@ -121,7 +120,7 @@ load_module(modp, fname, modsys)
     dlerror();
     fp = dlsym(handle, fn);
     if ((error = dlerror()) == NULL)
-      modp->fclose = (MOD_CLOSE_F ) fp;
+      modp->fclose = (MOD_CLOSE_F) fp;
     else
       ZE_LogSysError("%s", error);
 
@@ -129,7 +128,7 @@ load_module(modp, fname, modsys)
     dlerror();
     fp = dlsym(handle, fn);
     if ((error = dlerror()) == NULL)
-      modp->finfo = (MOD_INFO_F ) fp;
+      modp->finfo = (MOD_INFO_F) fp;
     else
       ZE_LogSysError("%s", error);
 
@@ -137,7 +136,7 @@ load_module(modp, fname, modsys)
     dlerror();
     fp = dlsym(handle, fn);
     if ((error = dlerror()) == NULL)
-      modp->fcall = (MOD_CALL_F ) fp;
+      modp->fcall = (MOD_CALL_F) fp;
     else
       ZE_LogSysError("%s", error);
 
@@ -145,7 +144,7 @@ load_module(modp, fname, modsys)
     dlerror();
     fp = dlsym(handle, fn);
     if ((error = dlerror()) == NULL)
-      modp->fservice = (MOD_SERVICE_F ) fp;
+      modp->fservice = (MOD_SERVICE_F) fp;
     else
       ZE_LogSysError("%s", error);
   }
@@ -182,10 +181,8 @@ read_mod_cf_line(line, arg)
 
   memset(argv, 0, sizeof (argv));
   argc = zeStr2Tokens(line, 8, argv, " \t");
-  for (i = 0; i < argc; i++)
-  {
-    switch (i)
-    {
+  for (i = 0; i < argc; i++) {
+    switch (i) {
       case 0:
         ZE_MessageInfo(9, "Name      : %s", argv[i]);
         name = argv[i];
@@ -210,60 +207,48 @@ read_mod_cf_line(line, arg)
           strlcpy(buf, argv[i], sizeof (buf));
           memset(cargv, 0, sizeof (cargv));
           cargc = zeStr2Tokens(buf, 32, cargv, ",");
-          for (j = 0; j < cargc; j++)
-          {
-            if (STRCASEEQUAL(cargv[j], "connect"))
-            {
+          for (j = 0; j < cargc; j++) {
+            if (STRCASEEQUAL(cargv[j], "connect")) {
               SET_BIT(callbacks, CALLBACK_CONNECT);
               continue;
             }
-            if (STRCASEEQUAL(cargv[j], "helo"))
-            {
+            if (STRCASEEQUAL(cargv[j], "helo")) {
               SET_BIT(callbacks, CALLBACK_EHLO);
               continue;
             }
-            if (STRCASEEQUAL(cargv[j], "ehlo"))
-            {
+            if (STRCASEEQUAL(cargv[j], "ehlo")) {
               SET_BIT(callbacks, CALLBACK_EHLO);
               continue;
             }
-            if (STRCASEEQUAL(cargv[j], "mail"))
-            {
+            if (STRCASEEQUAL(cargv[j], "mail")) {
               SET_BIT(callbacks, CALLBACK_MAIL);
               continue;
             }
-            if (STRCASEEQUAL(cargv[j], "rcpt"))
-            {
+            if (STRCASEEQUAL(cargv[j], "rcpt")) {
               SET_BIT(callbacks, CALLBACK_RCPT);
               continue;
             }
-            if (STRCASEEQUAL(cargv[j], "data"))
-            {
+            if (STRCASEEQUAL(cargv[j], "data")) {
               SET_BIT(callbacks, CALLBACK_DATA);
               continue;
             }
-            if (STRCASEEQUAL(cargv[j], "header"))
-            {
+            if (STRCASEEQUAL(cargv[j], "header")) {
               SET_BIT(callbacks, CALLBACK_HEADER);
               continue;
             }
-            if (STRCASEEQUAL(cargv[j], "eom"))
-            {
+            if (STRCASEEQUAL(cargv[j], "eom")) {
               SET_BIT(callbacks, CALLBACK_EOM);
               continue;
             }
-            if (STRCASEEQUAL(cargv[j], "abort"))
-            {
+            if (STRCASEEQUAL(cargv[j], "abort")) {
               SET_BIT(callbacks, CALLBACK_ABORT);
               continue;
             }
-            if (STRCASEEQUAL(cargv[j], "close"))
-            {
+            if (STRCASEEQUAL(cargv[j], "close")) {
               SET_BIT(callbacks, CALLBACK_CLOSE);
               continue;
             }
-            if (STRCASEEQUAL(cargv[j], "all"))
-            {
+            if (STRCASEEQUAL(cargv[j], "all")) {
               SET_BIT(callbacks, CALLBACK_CONNECT);
               SET_BIT(callbacks, CALLBACK_EHLO);
               SET_BIT(callbacks, CALLBACK_CLOSE);
@@ -287,32 +272,28 @@ read_mod_cf_line(line, arg)
         break;
     }
   }
-  if (fname != NULL && name != NULL)
-  {
+  if (fname != NULL && name != NULL) {
     module_T           *p = NULL;
     int                 i;
 
-    for (i = 0; i < NMOD; i++)
-    {
+    for (i = 0; i < NMOD; i++) {
       if (modules[i].fname == NULL)
         break;
       if (STRCASEEQUAL(modules[i].name, name))
         break;
     }
     ZE_MessageInfo(9, "Opening module : %s", name);
-    if (i < NMOD && modules[i].name == NULL)
-    {
+    if (i < NMOD && modules[i].name == NULL) {
       modsys->calloffer = 0;
       modsys->callrequest = callbacks;
       modsys->args = args;
-      if (load_module(&modules[i], fname, modsys))
-      {
+      if (load_module(&modules[i], fname, modsys)) {
         modules[i].ok = TRUE;
         modules[i].name = strdup(name);
         modules[i].fname = strdup(fname);
         if (args != NULL)
           modules[i].args = strdup(args);
-        /* 
+        /*
          ** modules[i].callbacks = callbacks & modsys->callbacks;
          */
         callbacks &= modsys->calloffer;
@@ -326,8 +307,7 @@ read_mod_cf_line(line, arg)
         res = 1;
       }
     }
-  } else
-  {
+  } else {
     ZE_MessageInfo(9, "Error : module filename is null !");
   }
 
@@ -345,8 +325,7 @@ load_all_modules(cfdir, modcf, moddir)
   char                path[1024];
   mod_open_T          modsys;
 
-  if (!mod_ok)
-  {
+  if (!mod_ok) {
     ZE_MessageInfo(10, "*** Loading ze-filter modules ...");
     memset(&modsys, 0, sizeof (modsys));
     mod_ok = TRUE;
@@ -372,8 +351,7 @@ close_all_modules(void)
   int                 i;
 
   ZE_MessageInfo(9, "*** Module subsystem");
-  for (i = 0; i < NMOD; i++)
-  {
+  for (i = 0; i < NMOD; i++) {
     module_T           *m = (module_T *) & modules[i];
     char               *error = NULL;
 
@@ -388,8 +366,7 @@ close_all_modules(void)
       continue;
 
     ZE_MessageInfo(9, "* Module %4d : %s", i, m->name);
-    if ((*m->fclose) ())
-    {
+    if ((*m->fclose) ()) {
       ZE_MessageInfo(9, "  * Closed !!!");
     }
   }
@@ -405,8 +382,7 @@ module_info()
   int                 i;
 
   ZE_MessageInfo(9, "*** Module subsystem");
-  for (i = 0; i < NMOD; i++)
-  {
+  for (i = 0; i < NMOD; i++) {
     module_T           *m = (module_T *) & modules[i];
     char               *error = NULL;
 
@@ -421,8 +397,7 @@ module_info()
     memset(&info, 0, sizeof (info));
 
     ZE_MessageInfo(9, "* Module %4d", i);
-    if ((*m->finfo) (&info))
-    {
+    if ((*m->finfo) (&info)) {
       ZE_MessageInfo(9, "  * Register info");
       ZE_MessageInfo(9, "    NAME      : %s", m->name);
       ZE_MessageInfo(9, "    NAME      : %s", m->fname);
@@ -453,20 +428,25 @@ module_call(callback, step, mctx)
   ASSERT(mctx != NULL);
 
   ZE_MessageInfo(9, "*** Calling subsystems : %s", CALLBACK_LABEL(callback));
-  for (i = 0; i < NMOD; i++)
-  {
+  for (i = 0; i < NMOD; i++) {
     module_T           *m = (module_T *) & modules[i];
     int                 result = MODR_CONTINUE;
 
-    /* was this module configured ? */
+    /*
+     * was this module configured ? 
+     */
     if (!m->ok)
       continue;
 
-    /* is this module enabled ? */
+    /*
+     * is this module enabled ? 
+     */
     if (!m->enable)
       continue;
 
-    /* Is this module enabled for this callback ? */
+    /*
+     * Is this module enabled for this callback ? 
+     */
     if (!GET_BIT(m->callbacks, callback))
       continue;
 
@@ -474,13 +454,12 @@ module_call(callback, step, mctx)
       continue;
 
     ZE_MessageInfo(9, "* Module %4d : %s", i, m->name);
-    if ((*m->fcall) (callback, step, mctx))
-    {
+    if ((*m->fcall) (callback, step, mctx)) {
       strlcpy(mctx->modname, m->name, sizeof (mctx->modname));
 
       ZE_MessageInfo(11, "  * Call result");
       ZE_MessageInfo(11, "    REPLY     : %s %s %s", mctx->code, mctx->xcode,
-                   mctx->reply);
+                     mctx->reply);
 #if 0
       ZE_MessageInfo(10, "    NAME      : %s", m->name);
       ZE_MessageInfo(10, "    NAME      : %s", m->fname);
@@ -494,7 +473,8 @@ module_call(callback, step, mctx)
 #endif
     }
 
-    if (mctx->result != MODR_CONTINUE || ((mctx->flags & MODF_STOP_CHECKS) != 0))
+    if (mctx->result != MODR_CONTINUE
+        || ((mctx->flags & MODF_STOP_CHECKS) != 0))
       break;
   }
   return TRUE;
@@ -511,15 +491,18 @@ module_service(why)
   int                 i;
 
   ZE_MessageInfo(9, "*** Calling subsystems : service");
-  for (i = 0; i < NMOD; i++)
-  {
+  for (i = 0; i < NMOD; i++) {
     module_T           *m = (module_T *) & modules[i];
 
-    /* was this module configured ? */
+    /*
+     * was this module configured ? 
+     */
     if (!m->ok)
       continue;
 
-    /* is this module enabled ? */
+    /*
+     * is this module enabled ? 
+     */
     if (!m->enable)
       continue;
 
@@ -527,8 +510,7 @@ module_service(why)
       continue;
 
     ZE_MessageInfo(9, "* Module %4d : %s", i, m->name);
-    if ((*m->fservice) (why))
-    {
+    if ((*m->fservice) (why)) {
       ZE_MessageInfo(9, "  * Service result");
     }
   }

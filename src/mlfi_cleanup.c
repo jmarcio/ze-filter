@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -40,7 +41,9 @@ mlfi_cleanup(ctx, ok)
   (void) free_private_data(priv, ok);
   if (ok)
     smfi_setpriv(ctx, NULL);
-  /* return status */
+  /*
+   * return status 
+   */
   return rstat;
 }
 
@@ -68,7 +71,9 @@ free_private_data(priv, ok)
   if (priv == NULL)
     return TRUE;
 
-  /* release private memory */
+  /*
+   * release private memory 
+   */
   free_message(&(priv->msg));
   FREE(priv->sm_msgid);
   FREE(priv->reply_code);
@@ -113,8 +118,7 @@ free_private_data(priv, ok)
   memset(&priv->rawScores, 0, sizeof (priv->rawScores));
   memset(&priv->netScores, 0, sizeof (priv->netScores));
   memset(&priv->dspScores, 0, sizeof (priv->dspScores));
-  if (ok)
-  {
+  if (ok) {
     FREE(priv->mailserver);
     FREE(priv->peer_addr);
     FREE(priv->peer_name);
@@ -124,6 +128,8 @@ free_private_data(priv, ok)
     FREE(priv);
   }
 
-  /* return status */
+  /*
+   * return status 
+   */
   return TRUE;
 }

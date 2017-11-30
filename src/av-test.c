@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -81,13 +82,14 @@ main(argc, argv)
   ze_logLevel = 10;
 
   printf("Let's begin with serious things...\n");
-  if (0)
-  {
+  if (0) {
     LOG_T               log = LOG_INITIALIZER;
     bool                res;
     char               *spec = NULL;
 
-    /* file */
+    /*
+     * file 
+     */
     spec = "/tmp/singlepath.txt";
     log_debug(&log, TRUE);
     res = log_open(&log, spec);
@@ -104,7 +106,9 @@ main(argc, argv)
     res = log_close(&log);
     printf("log_close : %d\n", res);
 
-    /* file */
+    /*
+     * file 
+     */
     spec = "file:/tmp/logtest.txt";
     log_debug(&log, TRUE);
     res = log_open(&log, spec);
@@ -121,7 +125,9 @@ main(argc, argv)
     res = log_close(&log);
     printf("log_close : %d\n", res);
 
-    /* udp */
+    /*
+     * udp 
+     */
     spec = "udp:10001@127.0.0.1";
     log_debug(&log, TRUE);
     res = log_open(&log, spec);
@@ -139,7 +145,9 @@ main(argc, argv)
     res = log_close(&log);
     printf("log_close : %d\n", res);
 
-    /* syslog */
+    /*
+     * syslog 
+     */
     spec = "syslog:av-test:warning";
     log_debug(&log, TRUE);
     res = log_open(&log, spec);
@@ -157,7 +165,9 @@ main(argc, argv)
     res = log_close(&log);
     printf("log_close : %d\n", res);
 
-    /* syslog */
+    /*
+     * syslog 
+     */
     spec = "syslog";
     log_debug(&log, TRUE);
     res = log_open(&log, spec);
@@ -176,8 +186,7 @@ main(argc, argv)
     printf("log_close : %d\n", res);
   }
 
-  if (0)
-  {
+  if (0) {
     debug_reply_msg("error:421:4.4.0:Message with error");
     debug_reply_msg("error:550:5.7.0:Message with error");
     debug_reply_msg("ok");
@@ -197,8 +206,7 @@ main(argc, argv)
 
     memset(&bl, 0, sizeof (bl));
 
-    if (db_blackliste_check("URLBL", question, &bl))
-    {
+    if (db_blackliste_check("URLBL", question, &bl)) {
       printf("Found       %s\n", question);
       printf(" WEIGHT     %d\n", bl.weight);
       printf(" DATE       %d\n", bl.date);

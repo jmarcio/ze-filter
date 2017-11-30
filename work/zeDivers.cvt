@@ -4,7 +4,7 @@
 #j_strdup        zeStrDup
 #j_malloc        zeMalloc
 strtolower      zeStr2Lower
-strtolower      zeStr2Upper
+strtoupper      zeStr2Upper
 strset          zeStrSet
 strchknull      zeStrChkNull
 strclean        zeStrRmNulls

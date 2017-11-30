@@ -1,0 +1,654 @@
+/* ========== libs/ze-msg-hash.c ========== */
+#include <ze-sys.h>
+#include <ze-libjc.h>
+#include <ze-msg-hash.h>
+/* ========== libs/ze-bcheck.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-bfilter.h>
+#include <ze-bcheck.h>
+/* ========== libs/ze-shmem.c ========== */
+#include <config.h>
+#include <ze-sys.h>
+#include "ze-libjc.h"
+#include "ze-shmem.h"
+/* ========== libs/ze-rdfile.c ========== */
+#include <ze-sys.h>
+#include "ze-libjc.h"
+/* ========== libs/ze-convert-8to7.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-convert-8to7.h>
+/* ========== libs/ze-uudecode.c ========== */
+#include <ze-sys.h>
+#include "ze-libjc.h"
+#include "ze-uudecode.h"
+/* ========== libs/ze-ipc.c ========== */
+#include <ze-sys.h>
+#include "ze-libjc.h"
+/* ========== libs/ze-bestof-n.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-bestof-n.h>
+/* ========== libs/ze-linkedlist.c ========== */
+#include <ze-sys.h>
+#include "ze-libjc.h"
+/* ========== libs/ze-demime.c ========== */
+#include <ze-sys.h>
+#include "ze-libjc.h"
+/* ========== libs/ze-unattach.c ========== */
+#include <ze-sys.h>
+#include "ze-filter.h"
+/* ========== libs/ze-strings.c ========== */
+#include <ze-sys.h>
+#include <zeLibs.h>
+#include "ze-strings.h"
+/* ========== libs/ze-ipv6.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-ipv6.h>
+/* ========== libs/ze-qp.c ========== */
+#include <ze-sys.h>
+#include "ze-qp.h"
+/* ========== libs/ze-regex.c ========== */
+#include <ze-sys.h>
+#include "ze-libjc.h"
+#include <ze-regex.h>
+/* ========== libs/ze-client.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-client.h>
+/* ========== libs/ze-dns.c ========== */
+#include <ze-sys.h>
+#include "ze-libjc.h"
+#include "ze-dns.h"
+/* ========== libs/ze-txtlog.c ========== */
+#include <ze-sys.h>
+#include <zeLibs.h>
+#include <ze-libjc.h>
+#include <ze-txtlog.h>
+/* ========== libs/ze-buffer.c ========== */
+#include <ze-sys.h>
+#include "ze-libjc.h"
+/* ========== libs/kstats.c ========== */
+#include <config.h>
+#include <ze-sys.h>
+#include "kstats.h"
+/* ========== libs/ze-avclient.c ========== */
+#include <ze-sys.h>
+#include "libmilter/mfapi.h"
+#include "ze-avclient.h"
+#include "ze-filter.h"
+/* ========== libs/ze-bfilter.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-bfilter.h>
+/* ========== libs/ze-btree.new.c ========== */
+#include <ze-sys.h>
+#include <ze-btree.h>
+#include "ze-libjc.h"
+/* ========== libs/ze-ipv4.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-ipv4.h>
+/* ========== libs/ze-server.c ========== */
+#include <ze-sys.h>
+#include <ze-libjc.h>
+/* ========== libs/ze-time.c ========== */
+#include <ze-sys.h>
+#include <ze-libjc.h>
+#include <ze-time.h>
+/* ========== libs/ze-dns-parse.c ========== */
+#include <ze-sys.h>
+#include <ze-libjc.h>
+#include <ze-dns-parse.h>
+/* ========== libs/ze-load.c ========== */
+#include <ze-sys.h>
+#include <zeLibs.h>
+#include "ze-filter.h"
+/* ========== libs/ze-cyclic.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-cyclic.h>
+/* ========== libs/ze-html.c ========== */
+#include <ze-sys.h>
+#include "ze-libjc.h"
+/* ========== libs/ze-bsegmentation.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-bfilter.h>
+/* ========== libs/ze-parse-dns.c ========== */
+/* ========== libs/ze-base64.c ========== */
+#include <ze-sys.h>
+#include "ze-libjc.h"
+#include "ze-base64.h"
+/* ========== libs/ze-rfc2822.c ========== */
+#include <ze-sys.h>
+#include <ze-libjc.h>
+#include <ze-rfc2822.h>
+/* ========== libs/ze-name2id.c ========== */
+#include <ze-sys.h>
+#include <ze-libjc.h>
+#include <ze-name2id.h>
+/* ========== libs/ze-divers.c ========== */
+#include <ze-sys.h>
+#include "ze-libjc.h"
+/* ========== libs/ze-table.c ========== */
+#include <ze-sys.h>
+#include <ze-table.h>
+#include "ze-libjc.h"
+/* ========== libs/ze-btree.c ========== */
+#include <ze-sys.h>
+#include <ze-btree.h>
+#include "ze-libjc.h"
+/* ========== libs/ze-smtp-divers.c ========== */
+#include <ze-sys.h>
+#include <zeLibs.h>
+#include "ze-libjc.h"
+/* ========== libs/ze-logit.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-logit.h>
+/* ========== libs/ze-morpho.c ========== */
+#include <ze-sys.h>
+#include "ze-libjc.h"
+/* ========== libs/sha1.c ========== */
+#include "config.h"
+#include <ze-sys.h>
+#include <macros.h>
+#include <sha1.h>
+#include <isc/assertions.h>
+#include <isc/sha1.h>
+#include <isc/string.h>
+#include <isc/types.h>
+#include <isc/util.h>
+/* ========== libs/md5.c ========== */
+#include "config.h"
+#include <ze-sys.h>
+#include <macros.h>
+#include <md5.h>
+/* ========== libs/ze-lr-funcs.c ========== */
+#include <ze-sys.h>
+#include <zeLibs.h>
+#include <ze-filter.h>
+#include <ze-lr-funcs.h>
+/* ========== libs/ze-ip.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-ip.h>
+/* ========== libs/ze-strconvert.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-strconvert.h>
+/* ========== libs/ze-decode.c ========== */
+#include <ze-sys.h>
+#include "ze-libjc.h"
+#include "ze-decode.h"
+/* ========== libs/ze-mbox.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-mbox.h>
+/* ========== libs/ze-inet.c ========== */
+#include <ze-sys.h>
+#include "ze-libjc.h"
+#include "ze-inet.h"
+/* ========== libjoe/ze-livehistory.c ========== */
+#include <ze-sys.h>
+#include "ze-filter.h"
+/* ========== libjoe/ze-modules.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-filter.h>
+#include <ze-modules.h>
+/* ========== libjoe/ze-msg-score.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-msg-score.h>
+/* ========== libjoe/scanmail.ok.org.c ========== */
+#include <ze-sys.h>
+#include "ze-filter.h"
+/* ========== libjoe/ze-netclass.c ========== */
+#include <ze-sys.h>
+#include "ze-filter.h"
+/* ========== libjoe/ze-policy.c ========== */
+#include <ze-sys.h>
+#include <zeLibs.h>
+#include "ze-filter.h"
+/* ========== libjoe/scanmail.c ========== */
+#include <ze-sys.h>
+#include "ze-filter.h"
+/* ========== libjoe/ze-log.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-log.h>
+/* ========== libjoe/ze-mailregex.c ========== */
+#include <ze-sys.h>
+#include "ze-filter.h"
+/* ========== libjoe/ze-grey-client.c ========== */
+#include <ze-sys.h>
+#include <zeLibs.h>
+#include <ze-filter.h>
+#include <ze-grey-client.h>
+/* ========== libjoe/ze-history.c ========== */
+#include <ze-sys.h>
+#include "libmilter/mfapi.h"
+#include "ze-filter.h"
+#include "ze-filter-data.h"
+/* ========== libjoe/ze-entropy.c ========== */
+#include <ze-sys.h>
+#include "ze-filter.h"
+/* ========== libjoe/ze-databases.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-databases.h>
+/* ========== libjoe/ze-oracle.c ========== */
+#include <ze-sys.h>
+#include "ze-filter.h"
+/* ========== libjoe/ze-stats.c ========== */
+#include <ze-sys.h>
+#include "ze-filter.h"
+/* ========== libjoe/ze-grey.c ========== */
+#include <ze-sys.h>
+#include <zeLibs.h>
+#include <ze-filter.h>
+#include <ze-grey.h>
+#include <ze-log-grey.h>
+/* ========== libjoe/ze-log-grey.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-log-grey.h>
+/* ========== libjoe/ze-rcpt-list.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-rcpt-list.h>
+/* ========== libjoe/mimelist.c ========== */
+#include <ze-sys.h>
+#include "ze-filter.h"
+/* ========== libjoe/ze-connopen.c ========== */
+#include <ze-sys.h>
+#include "ze-filter.h"
+/* ========== libjoe/ze-cf.c ========== */
+#include <ze-sys.h>
+#include <zeLibs.h>
+#include "ze-cf.h"
+#include "ze-filter.h"
+#include "cfc-defs.h"
+/* ========== libjoe/ze-fileexp.c ========== */
+#include <ze-sys.h>
+#include <zeLibs.h>
+#include <ze-filter.h>
+#include "ze-fileexp.h"
+/* ========== libjoe/ze-dns-iprbwl.c ========== */
+#include <ze-sys.h>
+#include "ze-dns-iprbwl.h"
+#include "ze-filter.h"
+/* ========== libjoe/ze-chkcontent.c ========== */
+#include <ze-sys.h>
+#include "ze-filter.h"
+/* ========== libjoe/ze-log-regex.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-log-regex.h>
+/* ========== libjoe/ze-dns-urlbl.c ========== */
+#include <ze-sys.h>
+#include "ze-dns-urlbl.h"
+#include "ze-filter.h"
+/* ========== libjoe/ze-oracle-scores.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-oracle-scores.h>
+/* ========== libjoe/ze-smtprate.c ========== */
+#include <ze-sys.h>
+#include "ze-filter.h"
+/* ========== libjoe/ze-dbrcpt.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-dbrcpt.h>
+/* ========== libjoe/ze-resolve-cache.c ========== */
+#include <ze-sys.h>
+#include <zeLibs.h>
+#include <ze-libjc.h>
+#include <ze-resolve-cache.h>
+/* ========== libjoe/scanmail.ok.c ========== */
+#include <ze-sys.h>
+#include "ze-filter.h"
+/* ========== libjoe/ze-headers.c ========== */
+#include <ze-sys.h>
+#include "ze-headers.h"
+#include "ze-filter.h"
+/* ========== libjoe/ze-resource.c ========== */
+#include <ze-sys.h>
+#include <zeLibs.h>
+#include "ze-filter.h"
+/* ========== libjoe/ze-grey-cleanup.c ========== */
+#include <ze-sys.h>
+#include <zeLibs.h>
+#include <ze-filter.h>
+#include <ze-grey-cleanup.h>
+/* ========== libjoe/ze-config.c ========== */
+#include <ze-sys.h>
+#include "ze-filter.h"
+/* ========== libjoe/ze-rcpt.c ========== */
+#include <ze-sys.h>
+#include "ze-filter.h"
+/* ========== libjoe/ze-dbbl.c ========== */
+#include <ze-sys.h>
+#include "ze-filter.h"
+/* ========== libjoe/ze-throttle.c ========== */
+#include <ze-sys.h>
+#include "ze-filter.h"
+/* ========== libjoe/ze-proc-witness.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-proc-witness.h>
+/* ========== libjoe/ze-read-conf-data.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-read-conf-data.h>
+/* ========== libjoe/ze-dbpolicy.c ========== */
+#include <ze-sys.h>
+#include "ze-filter.h"
+/* ========== libze/src/zeDb.c ========== */
+#include <ze-sys.h>
+#include <zeLibs.h>
+#include <zeDb.h>
+/* ========== libze/src/zeFileSystem.c ========== */
+#include <ze-sys.h>
+#include <zeLibs.h>
+#include <zeFileSystem.h>
+/* ========== libze/src/zeString.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <zeString.h>
+/* ========== libze/src/zeSyslog.c ========== */
+#include <ze-sys.h>
+#include <zeLibs.h>
+#include <zeSyslog.h>
+/* ========== libze/src/zeRegex.c ========== */
+#include <ze-sys.h>
+#include <zeLibs.h>
+#include "ze-libjc.h"
+#include <ze-regex.h>
+/* ========== libze/src/zeStrings.c ========== */
+#include <ze-sys.h>
+#include <zeLibs.h>
+#include <zeStrings.h>
+/* ========== libze/src/ze-linkedlist.c ========== */
+#include <ze-sys.h>
+#include "zelibs.h"
+/* ========== libze/src/zeStrConvert.c ========== */
+#include <ze-sys.h>
+#include <zeLibs.h>
+/* ========== libze/src/zeRdFile.c ========== */
+#include <ze-sys.h>
+#include "zeLibs.h"
+/* ========== libze/src/zeMap.c ========== */
+#include <ze-sys.h>
+#include <zeLibs.h>
+#include <zeStrings.h>
+#include <ze-filter.h>
+/* ========== libze/src/ze-divers.c ========== */
+#include <ze-sys.h>
+#include "zelibs.h"
+/* ========== libzechk/src/zePolicy.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <zePolicy.h>
+/* ========== libzechk/src/zeAccess.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <zeAccess.h>
+/* ========== scratch/ze-lr.c ========== */
+#include <ze-lr-main.c>
+#include <stdlib.h>
+#include <stdio.h>
+/* ========== scratch/ze-mfilter.c ========== */
+#include <ze-sys.h>
+#include "ze-filter.h"
+/* ========== scratch/ze-unattach.c ========== */
+#include <ze-sys.h>
+#include "ze-filter.h"
+/* ========== scratch/ze-uufile.c ========== */
+#include <ze-sys.h>
+#include "ze-filter.h"
+/* ========== scratch/ze-detach.c ========== */
+#include <ze-sys.h>
+#include "ze-filter.h"
+/* ========== scratch/ze-lr-main.c ========== */
+#include <ze-sys.h>
+#include <zeLibs.h>
+#include "ze-filter.h"
+/* ========== scratch/ze-lr-sim.c ========== */
+#include <ze-sys.h>
+#include <zeLibs.h>
+#include "ze-filter.h"
+/* ========== scratch/ze-chk-morpho.c ========== */
+#include <ze-sys.h>
+#include "ze-filter.h"
+/* ========== scratch/ze-extract-url.c ========== */
+#include <ze-sys.h>
+#include "ze-filter.h"
+/* ========== scratch/ze-msg-entropy.c ========== */
+#include <ze-sys.h>
+#include "ze-filter.h"
+/* ========== src/ze-policy-test.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+/* ========== src/mlfi_eom.c ========== */
+/* ========== src/ze-cleanspool.c ========== */
+#include <ze-sys.h>
+#include "ze-filter.h"
+/* ========== src/ze-policy-lookup.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+/* ========== src/ze-mod-tools.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include "ze-filter-data.h"
+#include <ze-spool.h>
+#include <ze-mod-tools.h>
+/* ========== src/av-test.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-avclient.h>
+/* ========== src/ze-signal.c ========== */
+#include <ze-sys.h>
+#include <zeLibs.h>
+#include <libmilter/mfapi.h>
+#include "ze-filter.h"
+/* ========== src/mlfi_envfrom.c ========== */
+/* ========== src/ze-callbacklogs.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-filter-data.h>
+#include <ze-callbacklogs.h>
+#include <ze-spool.h>
+/* ========== src/ze-filter.c ========== */
+#include <ze-sys.h>
+#include <zeLibs.h>
+#include "ze-filter.h"
+#include "ze-filter-data.h"
+#include "ze-spool.h"
+#include "ze-chkcontent.h"
+#include "ze-callbackchecks.h"
+#include "ze-callbacklogs.h"
+#include "ze-mxcheck.h"
+#include "mlfi_connect.c"
+#include "mlfi_helo.c"
+#include "mlfi_envfrom.c"
+#include "mlfi_envto.c"
+#include "mlfi_data.c"
+#include "mlfi_header.c"
+#include "mlfi_eoh.c"
+#include "mlfi_body.c"
+#include "mlfi_eom.c"
+#include "mlfi_close.c"
+#include "mlfi_abort.c"
+#include "mlfi_unknown.c"
+#include "mlfi_cleanup.c"
+#include "mlfi_negotiate.c"
+/* ========== src/ze-mxcheck.c ========== */
+#include <ze-sys.h>
+#include <zeLibs.h>
+#include <ze-filter.h>
+#include <ze-filter-data.h>
+#include <ze-mxcheck.h>
+/* ========== src/ze-ndc-server.c ========== */
+#include <ze-sys.h>
+#include <zeLibs.h>
+#include "ze-filter.h"
+/* ========== src/ze-main.c ========== */
+#include <ze-sys.h>
+#include "ze-filter.h"
+#include <xfilesdef.h>
+/* ========== src/ze-rbwl-test.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+/* ========== src/ze-bestof-test.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-bestof-n.h>
+/* ========== src/ze-ipv6-test.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+/* ========== src/mlfi_body.c ========== */
+/* ========== src/mlfi_envto.c ========== */
+/* ========== src/mlfi_eoh.c ========== */
+/* ========== src/ze-lr-init.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-lr-init.h>
+/* ========== src/mlfi_unknown.c ========== */
+/* ========== src/mlfi_connect.c ========== */
+/* ========== src/ze-grey-client-test.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+/* ========== src/ze-spool.c ========== */
+#include <ze-sys.h>
+#include "ze-filter.h"
+#include "ze-filter-data.h"
+#include "ze-spool.h"
+/* ========== src/ze-callback.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-callback.h>
+/* ========== src/policy-test.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-avclient.h>
+/* ========== src/ze-msg-score-test.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+/* ========== src/ze-short-messages.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-short-messages.h>
+/* ========== src/ze-libmilter.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-filter-data.h>
+#include <ze-libmilter.h>
+/* ========== src/ze-rcpt-test.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+/* ========== src/mlfi_close.c ========== */
+/* ========== src/mlfi_cleanup.c ========== */
+/* ========== src/ze-log-virus.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-filter-data.h>
+#include <ze-log-virus.h>
+/* ========== src/ze-smmacros.c ========== */
+#include <ze-sys.h>
+#include "ze-filter.h"
+#include "ze-filter-data.h"
+/* ========== src/mlfi_negotiate.c ========== */
+/* ========== src/ze-crypt-test.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+/* ========== src/ze-access-lookup.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+/* ========== src/ze-reply.c ========== */
+#include <ze-sys.h>
+#include "ze-filter.h"
+#include "ze-filter-data.h"
+/* ========== src/ze-check-connection.c ========== */
+#include <ze-sys.h>
+#include <zeLibs.h>
+#include <ze-filter.h>
+#include <ze-filter-data.h>
+#include <ze-check-connection.h>
+/* ========== src/ze-null-milter.c ========== */
+#include <ze-sys.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <sysexits.h>
+#include <unistd.h>
+#include "libmilter/mfapi.h"
+/* ========== src/ze-grey-test.c ========== */
+#include <ze-sys.h>
+#include <zeLibs.h>
+#include <ze-filter.h>
+/* ========== src/ze-log-files.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-filter-data.h>
+#include <ze-log-files.h>
+/* ========== src/ze-inet-test.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+/* ========== src/ze-log-quarantine.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-filter-data.h>
+#include <ze-log-quarantine.h>
+#include <ze-spool.h>
+/* ========== src/ze-client-test.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+/* ========== src/mlfi_abort.c ========== */
+/* ========== src/ze-module-test.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+/* ========== src/mlfi_header.c ========== */
+/* ========== src/ze-ndc-help.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-ndc-help.h>
+/* ========== src/ze-callbackchecks.c ========== */
+#include <ze-sys.h>
+#include <ze-filter.h>
+#include <ze-filter-data.h>
+#include <ze-spool.h>
+#include <ze-callbackchecks.h>
+/* ========== src/mlfi_data.c ========== */
+/* ========== src/mlfi_helo.c ========== */
+/* ========== ze-bayes-tbx/ze-bayes-tbx.c ========== */
+#include <ze-sys.h>
+#include <zeLibs.h>
+#include "ze-filter.h"
+#include <ze-bfilter.h>
+#include <ze-bcheck.h>
+/* ========== ze-greyd/ze-greyd.c ========== */
+#include <ze-sys.h>
+#include <zeLibs.h>
+#include <ze-filter.h>
+/* ========== ze-logserver/ze-logserver.c ========== */
+#include <ze-sys.h>
+#include <ze-libjc.h>
+/* ========== ze-makemap/ze-makemap.c ========== */
+#include <ze-sys.h>
+#include "ze-filter.h"
+/* ========== ze-printstats/ze-printstats.c ========== */
+#include <ze-sys.h>
+#include <zeLibs.h>
+#include "ze-filter.h"
+#include "ze-filter-data.h"
+/* ========== ze-scanfile/ze-message-tbx.c ========== */
+#include <ze-sys.h>
+#include "ze-filter.h"
+#include "ze-filter.h"
+/* ========== ze-scanfile/ze-scanfile.c ========== */
+#include <ze-sys.h>
+#include "ze-filter.h"

@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -30,7 +31,7 @@
 #define SQR(x)       ((x) * (x))
 
 #ifndef MAX_MSG_SCORE
-# define MAX_MSG_SCORE 15
+#define MAX_MSG_SCORE 15
 #endif
 
 /* ****************************************************************************
@@ -49,46 +50,48 @@
 #define EVAL_SHLIB              2
 #define EVAL_LOGIT              3
 
-typedef struct
-{
+typedef struct {
   bool                ok;
   char                buf_scale[256];
   char                buf_eval[256];
 
   scores_scale_T      scale;
   int                 func;
-  union
-  {
-    /* score is the module of the vector of components */
-    struct
-    {
+  union {
+    /*
+     * score is the module of the vector of components 
+     */
+    struct {
       double              kbayes;
       double              koracle;
       double              kurlbl;
       double              kregex;
     } vector;
-    /* score is a weigthed sum of components */
-    struct
-    {
+    /*
+     * score is a weigthed sum of components 
+     */
+    struct {
       double              kbayes;
       double              koracle;
       double              kurlbl;
       double              kregex;
     } sum;
 
-    /* score is a weigthed sum of logits */
-    struct
-    {
+    /*
+     * score is a weigthed sum of logits 
+     */
+    struct {
       double              kbayes;
       double              koracle;
       double              kurlbl;
       double              kregex;
     } logit;
 
-    /* score is defined by an external function in a shared library */
+    /*
+     * score is defined by an external function in a shared library 
+     */
 #if 0
-    struct
-    {
+    struct {
       char               *dlname;
       char               *func;
     } module;
@@ -97,6 +100,7 @@ typedef struct
 } msg_eval_func_T;
 
 static msg_eval_func_T msg_eval = { FALSE };
+
 static pthread_mutex_t fmutex = PTHREAD_MUTEX_INITIALIZER;
 
 /* ****************************************************************************
@@ -122,25 +126,24 @@ init_msg_eval()
   msg_eval.scale.regex = 1.;
   msg_eval.scale.oracle = 1.;
   msg_eval.func = EVAL_VECTOR;
-  switch (msg_eval.func)
-  {
+  switch (msg_eval.func) {
     case EVAL_VECTOR:
-      msg_eval.function.vector.kbayes  = 1.;
+      msg_eval.function.vector.kbayes = 1.;
       msg_eval.function.vector.koracle = 1. / 12.;
-      msg_eval.function.vector.kurlbl  = 1. / 4.;
-      msg_eval.function.vector.kregex  = 1. / 10.;
+      msg_eval.function.vector.kurlbl = 1. / 4.;
+      msg_eval.function.vector.kregex = 1. / 10.;
       break;
     case EVAL_LOGIT:
-      msg_eval.function.logit.kbayes  = 1.;
+      msg_eval.function.logit.kbayes = 1.;
       msg_eval.function.logit.koracle = 1. / 2.;
-      msg_eval.function.logit.kurlbl  = 1.;
-      msg_eval.function.logit.kregex  = 1. / 2.;
+      msg_eval.function.logit.kurlbl = 1.;
+      msg_eval.function.logit.kregex = 1. / 2.;
       break;
     case EVAL_SUM:
-      msg_eval.function.sum.kbayes  = 1.;
+      msg_eval.function.sum.kbayes = 1.;
       msg_eval.function.sum.koracle = 1. / 12.;
-      msg_eval.function.sum.kurlbl  = 1. / 4.;
-      msg_eval.function.sum.kregex  = 1. / 10.;
+      msg_eval.function.sum.kurlbl = 1. / 4.;
+      msg_eval.function.sum.kregex = 1. / 10.;
       break;
     default:
       break;
@@ -165,33 +168,30 @@ decode_msg_eval_token(q, val)
   char               *s = NULL;
   bool                result = TRUE;
 
-  /* decode the function type  */
-  if (q->func == EVAL_UNDEF)
-  {
+  /*
+   * decode the function type  
+   */
+  if (q->func == EVAL_UNDEF) {
     s = "VECTOR";
-    if (STRNCASEEQUAL(s, val, strlen(s)))
-    {
+    if (STRNCASEEQUAL(s, val, strlen(s))) {
       q->func = EVAL_VECTOR;
       goto fin;
     }
 
     s = "SUM";
-    if (STRNCASEEQUAL(s, val, strlen(s)))
-    {
+    if (STRNCASEEQUAL(s, val, strlen(s))) {
       q->func = EVAL_SUM;
       goto fin;
     }
 
     s = "LOGIT";
-    if (STRNCASEEQUAL(s, val, strlen(s)))
-    {
+    if (STRNCASEEQUAL(s, val, strlen(s))) {
       q->func = EVAL_SHLIB;
       goto fin;
     }
 
     s = "SHLIB";
-    if (STRNCASEEQUAL(s, val, strlen(s)))
-    {
+    if (STRNCASEEQUAL(s, val, strlen(s))) {
       q->func = EVAL_SHLIB;
       goto fin;
     }
@@ -201,10 +201,11 @@ decode_msg_eval_token(q, val)
 
   }
 
-  /* function type already decoded - parameters now */
+  /*
+   * function type already decoded - parameters now 
+   */
   s = "SSCORE1=";
-  if (STRNCASEEQUAL(s, val, strlen(s)))
-  {
+  if (STRNCASEEQUAL(s, val, strlen(s))) {
     double              k = 0.;
 
     s = val + strlen(s);
@@ -215,8 +216,7 @@ decode_msg_eval_token(q, val)
     goto fin;
   }
   s = "SSCORE0=";
-  if (STRNCASEEQUAL(s, val, strlen(s)))
-  {
+  if (STRNCASEEQUAL(s, val, strlen(s))) {
     double              k = 0.;
 
     s = val + strlen(s);
@@ -227,8 +227,7 @@ decode_msg_eval_token(q, val)
     goto fin;
   }
   s = "SBAYES=";
-  if (STRNCASEEQUAL(s, val, strlen(s)))
-  {
+  if (STRNCASEEQUAL(s, val, strlen(s))) {
     double              k = 0.;
 
     s = val + strlen(s);
@@ -239,8 +238,7 @@ decode_msg_eval_token(q, val)
     goto fin;
   }
   s = "SURLBL=";
-  if (STRNCASEEQUAL(s, val, strlen(s)))
-  {
+  if (STRNCASEEQUAL(s, val, strlen(s))) {
     double              k = 0.;
 
     s = val + strlen(s);
@@ -251,8 +249,7 @@ decode_msg_eval_token(q, val)
     goto fin;
   }
   s = "SREGEX=";
-  if (STRNCASEEQUAL(s, val, strlen(s)))
-  {
+  if (STRNCASEEQUAL(s, val, strlen(s))) {
     double              k = 0.;
 
     s = val + strlen(s);
@@ -263,8 +260,7 @@ decode_msg_eval_token(q, val)
     goto fin;
   }
   s = "SORACLE=";
-  if (STRNCASEEQUAL(s, val, strlen(s)))
-  {
+  if (STRNCASEEQUAL(s, val, strlen(s))) {
     double              k = 0.;
 
     s = val + strlen(s);
@@ -275,12 +271,12 @@ decode_msg_eval_token(q, val)
     goto fin;
   }
 
-  /* vector */
-  if (q->func == EVAL_VECTOR)
-  {
+  /*
+   * vector 
+   */
+  if (q->func == EVAL_VECTOR) {
     s = "KBAYES=";
-    if (STRNCASEEQUAL(s, val, strlen(s)))
-    {
+    if (STRNCASEEQUAL(s, val, strlen(s))) {
       double              k = 0.;
 
       s = val + strlen(s);
@@ -292,8 +288,7 @@ decode_msg_eval_token(q, val)
     }
 
     s = "KURLBL=";
-    if (STRNCASEEQUAL(s, val, strlen(s)))
-    {
+    if (STRNCASEEQUAL(s, val, strlen(s))) {
       double              k;
 
       s = val + strlen(s);
@@ -305,8 +300,7 @@ decode_msg_eval_token(q, val)
     }
 
     s = "KORACLE=";
-    if (STRNCASEEQUAL(s, val, strlen(s)))
-    {
+    if (STRNCASEEQUAL(s, val, strlen(s))) {
       double              k;
 
       s = val + strlen(s);
@@ -318,8 +312,7 @@ decode_msg_eval_token(q, val)
     }
 
     s = "KREGEX=";
-    if (STRNCASEEQUAL(s, val, strlen(s)))
-    {
+    if (STRNCASEEQUAL(s, val, strlen(s))) {
       double              k;
 
       s = val + strlen(s);
@@ -333,12 +326,12 @@ decode_msg_eval_token(q, val)
     goto fin;
   }
 
-  /* logit */
-  if (q->func == EVAL_LOGIT)
-  {
+  /*
+   * logit 
+   */
+  if (q->func == EVAL_LOGIT) {
     s = "KBAYES=";
-    if (STRNCASEEQUAL(s, val, strlen(s)))
-    {
+    if (STRNCASEEQUAL(s, val, strlen(s))) {
       double              k = 0.;
 
       s = val + strlen(s);
@@ -350,8 +343,7 @@ decode_msg_eval_token(q, val)
     }
 
     s = "KURLBL=";
-    if (STRNCASEEQUAL(s, val, strlen(s)))
-    {
+    if (STRNCASEEQUAL(s, val, strlen(s))) {
       double              k;
 
       s = val + strlen(s);
@@ -363,8 +355,7 @@ decode_msg_eval_token(q, val)
     }
 
     s = "KORACLE=";
-    if (STRNCASEEQUAL(s, val, strlen(s)))
-    {
+    if (STRNCASEEQUAL(s, val, strlen(s))) {
       double              k;
 
       s = val + strlen(s);
@@ -376,8 +367,7 @@ decode_msg_eval_token(q, val)
     }
 
     s = "KREGEX=";
-    if (STRNCASEEQUAL(s, val, strlen(s)))
-    {
+    if (STRNCASEEQUAL(s, val, strlen(s))) {
       double              k;
 
       s = val + strlen(s);
@@ -391,12 +381,12 @@ decode_msg_eval_token(q, val)
     goto fin;
   }
 
-  /* weighted sum */
-  if (q->func == EVAL_SUM)
-  {
+  /*
+   * weighted sum 
+   */
+  if (q->func == EVAL_SUM) {
     s = "KBAYES=";
-    if (STRNCASEEQUAL(s, val, strlen(s)))
-    {
+    if (STRNCASEEQUAL(s, val, strlen(s))) {
       double              k;
 
       s = val + strlen(s);
@@ -408,8 +398,7 @@ decode_msg_eval_token(q, val)
     }
 
     s = "KURLBL=";
-    if (STRNCASEEQUAL(s, val, strlen(s)))
-    {
+    if (STRNCASEEQUAL(s, val, strlen(s))) {
       double              k;
 
       s = val + strlen(s);
@@ -421,8 +410,7 @@ decode_msg_eval_token(q, val)
     }
 
     s = "KORACLE=";
-    if (STRNCASEEQUAL(s, val, strlen(s)))
-    {
+    if (STRNCASEEQUAL(s, val, strlen(s))) {
       double              k;
 
       s = val + strlen(s);
@@ -434,8 +422,7 @@ decode_msg_eval_token(q, val)
     }
 
     s = "KREGEX=";
-    if (STRNCASEEQUAL(s, val, strlen(s)))
-    {
+    if (STRNCASEEQUAL(s, val, strlen(s))) {
       double              k;
 
       s = val + strlen(s);
@@ -472,8 +459,7 @@ configure_msg_eval_function(val)
   if (!msg_eval.ok && !init_msg_eval())
     return FALSE;
 
-  if (val == NULL)
-  {
+  if (val == NULL) {
     bool                r;
     char               *env = NULL;
 
@@ -504,10 +490,8 @@ configure_msg_eval_function(val)
   q->func = EVAL_UNDEF;
 
   argc = zeStr2Tokens(buf, 32, argv, ";, ");
-  for (i = 0; i < argc; i++)
-  {
-    if (!decode_msg_eval_token(q, argv[i]))
-    {
+  for (i = 0; i < argc; i++) {
+    if (!decode_msg_eval_token(q, argv[i])) {
       ZE_MessageWarning(9, "Hu... I didn't understand this : %s ???", argv[i]);
       goto fin;
     }
@@ -549,10 +533,8 @@ configure_msg_score_scales(val)
   q->scale.oracle = 1.;
 
   argc = zeStr2Tokens(buf, 32, argv, ";, ");
-  for (i = 0; i < argc; i++)
-  {
-    if (!decode_msg_eval_token(q, argv[i]))
-    {
+  for (i = 0; i < argc; i++) {
+    if (!decode_msg_eval_token(q, argv[i])) {
       ZE_MessageWarning(9, "Hu... I didn't understand this : %s ???", argv[i]);
       goto fin;
     }
@@ -579,8 +561,7 @@ display_msg_eval()
 
   MUTEX_LOCK(&fmutex);
 
-  switch (q->func)
-  {
+  switch (q->func) {
     case EVAL_UNDEF:
       ZE_MessageInfo(10, "* UNDEFINED  : %s", q->buf_eval);
       ZE_MessageInfo(10, "");
@@ -670,8 +651,7 @@ compute_msg_score(scp)
   regex = scp->body + scp->headers;
 
   scp->combined = 0.;
-  switch (q->func)
-  {
+  switch (q->func) {
     case EVAL_UNDEF:
       ZE_MessageInfo(11, "* UNDEFINED  : %s", q->buf_eval);
       break;
@@ -685,15 +665,13 @@ compute_msg_score(scp)
         k = scp->urlbl * q->function.vector.kurlbl;
         score += SQR(k);
 
-        if (scp->do_bayes)
-        {
+        if (scp->do_bayes) {
           double              x;
 
           x = logit(scp->bayes) + 0.5 * logit(scp->noracle);
           k = logitinv(x) * q->function.vector.kbayes;
           score += SQR(k);
-        } else
-        {
+        } else {
           k = scp->oracle * q->function.vector.koracle;
           score += SQR(k);
         }
@@ -713,8 +691,7 @@ compute_msg_score(scp)
         score += k;
         k = scp->oracle * q->function.logit.koracle;
         score += k;
-        if (scp->do_bayes)
-        {
+        if (scp->do_bayes) {
           k = logit(scp->bayes) * q->function.logit.kbayes;
           score += k;
         }
@@ -745,8 +722,8 @@ compute_msg_score(scp)
 
 #if 0
   ZE_MessageInfo(10, "  R=%.3f O=%.3f U=%.3f B=%.3f S=%.3f",
-               (double) regex, (double) scp->oracle, (double) scp->urlbl,
-               scp->bayes, score);
+                 (double) regex, (double) scp->oracle, (double) scp->urlbl,
+                 scp->bayes, score);
 #endif
 
   return score;
@@ -813,8 +790,7 @@ create_msg_score_header(buf, size, id, hostname, scp)
   else
     strlcpy(so, ".", sizeof (so));
 
-  if (buf != NULL && size > 0)
-  {
+  if (buf != NULL && size > 0) {
     id = STRNULL(id, "NOID");
     hostname = STRNULL(hostname, "UNKNOWN");
 
@@ -883,13 +859,11 @@ fill_msg_scores(scores, do_bayes, bayes, do_regex, regex, do_urlbl, urlbl,
  *                                                                            *
  **************************************************************************** */
 
-typedef struct
-{
+typedef struct {
   int                 action;
   char                buf[256]; /* configuration string */
   int                 type;     /* decoded type : THRESHOLD or REGEX */
-  union
-  {
+  union {
     double              threshold;
     char                regex[256];
   } value;
@@ -944,8 +918,7 @@ set_message_action(q, which, val)
 
   ASSERT(q != NULL);
   memset(q, 0, sizeof (*q));
-  if (val == NULL || strlen(val) == 0)
-  {
+  if (val == NULL || strlen(val) == 0) {
     result = TRUE;
     goto fin;
   }
@@ -957,24 +930,21 @@ set_message_action(q, which, val)
   p = buf;
 
   s = "THRESHOLD:";
-  if (STRNCASEEQUAL(s, p, strlen(s)))
-  {
+  if (STRNCASEEQUAL(s, p, strlen(s))) {
     double              k;
 
     q->type = MATCH_THRESHOLD;
     p += strlen(s);
     errno = 0;
     k = strtod(p, NULL);
-    if (errno == 0)
-    {
+    if (errno == 0) {
       q->value.threshold = k;
       result = TRUE;
     }
     goto fin;
   }
   s = "REGEX:";
-  if (STRNCASEEQUAL(s, p, strlen(s)))
-  {
+  if (STRNCASEEQUAL(s, p, strlen(s))) {
     q->type = MATCH_REGEX;
     p += strlen(s);
     strlcpy(q->value.regex, p, sizeof (q->value.regex));
@@ -1007,17 +977,14 @@ register_msg_action(which, val)
 
   MUTEX_LOCK(&amutex);
 
-  for (i = 0; i < N_ACTIONS; i++)
-  {
-    if (msg_actions[i].action == MSG_ACTION_UNDEF)
-    {
+  for (i = 0; i < N_ACTIONS; i++) {
+    if (msg_actions[i].action == MSG_ACTION_UNDEF) {
       msg_eval_action_T  *q = &msg_actions[i];
 
       result = set_message_action(q, which, val);
       break;
     }
-    if (msg_actions[i].action == which)
-    {
+    if (msg_actions[i].action == which) {
       msg_eval_action_T  *q = &msg_actions[i];
 
       result = set_message_action(q, which, val);
@@ -1050,14 +1017,11 @@ evaluate_msg_action(action, scp, score, str)
 
   MUTEX_LOCK(&amutex);
 
-  for (i = 0; i < N_ACTIONS; i++)
-  {
-    if (msg_actions[i].action == action)
-    {
+  for (i = 0; i < N_ACTIONS; i++) {
+    if (msg_actions[i].action == action) {
       msg_eval_action_T  *q = &msg_actions[i];
 
-      switch (q->type)
-      {
+      switch (q->type) {
         case MATCH_THRESHOLD:
           result = score > q->value.threshold;
           break;

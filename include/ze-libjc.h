@@ -22,7 +22,7 @@
  */
 
 
-#ifndef __J_LIBJC_H__
+#ifndef __ZE_LIBJC_H__
 
 #include "version.h"
 #include "defs.h"
@@ -44,10 +44,7 @@
 #include "ze-demime.h"
 #include "ze-convert-8to7.h"
 #include "ze-html.h"
-#include "ze-divers.h"
 #include "ze-smtp-divers.h"
-#include "ze-strings.h"
-#include "ze-strconvert.h"
 #include "ze-buffer.h"
 #include "ze-morpho.h"
 #include "ze-ipv4.h"
@@ -110,5 +107,5 @@
 
 
 
-#define __J_LIBJC_H__
+#define __ZE_LIBJC_H__
 #endif

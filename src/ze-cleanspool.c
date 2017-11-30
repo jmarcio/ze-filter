@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -48,43 +49,34 @@ cleanup_spool(dirname, maxage)
 
   ZE_MessageInfo(9, "*** Cleaning up spool dir : %s", dirname);
 
-  if (maxage == 0)
-  {
+  if (maxage == 0) {
     ZE_LogMsgInfo(9, "MAX_AGE == 0 : no spool cleaning up");
     return;
   }
 
-  if ((dir = opendir(dirname)) != NULL)
-  {
-    while ((p = readdir(dir)) != NULL)
-    {
+  if ((dir = opendir(dirname)) != NULL) {
+    while ((p = readdir(dir)) != NULL) {
       if (p->d_name[0] == '.')
-	continue;
+        continue;
       snprintf(fname, sizeof (fname), "%s/%s", dirname, p->d_name);
 #if HAVE_LSTAT
-      if (lstat(fname, &st) == 0)
-      {
+      if (lstat(fname, &st) == 0) {
 #else
-      if (stat(fname, &st) == 0)
-      {
+      if (stat(fname, &st) == 0) {
 #endif
-        if (S_ISREG(st.st_mode))
-        {
-          if (st.st_mtime + maxage < now)
-          {
+        if (S_ISREG(st.st_mode)) {
+          if (st.st_mtime + maxage < now) {
             nb++;
             ZE_MessageInfo(11, "* Deleting file : %s", fname);
             unlink(fname);
           }
         }
-      } else
-      {
+      } else {
         ZE_LogMsgWarning(0, "lstat(%s) error", STRNULL(fname, ""));
       }
     }
     closedir(dir);
-  } else
-  {
+  } else {
     ZE_LogMsgWarning(0, "opendir(%s) error", STRNULL(dirname, ""));
   }
 

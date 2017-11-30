@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -41,8 +42,7 @@ mlfi_data(ctx)
   INIT_CALLBACK_DELAY();
 #endif
 
-  if (priv == NULL)
-  {
+  if (priv == NULL) {
     ZE_LogMsgWarning(0, "%s priv is NULL ", CONNID_STR(priv->id));
     result = SMFIS_TEMPFAIL;
     goto fin;
@@ -57,11 +57,11 @@ mlfi_data(ctx)
   /*
    ** spool file creation
    */
-  if (!spool_file_is_open(priv))
-  {
-    /* open a file to store this message */
-    if (!spool_file_create(priv))
-    {
+  if (!spool_file_is_open(priv)) {
+    /*
+     * open a file to store this message 
+     */
+    if (!spool_file_create(priv)) {
       ZE_LogMsgWarning(0, "%s can't create spool file ", CONNID_STR(priv->id));
       result = SMFIS_TEMPFAIL;
     }
@@ -70,10 +70,8 @@ mlfi_data(ctx)
   if (result != SMFIS_CONTINUE)
     goto fin;
 
-  if (IS_UNKNOWN(ip_class) && (priv->dbrcpt_conn_spamtrap > 0))
-  {
-    switch (cf_get_int(CF_SPAMTRAP_RESULT))
-    {
+  if (IS_UNKNOWN(ip_class) && (priv->dbrcpt_conn_spamtrap > 0)) {
+    switch (cf_get_int(CF_SPAMTRAP_RESULT)) {
       case OPT_OK:
         break;
       case OPT_TEMPFAIL:
@@ -100,8 +98,7 @@ mlfi_data(ctx)
   /*
    * Check recipient rate
    */
-  if ((result == SMFIS_CONTINUE) && (cf_get_int(CF_CHECK_RCPT_RATE) == OPT_YES))
-  {
+  if ((result == SMFIS_CONTINUE) && (cf_get_int(CF_CHECK_RCPT_RATE) == OPT_YES)) {
     int                 ip_class = priv->netclass.class;
     char                buf[256];
     int                 vmax = 0;
@@ -116,8 +113,7 @@ mlfi_data(ctx)
     if (vmax > 0 && rcpt_rate > vmax)
       result = SMFIS_TEMPFAIL;
 
-    if (result != SMFIS_CONTINUE)
-    {
+    if (result != SMFIS_CONTINUE) {
       char                s[1024];
 
       stats_inc(STAT_MAX_RCPT, 1);
@@ -132,7 +128,7 @@ mlfi_data(ctx)
     }
   }
 #if _FFR_MODULES
-  /* 
+  /*
    ** ze-filter modules
    **
    */
@@ -150,4 +146,3 @@ fin:
 
   return result;
 }
-

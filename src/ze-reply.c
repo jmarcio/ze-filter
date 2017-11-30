@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -32,17 +33,18 @@
  ******************************************************************************/
 
 
-static bool         rule2reply(SMFICTX *, char *, char *, size_t, char *, char *);
+static bool         rule2reply(SMFICTX *, char *, char *, size_t, char *,
+                               char *);
 
-typedef struct replymsg_T
-{
+typedef struct replymsg_T {
   char               *code;
   char               *msg;
 } replymsg_T;
 
 static replymsg_T   replymsg[] = {
   {"NO_PEER_HOSTNAME", "*** No peer hostname when connecting"},
-  {"XFILE", "*** A suspicious file (executable code) was found in the message!"},
+  {"XFILE",
+   "*** A suspicious file (executable code) was found in the message!"},
   {"NO_FROM_HEADER", "*** There is no From: header field"},
   {"NO_RCPT_HEADER", "*** There is no To, CC or Bcc header field"},
   {"NO_SUBJECT_HEADER", "*** There is no Subject Header"},
@@ -84,8 +86,7 @@ reply_code2msg(code)
   if (p == NULL)
     return NULL;
 
-  while (p->code != NULL)
-  {
+  while (p->code != NULL) {
     if (strcasecmp(p->code, code) == 0)
       return p->msg;
     p++;
@@ -126,12 +127,11 @@ get_reply_msg(ctx, code, msg, sz, attr, value)
   if (sin == NULL)
     ZE_LogMsgWarning(0, "Can't get message for code : %s", code);
 
-  if ((sin != NULL) && rule2reply(ctx, b_out, b_in, sizeof (b_out), attr, value))
-  {
+  if ((sin != NULL)
+      && rule2reply(ctx, b_out, b_in, sizeof (b_out), attr, value)) {
     zeSafeStrnCpy(msg, sz, b_out, strlen(b_out));
     result = TRUE;
-  } else
-  {
+  } else {
     sout = "*** Unknown error";
 
     zeSafeStrnCpy(msg, sz, sout, strlen(sout));
@@ -167,13 +167,11 @@ rule2reply(ctx, out, in, sz, attr, value)
 
   p = in;
   q = out;
-  while ((sz > 0) && zeStrRegex(p, "__[A-Z0-9_]+__", &pi, &pf, TRUE))
-  {
+  while ((sz > 0) && zeStrRegex(p, "__[A-Z0-9_]+__", &pi, &pf, TRUE)) {
     char               *tag = NULL;
     int                 n;
 
-    if (pi > 0)
-    {
+    if (pi > 0) {
       n = zeSafeStrnCat(q, sz, p, pi);
       p += pi;
       q += n;
@@ -186,10 +184,8 @@ rule2reply(ctx, out, in, sz, attr, value)
      **  Check for variables...
      */
     if ((attr != NULL) && (strlen(attr) > 0)
-        && (strncasecmp(p, attr, strlen(attr)) == 0))
-    {
-      if (value != NULL)
-      {
+        && (strncasecmp(p, attr, strlen(attr)) == 0)) {
+      if (value != NULL) {
         n = zeSafeStrnCat(q, sz, value, strlen(value));
         q += n;
         sz -= n;
@@ -199,31 +195,30 @@ rule2reply(ctx, out, in, sz, attr, value)
     }
 
     tag = "__VIRUS__";
-    if (strncasecmp(p, tag, strlen(tag)) == 0)
-    {
+    if (strncasecmp(p, tag, strlen(tag)) == 0) {
 
       p += pf;
       continue;
     }
 
     tag = "__VIRUS__";
-    if (strncasecmp(p, tag, strlen(tag)) == 0)
-    {
+    if (strncasecmp(p, tag, strlen(tag)) == 0) {
 
       p += pf;
       continue;
     }
 
     tag = "__CLNT_ADDR__";
-    if (strncasecmp(p, tag, strlen(tag)) == 0)
-    {
+    if (strncasecmp(p, tag, strlen(tag)) == 0) {
       char               *addr = NULL;
 
       addr = (priv != NULL && priv->peer_addr) ? priv->peer_addr : "???";
 
       n = zeSafeStrnCat(q, sz, addr, strlen(addr));
 
-      /* printf(" pi = %ld; pf = %ld; n = %d\n", pi, pf, n); */
+      /*
+       * printf(" pi = %ld; pf = %ld; n = %d\n", pi, pf, n); 
+       */
 
       q += n;
       sz -= n;
@@ -233,24 +228,21 @@ rule2reply(ctx, out, in, sz, attr, value)
     }
 
     tag = "__CLNT_NAME__";
-    if (strncasecmp(p, tag, strlen(tag)) == 0)
-    {
+    if (strncasecmp(p, tag, strlen(tag)) == 0) {
 
       p += pf;
       continue;
     }
 
     tag = "__FROM__";
-    if (strncasecmp(p, tag, strlen(tag)) == 0)
-    {
+    if (strncasecmp(p, tag, strlen(tag)) == 0) {
 
       p += pf;
       continue;
     }
 
     tag = "__TO__";
-    if (strncasecmp(p, tag, strlen(tag)) == 0)
-    {
+    if (strncasecmp(p, tag, strlen(tag)) == 0) {
 
       p += pf;
       continue;

@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -64,8 +65,7 @@ int
 mod2ctx_result(r)
      int                 r;
 {
-  switch (r)
-  {
+  switch (r) {
     case MODR_REJECT:
       return SMFIS_REJECT;
       break;
@@ -103,17 +103,20 @@ do_module_callback(ctx, step, result)
 
   ZE_MessageInfo(12, "RESULT : %08x %08x", mctx.result, mctx.flags);
 
-  if (*result != SMFIS_CONTINUE)
-  {
+  if (*result != SMFIS_CONTINUE) {
     char                reason[128];
 
-    /* set reply */
-    if (strlen(mctx.code) > 0 && strlen(mctx.xcode) > 0 && strlen(mctx.reply) > 0)
-    {
+    /*
+     * set reply 
+     */
+    if (strlen(mctx.code) > 0 && strlen(mctx.xcode) > 0
+        && strlen(mctx.reply) > 0) {
       (void) jsmfi_setreply(ctx, mctx.code, mctx.xcode, mctx.reply);
     }
 
-    /* log context */
+    /*
+     * log context 
+     */
     snprintf(reason, sizeof (reason), "Message rejected by module %s",
              mctx.modname);
     log_msg_context(ctx, reason);

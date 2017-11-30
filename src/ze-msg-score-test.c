@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -112,13 +113,15 @@ main(argc, argv)
   ZE_MessageInfo(9, "\n --- ??? ");
   score = compute_msg_score(regex, oracle, urlbl, -1.);
   ZE_MessageInfo(9, "  SCORE : %7.3f", score);
-  create_msg_score_header(buf, sizeof (buf), NULL, NULL, regex, oracle, urlbl, -1);
+  create_msg_score_header(buf, sizeof (buf), NULL, NULL, regex, oracle, urlbl,
+                          -1);
   ZE_MessageInfo(9, "  HEADER : %s", buf);
 
   ZE_MessageInfo(9, "\n --- ??? ");
   score = evaluate_msg_score(regex, oracle, urlbl, -1.);
   ZE_MessageInfo(9, "  SCORE : %7.3f", score);
-  create_msg_score_header(buf, sizeof (buf), NULL, NULL, regex, oracle, urlbl, -1);
+  create_msg_score_header(buf, sizeof (buf), NULL, NULL, regex, oracle, urlbl,
+                          -1);
   ZE_MessageInfo(9, "  HEADER : %s", buf);
 #endif
 

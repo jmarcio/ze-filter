@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -52,8 +53,7 @@
 #define      NB_MAJOR(i)     ((i) >> K_SHF)
 #define      NB_MINOR(i)     (((i) >> K_SHF) & (K_MIN - 1))
 
-typedef struct Bucket_T
-{
+typedef struct Bucket_T {
   long                count[LH_MAX];
 
 #if 0
@@ -67,18 +67,15 @@ typedef struct Bucket_T
 
   time_t              dtms;
   time_t              t;
-}
-Bucket_T;
+} Bucket_T;
 
 
-typedef struct ShortHist_T
-{
+typedef struct ShortHist_T {
   JSOCKADDR_T         addr;
   char                ip[SZ_IP];
   struct Bucket_T     bucket[K_MIN];
   time_t              update;
-}
-ShortHist_T;
+} ShortHist_T;
 
 
 /* ****************************************************************************
@@ -86,8 +83,7 @@ ShortHist_T;
  *                                                                            *
  **************************************************************************** */
 
-static struct
-{
+static struct {
   bool                ok;
   time_t              last;
   int                 nb;
@@ -97,9 +93,7 @@ static struct
   JBT_T               db_empty;
 
   struct Bucket_T     bucket[K_MIN];
-}
-hdata =
-{
+} hdata = {
 FALSE, (time_t) 0, 0, PTHREAD_MUTEX_INITIALIZER, JBT_INITIALIZER};
 
 
@@ -146,8 +140,7 @@ livehistory_init()
     return TRUE;
 
   DATA_LOCK();
-  if (!hdata.ok)
-  {
+  if (!hdata.ok) {
     if (!jbt_init(&hdata.db_empty, sizeof (ShortHist_T), livehistory_cmp))
       ZE_LogMsgError(0, "Can't initialize db_empty");
 
@@ -205,8 +198,7 @@ select_function(vp, arg)
   if (p->update + 3600 > now)
     return TRUE;
 
-  for (i = 0; i < K_MIN; i++)
-  {
+  for (i = 0; i < K_MIN; i++) {
     if (p->bucket[i].t + K_MIN >= tr)
       return TRUE;
   }
@@ -228,16 +220,13 @@ livehistory_clean_table()
 
   DATA_LOCK();
 
-  if ((hdata.last + DTCLEANUP / 2 < now) &&
-      ((hdata.last + DTCLEANUP < now)
-       || (jbt_count(&hdata.db_empty) > NB_BTCLEANUP)))
-  {
+  if ((hdata.last + DTCLEANUP / 2 < now) && ((hdata.last + DTCLEANUP < now)
+                                             || (jbt_count(&hdata.db_empty) >
+                                                 NB_BTCLEANUP))) {
     JBT_T               tmp = JBT_INITIALIZER;
 
-    if (jbt_init(&tmp, sizeof (ShortHist_T), livehistory_cmp))
-    {
-      if (jbt_cpy(&tmp, &hdata.db_empty, select_function, (void *) &now))
-      {
+    if (jbt_init(&tmp, sizeof (ShortHist_T), livehistory_cmp)) {
+      if (jbt_cpy(&tmp, &hdata.db_empty, select_function, (void *) &now)) {
         jbt_destroy(&hdata.db_empty);
         hdata.db_empty = tmp;
       } else
@@ -289,29 +278,27 @@ livehistory_add_entry(ip, now, n, what)
 
   DATA_LOCK();
 
-  /* update throttle table... */
+  /*
+   * update throttle table... 
+   */
   memset(&p, 0, sizeof (p));
   strlcpy(p.ip, ip, sizeof (p.ip));
 
   ptr = jbt_get(&hdata.db_empty, &p);
 
-  if (ptr != NULL)
-  {
-    if (ptr->bucket[ti].t != tr)
-    {
+  if (ptr != NULL) {
+    if (ptr->bucket[ti].t != tr) {
       memset(&ptr->bucket[ti], 0, sizeof (Bucket_T));
       ptr->bucket[ti].t = tr;
     }
     ptr->bucket[ti].count[what] += n;
 
     ptr->update = now;
-    for (i = 0; i < K_MIN; i++)
-    {
+    for (i = 0; i < K_MIN; i++) {
       if (ptr->bucket[i].t + K_MIN >= tr)
         res += ptr->bucket[ti].count[what];
     }
-  } else
-  {
+  } else {
     memset(&p, 0, sizeof (p));
     strlcpy(p.ip, ip, sizeof (p.ip));
     p.update = now;
@@ -326,8 +313,7 @@ livehistory_add_entry(ip, now, n, what)
     res = n;
   }
 
-  if (hdata.bucket[ti].t != tr)
-  {
+  if (hdata.bucket[ti].t != tr) {
     memset(&hdata.bucket[ti], 0, sizeof (hdata.bucket[ti]));
     hdata.bucket[ti].t = tr;
   }
@@ -336,9 +322,9 @@ livehistory_add_entry(ip, now, n, what)
 
   DATA_UNLOCK();
 
-  if ((hdata.last + DTCLEANUP / 2 < now) &&
-      ((hdata.last + DTCLEANUP < now)
-       || (jbt_count(&hdata.db_empty) > NB_BTCLEANUP)))
+  if ((hdata.last + DTCLEANUP / 2 < now) && ((hdata.last + DTCLEANUP < now)
+                                             || (jbt_count(&hdata.db_empty) >
+                                                 NB_BTCLEANUP)))
     livehistory_clean_table();
 
   return res;
@@ -378,16 +364,16 @@ livehistory_check_host(ip, win, what)
 
   DATA_LOCK();
 
-  /* update throttle table... */
+  /*
+   * update throttle table... 
+   */
   memset(&p, 0, sizeof (p));
   strlcpy(p.ip, ip, sizeof (p.ip));
 
   ptr = jbt_get(&hdata.db_empty, &p);
 
-  if (ptr != NULL)
-  {
-    for (i = 0; i < K_MIN; i++)
-    {
+  if (ptr != NULL) {
+    for (i = 0; i < K_MIN; i++) {
       if (ptr->bucket[i].t + K_MIN >= tr)
         res += ptr->bucket[ti].count[what];
     }
@@ -406,8 +392,7 @@ livehistory_check_host(ip, win, what)
  **************************************************************************** */
 typedef struct browse_T browse_T;
 
-struct browse_T
-{
+struct browse_T {
   int                 fd;
 
   int                 nrec;
@@ -447,12 +432,9 @@ log_rec(void *data, void *arg)
   results->nrec++;
 
   memset(count, 0, sizeof (count));
-  for (i = 0; i < K_MIN; i++)
-  {
-    if (p->bucket[i].t + K_MIN >= tr)
-    {
-      for (j = 0; j < LH_MAX; j++)
-      {
+  for (i = 0; i < K_MIN; i++) {
+    if (p->bucket[i].t + K_MIN >= tr) {
+      for (j = 0; j < LH_MAX; j++) {
         count[j] += p->bucket[i].count[j];
         results->count[j] += p->bucket[i].count[j];
       }
@@ -462,16 +444,14 @@ log_rec(void *data, void *arg)
     if (count[j] > 0)
       ok = TRUE;
 
-  if (ok)
-  {
+  if (ok) {
     char               *s = "", nodename[128];
 
     FD_PRINTF(fd, "  %-17s :", p->ip);
     for (j = 1; j < LH_MAX; j++)
       FD_PRINTF(fd, " %9d", count[j]);
 
-    if (results->ip_resolve)
-    {
+    if (results->ip_resolve) {
       s = nodename;
       *s = '\0';
       CACHE_GETHOSTNAMEBYADDR(p->ip, nodename, sizeof (nodename), FALSE);

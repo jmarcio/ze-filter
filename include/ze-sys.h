@@ -21,7 +21,7 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#ifndef __J_SYS_H__
+#ifndef __ZE_SYS_H__
 
 
 #ifdef HAVE_CONFIG_H
@@ -606,6 +606,6 @@ int  mi_stop (void);
 #endif  /* HAVE_STRTOULL */
 
 
-#define __J_SYS_H__
+#define __ZE_SYS_H__
 
 #endif

@@ -116,19 +116,26 @@ do { \
  *                                                                            * 
  *                                                                            *
  **************************************************************************** */
-#define ZE_LogSys(sysloglevel, ...) \
-do { \
-  char    h_log_str[256]; \
-  char    *t = (errno != 0 ? strerror(errno) : ""); \
-  (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__); \
+#define ZE_LogSys(sysloglevel, ...)                                 \
+do {                                                                \
+  char    h_log_str[256];                                           \
+  int     serrno = errno;                                           \
+  char    *t = (serrno != 0 ? strerror(serrno) : "");               \
+  (void ) snprintf(h_log_str, sizeof(h_log_str), __VA_ARGS__);      \
   zeSyslog(sysloglevel, "%s : %s : %s", ZE_FUNCTION, h_log_str, t); \
-  if (sysloglevel == LOG_ERR || sysloglevel == LOG_CRIT) \
-    exit(EX_SOFTWARE); \
 } while (0)
 
 #define ZE_LogSysWarning(...) ZE_LogSys(LOG_WARNING, __VA_ARGS__)
 #define ZE_LogSysError(...)   ZE_LogSys(LOG_ERR, __VA_ARGS__)
 #define ZE_LogSysCrit(...)    ZE_LogSys(LOG_CRIT, __VA_ARGS__)
+
+#if 0
+  if (sysloglevel == LOG_ERR || sysloglevel == LOG_CRIT) {          \
+    if (serrno == ENOMEM)                                           \
+      exit(EX_OSERR);                                               \
+  }                                                                 \
+
+#endif
 
 /* ****************************************************************************
  *                                                                            * 

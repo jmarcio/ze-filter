@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -31,17 +32,16 @@
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
-rcpt_addr_T   *
+rcpt_addr_T        *
 rcpt_list_free(head)
-     rcpt_addr_T   *head;
+     rcpt_addr_T        *head;
 {
-  rcpt_addr_T   *p;
+  rcpt_addr_T        *p;
 
   if (head == NULL)
     return NULL;
 
-  while (head != NULL)
-  {
+  while (head != NULL) {
     p = head->next;
     FREE(head->rcpt);
     FREE(head->email);
@@ -58,25 +58,24 @@ rcpt_list_free(head)
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
-rcpt_addr_T   *
+rcpt_addr_T        *
 rcpt_list_add(head, rcpt, access)
-     rcpt_addr_T  **head;
-     char          *rcpt;
-     int            access;
+     rcpt_addr_T       **head;
+     char               *rcpt;
+     int                 access;
 {
-  rcpt_addr_T   *p, *q;
-  bool           res = TRUE;
-  rcpt_addr_T   *new = NULL;
+  rcpt_addr_T        *p, *q;
+  bool                res = TRUE;
+  rcpt_addr_T        *new = NULL;
 
-  char          *s;
+  char               *s;
 
   p = q = new = NULL;
 
   if (rcpt == NULL || strlen(rcpt) == 0)
     return FALSE;
 
-  if ((p = malloc(sizeof (rcpt_addr_T))) == NULL)
-  {
+  if ((p = malloc(sizeof (rcpt_addr_T))) == NULL) {
     ZE_LogSysError("malloc(rcpt_addr_T)");
     res = FALSE;
     goto fin;
@@ -84,23 +83,20 @@ rcpt_list_add(head, rcpt, access)
 
   memset(p, 0, sizeof (*p));
 
-  if ((p->rcpt = strdup(rcpt)) == NULL)
-  {
+  if ((p->rcpt = strdup(rcpt)) == NULL) {
     ZE_LogSysError("strdup(rcpt)");
     res = FALSE;
     goto fin;
   }
 
-  if ((p->email = strdup(rcpt)) == NULL)
-  {
+  if ((p->email = strdup(rcpt)) == NULL) {
     ZE_LogSysError("strdup(rcpt)");
     res = FALSE;
     goto fin;
   }
   extract_email_address(p->email, rcpt, strlen(p->email) + 1);
 
-  if ((p->user = strdup(p->email)) == NULL)
-  {
+  if ((p->user = strdup(p->email)) == NULL) {
     ZE_LogSysError("strdup(p->email)");
     res = FALSE;
     goto fin;
@@ -108,8 +104,7 @@ rcpt_list_add(head, rcpt, access)
   if ((s = strrchr(p->user, '@')) != NULL)
     *s = '\0';
 
-  if ((p->host = strdup(p->email)) == NULL)
-  {
+  if ((p->host = strdup(p->email)) == NULL) {
     ZE_LogSysError("strdup(p->email)");
     res = FALSE;
     goto fin;
@@ -119,11 +114,9 @@ rcpt_list_add(head, rcpt, access)
   else
     strlcpy(p->host, "", strlen(p->host) + 1);
 
-  if (*head == NULL)
-  {
+  if (*head == NULL) {
     *head = p;
-  } else
-  {
+  } else {
     q = *head;
     while (q->next != NULL)
       q = q->next;
@@ -131,10 +124,8 @@ rcpt_list_add(head, rcpt, access)
   }
 
 fin:
-  if (!res)
-  {
-    if (p != NULL)
-    {
+  if (!res) {
+    if (p != NULL) {
       FREE(p->rcpt);
       FREE(p->email);
       FREE(p->user);
@@ -154,10 +145,10 @@ fin:
 #if 0
 int
 rcpt_list_del(head, rcpt)
-     rcpt_addr_T  **head;
-     char          *rcpt;
+     rcpt_addr_T       **head;
+     char               *rcpt;
 {
-  rcpt_addr_T   *p, *q;
+  rcpt_addr_T        *p, *q;
 
   if (rcpt == NULL || strlen(rcpt) == 0)
     return 0;

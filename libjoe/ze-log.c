@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -34,12 +35,13 @@ configure_log(app)
   char               *p;
 
   app = STRNULL(app, "ze-filter");
-  /* Log level */
+  /*
+   * Log level 
+   */
   ze_logSeverity = cf_get_int(CF_LOG_SEVERITY) != OPT_NO;
   ze_logLevel = cf_get_int(CF_LOG_LEVEL);
 
-  if (cf_opt.arg_l != NULL)
-  {
+  if (cf_opt.arg_l != NULL) {
     int                 l = 0;
 
     if ((l = atoi(cf_opt.arg_l)) > 0)
@@ -49,27 +51,26 @@ configure_log(app)
     char               *envloglevel = NULL;
     int                 level;
 
-    if ((envloglevel = getenv("JCHKMAIL_LOG_LEVEL")) != NULL)
-    {
+    if ((envloglevel = getenv("JCHKMAIL_LOG_LEVEL")) != NULL) {
       level = atoi(envloglevel);
       if (level > 0)
         ze_logLevel = level;
     }
   }
 
-  /* Log facility */
-  if ((p = cf_get_str(CF_LOG_FACILITY)) != NULL)
-  {
+  /*
+   * Log facility 
+   */
+  if ((p = cf_get_str(CF_LOG_FACILITY)) != NULL) {
     int                 n;
 
     n = zeLog_FacilityValue(p);
-    if (n != -1 && n != ze_logFacility)
-    {
+    if (n != -1 && n != ze_logFacility) {
       zeLog_SetFacility(p);
       closelog();
       openlog(app, LOG_PID | LOG_NOWAIT | LOG_NDELAY, ze_logFacility);
       ZE_MessageInfo(11, "NEW FACILITY : %d - %s",
-                   ze_logFacility, zeLog_FacilityName(ze_logFacility));
+                     ze_logFacility, zeLog_FacilityName(ze_logFacility));
     }
   }
 

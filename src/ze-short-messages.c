@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -32,42 +33,33 @@
  ******************************************************************************/
 
 #if 0
- HELp
- INFO <liste>
- LISts
- REView <liste>
- WHICH
- SUBscribe <liste> <nom>
- UNSubscribe <liste> <email>
- UNSubscribe * <EMAIL>
- SET <liste>|* NOMAIL
- SET <list>|* DIGEST
- SET <liste|*> DIGESTPLAIN
- SET <liste>|* SUMMARY
- SET <liste>|* NOTICE
- SET <liste>|* MAIL
- SET <liste>|* CONCEAL
- SET <liste>|* NOCONCEAL
- INDex
- GET <liste> <fichier>
- LAST <liste>
- INVITE <liste> <email>
- CONFIRM <clé>
-
- ADD <liste> jean@serveur nom complet
- DEL <liste> jean@serveur
- STATS <liste>
-
- REMIND <liste>
-
- DISTribute <liste> <clé>
- REJect <liste> <clé>
- MODINDEX <liste>
-
- QUIT
+HELp
+  INFO < liste >
+  LISts
+  REView < liste >
+  WHICH
+  SUBscribe < liste > <nom >
+  UNSubscribe < liste > <email >
+  UNSubscribe * <EMAIL >
+  SET < liste > |*NOMAIL
+  SET < list > |*DIGEST
+  SET < liste | *>DIGESTPLAIN
+  SET < liste > |*SUMMARY
+  SET < liste > |*NOTICE
+  SET < liste > |*MAIL
+  SET < liste > |*CONCEAL
+  SET < liste > |*NOCONCEAL
+  INDex
+  GET < liste > <fichier >
+  LAST < liste >
+  INVITE < liste > <email >
+  CONFIRM < cl é >ADD < liste > jean @ serveur nom complet
+  DEL < liste > jean @ serveur
+  STATS < liste >
+  REMIND < liste >
+  DISTribute < liste > <cl é >REJect < liste > <cl é >MODINDEX < liste > QUIT
 #endif
-
-static char *sympa_cmds[] = {
+static char        *sympa_cmds[] = {
   "^hel(p)?",
   "^info .+",
   "^lis(ts)?",
@@ -89,72 +81,70 @@ static char *sympa_cmds[] = {
   "^dist(ribute) .+",
   "^rej(ect) .+",
   "^modindex .+",
-  NULL};
+  NULL
+};
 
 #if 0
-  if (priv->body_nb == 0 && IS_UNKNOWN(priv->ip_class))
-  {
-    char                buf[1024];
-    header_T           *h = priv->headers;
+if (priv->body_nb == 0 && IS_UNKNOWN(priv->ip_class)) {
+  char                buf[1024];
+  header_T           *h = priv->headers;
+  int                 i;
+  bool                doit = FALSE;
+
+  if (bodylen > 1023)
+    goto ok;
+
+  if (cf_get_int(CF_REJECT_SHORT_BODIES) != OPT_YES)
+    goto ok;
+
+  i = 0;
+  while (i < bodylen && isspace(bodyp[i]))
+    i++;
+
+  memcpy(buf, bodyp + i, bodylen - i);
+  buf[bodylen - i] = '\0';
+
+  while ((i = strlen(buf)) > 0) {
+    if (!isspace(buf[i - 1]))
+      break;
+    buf[i - 1] = '\0';
+  }
+
+  if (strlen(buf) >= cf_get_int(CF_MIN_BODY_LENGTH))
+    goto ok;
+
+  /*
+   * is this a subscription message ? 
+   */
+  if (zeStrRegex(buf, "subscribe", NULL, NULL, TRUE))
+    goto ok;
+
+  while ((h = get_msgheader_next(h, "Subject")) != NULL) {
+    if (h->value != NULL && zeStrRegex(h->value, "subscribe", NULL, NULL, TRUE))
+      goto ok;
+  }
+
+  /*
+   * autres ??? 
+   */
+#if 0
+  if (0) {
+    char               *p, *q;
     int                 i;
-    bool                doit = FALSE;
 
-    if (bodylen > 1023)
-      goto ok;
-
-    if (cf_get_int(CF_REJECT_SHORT_BODIES) != OPT_YES)
-      goto ok;
-
-    i = 0;
-    while (i < bodylen && isspace(bodyp[i]))
-      i++;
-
-    memcpy(buf, bodyp + i, bodylen - i);
-    buf[bodylen - i] = '\0';
-
-    while ((i = strlen(buf)) > 0)
-    {
-      if (!isspace(buf[i - 1]))
-        break;
-      buf[i - 1] = '\0';
-    }
-
-    if (strlen(buf) >= cf_get_int(CF_MIN_BODY_LENGTH))
-      goto ok;
-
-    /* is this a subscription message ? */
-    if (zeStrRegex(buf, "subscribe", NULL, NULL, TRUE))
-      goto ok;
-
-    while ((h = get_msgheader_next(h, "Subject")) != NULL)
-    {
-      if (h->value != NULL && zeStrRegex(h->value, "subscribe", NULL, NULL, TRUE))
-        goto ok;
-    }
-
-    /* autres ??? */
-#if 0
-    if (0)
-    {
-      char *p, *q;
-      int   i;
-
-      while (p != NULL && *p != '\0') {
-	if ((p = strpbrk(p, " \t\n")) != NULL) {
-	  i++;
-	  p++;
-	  continue;
-	}
+    while (p != NULL && *p != '\0') {
+      if ((p = strpbrk(p, " \t\n")) != NULL) {
+        i++;
+        p++;
+        continue;
       }
-      for (p = buf, i = 0; 
     }
+  for (p = buf, i = 0;}
 #endif
 
-    ZE_MessageInfo(10, "%s : This is a short message...",
-		 CONNID_STR(priv->id), strlen(buf));
-
-    priv->msg_short = TRUE;
-  }
+       ZE_MessageInfo(10, "%s : This is a short message...",
+                      CONNID_STR(priv->id), strlen(buf));
+       priv->msg_short = TRUE;}
 
 ok:
 #endif

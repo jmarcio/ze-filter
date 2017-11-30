@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -38,8 +39,7 @@
 #endif
 
 
-typedef struct OpenConn_T
-{
+typedef struct OpenConn_T {
 #if 0
   JSOCKADDR_T         addr;
 #endif
@@ -47,8 +47,7 @@ typedef struct OpenConn_T
   char                name[SZ_NAME];
   int                 nb;
   time_t              update;
-}
-OpenConn_T;
+} OpenConn_T;
 
 
 /* ****************************************************************************
@@ -56,8 +55,7 @@ OpenConn_T;
  *                                                                            *
  **************************************************************************** */
 
-static struct
-{
+static struct {
   bool                ok;
   time_t              last;
   int                 nb;
@@ -66,9 +64,7 @@ static struct
 
   JBT_T               db_open;
 
-}
-hdata =
-{
+} hdata = {
 FALSE, (time_t) 0, 0, PTHREAD_MUTEX_INITIALIZER, JBT_INITIALIZER};
 
 #define DATA_LOCK() \
@@ -95,8 +91,7 @@ connopen_cmp(a, b)
   OpenConn_T         *ta = (OpenConn_T *) a;
   OpenConn_T         *tb = (OpenConn_T *) b;
 
-  if ((ta == NULL) || (tb == NULL))
-  {
+  if ((ta == NULL) || (tb == NULL)) {
     if (ta == tb)
       return 0;
     if (ta == NULL)
@@ -120,10 +115,8 @@ connopen_init()
 
   DATA_LOCK();
 
-  if (!hdata.ok)
-  {
-    if (jbt_init(&hdata.db_open, sizeof (OpenConn_T), connopen_cmp))
-    {
+  if (!hdata.ok) {
+    if (jbt_init(&hdata.db_open, sizeof (OpenConn_T), connopen_cmp)) {
       hdata.ok = TRUE;
       hdata.last = time(NULL);
     } else
@@ -181,32 +174,29 @@ connopen_check_host(ip, name, nb)
   if (strlen(name) == 0)
     name = "NONAME";
 
-  /* update open connections table... */
+  /*
+   * update open connections table... 
+   */
   memset(&p, 0, sizeof (p));
   strlcpy(p.ip, ip, sizeof (p.ip));
 
   ptr = jbt_get(&hdata.db_open, &p);
 
-  if (ptr != NULL)
-  {
-    if (nb != 0)
-    {
+  if (ptr != NULL) {
+    if (nb != 0) {
       ptr->nb += nb;
       ptr->update = now;
       hdata.nb += nb;
     }
     res = ptr->nb;
-  } else
-  {
-    if (nb > 0)
-    {
+  } else {
+    if (nb > 0) {
       strlcpy(p.ip, ip, sizeof (p.ip));
       strlcpy(p.name, name, sizeof (p.name));
 
       p.nb = nb;
       p.update = now;
-      if (jbt_add(&hdata.db_open, &p))
-      {
+      if (jbt_add(&hdata.db_open, &p)) {
         res = p.nb;
         hdata.nb += nb;
       } else
@@ -217,7 +207,8 @@ connopen_check_host(ip, name, nb)
   DATA_UNLOCK();
 
   if ((hdata.last + DTCLEANUP / 2 < now) &&
-      ((hdata.last + DTCLEANUP < now) || (jbt_count(&hdata.db_open) > NB_BTCLEANUP)))
+      ((hdata.last + DTCLEANUP < now)
+       || (jbt_count(&hdata.db_open) > NB_BTCLEANUP)))
     connopen_clean_table();
 
   return res;
@@ -265,19 +256,17 @@ connopen_clean_table()
   tcleanup = now;
 
   if ((hdata.last + DTCLEANUP / 2 < now) &&
-      ((hdata.last + DTCLEANUP < now) || (jbt_count(&hdata.db_open) > NB_BTCLEANUP)))
-  {
+      ((hdata.last + DTCLEANUP < now)
+       || (jbt_count(&hdata.db_open) > NB_BTCLEANUP))) {
 
 #if 1
     JBT_T               tmp = JBT_INITIALIZER;
 
     ZE_MessageInfo(19, "connopen_clean_table : before  : %d nodes",
-                 jbt_count(&hdata.db_open));
+                   jbt_count(&hdata.db_open));
 
-    if (jbt_init(&tmp, sizeof (OpenConn_T), connopen_cmp))
-    {
-      if (jbt_cpy(&tmp, &hdata.db_open, select_function, NULL))
-      {
+    if (jbt_init(&tmp, sizeof (OpenConn_T), connopen_cmp)) {
+      if (jbt_cpy(&tmp, &hdata.db_open, select_function, NULL)) {
         jbt_destroy(&hdata.db_open);
         hdata.db_open = tmp;
       } else
@@ -289,7 +278,7 @@ connopen_clean_table()
       ZE_LogMsgError(0, "Can't initialize temporary btree");
 
     ZE_MessageInfo(19, "connopen_clean_table : after   : %d nodes",
-                 jbt_count(&hdata.db_open));
+                   jbt_count(&hdata.db_open));
 
     hdata.last = now;
   }
@@ -310,8 +299,7 @@ log_rec(void *data, void *param)
 {
   OpenConn_T         *p = (OpenConn_T *) data;
 
-  if (p->nb > 0)
-  {
+  if (p->nb > 0) {
     if (logfd < 0)
       ZE_MessageInfo(10, "  %-17s : %3d : %s", p->ip, p->nb, p->name);
     else

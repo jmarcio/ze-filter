@@ -100,7 +100,8 @@ mlfi_envto(ctx, envto)
 
     auth_authen = sm_macro_get_str(priv->sm, "{auth_authen}");
     if (auth_authen != NULL && strlen(auth_authen) > 0) {
-      (void) smtprate_add_entry(RATE_AUTH_RCPT, auth_authen, NULL, 1, CONNID_INT(priv->id));
+      (void) smtprate_add_entry(RATE_AUTH_RCPT, auth_authen, NULL, 1,
+                                CONNID_INT(priv->id));
     }
   }
 
@@ -138,7 +139,7 @@ mlfi_envto(ctx, envto)
 
 
       ZE_MessageInfo(12, "%s : SM BAD RECIPIENT : %s", CONNID_STR(priv->id),
-                   rcpt_to);
+                     rcpt_to);
 
       stats_inc(STAT_RCPT_UNKNOWN, 1);
       priv->dbrcpt_msg_unknown++;
@@ -185,7 +186,7 @@ mlfi_envto(ctx, envto)
    */
   if (!zeStrRegex(rcpt_to, "<.*>", NULL, NULL, TRUE)) {
     ZE_MessageInfo(9, "%-12s : ENV TO   Syntax Error : %s",
-                 CONNID_STR(priv->id), priv->env_to);
+                   CONNID_STR(priv->id), priv->env_to);
   }
   /*
    * more to came... 
@@ -197,14 +198,14 @@ mlfi_envto(ctx, envto)
   rcpt_rec = rcpt_list_add(&priv->env_rcpt, rcpt_to, access);
   if (rcpt_rec == NULL) {
     ZE_MessageWarning(9, "%-12s mlfi_envto : can't add %s to rcpt_list",
-                    CONNID_STR(priv->id), rcpt_to);
+                      CONNID_STR(priv->id), rcpt_to);
     result = SMFIS_TEMPFAIL;
     goto fin;
   }
   ZE_MessageInfo(11,
-               "RCPT LIST : ARG=(%s) TO=(%s) EMAIL=(%s) USER=(%s) HOST=(%s)",
-               envto[0], rcpt_rec->rcpt, rcpt_rec->email, rcpt_rec->user,
-               rcpt_rec->host);
+                 "RCPT LIST : ARG=(%s) TO=(%s) EMAIL=(%s) USER=(%s) HOST=(%s)",
+                 envto[0], rcpt_rec->rcpt, rcpt_rec->email, rcpt_rec->user,
+                 rcpt_rec->host);
 
 
 #if _FFR_MODULES
@@ -232,9 +233,9 @@ mlfi_envto(ctx, envto)
       rstr = STRNULL(rstr, "???");
 
       ZE_MessageInfo(11, "%s : RCPT ACCESS : %-16s %02X %-16s %s : %s %2d %s",
-                   CONNID_STR(priv->id), priv->peer_addr, ip_class,
-                   CTX_NETCLASS_LABEL(priv),
-                   priv->peer_name, priv->env_to, access, rstr);
+                     CONNID_STR(priv->id), priv->peer_addr, ip_class,
+                     CTX_NETCLASS_LABEL(priv),
+                     priv->peer_name, priv->env_to, access, rstr);
 
       strlcpy(why, "", sizeof (why));
       switch (access) {
@@ -403,7 +404,7 @@ mlfi_envto(ctx, envto)
               }
             }
             ZE_MessageInfo(10, "GREY REPLY : rcode=%s xcode=%s msg=%s",
-                         rcode, xcode, msg);
+                           rcode, xcode, msg);
             ok = TRUE;
           }
           MUTEX_UNLOCK(&mutex);
@@ -428,8 +429,8 @@ mlfi_envto(ctx, envto)
                            CTX_NETCLASS_LABEL(priv),
                            priv->env_from, priv->env_to, FALSE)) {
       ZE_MessageInfo(10, "%-12s Archiving message : %s %s %s %s",
-                   CONNID_STR(priv->id), priv->peer_addr, priv->peer_name,
-                   priv->env_from, priv->env_to);
+                     CONNID_STR(priv->id), priv->peer_addr, priv->peer_name,
+                     priv->env_from, priv->env_to);
 
       DO_QUARANTINE_MESSAGE(priv, WHY_ARCHIVE, NULL);
 

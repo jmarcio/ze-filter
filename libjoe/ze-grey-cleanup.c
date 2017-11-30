@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -55,8 +56,7 @@ set_threshold_from_env()
     return;
 
   env = getenv("GREY_DEWHITELIST_THRESHOLD");
-  if (env != NULL)
-  {
+  if (env != NULL) {
     double              t = zeStr2double(env, NULL, 0);
 
     if (errno != EINVAL && errno != ERANGE)
@@ -99,26 +99,22 @@ grey_check_bad_smtp_client(ip, flags)
   }
 #endif
 
-  if ((flags & GREY_DW_SPAMTRAP) != GREY_DW_NONE)
-  {
+  if ((flags & GREY_DW_SPAMTRAP) != GREY_DW_NONE) {
     spamtraps = livehistory_check_host(ip, 4 HOURS, LH_SPAMTRAP);
     res += spamtraps / 5.;
   }
 
-  if ((flags & GREY_DW_BAD_RCPT) != GREY_DW_NONE)
-  {
+  if ((flags & GREY_DW_BAD_RCPT) != GREY_DW_NONE) {
     badrcpt = livehistory_check_host(ip, 4 HOURS, LH_BADRCPT);
     res += badrcpt / 3.;
   }
 
-  if ((flags & GREY_DW_BAD_MX) != GREY_DW_NONE)
-  {
+  if ((flags & GREY_DW_BAD_MX) != GREY_DW_NONE) {
     badmx = livehistory_check_host(ip, 4 HOURS, LH_BADMX);
     res += badmx / 3.;
   }
 
-  if ((flags & GREY_DW_BAD_CLIENT) != GREY_DW_NONE)
-  {
+  if ((flags & GREY_DW_BAD_CLIENT) != GREY_DW_NONE) {
     msgs = smtprate_check(RATE_MSGS, ip, 10 MINUTES);
     score = smtprate_check(RATE_SCORE, ip, 10 MINUTES);
     if (msgs > 1)

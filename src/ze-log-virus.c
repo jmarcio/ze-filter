@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -92,8 +93,7 @@ log_virus(id, ip, virus)
   MUTEX_LOCK(&mutex);
 
 #if 0
-  if (!log_ready(&logt))
-  {
+  if (!log_ready(&logt)) {
     if (!log_open(&logt, logname))
       goto fin;
   }

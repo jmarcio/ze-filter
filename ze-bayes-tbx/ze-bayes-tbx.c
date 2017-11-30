@@ -341,7 +341,7 @@ main(argc, argv)
     set_bfilter_db_crypt(HASH_PLAIN);
     if (crypt != NULL)
     {
-      strtoupper(crypt);
+      zeStr2Upper(crypt);
       if (STRCASEEQUAL(crypt, "PLAIN"))
         set_bfilter_db_crypt(HASH_PLAIN);
       if (STRCASEEQUAL(crypt, "MD5"))

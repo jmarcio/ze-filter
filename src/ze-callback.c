@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -95,8 +96,7 @@ callback_stats_dump(fd, line)
 
   MUTEX_LOCK(&mutex);
 
-  if (line)
-  {
+  if (line) {
     char                buf[2048];
     time_t              now = time(NULL);
     char                str[256];
@@ -106,34 +106,30 @@ callback_stats_dump(fd, line)
 
     snprintf(str, sizeof (str), "DATA TIMESTAMP=(%12lld) ", (long long) now);
     strlcat(buf, str, sizeof (buf));
-    for (i = CALLBACK_FIRST; i <= CALLBACK_LAST; i++)
-    {
-      snprintf(str, sizeof(str), "%s=(%.1f) ", CALLBACK_LABEL(i), kmean(&callback_st[i]));
+    for (i = CALLBACK_FIRST; i <= CALLBACK_LAST; i++) {
+      snprintf(str, sizeof (str), "%s=(%.1f) ", CALLBACK_LABEL(i),
+               kmean(&callback_st[i]));
       strlcat(buf, str, sizeof (buf));
     }
     FD_PRINTF(fd, "%s\n", buf);
-  } else
-  {
-    if (fd >= 0)
-    {
+  } else {
+    if (fd >= 0) {
       FD_PRINTF(fd, "   Callback Handling Times Statistics\n");
       FD_PRINTF(fd, "*  %-15s : %8s %10s %10s %10s %10s\n",
                 "Callback", "Count", "Minimum", "Maximum", "Mean", "Std. Dev.");
       FD_PRINTF(fd, "*  %-15s : %8s %10s %10s %10s %10s\n",
                 "********", "********", "*********", "*********",
                 "*********", "*********");
-    } else
-    {
+    } else {
       ZE_MessageInfo(9, "   Callback Handling Times Statistics");
       ZE_MessageInfo(9, "*  %-15s : %8s %10s %10s %10s %10s",
-                   "Callback", "Count", "Minimum", "Maximum", "Mean",
-                   "Std. Dev.");
+                     "Callback", "Count", "Minimum", "Maximum", "Mean",
+                     "Std. Dev.");
       ZE_MessageInfo(9, "*  %-15s : %8s %10s %10s %10s %10s", "********",
-                   "********", "*********", "*********", "*********",
-                   "*********");
+                     "********", "*********", "*********", "*********",
+                     "*********");
     }
-    for (i = CALLBACK_FIRST; i <= CALLBACK_LAST; i++)
-    {
+    for (i = CALLBACK_FIRST; i <= CALLBACK_LAST; i++) {
       if (fd >= 0)
         FD_PRINTF(fd, "*  %-15s : %8d %10.1f %10.1f %10.1f %10.1f  ms\n",
                   CALLBACK_LABEL(i),
@@ -143,14 +139,13 @@ callback_stats_dump(fd, line)
                   kmean(&callback_st[i]), kstddev(&callback_st[i]));
       else
         ZE_MessageInfo(9, "*  %-15s : %8d %10.1f %10.1f %10.1f %10.1f  ms",
-                     CALLBACK_LABEL(i),
-                     kcount(&callback_st[i]),
-                     kmin(&callback_st[i]),
-                     kmax(&callback_st[i]),
-                     kmean(&callback_st[i]), kstddev(&callback_st[i]));
+                       CALLBACK_LABEL(i),
+                       kcount(&callback_st[i]),
+                       kmin(&callback_st[i]),
+                       kmax(&callback_st[i]),
+                       kmean(&callback_st[i]), kstddev(&callback_st[i]));
     }
-    if (fd >= 0)
-    {
+    if (fd >= 0) {
       FD_PRINTF(fd, "*  %-15s : %8s %10s %10s %10s %10s\n",
                 "********", "********", "*********", "*********",
                 "*********", "*********");
@@ -160,17 +155,16 @@ callback_stats_dump(fd, line)
                 kmin(&callback_gst),
                 kmax(&callback_gst),
                 kmean(&callback_gst), kstddev(&callback_gst));
-    } else
-    {
+    } else {
       ZE_MessageInfo(9, "*  %-15s : %8s %10s %10s %10s %10s",
-                   "********", "********", "*********", "*********",
-                   "*********", "*********");
+                     "********", "********", "*********", "*********",
+                     "*********", "*********");
       ZE_MessageInfo(9, "*  %-15s : %8d %10.1f %10.1f %10.1f %10.1f  ms",
-                   "Global",
-                   kcount(&callback_gst),
-                   kmin(&callback_gst),
-                   kmax(&callback_gst),
-                   kmean(&callback_gst), kstddev(&callback_gst));
+                     "Global",
+                     kcount(&callback_gst),
+                     kmin(&callback_gst),
+                     kmax(&callback_gst),
+                     kmean(&callback_gst), kstddev(&callback_gst));
     }
   }
 

@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -34,8 +35,7 @@
 #define             DEF_TUPLE         "NET,HOST,FULL"
 #define             DEF_TIMES         "0,1000,0,1000"
 
-struct conf_T
-{
+struct conf_T {
   char               *workdir;
   int                 count;
 
@@ -78,27 +78,33 @@ main(argc, argv)
     const char         *args = "ht:dvw:n:l:c:";
     int                 c;
 
-    while ((c = getopt(argc, argv, args)) != -1)
-    {
-      switch (c)
-      {
-          /* help */
+    while ((c = getopt(argc, argv, args)) != -1) {
+      switch (c) {
+          /*
+           * help 
+           */
         case 'h':
           usage(argv[0]);
           exit(0);
           break;
 
-          /* time constants */
+          /*
+           * time constants 
+           */
         case 't':
           tconst = optarg;
           break;
 
-          /* verbose */
+          /*
+           * verbose 
+           */
         case 'v':
           ze_logLevel++;
           break;
 
-          /* group */
+          /*
+           * group 
+           */
         case 'l':
           ze_logLevel = atoi(optarg);
           break;
@@ -107,7 +113,9 @@ main(argc, argv)
           cargs.count = atoi(optarg);
           break;
 
-          /* Work directory */
+          /*
+           * Work directory 
+           */
         case 'w':
           workdir = optarg;
           break;
@@ -126,22 +134,19 @@ main(argc, argv)
   }
 
 
-  if (!grey_init(workdir, FALSE, GREY_SERVER))
-  {
+  if (!grey_init(workdir, FALSE, GREY_SERVER)) {
 
     return 1;
   }
 
   ntuple = STRNULL(ntuple, DEF_TUPLE);
-  if (ntuple != NULL)
-  {
+  if (ntuple != NULL) {
 #define NTP   3
     int                 argc;
     char               *argv[NTP];
     char               *s = NULL;
 
-    if ((s = strdup(ntuple)) != NULL)
-    {
+    if ((s = strdup(ntuple)) != NULL) {
       memset(argv, 0, sizeof (argv));
       argc = zeStr2Tokens(s, NTP, argv, ",");
       for (i = 0; i < NTP; i++)
@@ -151,21 +156,18 @@ main(argc, argv)
   }
 
   tconst = STRNULL(tconst, DEF_TIMES);
-  if (tconst != NULL)
-  {
+  if (tconst != NULL) {
 #define NTC   4
     int                 argc;
     char               *argv[NTC];
     time_t              tc[NTC];
     char               *s = NULL;
 
-    if ((s = strdup(tconst)) != NULL)
-    {
+    if ((s = strdup(tconst)) != NULL) {
       memset(argv, 0, sizeof (argv));
       memset(tc, 0, sizeof (tc));
       argc = zeStr2Tokens(s, NTC, argv, ",");
-      for (i = 0; i < NTC; i++)
-      {
+      for (i = 0; i < NTC; i++) {
         argv[i] = STRNULL(argv[i], "0");
         tc[i] = (time_t) zeStr2time(argv[i], NULL, 0);
       }
@@ -199,8 +201,7 @@ do_test(conf_T * cargs)
   to = "grey@foss.jose-marcio.org";
 
   ti = time_ms();
-  for (n = 0; n < cargs->count; n++)
-  {
+  for (n = 0; n < cargs->count; n++) {
     int                 r = GREY_OK;
     char               *s = NULL;
     bool                new = FALSE;
@@ -210,8 +211,7 @@ do_test(conf_T * cargs)
     to = buf;
 
     r = grey_check(ip, from, to, hostname, &new, can_validate);
-    switch (r)
-    {
+    switch (r) {
       case GREY_OK:
         s = "OK";
         break;

@@ -48,6 +48,9 @@ bool                zeStrRegex(char *, char *, long *, long *, bool);
 void                zeStrCenter(char *, char *, int);
 int                 zeStr2Tokens(char *, int, char **, char *);
 
+time_t              zeStrTime2Secs(char *);
+
+
 char               *zm_malloc(size_t);
 #if 0
 #define STRCASEEQUAL(a,b)                                               \

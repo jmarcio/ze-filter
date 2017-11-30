@@ -759,7 +759,7 @@ smodel_db_check_token(key, token)
       break;
   }
 
-  zeStr2Upper(k);
+  zeStr2Lower(k);
   ZE_MessageInfo(19, "Looking for %s", k);
   if (zeDb_GetRec(&bf->bdb, k, v, sizeof (v)))
   {

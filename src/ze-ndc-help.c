@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -32,8 +33,7 @@
  ******************************************************************************/
 static bool         show_help(int fd, char *hdr, char *str);
 
-typedef struct
-{
+typedef struct {
   char               *cmd;
   char               *desc;
   char               *str;
@@ -49,7 +49,8 @@ static ndc_help_T   helps[] = {
    "version",
    NULL,
    "  VERSION\r\n"
-   "    * Show filter version\r\n" "    * Syntax :\r\n" "      ze-ndc VERSION\r\n"},
+   "    * Show filter version\r\n" "    * Syntax :\r\n"
+   "      ze-ndc VERSION\r\n"},
 
   {
    "setcf",
@@ -65,10 +66,7 @@ static ndc_help_T   helps[] = {
    "    * Dumps running configuration\r\n"
    "    * Syntax :\r\n" "      ze-ndc DUMPCF option\r\n"
    "          option is one of :\r\n"
-   "            default\r\n"
-   "            running\r\n"
-   "            short\r\n"
-  },
+   "            default\r\n" "            running\r\n" "            short\r\n"},
 
   {
    "setoracle",
@@ -238,20 +236,17 @@ get_help_rec(cmd, buf, sz)
   ndc_help_T         *p = NULL;
   char                s[32];
 
-  for (p = helps; p->cmd != NULL; p++)
-  {
-    if (p->cmd != NULL && STRCASEEQUAL(p->cmd, cmd))
-    {
+  for (p = helps; p->cmd != NULL; p++) {
+    if (p->cmd != NULL && STRCASEEQUAL(p->cmd, cmd)) {
       snprintf(buf, sz, "%s", p->str);
       if (!STRCASEEQUAL(p->cmd, "help"))
         return p;
     }
   }
 
-  for (p = helps; p->cmd != NULL; p++)
-  {
+  for (p = helps; p->cmd != NULL; p++) {
     snprintf(s, sizeof (s), "      %s\r\n", p->cmd);
-    strtoupper(s);
+    zeStr2Upper(s);
     strlcat(buf, s, sz);
   }
 

@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -38,8 +39,7 @@ mlfi_header(ctx, headerf, headerv)
 
   INIT_CALLBACK_DELAY();
 
-  if (priv == NULL)
-  {
+  if (priv == NULL) {
     ZE_LogMsgWarning(0, "%s priv is NULL ", CONNID_STR(priv->id));
     return SMFIS_TEMPFAIL;
   }
@@ -48,15 +48,13 @@ mlfi_header(ctx, headerf, headerv)
 
   sm_macro_update(ctx, priv->sm);
 
-  if (headerf == NULL)
-  {
+  if (headerf == NULL) {
     ZE_MessageWarning(9, "%-12s : headerf NULL", CONNID_STR(priv->id));
     result = SMFIS_TEMPFAIL;
 
     goto fin;
   }
-  if (headerv == NULL)
-  {
+  if (headerv == NULL) {
     ZE_MessageWarning(9, "%-12s : headerv NULL", CONNID_STR(priv->id));
     result = SMFIS_TEMPFAIL;
 
@@ -66,12 +64,13 @@ mlfi_header(ctx, headerf, headerv)
   /*
    ** spool file creation
    */
-  if (!spool_file_is_open(priv))
-  {
-    /* open a file to store this message */
-    if (!spool_file_create(priv))
-    {
-      ZE_LogMsgWarning(0, "%s : can't create spool file ", CONNID_STR(priv->id));
+  if (!spool_file_is_open(priv)) {
+    /*
+     * open a file to store this message 
+     */
+    if (!spool_file_create(priv)) {
+      ZE_LogMsgWarning(0, "%s : can't create spool file ",
+                       CONNID_STR(priv->id));
       result = SMFIS_TEMPFAIL;
     }
   }
@@ -79,7 +78,9 @@ mlfi_header(ctx, headerf, headerv)
   if (result != SMFIS_CONTINUE)
     goto fin;
 
-  /* write the header to the spool file */
+  /*
+   * write the header to the spool file 
+   */
   {
     char                buf[2048];
 
@@ -91,8 +92,7 @@ mlfi_header(ctx, headerf, headerv)
     spool_file_write(priv, buf, strlen(buf));
   }
 
-  if (strlen(headerf) == 0)
-  {
+  if (strlen(headerf) == 0) {
     ZE_MessageInfo(9, "%-12s : headerf empty", CONNID_STR(priv->id));
   }
   if (result != SMFIS_CONTINUE)
@@ -105,15 +105,16 @@ mlfi_header(ctx, headerf, headerv)
   /*
    ** Add header to headers linked list
    */
-  if ((hf = strdup(headerf)) == NULL)
-  {
+  if ((hf = strdup(headerf)) == NULL) {
     ZE_LogSysError("strdup(headerf) error");
     result = SMFIS_TEMPFAIL;
   }
   if (result != SMFIS_CONTINUE)
     goto fin;
 
-  /* remove an eventual ':' */
+  /*
+   * remove an eventual ':' 
+   */
   {
     char               *p = hf;
 
@@ -125,14 +126,13 @@ mlfi_header(ctx, headerf, headerv)
   ZE_MessageInfo(12, "HEADER Value : %s", headerv);
   (void) add_to_msgheader_list(&priv->headers, hf, headerv);
 
-  if (strlen(headerv) == 0)
-  {
+  if (strlen(headerv) == 0) {
     ZE_MessageInfo(9, "%-12s : %s header empty", CONNID_STR(priv->id), headerf);
 
     goto fin;
   }
 #if _FFR_MODULES
-  /* 
+  /*
    ** ze-filter modules
    **
    */
@@ -142,8 +142,7 @@ mlfi_header(ctx, headerf, headerv)
     goto fin;
 #endif             /* _FFR_MODULES */
 
-  if (zeStrRegex(headerv, "<script>", NULL, NULL, TRUE))
-  {
+  if (zeStrRegex(headerv, "<script>", NULL, NULL, TRUE)) {
     result = SMFIS_REJECT;
 
     stats_inc(STAT_HEADERS_CONTENTS, 1);
@@ -153,8 +152,7 @@ mlfi_header(ctx, headerf, headerv)
   if (result != SMFIS_CONTINUE)
     goto fin;
 
-  if (zeStrRegex(headerv, "<html>", NULL, NULL, TRUE))
-  {
+  if (zeStrRegex(headerv, "<html>", NULL, NULL, TRUE)) {
     result = SMFIS_REJECT;
 
     stats_inc(STAT_HEADERS_CONTENTS, 1);
@@ -164,11 +162,9 @@ mlfi_header(ctx, headerf, headerv)
   if (result != SMFIS_CONTINUE)
     goto fin;
 
-  if (STRCASEEQUAL(hf, "x-mailer") || STRCASEEQUAL(hf, "user-agent"))
-  {
+  if (STRCASEEQUAL(hf, "x-mailer") || STRCASEEQUAL(hf, "user-agent")) {
     FREE(priv->hdr_mailer);
-    if ((priv->hdr_mailer = strdup(headerv)) == NULL)
-    {
+    if ((priv->hdr_mailer = strdup(headerv)) == NULL) {
       ZE_LogSysError("%-12s : strdup hdr_mailer", CONNID_STR(priv->id));
       result = SMFIS_TEMPFAIL;
     }
@@ -176,15 +172,13 @@ mlfi_header(ctx, headerf, headerv)
   if (result != SMFIS_CONTINUE)
     goto fin;
 
-  if (STRCASEEQUAL(hf, "from"))
-  {
+  if (STRCASEEQUAL(hf, "from")) {
     if (priv->hdr_from != NULL)
       ZE_MessageInfo(10, "%s : More than one From Header...",
-                   CONNID_STR(priv->id));
+                     CONNID_STR(priv->id));
 
     FREE(priv->hdr_from);
-    if ((priv->hdr_from = strdup(headerv)) == NULL)
-    {
+    if ((priv->hdr_from = strdup(headerv)) == NULL) {
       ZE_LogSysError("%-12s : strdup hdr_from", CONNID_STR(priv->id));
       result = SMFIS_TEMPFAIL;
     }
@@ -192,15 +186,13 @@ mlfi_header(ctx, headerf, headerv)
   if (result != SMFIS_CONTINUE)
     goto fin;
 
-  if (STRCASEEQUAL(hf, "subject"))
-  {
+  if (STRCASEEQUAL(hf, "subject")) {
     if (priv->hdr_subject != NULL)
       ZE_MessageInfo(10, "%s : More than one Subject Header...",
-                   CONNID_STR(priv->id));
+                     CONNID_STR(priv->id));
 
     FREE(priv->hdr_subject);
-    if ((priv->hdr_subject = strdup(headerv)) == NULL)
-    {
+    if ((priv->hdr_subject = strdup(headerv)) == NULL) {
       ZE_LogSysError("%-12s : strdup hdr_subject", CONNID_STR(priv->id));
       result = SMFIS_TEMPFAIL;
     }
@@ -209,15 +201,13 @@ mlfi_header(ctx, headerf, headerv)
     goto fin;
 
 #if 1
-  if (STRCASEEQUAL(hf, "content-disposition") || 
-      STRCASEEQUAL(hf, "content-type"))
-  {
+  if (STRCASEEQUAL(hf, "content-disposition") ||
+      STRCASEEQUAL(hf, "content-type")) {
     char               *buf = NULL;
     size_t              sz;
 
     sz = strlen(hf) + strlen(headerv) + 8;
-    if ((buf = (char *) malloc(sz + 1)) != NULL)
-    {
+    if ((buf = (char *) malloc(sz + 1)) != NULL) {
       memset(buf, 0, sz + 1);
       snprintf(buf, sz, "%s: %s\n", hf, headerv);
       priv->body_res_scan = scan_block(CONNID_STR(priv->id),
@@ -240,7 +230,9 @@ mlfi_header(ctx, headerf, headerv)
   if (result != SMFIS_CONTINUE)
     goto fin;
 
-  /* end... */
+  /*
+   * end... 
+   */
 fin:
   FREE(hf);
   CHECK_CALLBACK_DELAY();

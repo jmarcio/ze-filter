@@ -205,7 +205,7 @@ init_default_file_extensions()
       int                 n = 0;
 
       ZE_MessageInfo(11, "Using environnement FILE_EXT (%s) to define X-FILES",
-                   envext);
+                     envext);
       n = extract_extensions(envext);
 
       if (n > 0) {
@@ -218,7 +218,7 @@ init_default_file_extensions()
       int                 n = 0;
 
       ZE_MessageInfo(11, "Using default FILE_EXT (%s) to define X-FILES",
-                   default_xfiles);
+                     default_xfiles);
       n = extract_extensions(default_xfiles);
 
       if (n > 0) {
@@ -492,6 +492,7 @@ add_xfiles(vk, vv)
 
           continue;
         }
+
 /* JOE XXX action */
 #if 0
         if (zeStrRegex(s, "^ACTION=.+$", NULL, NULL, TRUE)) {
@@ -514,14 +515,15 @@ add_xfiles(vk, vv)
               argv[i]++;
             }
             if (STRCASEEQUAL(argv[i], "notify")) {
-	      flags |= (no ? 0 : X_NOTIFY);
+              flags |= (no ? 0 : X_NOTIFY);
             }
           }
           continue;
         }
 #endif
 
-        if (zeStrRegex(s, "^ACTION=(notify|discard|reject|ok)$", NULL, NULL, TRUE)) {
+        if (zeStrRegex
+            (s, "^ACTION=(notify|discard|reject|ok)$", NULL, NULL, TRUE)) {
           char               *ps;
 
           ps = strchr(s, '=');
