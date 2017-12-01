@@ -24,14 +24,14 @@
 
 #include <ze-sys.h>
 
-#include "zelibs.h"
+#include "zeLibs.h"
 
 /* ****************************************************************************
  *                                                                            *
  *                                                                            *
  ******************************************************************************/
 LISTR_T            *
-zmLinkedListAdd(head, s, nb, data, size)
+zeLinkedList_Add(head, s, nb, data, size)
      LISTR_T            *head;
      char               *s;
      int                 nb;
@@ -91,7 +91,7 @@ zmLinkedListAdd(head, s, nb, data, size)
  *                                                                            *
  ******************************************************************************/
 LISTR_T            *
-zmLinkedListSet(head, s, nb, data, size)
+zeLinkedList_Set(head, s, nb, data, size)
      LISTR_T            *head;
      char               *s;
      int                 nb;
@@ -132,7 +132,7 @@ zmLinkedListSet(head, s, nb, data, size)
  *                                                                            *
  ******************************************************************************/
 bool
-zmLinkedListRemove(head, key, func)
+zeLinkedList_Remove(head, key, func)
      LISTR_T            *head;
      char               *key;
      LISTCLEAR_F         func;
@@ -169,7 +169,7 @@ zmLinkedListRemove(head, key, func)
  *                                                                            *
  ******************************************************************************/
 LISTR_T            *
-zmLinkedListFind(head, s)
+zeLinkedList_Find(head, s)
      LISTR_T            *head;
      char               *s;
 {
@@ -192,7 +192,7 @@ zmLinkedListFind(head, s)
  *                                                                            *
  ******************************************************************************/
 bool
-zmLinkedListClear(head, func)
+zeLinkedList_Clear(head, func)
      LISTR_T            *head;
      LISTCLEAR_F         func;
 {
@@ -216,14 +216,14 @@ zmLinkedListClear(head, func)
  ******************************************************************************/
 
 int
-zmLinkedListCountSet(head, key, nb)
+zeLinkedList_CountSet(head, key, nb)
      LISTR_T            *head;
      char               *key;
      int                 nb;
 {
   LISTR_T            *p;
 
-  p = zmLinkedListFind(head, key);
+  p = zeLinkedList_Find(head, key);
   if (p != NULL) {
     p->count = nb;
     return p->count;
@@ -236,13 +236,13 @@ zmLinkedListCountSet(head, key, nb)
  *                                                                            *
  ******************************************************************************/
 int
-zmLinkedListCountGet(head, key)
+zeLinkedList_CountGet(head, key)
      LISTR_T            *head;
      char               *key;
 {
   LISTR_T            *p;
 
-  p = zmLinkedListFind(head, key);
+  p = zeLinkedList_Find(head, key);
   if (p != NULL)
     return p->count;
   return 0;
@@ -253,13 +253,13 @@ zmLinkedListCountGet(head, key)
  *                                                                            *
  ******************************************************************************/
 int
-zmLinkedListCountInc(head, key)
+zeLinkedList_CountInc(head, key)
      LISTR_T            *head;
      char               *key;
 {
   LISTR_T            *p;
 
-  p = zmLinkedListFind(head, key);
+  p = zeLinkedList_Find(head, key);
   if (p != NULL) {
     p->count++;
     return p->count;

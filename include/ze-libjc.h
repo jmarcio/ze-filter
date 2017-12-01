@@ -31,10 +31,8 @@
 
 #include "macros.h"
 
-#include "ze-time.h"
 #include "kstats.h"
 #include "ze-logit.h"
-#include "ze-linkedlist.h"
 #include "ze-name2id.h"
 #include "ze-regex.h"
 #include "ze-decode.h"
@@ -45,12 +43,10 @@
 #include "ze-convert-8to7.h"
 #include "ze-html.h"
 #include "ze-smtp-divers.h"
-#include "ze-buffer.h"
 #include "ze-morpho.h"
 #include "ze-ipv4.h"
 #include "ze-ipv6.h"
 #include "ze-ip.h"
-#include "ze-inet.h"
 #include "ze-txtlog.h"
 #include "ze-server.h"
 #include "ze-client.h"
@@ -65,9 +61,6 @@
 #include "ze-databases.h"
 
 #include "ze-resolve-cache.h"
-#include "ze-btree.h"
-#include "ze-shmem.h"
-#include "ze-table.h"
 #include "ze-uudecode.h"
 #include "ze-unattach.h"
 #include "ze-load.h"

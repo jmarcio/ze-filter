@@ -92,7 +92,7 @@ buf_extract_tokens(buf)
 #if 0
       printf("--> %s\n", s);
 #endif
-      p = linked_list_add(head, s, 1, NULL, 0);
+      p = zeLinkedList_Add(head, s, 1, NULL, 0);
       if (p != NULL)
         head = p;
       else

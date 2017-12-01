@@ -38,15 +38,15 @@ struct LISTR_T
 
 typedef void        (*LISTCLEAR_F) (void *);
 
-LISTR_T            *linked_list_add(LISTR_T *, char *, int, void *, size_t);
-LISTR_T            *linked_list_set(LISTR_T *, char *, int, void *, size_t);
-bool                linked_list_remove(LISTR_T *, char *, LISTCLEAR_F);
-LISTR_T            *linked_list_find(LISTR_T *, char *);
-bool                linked_list_clear(LISTR_T *, LISTCLEAR_F);
+LISTR_T            *zeLinkedList_Add(LISTR_T *, char *, int, void *, size_t);
+LISTR_T            *zeLinkedList_Set(LISTR_T *, char *, int, void *, size_t);
+bool                zeLinkedList_Remove(LISTR_T *, char *, LISTCLEAR_F);
+LISTR_T            *zeLinkedList_Find(LISTR_T *, char *);
+bool                zeLinkedList_Clear(LISTR_T *, LISTCLEAR_F);
 
-int                 linked_list_count_set(LISTR_T *, char *, int);
-int                 linked_list_count_get(LISTR_T *, char *);
-int                 linked_list_count_inc(LISTR_T *, char *);
+int                 zeLinkedList_CountSet(LISTR_T *, char *, int);
+int                 zeLinkedList_CountGet(LISTR_T *, char *);
+int                 zeLinkedList_CountInc(LISTR_T *, char *);
 
 #define __JLINKEDLIST_H__
 #endif

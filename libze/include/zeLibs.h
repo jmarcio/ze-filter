@@ -29,13 +29,22 @@
 #include <zeStrings.h>
 #include <zeStrConvert.h>
 #include <zeDivers.h>
-#include <ze-linkedlist.h>
+#include <zeLinkedList.h>
 #include <zeDb.h>
 #include <zeMap.h>
 #include <zeRdFile.h>
 #include <zeRegex.h>
 #include <zeMD5.h>
 #include <zeSHA1.h>
+
+#include <kstats.h>
+#include <ze-btree.h>
+#include <ze-buffer.h>
+#include <ze-inet.h>
+#include <ze-shmem.h>
+#include <ze-strconvert.h>
+#include <ze-table.h>
+#include <ze-time.h>
 
 # define ZMLIBS_H    1
 #endif /* ZMLIBS_H */

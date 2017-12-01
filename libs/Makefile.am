@@ -3,9 +3,6 @@ VPATH=../../ze-logistic:tmp
 noinst_LIBRARIES      = 	libcommon.a libchkvirus.a 
 
 libcommon_a_SOURCES   = 	ze-base64.c \
-				ze-btree.c \
-				ze-buffer.c \
-				ze-linkedlist.c \
 				ze-decode.c \
 				ze-rfc2822.c \
 				ze-demime.c \
@@ -14,7 +11,6 @@ libcommon_a_SOURCES   = 	ze-base64.c \
 				ze-dns-parse.c \
 				ze-dns.c \
 				ze-html.c \
-				ze-inet.c \
 				ze-ipv4.c \
 				ze-ipv6.c \
 				ze-ip.c \
@@ -27,15 +23,11 @@ libcommon_a_SOURCES   = 	ze-base64.c \
 				ze-regex.c \
 				ze-server.c \
 				ze-client.c \
-				ze-shmem.c \
 				ze-smtp-divers.c \
-				ze-time.c \
-				ze-table.c \
 				ze-uudecode.c \
 				ze-unattach.c \
 				ze-load.c \
 				ze-cyclic.c \
-				kstats.c \
 				ze-logit.c \
 				ze-bfilter.c \
 				ze-bsegmentation.c \

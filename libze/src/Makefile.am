@@ -12,7 +12,16 @@ libze_a_SOURCES       = 	zeString.c \
 				zeRegex.c \
 				zeDivers.c \
 				zeMD5.c \
-				zeSHA1.c
+				zeSHA1.c \
+				zeLinkedList.c \
+				ze-btree.c \
+				ze-buffer.c \
+				ze-inet.c \
+				ze-shmem.c \
+				ze-table.c \
+				ze-time.c \
+				kstats.c 
+
 
 
 #LDADD                 = @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@

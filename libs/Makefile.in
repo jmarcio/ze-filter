@@ -112,22 +112,20 @@ am_libchkvirus_a_OBJECTS = ze-avclient.$(OBJEXT)
 libchkvirus_a_OBJECTS = $(am_libchkvirus_a_OBJECTS)
 libcommon_a_AR = $(AR) $(ARFLAGS)
 libcommon_a_LIBADD =
-am_libcommon_a_OBJECTS = ze-base64.$(OBJEXT) ze-btree.$(OBJEXT) \
-	ze-buffer.$(OBJEXT) ze-linkedlist.$(OBJEXT) \
-	ze-decode.$(OBJEXT) ze-rfc2822.$(OBJEXT) ze-demime.$(OBJEXT) \
+am_libcommon_a_OBJECTS = ze-base64.$(OBJEXT) ze-decode.$(OBJEXT) \
+	ze-rfc2822.$(OBJEXT) ze-demime.$(OBJEXT) \
 	ze-convert-8to7.$(OBJEXT) ze-mbox.$(OBJEXT) \
 	ze-dns-parse.$(OBJEXT) ze-dns.$(OBJEXT) ze-html.$(OBJEXT) \
-	ze-inet.$(OBJEXT) ze-ipv4.$(OBJEXT) ze-ipv6.$(OBJEXT) \
-	ze-ip.$(OBJEXT) ze-ipc.$(OBJEXT) ze-txtlog.$(OBJEXT) \
-	ze-morpho.$(OBJEXT) ze-name2id.$(OBJEXT) \
-	ze-parse-dns.$(OBJEXT) ze-qp.$(OBJEXT) ze-regex.$(OBJEXT) \
-	ze-server.$(OBJEXT) ze-client.$(OBJEXT) ze-shmem.$(OBJEXT) \
-	ze-smtp-divers.$(OBJEXT) ze-time.$(OBJEXT) ze-table.$(OBJEXT) \
-	ze-uudecode.$(OBJEXT) ze-unattach.$(OBJEXT) ze-load.$(OBJEXT) \
-	ze-cyclic.$(OBJEXT) kstats.$(OBJEXT) ze-logit.$(OBJEXT) \
-	ze-bfilter.$(OBJEXT) ze-bsegmentation.$(OBJEXT) \
-	ze-bcheck.$(OBJEXT) ze-msg-hash.$(OBJEXT) \
-	ze-bestof-n.$(OBJEXT) ze-lr-funcs.$(OBJEXT)
+	ze-ipv4.$(OBJEXT) ze-ipv6.$(OBJEXT) ze-ip.$(OBJEXT) \
+	ze-ipc.$(OBJEXT) ze-txtlog.$(OBJEXT) ze-morpho.$(OBJEXT) \
+	ze-name2id.$(OBJEXT) ze-parse-dns.$(OBJEXT) ze-qp.$(OBJEXT) \
+	ze-regex.$(OBJEXT) ze-server.$(OBJEXT) ze-client.$(OBJEXT) \
+	ze-smtp-divers.$(OBJEXT) ze-uudecode.$(OBJEXT) \
+	ze-unattach.$(OBJEXT) ze-load.$(OBJEXT) ze-cyclic.$(OBJEXT) \
+	ze-logit.$(OBJEXT) ze-bfilter.$(OBJEXT) \
+	ze-bsegmentation.$(OBJEXT) ze-bcheck.$(OBJEXT) \
+	ze-msg-hash.$(OBJEXT) ze-bestof-n.$(OBJEXT) \
+	ze-lr-funcs.$(OBJEXT)
 libcommon_a_OBJECTS = $(am_libcommon_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -346,9 +344,6 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 noinst_LIBRARIES = libcommon.a libchkvirus.a 
 libcommon_a_SOURCES = ze-base64.c \
-				ze-btree.c \
-				ze-buffer.c \
-				ze-linkedlist.c \
 				ze-decode.c \
 				ze-rfc2822.c \
 				ze-demime.c \
@@ -357,7 +352,6 @@ libcommon_a_SOURCES = ze-base64.c \
 				ze-dns-parse.c \
 				ze-dns.c \
 				ze-html.c \
-				ze-inet.c \
 				ze-ipv4.c \
 				ze-ipv6.c \
 				ze-ip.c \
@@ -370,15 +364,11 @@ libcommon_a_SOURCES = ze-base64.c \
 				ze-regex.c \
 				ze-server.c \
 				ze-client.c \
-				ze-shmem.c \
 				ze-smtp-divers.c \
-				ze-time.c \
-				ze-table.c \
 				ze-uudecode.c \
 				ze-unattach.c \
 				ze-load.c \
 				ze-cyclic.c \
-				kstats.c \
 				ze-logit.c \
 				ze-bfilter.c \
 				ze-bsegmentation.c \
@@ -443,15 +433,12 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/kstats.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-avclient.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-base64.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-bcheck.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-bestof-n.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-bfilter.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-bsegmentation.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-btree.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-buffer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-client.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-convert-8to7.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-cyclic.Po@am__quote@
@@ -460,12 +447,10 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-dns-parse.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-dns.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-html.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-inet.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-ip.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-ipc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-ipv4.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-ipv6.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-linkedlist.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-load.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-logit.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-lr-funcs.Po@am__quote@
@@ -478,10 +463,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-regex.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-rfc2822.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-server.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-shmem.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-smtp-divers.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-table.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-time.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-txtlog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-unattach.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-uudecode.Po@am__quote@

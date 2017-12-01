@@ -2384,7 +2384,7 @@ grey_database_whitelist(dba, dbb, st)
 
         grey_list2white(dbb, list);
 
-        (void) linked_list_clear(list, NULL);
+        (void) zeLinkedList_Clear(list, NULL);
         list = NULL;
       } else
         cnt_prefix++;
@@ -2456,7 +2456,7 @@ grey_database_whitelist(dba, dbb, st)
         /*
          * No - let's add this record to linked list 
          */
-        list = linked_list_add(list, lkey, nb, &entry, sizeof (entry));
+        list = zeLinkedList_Add(list, lkey, nb, &entry, sizeof (entry));
       }
     }
     DB_BTREE_SEQ_END();
@@ -2468,7 +2468,7 @@ grey_database_whitelist(dba, dbb, st)
      * browse is done ! 
      */
     grey_list2white(dbb, list);
-    (void) linked_list_clear(list, NULL);
+    (void) zeLinkedList_Clear(list, NULL);
     list = NULL;
 
     (void) grey_cursor_close(dba);

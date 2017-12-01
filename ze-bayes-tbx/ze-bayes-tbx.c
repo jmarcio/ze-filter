@@ -669,14 +669,14 @@ group_token_files(argc, argv, msgMin, scli_crypt)
         if (STRNCASEEQUAL(buf, "msgs:", strlen("msgs:")))
         {
           if (zeStrRegex(buf, "^msgs:[^ ]*[.]dtok[ ]+", NULL, NULL, TRUE))
-            list = linked_list_add(list, buf, 1, NULL, 0);
+            list = zeLinkedList_Add(list, buf, 1, NULL, 0);
         }
 
         if (STRNCASEEQUAL(buf, "crypt:", strlen("crypt:")))
         {
           char               *p;
 
-          list = linked_list_add(list, buf, 1, NULL, 0);
+          list = zeLinkedList_Add(list, buf, 1, NULL, 0);
 
           p = buf;
           p += strcspn(p, " \t");
@@ -707,7 +707,7 @@ group_token_files(argc, argv, msgMin, scli_crypt)
 
         if (STRNCASEEQUAL(buf, "info:", strlen("info:")))
         {
-          list = linked_list_add(list, buf, 1, NULL, 0);
+          list = zeLinkedList_Add(list, buf, 1, NULL, 0);
         }
 
         if (STRNCASEEQUAL(buf, "token:", strlen("token:")))
@@ -831,7 +831,7 @@ group_token_files(argc, argv, msgMin, scli_crypt)
   }
 
   jbt_destroy(&bt);
-  linked_list_clear(list, NULL);
+  zeLinkedList_Clear(list, NULL);
 
   printf("# Tokens browsed : %d\n", nt);
 
@@ -903,7 +903,7 @@ agregate_tokens(argc, argv, multinomial)
 
         if (STRNCASEEQUAL(buf, "file ", strlen("file ")))
         {
-          list = linked_list_add(list, buf, 1, NULL, 0);
+          list = zeLinkedList_Add(list, buf, 1, NULL, 0);
         }
 
         if (STRNCASEEQUAL(buf, "crypt ", strlen("crypt ")))
@@ -917,7 +917,7 @@ agregate_tokens(argc, argv, multinomial)
             p += strspn(p, " \t");
 
           strlcpy(crypt, p, sizeof (crypt));
-          list = linked_list_add(list, buf, 1, NULL, 0);
+          list = zeLinkedList_Add(list, buf, 1, NULL, 0);
         }
 
         if (STRNCASEEQUAL(buf, "info ", strlen("info ")))
@@ -937,7 +937,7 @@ agregate_tokens(argc, argv, multinomial)
           if (strlen(p) > 0)
           {
             strlcpy(info, p, sizeof (info));
-            list = linked_list_add(list, p, 1, NULL, 0);
+            list = zeLinkedList_Add(list, p, 1, NULL, 0);
           }
         }
 
@@ -959,7 +959,7 @@ agregate_tokens(argc, argv, multinomial)
 
           msgs = atoi(bargv[4]);
 
-          list = linked_list_add(list, buf, 1, NULL, 0);
+          list = zeLinkedList_Add(list, buf, 1, NULL, 0);
         }
 
         if (STRNCASEEQUAL(buf, "token ", strlen("token ")))
@@ -1040,7 +1040,7 @@ agregate_tokens(argc, argv, multinomial)
 
       printf("__END__\n");
     }
-    linked_list_clear(list, NULL);
+    zeLinkedList_Clear(list, NULL);
   }
 
   jbt_destroy(&bt);

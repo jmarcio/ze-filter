@@ -566,8 +566,8 @@ check_rurlbl(id, ip, msg)
       /*
        * Check if already handled... 
        */
-      if (!linked_list_find(urllist, revurl))
-        urllist = linked_list_add(urllist, revurl, 1, NULL, 0);
+      if (!zeLinkedList_Find(urllist, revurl))
+        urllist = zeLinkedList_Add(urllist, revurl, 1, NULL, 0);
       else
         alreadydone = TRUE;
 
@@ -697,7 +697,7 @@ check_rurlbl(id, ip, msg)
       if (result >= score_min)
         break;
     }
-    (void) linked_list_clear(urllist, NULL);
+    (void) zeLinkedList_Clear(urllist, NULL);
   }
 
   /*
