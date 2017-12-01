@@ -63,7 +63,7 @@ LABEL        105   Show/Hide ze-filter signature at warning message
 DEFINE       106   FILTER_URL                     STR          256
 DESCR        106   
 SYNTAX       106   -----
-DEFAULT      106   http : // ze-filter dot ensmp dot fr
+DEFAULT      106   http : // foss dot jose-marcio dot org
 LABEL        106   Filter URL (to be included on X-Miltered header)
 
 DEFINE       107   POLICY_URL                     STR          256

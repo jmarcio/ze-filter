@@ -186,7 +186,7 @@ mlfi_eom(ctx)
                             CTX_NETCLASS_LABEL(priv), priv->env_from,
                             priv->env_rcpt, 0);
     if (limit > 0) {
-      fsize = get_file_size(priv->fname);
+      fsize = zeGetFileSize(priv->fname);
       if (fsize > limit) {
         char                msg[256];
 
@@ -273,7 +273,7 @@ mlfi_eom(ctx)
     url = cf_get_str(CF_FILTER_URL);
     url = STRNULL(url, "");
     if (strcasecmp(url, "http://foss.jose-marcio.org") == 0)
-      url = "http : // ze-filter dot ensmp dot fr";
+      url = "http : // foss dot jose-marcio dot org";
     if (strcasecmp(url, "NO") == 0)
       url = "";
     if (strlen(url) > 0) {
@@ -1047,7 +1047,7 @@ eom_check_content(ctx, done)
       if ((env = getenv("LR_MAX_FSIZE")) != NULL)
         fsize_max = zeStr2size(env, NULL, fsize_max);
     }
-    fsize = get_file_size(priv->fname);
+    fsize = zeGetFileSize(priv->fname);
 
     ZE_MessageInfo(10, "%s LogReg filter sizes : size %7d, size max %7d %s %s",
                    CONNID_STR(priv->id), fsize, fsize_max,

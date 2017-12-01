@@ -241,7 +241,7 @@ read_error_msg(buf, sz, ahead, answer, from, why, tag, priv)
           /*
            * delete directory part from filename 
            */
-          if (j_basename(filename, priv->fname, sizeof (filename)) == filename)
+          if (zeMyBasename(filename, priv->fname, sizeof (filename)) == filename)
             snprintf(line, sizeof (line), "  **** MSG ID : %s%s", filename,
                      suffix);
           else

@@ -111,7 +111,7 @@ cf_define ()
   cf_add_id_enum (CF_ZE_HOSTNAME, STRING(ZE_HOSTNAME), ENUM_HOSTNAME, "SYSTEM");
   cf_add_id_enum (CF_PRESENCE, STRING(PRESENCE), ENUM_PRESENCE, "SHOW");
   cf_add_id_enum (CF_FOOTER, STRING(FOOTER), ENUM_PRESENCE, "SHOW");
-  cf_add_id_str  (CF_FILTER_URL, STRING(FILTER_URL), 256, "http : // ze-filter dot ensmp dot fr");
+  cf_add_id_str  (CF_FILTER_URL, STRING(FILTER_URL), 256, "http : // foss dot jose-marcio dot org");
   cf_add_id_str  (CF_POLICY_URL, STRING(POLICY_URL), 256, "");
   cf_add_id_str  (CF_DAEMON_FILTER_DISABLE, STRING(DAEMON_FILTER_DISABLE), 256, "");
   cf_add_id_str  (CF_USER, STRING(USER), 256, "smmsp");
@@ -310,7 +310,7 @@ cf_defaults ()
   cf_set_val (CF_ZE_HOSTNAME, "SYSTEM");
   cf_set_val (CF_PRESENCE, "SHOW");
   cf_set_val (CF_FOOTER, "SHOW");
-  cf_set_val (CF_FILTER_URL, "http : // ze-filter dot ensmp dot fr");
+  cf_set_val (CF_FILTER_URL, "http : // foss dot jose-marcio dot org");
   cf_set_val (CF_POLICY_URL, "");
   cf_set_val (CF_DAEMON_FILTER_DISABLE, "");
   cf_set_val (CF_USER, "smmsp");
@@ -549,11 +549,11 @@ static cfvar_t cfvar[] = {
              /* Filter URL (to be included on X-Miltered header) */
              {CF_FILTER_URL, ZE_STR, NULL, 256,
               "FILTER_URL", 
-              "http : // ze-filter dot ensmp dot fr",
+              "http : // foss dot jose-marcio dot org",
               "General Parameters",
               "Filter URL (to be included on X-Miltered header)",
               "-----",
-              "http : // ze-filter dot ensmp dot fr"},
+              "http : // foss dot jose-marcio dot org"},
 
              /* Policy filtering URL - appended to reply messages */
              {CF_POLICY_URL, ZE_STR, NULL, 256,

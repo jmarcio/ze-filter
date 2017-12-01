@@ -49,7 +49,7 @@ main(argc, argv)
   unattach(id, fname, ".", NULL);
   getchar();
   snprintf(prefix, sizeof (prefix), "./%s.dir", fname);
-  /* remove_dir (prefix); */
+  /* zeRemoveDir (prefix); */
 
   return 0;
 

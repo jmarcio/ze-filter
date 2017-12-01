@@ -110,7 +110,7 @@ am__v_AR_1 =
 libze_a_AR = $(AR) $(ARFLAGS)
 libze_a_LIBADD =
 am_libze_a_OBJECTS = zeString.$(OBJEXT) zeStrings.$(OBJEXT) \
-	zeStrConvert.$(OBJEXT) zeFileSystem.$(OBJEXT) zeDb.$(OBJEXT) \
+	zeStrConvert.$(OBJEXT) zeFileTools.$(OBJEXT) zeDb.$(OBJEXT) \
 	zeMap.$(OBJEXT) zeSyslog.$(OBJEXT) zeRdFile.$(OBJEXT) \
 	zeRegex.$(OBJEXT) zeDivers.$(OBJEXT)
 libze_a_OBJECTS = $(am_libze_a_OBJECTS)
@@ -332,7 +332,7 @@ noinst_LIBRARIES = libze.a
 libze_a_SOURCES = zeString.c \
 				zeStrings.c \
 				zeStrConvert.c \
-				zeFileSystem.c \
+				zeFileTools.c \
 				zeDb.c \
 				zeMap.c \
 				zeSyslog.c \
@@ -393,7 +393,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeDb.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeDivers.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeFileSystem.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeFileTools.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeMap.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeRdFile.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeRegex.Po@am__quote@

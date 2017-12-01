@@ -22,15 +22,13 @@
 
 #include <ze-sys.h>
 #include <zeLibs.h>
-#include <zeFileSystem.h>
 
 /* ****************************************************************************
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
-#if 0
 char               *
-zeBasename(out, in, size)
+zeMyBasename(out, in, size)
      char               *out;
      char               *in;
      size_t              size;
@@ -55,7 +53,6 @@ zeBasename(out, in, size)
   FREE(t);
   return out;
 }
-#endif
 
 /* ****************************************************************************
  *                                                                            * 
@@ -77,9 +74,6 @@ zeBasename(path)
 
   return path;
 }
-
-
-#if 0
 
 /* ****************************************************************************
  *                                                                            *
@@ -103,7 +97,7 @@ ssp_flock(fd, cmd, type)
 }
 
 bool
-file_lock(fd)
+zmFileLock(fd)
      int                 fd;
 {
   if (ssp_flock(fd, F_SETLKW, F_WRLCK) < 0) {
@@ -117,7 +111,7 @@ file_lock(fd)
 }
 
 bool
-file_unlock(fd)
+zmFileUnlock(fd)
      int                 fd;
 {
   if (ssp_flock(fd, F_SETLK, F_UNLCK) < 0) {
@@ -129,8 +123,6 @@ file_unlock(fd)
   }
   return TRUE;
 }
-
-#endif
 
 /* ****************************************************************************
  *                                                                            *

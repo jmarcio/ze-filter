@@ -1323,7 +1323,7 @@ bfilter_handle_message(id, fname, func, arg)
   {
     size_t              fsize;
 
-    fsize = get_file_size(fname);
+    fsize = zeGetFileSize(fname);
 
     if (bf->maxMsgSize > 0 && fsize > bf->maxMsgSize)
       return FALSE;

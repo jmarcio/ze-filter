@@ -4,7 +4,7 @@ noinst_LIBRARIES      = 	libze.a
 libze_a_SOURCES       = 	zeString.c \
 				zeStrings.c \
 				zeStrConvert.c \
-				zeFileSystem.c \
+				zeFileTools.c \
 				zeDb.c \
 				zeMap.c \
 				zeSyslog.c \

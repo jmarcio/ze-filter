@@ -158,7 +158,7 @@ scan_mbox(fname, msgNb, arg)
   if ((fin = fopen(fname, "r")) == NULL)
     return RES_SCAN_ERROR;
 
-  fsize = get_file_size(fname);
+  fsize = zeGetFileSize(fname);
 
   snprintf(bid, sizeof (bid), "%08X.000", msgNb);
   id = bid;

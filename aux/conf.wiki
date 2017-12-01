@@ -2,7 +2,7 @@
 ==== General Parameters ====
 
   * **VERSION** (String) - Configuration file version
-    * **Default** : ''ze-Filter''
+    * **Default** : ''ze-filter-develop-171129''
   * **MYSELF** (String) - My own names, IPs and aliases
     * **Default** : ''127.0.0.1 HOSTNAME''
   * **ZE_HOSTNAME** (Option) - How to get mailserver hostname ?
@@ -15,7 +15,7 @@
     * **Values** : ''SHOW/HIDE''
     * **Default** : ''SHOW''
   * **FILTER_URL** (String) - Filter URL (to be included on X-Miltered header)
-    * **Default** : ''http : / / ze-filter dot ensmp dot fr''
+    * **Default** : ''http : / / foss dot jose-marcio dot org''
   * **POLICY_URL** (String) - Policy filtering URL - appended to reply messages
     * If your domain has a web page to inform people about your email policies, you define this option, with some URL, ze-filter will append a reference - **See POLICY_URL** - to each reply done in SMTP session
     * **Default** : ''''
@@ -59,7 +59,7 @@
 
   * **SOCKET** (String) - Communication socket between sendmail and ze-filter
     * **Syntax** : ''inet:PORT@HOSTNAME | local:SOCKET_PATH''
-    * **Default** : ''local:/var/run/ze-filter/ze-filter.sock''
+    * **Default** : ''ZE_SMSOCKFILE''
   * **SM_TIMEOUT** (Integer) - Inactivity timeout (milter <-> sendmail connection)
     * The filter will close sendmail connections inactive for this value long. Busy servers shall be configured with a much lower value (~ 600 s shall be OK)
     * **Default** : ''600s''
@@ -130,15 +130,15 @@ This Section defines how ze-ndc command line tool communicates with ze-filter.
 ==== Spool and state Files ====
 
   * **WORKROOT** (String) - ze-filter root directory
-    * **Default** : ''/var/ze-filter''
+    * **Default** : ''ZE_WORKROOT''
   * **WORKDIR** (String) - ze-filter work directory (state and specific logs)
-    * **Default** : ''/var/ze-filter/files''
+    * **Default** : ''ZE_WORKDIR''
   * **SPOOLDIR** (String) - ze-filter message spool directory
-    * **Default** : ''/var/spool/ze-filter''
+    * **Default** : ''ZE_SPOOLDIR''
   * **PID_FILE** (String) - ze-filter pid file
-    * **Default** : ''/var/run/ze-filter/ze-filter.pid''
+    * **Default** : ''ZE_PID_FILE''
   * **STATS_FILE** (String) - STATS_FILE
-    * **Default** : ''file:ze-stats''
+    * **Default** : ''ZE_STATS_FILE''
 
 ==== Quarantine and Archive management ====
 
@@ -152,7 +152,7 @@ This Section defines how ze-ndc command line tool communicates with ze-filter.
     * **Values** : ''NO/YES''
     * **Default** : ''YES''
   * **QUARANTINE_LOG_FILE** (String) - Quarantine log file
-    * **Default** : ''file:ze-quarantine''
+    * **Default** : ''ZE_QUARANTINE_LOG''
   * **ARCHIVE** (Option) - Archiving messages
     * When this option is enabled, ze-filter will be able to save a copy of each message matching Archive policy.
     * **Values** : ''NO/YES''
@@ -166,13 +166,13 @@ This Section defines how ze-ndc command line tool communicates with ze-filter.
 ==== Databases ====
 
   * **WDBDIR** (String) - ze-filter working databases directory
-    * **Default** : ''/var/ze-filter/wdb''
+    * **Default** : ''ZE_WDBDIR''
 
 ==== Constant Databases ====
 
   * **CDBDIR** (String) - ze-filter constant databases directory
     * Path of the directory where constant databases are installed
-    * **Default** : ''/var/ze-filter/cdb''
+    * **Default** : ''ZE_CDBDIR''
   * **DB_CACHE_SIZE** (Integer) - BerkeleyDB constant databases cache size
     * Size of memory cache used by constant databases
     * **Default** : ''32M''
@@ -237,7 +237,7 @@ This Section defines how ze-ndc command line tool communicates with ze-filter.
   * **XFILE_SUBJECT_TAG** (String) - Tag to be inserted on Subject
     * **Default** : ''''
   * **XFILES_LOG_FILE** (String) - Detected X-Files log file
-    * **Default** : ''file:ze-files''
+    * **Default** : ''ZE_XFILES_LOG''
 
 ==== External virus scanner ====
 
@@ -272,7 +272,7 @@ This section contains the options to connect ze-filter to an external virus scan
   * **VIRUS_LOG_FILE** (String) - Detected Virus log file
     * Virus found will be logged in this file.
     * **Syntax** : ''file:filename or udp:port@hostname''
-    * **Default** : ''file:ze-virus''
+    * **Default** : ''ZE_VIRUS_LOG''
 
 ==== Antispam checks (bayesian filter) ====
 
@@ -320,7 +320,7 @@ This section contains the options to connect ze-filter to an external virus scan
     * **Values** : ''NO/YES''
     * **Default** : ''YES''
   * **REGEX_LOG_FILE** (String) - Matched pattern log file
-    * **Default** : ''file:ze-regex''
+    * **Default** : ''ZE_REGEX_LOG''
 
 ==== Antispam content check - Heuristic filtering (ORACLE) ====
 
@@ -607,7 +607,7 @@ This section contains the options to connect ze-filter to an external virus scan
   * **GREY_LOG_FILE** (String) - The expired entries log file
     * This is the file where expired entries can be logged. **Don't enable this feature on busy servers**
     * **Syntax** : ''''
-    * **Default** : ''file:ze-grey-expire''
+    * **Default** : ''ZE_GREY_LOG''
 
 ==== Greylisting - ze-greyd specific ====
 
@@ -622,9 +622,9 @@ This section presents parameters which are exclusive to **ze-greyd** greylisting
     * **Default** : ''10''
   * **GREYDDIR** (String) - ze-greyd working directory
     * The directory where ze-greyd will save its databases.
-    * **Default** : ''/var/ze-filter/ze-greydb''
+    * **Default** : ''ZE_GREYDDIR''
   * **GREYD_PID_FILE** (String) - ze-greyd pid file
-    * **Default** : ''/var/run/ze-filter/ze-greyd.pid''
+    * **Default** : ''ZE_GREYD_PID_FILE''
   * **GREYD_CLIENT_IDLE_MAX** (Integer) - Maximum inactivity time (after this connection will be closed)
     * ze-greyd server will disconnect clients inactive longer than this delay.
     * **Default** : ''300''

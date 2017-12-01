@@ -584,7 +584,7 @@ cli_handle_message(fname, msgNb, arg)
       snprintf(sout, 80, "%s", h->value);
       ZE_MessageInfo(9, "MSGID : %s FROM    : %s", id, sout);
     }
-    size = get_file_size(fname);
+    size = zeGetFileSize(fname);
     ZE_MessageInfo(9, "MSGID : %s SIZE    : %7d", id, size);
 
     if (mstat->spam_judgement)
@@ -672,7 +672,7 @@ worker_check_file(arg)
 
   while (get_next_message_file(worker->fin, fname, sizeof (fname)))
   {
-    if (get_file_size(fname) > 150000)
+    if (zeGetFileSize(fname) > 150000)
       continue;
 
     nb += cli_handle_message(fname, nb, &worker->mstat);
@@ -854,7 +854,7 @@ cli_toolbox(mstat)
         continue;
       }
 
-      size = get_file_size(argv[1]);
+      size = zeGetFileSize(argv[1]);
       if (size == 0)
       {
         ZE_MessageInfo(8, "%s File %s not found", argv[0], argv[1]);

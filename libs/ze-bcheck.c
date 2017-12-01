@@ -260,7 +260,7 @@ sfilter_cli_handle_message(fname, msgNb, arg)
 
   SHOW_CURSOR(FALSE);
 
-  if (data->maxSize > 0 && get_file_size(fname) > data->maxSize)
+  if (data->maxSize > 0 && zeGetFileSize(fname) > data->maxSize)
     return FALSE;
 
   if (data->check)

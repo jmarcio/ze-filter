@@ -22,6 +22,11 @@
 #ifndef ZEFILESYSTEM_H
 
 char               *zeBasename(char *);
+char               *zeMyBasename(char *, char *, size_t);
+
+bool                zmFileLock(int);
+bool                zmFileUnlock(int);
+
 size_t              zeGetFileSize(char *);
 size_t              zeGetFdSize(int );
 int                 zeReadLn(int, char *, size_t);

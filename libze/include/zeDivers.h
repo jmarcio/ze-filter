@@ -26,18 +26,8 @@
 
 int                 count_uint32bits(uint32_t);
 
-int                 nb_valid_pointer(char *, char *, char *);
 
-char               *j_basename(char *, char *, size_t);
 
-bool                file_lock(int);
-bool                file_unlock(int); 
-
-size_t              get_file_size(char *);
-size_t              get_fd_size(int);
-int                 readln(int, char *, size_t);
-bool                remove_dir(char *);
-bool                getdirinfo(char *);
 char               *path2filename(char *s);
 
 int                 fd_printf(int, char *, ...);

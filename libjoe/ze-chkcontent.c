@@ -594,7 +594,7 @@ scan_body_contents(id, ip, fname, maxsize, data, flags, scores)
   if (fname == NULL)
     return 0;
 
-  size = get_file_size(fname);
+  size = zeGetFileSize(fname);
   if (size < 0)
     return 0;
 
