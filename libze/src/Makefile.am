@@ -10,7 +10,9 @@ libze_a_SOURCES       = 	zeString.c \
 				zeSyslog.c \
 				zeRdFile.c \
 				zeRegex.c \
-				zeDivers.c
+				zeDivers.c \
+				zeMD5.c \
+				zeSHA1.c
 
 
 #LDADD                 = @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@

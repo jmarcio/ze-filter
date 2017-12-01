@@ -37,15 +37,15 @@ jmc_str2md5(sout, sin, szout)
      unsigned char      *sin;
      size_t              szout;
 {
-  jmc_md5_t           ctx;
+  ZEMD5_T           ctx;
   unsigned char                dig[64];
 
   memset(dig, 0, sizeof (dig));
-  jmc_md5_init(&ctx);
-  jmc_md5_update(&ctx, sin, strlen((char *) sin));
-  jmc_md5_final(&ctx, dig);
+  zeMD5_Init(&ctx);
+  zeMD5_Update(&ctx, sin, strlen((char *) sin));
+  zeMD5_Final(&ctx, dig);
 
-  base64_encode(sout, szout, dig, JMC_MD5_DIGESTLENGTH);
+  base64_encode(sout, szout, dig, ZE_MD5_DIGESTLENGTH);
 
   return TRUE;
 }
@@ -60,13 +60,13 @@ jmc_str2sha1(sout, sin, szout)
      unsigned char      *sin;
      size_t              szout;
 {
-  jmc_sha1_t          ctx;
+  ZESHA1_T          ctx;
   unsigned char                dig[64];
 
   memset(dig, 0, sizeof (dig));
-  jmc_sha1_init(&ctx);
-  jmc_sha1_update(&ctx, sin, strlen((char *) sin));
-  jmc_sha1_final(&ctx, dig);
+  zeSHA1_Init(&ctx);
+  zeSHA1_Update(&ctx, sin, strlen((char *) sin));
+  zeSHA1_Final(&ctx, dig);
 
   base64_encode(sout, szout, dig, JMC_SHA1_DIGESTLENGTH);
 
@@ -115,22 +115,22 @@ str2hash2hex(code, sout, sin, szout)
   {
     case HASH_SHA1:
       {
-        jmc_sha1_t          ctx;
+        ZESHA1_T          ctx;
 
-        jmc_sha1_init(&ctx);
-        jmc_sha1_update(&ctx, (unsigned char *) sin, strlen((char *) sin));
-        jmc_sha1_final(&ctx, dig);
+        zeSHA1_Init(&ctx);
+        zeSHA1_Update(&ctx, (unsigned char *) sin, strlen((char *) sin));
+        zeSHA1_Final(&ctx, dig);
         hexa_encode(sout, szout, dig, JMC_SHA1_DIGESTLENGTH);
       }
       break;
     case HASH_MD5:
       {
-        jmc_md5_t           ctx;
+        ZEMD5_T           ctx;
 
-        jmc_md5_init(&ctx);
-        jmc_md5_update(&ctx, (unsigned char *) sin, strlen((char *) sin));
-        jmc_md5_final(&ctx, dig);
-        hexa_encode(sout, szout, dig, JMC_MD5_DIGESTLENGTH);
+        zeMD5_Init(&ctx);
+        zeMD5_Update(&ctx, (unsigned char *) sin, strlen((char *) sin));
+        zeMD5_Final(&ctx, dig);
+        hexa_encode(sout, szout, dig, ZE_MD5_DIGESTLENGTH);
       }
       break;
   }
@@ -156,22 +156,22 @@ str2hash2b64(code, sout, sin, szout)
   {
     case HASH_SHA1:
       {
-        jmc_sha1_t          ctx;
+        ZESHA1_T          ctx;
 
-        jmc_sha1_init(&ctx);
-        jmc_sha1_update(&ctx, (unsigned char *) sin, strlen((char *) sin));
-        jmc_sha1_final(&ctx, dig);
+        zeSHA1_Init(&ctx);
+        zeSHA1_Update(&ctx, (unsigned char *) sin, strlen((char *) sin));
+        zeSHA1_Final(&ctx, dig);
         base64_encode(sout, szout, dig, JMC_SHA1_DIGESTLENGTH);
       }
       break;
     case HASH_MD5:
       {
-        jmc_md5_t           ctx;
+        ZEMD5_T           ctx;
 
-        jmc_md5_init(&ctx);
-        jmc_md5_update(&ctx, (unsigned char *) sin, strlen((char *) sin));
-        jmc_md5_final(&ctx, dig);
-        base64_encode(sout, szout, dig, JMC_MD5_DIGESTLENGTH);
+        zeMD5_Init(&ctx);
+        zeMD5_Update(&ctx, (unsigned char *) sin, strlen((char *) sin));
+        zeMD5_Final(&ctx, dig);
+        base64_encode(sout, szout, dig, ZE_MD5_DIGESTLENGTH);
       }
       break;
   }

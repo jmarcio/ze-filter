@@ -34,6 +34,8 @@
 #include <zeMap.h>
 #include <zeRdFile.h>
 #include <zeRegex.h>
+#include <zeMD5.h>
+#include <zeSHA1.h>
 
 # define ZMLIBS_H    1
 #endif /* ZMLIBS_H */

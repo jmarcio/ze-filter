@@ -35,16 +35,16 @@ typedef struct
   uint32_t            state[5];
   uint32_t            count[2];
   unsigned char       buffer[64];
-} jmc_sha1_t;
+} ZESHA1_T;
 
-void                jmc_sha1_init(jmc_sha1_t *ctx);
+void                zeSHA1_Init(ZESHA1_T *ctx);
 
-void                jmc_sha1_invalidate(jmc_sha1_t *ctx);
+void                zeSHA1_Invalidate(ZESHA1_T *ctx);
 
-void                jmc_sha1_update(jmc_sha1_t *ctx, const unsigned char *data,
+void                zeSHA1_Update(ZESHA1_T *ctx, const unsigned char *data,
 				    unsigned int len);
 
-void                jmc_sha1_final(jmc_sha1_t *ctx, unsigned char *digest);
+void                zeSHA1_Final(ZESHA1_T *ctx, unsigned char *digest);
 
 
 #endif             /* JMC_SHA1_H */

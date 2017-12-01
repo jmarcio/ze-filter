@@ -38,7 +38,7 @@
 
 #include <ze-sys.h>
 #include <macros.h>
-#include <md5.h>
+#include <zeLibs.h>
 
 static void
 byteSwap(uint32_t * buf, unsigned words)
@@ -58,7 +58,7 @@ byteSwap(uint32_t * buf, unsigned words)
  * initialization constants.
  */
 void
-jmc_md5_init(jmc_md5_t * ctx)
+zeMD5_Init(ZEMD5_T * ctx)
 {
   ctx->buf[0] = 0x67452301;
   ctx->buf[1] = 0xefcdab89;
@@ -70,9 +70,9 @@ jmc_md5_init(jmc_md5_t * ctx)
 }
 
 void
-jmc_md5_invalidate(jmc_md5_t * ctx)
+zeMD5_Invalidate(ZEMD5_T * ctx)
 {
-  memset(ctx, 0, sizeof (jmc_md5_t));
+  memset(ctx, 0, sizeof (ZEMD5_T));
 }
 
 /* The four core functions - F1 is optimized somewhat */
@@ -181,7 +181,7 @@ transform(uint32_t buf[4], uint32_t const in[16])
  * of bytes.
  */
 void
-jmc_md5_update(jmc_md5_t * ctx, const unsigned char *buf, unsigned int len)
+zeMD5_Update(ZEMD5_T * ctx, const unsigned char *buf, unsigned int len)
 {
   uint32_t            t;
 
@@ -223,7 +223,7 @@ jmc_md5_update(jmc_md5_t * ctx, const unsigned char *buf, unsigned int len)
  * 1 0* (64-bit count of bits processed, MSB-first)
  */
 void
-jmc_md5_final(jmc_md5_t * ctx, unsigned char *digest)
+zeMD5_Final(ZEMD5_T * ctx, unsigned char *digest)
 {
   int                 count = ctx->bytes[0] & 0x3f; /* Number of bytes in ctx->in */
   unsigned char      *p = (unsigned char *) ctx->in + count;
@@ -252,6 +252,6 @@ jmc_md5_final(jmc_md5_t * ctx, unsigned char *digest)
 
   byteSwap(ctx->buf, 4);
   memcpy(digest, ctx->buf, 16);
-  memset(ctx, 0, sizeof (jmc_md5_t)); /* In case it's sensitive */
+  memset(ctx, 0, sizeof (ZEMD5_T)); /* In case it's sensitive */
 }
 

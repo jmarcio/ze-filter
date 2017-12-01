@@ -1,0 +1,14 @@
+jmc_md5_init          	zeMD5_Init
+jmc_md5_invalidate    	zeMD5_Invalidate
+jmc_md5_update        	zeMD5_Update
+jmc_md5_final         	zeMD5_Final
+jmc_md5_t           	  ZEMD5_T
+
+
+jmc_sha1_init          	zeSHA1_Init
+jmc_sha1_invalidate    	zeSHA1_Invalidate
+jmc_sha1_update        	zeSHA1_Update
+jmc_sha1_final         	zeSHA1_Final
+jmc_sha1_t           	  ZESHA1_T
+
+

@@ -26,8 +26,6 @@
 
 int                 count_uint32bits(uint32_t);
 
-
-
 char               *path2filename(char *s);
 
 int                 fd_printf(int, char *, ...);

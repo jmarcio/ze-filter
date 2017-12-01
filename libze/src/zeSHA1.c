@@ -38,7 +38,7 @@
 
 #include <ze-sys.h>
 #include <macros.h>
-#include <sha1.h>
+#include <zeLibs.h>
 
 #if 0
 #include <isc/assertions.h>
@@ -338,10 +338,10 @@ transform(uint32_t state[5], const unsigned char buffer[64])
 
 
 /*
- * jmc_sha1_init - Initialize new context
+ * zeSHA1_Init - Initialize new context
  */
 void
-jmc_sha1_init(jmc_sha1_t * context)
+zeSHA1_Init(ZESHA1_T * context)
 {
   ASSERT(context != NULL);
 
@@ -356,16 +356,16 @@ jmc_sha1_init(jmc_sha1_t * context)
 }
 
 void
-jmc_sha1_invalidate(jmc_sha1_t * context)
+zeSHA1_Invalidate(ZESHA1_T * context)
 {
-  memset(context, 0, sizeof (jmc_sha1_t));
+  memset(context, 0, sizeof (ZESHA1_T));
 }
 
 /*
  * Run your data through this.
  */
 void
-jmc_sha1_update(jmc_sha1_t * context, const unsigned char *data,
+zeSHA1_Update(ZESHA1_T * context, const unsigned char *data,
                 unsigned int len)
 {
   unsigned int        i, j;
@@ -401,7 +401,7 @@ static const unsigned char final_200 = 128;
 static const unsigned char final_0 = 0;
 
 void
-jmc_sha1_final(jmc_sha1_t * context, unsigned char *digest)
+zeSHA1_Final(ZESHA1_T * context, unsigned char *digest)
 {
   unsigned int        i;
   unsigned char       finalcount[8];
@@ -416,11 +416,11 @@ jmc_sha1_final(jmc_sha1_t * context, unsigned char *digest)
       ((context->count[(i >= 4 ? 0 : 1)] >> ((3 - (i & 3)) * 8)) & 255);
   }
 
-  jmc_sha1_update(context, &final_200, 1);
+  zeSHA1_Update(context, &final_200, 1);
   while ((context->count[0] & 504) != 448)
-    jmc_sha1_update(context, &final_0, 1);
+    zeSHA1_Update(context, &final_0, 1);
   /* The next Update should cause a transform() */
-  jmc_sha1_update(context, finalcount, 8);
+  zeSHA1_Update(context, finalcount, 8);
 
   if (digest)
   {
@@ -429,6 +429,6 @@ jmc_sha1_final(jmc_sha1_t * context, unsigned char *digest)
         ((context->state[i >> 2] >> ((3 - (i & 3)) * 8)) & 255);
   }
 
-  memset(context, 0, sizeof (jmc_sha1_t));
+  memset(context, 0, sizeof (ZESHA1_T));
 }
 

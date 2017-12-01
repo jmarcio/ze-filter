@@ -42,22 +42,22 @@
 #ifndef JMC_MD5_H
 #define JMC_MD5_H 1
 
-#define JMC_MD5_DIGESTLENGTH 16
+#define ZE_MD5_DIGESTLENGTH 16
 
 typedef struct
 {
   uint32_t            buf[4];
   uint32_t            bytes[2];
   uint32_t            in[16];
-} jmc_md5_t;
+} ZEMD5_T;
 
-void                jmc_md5_init(jmc_md5_t *ctx);
+void                zeMD5_Init(ZEMD5_T *ctx);
 
-void                jmc_md5_invalidate(jmc_md5_t *ctx);
+void                zeMD5_Invalidate(ZEMD5_T *ctx);
 
-void                jmc_md5_update(jmc_md5_t *ctx, const unsigned char *buf, 
+void                zeMD5_Update(ZEMD5_T *ctx, const unsigned char *buf, 
 				   unsigned int len);
 
-void                jmc_md5_final(jmc_md5_t * ctx, unsigned char *digest);
+void                zeMD5_Final(ZEMD5_T * ctx, unsigned char *digest);
 
 #endif             /* JMC_MD5_H */

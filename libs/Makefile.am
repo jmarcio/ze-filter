@@ -40,8 +40,6 @@ libcommon_a_SOURCES   = 	ze-base64.c \
 				ze-bfilter.c \
 				ze-bsegmentation.c \
 				ze-bcheck.c \
-				md5.c \
-				sha1.c \
 				ze-msg-hash.c \
 				ze-bestof-n.c \
 				ze-lr-funcs.c

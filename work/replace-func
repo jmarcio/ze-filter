@@ -17,6 +17,7 @@ if ($#Dirs < 0) {
     scratch 
     libzechk/src
     libze/src
+    libze/include
   );
 }
 
