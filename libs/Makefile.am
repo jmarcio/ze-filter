@@ -28,13 +28,7 @@ libcommon_a_SOURCES   = 	ze-base64.c \
 				ze-unattach.c \
 				ze-load.c \
 				ze-cyclic.c \
-				ze-logit.c \
-				ze-bfilter.c \
-				ze-bsegmentation.c \
-				ze-bcheck.c \
-				ze-msg-hash.c \
-				ze-bestof-n.c \
-				ze-lr-funcs.c
+				ze-bestof-n.c
 
 libchkvirus_a_SOURCES   =       ze-avclient.c
 

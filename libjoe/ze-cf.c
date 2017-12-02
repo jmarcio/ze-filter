@@ -22,7 +22,7 @@
  * web site : http://foss.jose-marcio.org
  */
 #include <ze-sys.h>
-#include <zeLibs.h>
+#include <libze.h>
 
 #include "ze-cf.h"
 

@@ -23,6 +23,8 @@
 
 
 #include <ze-sys.h>
+#include <libml.h>
+#include <libze.h>
 #include <ze-libjc.h>
 #include <ze-msg-hash.h>
 

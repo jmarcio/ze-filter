@@ -8,23 +8,29 @@
  *                 jose.marcio.mc@gmail.org
  *
  *  Historique   :
- *  Creation     : Sat Apr 25 23:48:35 CEST 2009
+ *  Creation     : Sun Jun 15 21:32:00 CEST 2014
  *
- * This program is free software, but with restricted license :
- *
+ * This program is free software - GPL v2., 
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * More details about ze-filter license can be found at ze-filter
- * web site : http://foss.jose-marcio.org
  */
 
 
-#ifndef ZE_LOGREG_H
+#ifndef LIBML_H
 
-double              logreg_check(bool learn, double grad, char *file);
+#include <libze.h>
 
-# define ZE_LOGREG_H    1
-#endif             /* J_LOGREG_H */
+#include <ze-msg-score.h>
+#include <ze-msg-hash.h>
+#include <ze-lr-funcs.h>
+#include <ze-bfilter.h>
+#include <ze-bcheck.h>
+#include <ze-logit.h>
+#include <ze-lr-init.h>
+
+# define LIBML_H    1
+#endif /* LIBML_H */
+

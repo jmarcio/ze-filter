@@ -24,7 +24,7 @@
 
 #include <ze-sys.h>
 
-#include <zeLibs.h>
+#include <libze.h>
 #include <zeDb.h>
 
 #if USE_BerkeleyDB

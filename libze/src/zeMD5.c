@@ -38,7 +38,7 @@
 
 #include <ze-sys.h>
 #include <macros.h>
-#include <zeLibs.h>
+#include <libze.h>
 
 static void
 byteSwap(uint32_t * buf, unsigned words)

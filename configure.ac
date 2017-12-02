@@ -1431,16 +1431,21 @@ dnl
 TOPDIR=`pwd`
 AC_SUBST(TOPDIR)
 
-ZEINCS="-I$TOPDIR/libze/include -I$TOPDIR/libzechk/include -I$TOPDIR/libzefilter/include"
+ZEINCS="-I$TOPDIR/libze/include -I$TOPDIR/libzechk/include -I$TOPDIR/libml/include -I$TOPDIR/libzefilter/include"
 AC_SUBST(ZEINCS)
 
 dnl from line 963
 CPPFLAGS="$CPPFLAGS -I../include $ZEINCS"
 
 #JCHKLIBS=" ../libjoe/libjoe.a ../libs/libcommon.a ../librepl/librepl.a ../zelib/libzm.a"
-#JCHKLIBS=" -L../libjoe -ljoe -L../zechklib -lzechk -L../libs -lcommon -L../librepl -lrepl -L../zelib -lze "
-#JCHKLIBS=" -L../libjoe -ljoe -L../zechklib -lzechk -L../libs -lcommon -L../zelib -lze "
-JCHKLIBS=" -L../libjoe -ljoe -L../libzechk/src -lzechk -L../libs -lcommon -L../libze/src -lze "
+
+JCHKLIBS=" -L$TOPDIR/libjoe -ljoe"
+JCHKLIBS="$JCHKLIBS -L$TOPDIR/libml/src -lml"
+JCHKLIBS="$JCHKLIBS -L$TOPDIR/libzechk/src -lzechk"
+JCHKLIBS="$JCHKLIBS -L$TOPDIR/libs -lcommon"
+JCHKLIBS="$JCHKLIBS -L$TOPDIR/libze/src -lze"
+
+
 AC_SUBST(JCHKLIBS)
 dnl
 dnl
@@ -1449,15 +1454,30 @@ AC_CONFIG_FILES(Makefile)
 AC_CONFIG_FILES(include/version.h include/defs.h)
 
 dnl AC_CONFIG_FILES(libjoe/Makefile libs/Makefile zelib/Makefile zechklib/Makefile)
-AC_CONFIG_FILES(libjoe/Makefile libs/Makefile libze/src/Makefile libzechk/src/Makefile)
-AC_CONFIG_FILES(src/Makefile scratch/Makefile ze-bayes-tbx/Makefile)
-AC_CONFIG_FILES(ze-makemap/Makefile ze-scanfile/Makefile ze-printstats/Makefile)
-AC_CONFIG_FILES(ze-greyd/Makefile ze-logserver/Makefile)
+AC_CONFIG_FILES(libjoe/Makefile)
+AC_CONFIG_FILES(libs/Makefile)
+AC_CONFIG_FILES(libze/src/Makefile)
+AC_CONFIG_FILES(libzechk/src/Makefile)
+AC_CONFIG_FILES(libml/src/Makefile)
+
+AC_CONFIG_FILES(src/Makefile)
+AC_CONFIG_FILES(scratch/Makefile)
+
+AC_CONFIG_FILES(ze-bayes-tbx/Makefile)
+AC_CONFIG_FILES(ze-makemap/Makefile)
+AC_CONFIG_FILES(ze-scanfile/Makefile)
+AC_CONFIG_FILES(ze-printstats/Makefile)
+AC_CONFIG_FILES(ze-greyd/Makefile)
+AC_CONFIG_FILES(ze-logserver/Makefile)
 
 
-AC_CONFIG_FILES(etc/Makefile etc/Makefile.org)
-AC_CONFIG_FILES(etc/get-urlbl.org etc/get-bayes.org)
-AC_CONFIG_FILES(bin/ze-filter.init bin/ze-greyd.init bin/ze-filter.init.rhel)
+AC_CONFIG_FILES(etc/Makefile)
+AC_CONFIG_FILES(etc/Makefile.org)
+AC_CONFIG_FILES(etc/get-urlbl.org)
+AC_CONFIG_FILES(etc/get-bayes.org)
+AC_CONFIG_FILES(bin/ze-filter.init)
+AC_CONFIG_FILES(bin/ze-greyd.init)
+AC_CONFIG_FILES(bin/ze-filter.init.rhel)
 
 dnl AC_CONFIG_FILES([$MODMAKE])
 

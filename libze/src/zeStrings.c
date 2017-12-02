@@ -21,7 +21,7 @@
 
 
 #include <ze-sys.h>
-#include <zeLibs.h>
+#include <libze.h>
 #include <zeStrings.h>
 
 /* #include <ze-filter.h> */

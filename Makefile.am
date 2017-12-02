@@ -5,6 +5,7 @@
 
 SUBDIRS = $(subdirs) \
 	libze/src \
+	libml/src \
 	libzechk/src \
 	libs \
 	libjoe \

@@ -1,11 +1,11 @@
 
-Configuration results : Fri Dec  1 23:45:05 CET 2017
+Configuration results : Sat Dec  2 22:46:44 CET 2017
 -----------------------
   configure arguments      : 
 
   Source directory         : /data/FOSS/dev-ze-filter/ze-filter
   Package                  : ze-filter
-  Version                  : ze-filter-develop-171129
+  Version                  : ze-filter-develop-171202
   Host type                : x86_64-pc-linux-gnu
   Host OS                  : linux-gnu
   Host CPU                 : x86_64
@@ -26,11 +26,11 @@ Configuration results : Fri Dec  1 23:45:05 CET 2017
   MODULES                  : 
   
   CC                       : gcc
-  CPPFLAGS                 :  -DOTHER_IS_KNOWN=1 -D_FFR_LOGREG=1 -I../pcre.dir -I. -I../berkdb -I../include -I/data/FOSS/dev-ze-filter/ze-filter/libze/include -I/data/FOSS/dev-ze-filter/ze-filter/libzechk/include -I/data/FOSS/dev-ze-filter/ze-filter/libzefilter/include
+  CPPFLAGS                 :  -DOTHER_IS_KNOWN=1 -D_FFR_LOGREG=1 -I../pcre.dir -I. -I../berkdb -I../include -I/data/FOSS/dev-ze-filter/ze-filter/libze/include -I/data/FOSS/dev-ze-filter/ze-filter/libzechk/include -I/data/FOSS/dev-ze-filter/ze-filter/libml/include -I/data/FOSS/dev-ze-filter/ze-filter/libzefilter/include
   CFLAGS                   : -pthread 
   LIBS                     : -lmilter -ldl -lrt -lm -lresolv -lc -lresolv -lldap -lnsl -lpthread  
   LDFLAGS                  : 
-  JLIBS                    :  -L../libjoe -ljoe -L../libzechk/src -lzechk -L../libs -lcommon -L../libze/src -lze 
+  JLIBS                    :  -L/data/FOSS/dev-ze-filter/ze-filter/libjoe -ljoe -L/data/FOSS/dev-ze-filter/ze-filter/libml/src -lml -L/data/FOSS/dev-ze-filter/ze-filter/libzechk/src -lzechk -L/data/FOSS/dev-ze-filter/ze-filter/libs -lcommon -L/data/FOSS/dev-ze-filter/ze-filter/libze/src -lze
   
 
   Before upgrading from a previous version, it's absolutely necessary

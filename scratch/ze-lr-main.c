@@ -22,7 +22,8 @@
  */
 
 #include <ze-sys.h>
-#include <zeLibs.h>
+#include <libze.h>
+#include <libml.h>
 #include "ze-filter.h"
 
 

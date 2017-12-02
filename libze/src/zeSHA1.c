@@ -38,7 +38,7 @@
 
 #include <ze-sys.h>
 #include <macros.h>
-#include <zeLibs.h>
+#include <libze.h>
 
 #if 0
 #include <isc/assertions.h>

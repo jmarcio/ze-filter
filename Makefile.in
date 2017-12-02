@@ -362,6 +362,7 @@ top_srcdir = @top_srcdir@
 #CLEANDIRS = etc
 SUBDIRS = $(subdirs) \
 	libze/src \
+	libml/src \
 	libzechk/src \
 	libs \
 	libjoe \

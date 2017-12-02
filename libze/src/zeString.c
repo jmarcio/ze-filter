@@ -29,7 +29,7 @@
  */
 
 #include <ze-sys.h>
-#include <ze-filter.h>
+#include <libze.h>
 #include <zeString.h>
 
 /* ****************************************************************************

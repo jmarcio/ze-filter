@@ -24,7 +24,7 @@
 
 #include <ze-sys.h>
 
-#include "zeLibs.h"
+#include "libze.h"
 
 
 int                 zm_RdTextFile(char *, int, int, char *,

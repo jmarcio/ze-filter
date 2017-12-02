@@ -54,9 +54,8 @@
 #include "ze-dns.h"
 #include "ze-dns-parse.h"
 #include "ze-ipc.h"
-#include "ze-msg-hash.h"
 
-#include <zeLibs.h>
+#include <libze.h>
 
 #include "ze-databases.h"
 
@@ -68,9 +67,6 @@
 #include "ze-cyclic.h"
 #include "ze-mbox.h"
 #include "ze-msg-score.h"
-#include "ze-bfilter.h"
-#include "ze-bcheck.h"
-#include "ze-lr-funcs.h"
 #include "ze-bestof-n.h"
 
 /* ****************************************************************************

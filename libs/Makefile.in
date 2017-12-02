@@ -122,10 +122,7 @@ am_libcommon_a_OBJECTS = ze-base64.$(OBJEXT) ze-decode.$(OBJEXT) \
 	ze-regex.$(OBJEXT) ze-server.$(OBJEXT) ze-client.$(OBJEXT) \
 	ze-smtp-divers.$(OBJEXT) ze-uudecode.$(OBJEXT) \
 	ze-unattach.$(OBJEXT) ze-load.$(OBJEXT) ze-cyclic.$(OBJEXT) \
-	ze-logit.$(OBJEXT) ze-bfilter.$(OBJEXT) \
-	ze-bsegmentation.$(OBJEXT) ze-bcheck.$(OBJEXT) \
-	ze-msg-hash.$(OBJEXT) ze-bestof-n.$(OBJEXT) \
-	ze-lr-funcs.$(OBJEXT)
+	ze-bestof-n.$(OBJEXT)
 libcommon_a_OBJECTS = $(am_libcommon_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -369,13 +366,7 @@ libcommon_a_SOURCES = ze-base64.c \
 				ze-unattach.c \
 				ze-load.c \
 				ze-cyclic.c \
-				ze-logit.c \
-				ze-bfilter.c \
-				ze-bsegmentation.c \
-				ze-bcheck.c \
-				ze-msg-hash.c \
-				ze-bestof-n.c \
-				ze-lr-funcs.c
+				ze-bestof-n.c
 
 libchkvirus_a_SOURCES = ze-avclient.c
 LDADD = @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@
@@ -435,10 +426,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-avclient.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-base64.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-bcheck.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-bestof-n.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-bfilter.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-bsegmentation.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-client.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-convert-8to7.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-cyclic.Po@am__quote@
@@ -452,11 +440,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-ipv4.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-ipv6.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-load.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-logit.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-lr-funcs.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-mbox.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-morpho.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-msg-hash.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-name2id.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-parse-dns.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-qp.Po@am__quote@
