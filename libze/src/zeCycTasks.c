@@ -24,7 +24,7 @@
 
 #include <ze-sys.h>
 #include <ze-filter.h>
-#include <ze-cyclic.h>
+#include <zeCycTasks.h>
 
 /* ****************************************************************************
  *                                                                            *
@@ -53,14 +53,14 @@ static bool    tsk_ok = FALSE;
 static time_t  dt_loop = 10;
 static time_t  t_start = 0;
 
-static void   *cyclic_tasks(void *arg);
+static void   *CycTasks(void *arg);
 
 /* ****************************************************************************
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
 bool
-cyclic_tasks_init(dt)
+CycTasks_Init(dt)
      time_t         dt;
 {
   pthread_t      tid = (pthread_t) 0;
@@ -73,8 +73,8 @@ cyclic_tasks_init(dt)
     dt_loop = dt;
     memset(tasks, 0, sizeof (tasks));
 
-    if ((r = pthread_create(&tid, NULL, cyclic_tasks, (void *) NULL)) != 0)
-      ZE_LogSysError("Couldn't launch cyclic_tasks");
+    if ((r = pthread_create(&tid, NULL, CycTasks, (void *) NULL)) != 0)
+      ZE_LogSysError("Couldn't launch CycTasks");
 
     tsk_ok = TRUE;
   }
@@ -88,7 +88,7 @@ cyclic_tasks_init(dt)
  **************************************************************************** */
 
 bool
-cyclic_tasks_register(task, arg, dt)
+CycTasks_Register(task, arg, dt)
      CYCLIC_F       task;
      void          *arg;
      time_t         dt;
@@ -126,7 +126,7 @@ cyclic_tasks_register(task, arg, dt)
  *                                                                            *
  **************************************************************************** */
 void
-cyclic_tasks_time_stats()
+CycTasks_Stats()
 {
   int i;
 
@@ -150,7 +150,7 @@ cyclic_tasks_time_stats()
  *                                                                            *
  **************************************************************************** */
 static void   *
-cyclic_tasks(arg)
+CycTasks(arg)
      void          *arg;
 {
   pthread_t      tid;
@@ -166,7 +166,7 @@ cyclic_tasks(arg)
   {
     int            i;
 
-    ZE_MessageInfo(12, "*** cyclic_tasks running...");
+    ZE_MessageInfo(12, "*** CycTasks running...");
 
     sleep(dt_loop);
     now = time(NULL);

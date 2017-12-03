@@ -33,7 +33,7 @@
 
 #include "libze.h"
 
-#include "ze-shmem.h"
+#include "zeShared.h"
 
 
 
@@ -42,7 +42,7 @@
  *                                                                            *
  **************************************************************************** */
 void               *
-shared_file_open (shm, name, size)
+SharedFile_Open (shm, name, size)
      SHMOBJ_T           *shm;
      char               *name;
      size_t              size;
@@ -127,7 +127,7 @@ shared_file_open (shm, name, size)
  *                                                                            *
  **************************************************************************** */
 void
-shared_file_close (shm)
+SharedFile_Close (shm)
      SHMOBJ_T           *shm;
 {
   if (shm == NULL)
@@ -151,7 +151,7 @@ shared_file_close (shm)
  *                                                                            *
  **************************************************************************** */
 size_t
-shared_file_size (shm)
+SharedFile_Size (shm)
      SHMOBJ_T           *shm;
 {
   struct stat         st;
@@ -171,7 +171,7 @@ shared_file_size (shm)
  *                                                                            *
  **************************************************************************** */
 size_t
-shared_file_resize (shm, size)
+SharedFile_Resize (shm, size)
      SHMOBJ_T           *shm;
      size_t              size;
 {
@@ -199,7 +199,7 @@ shared_file_resize (shm, size)
  *                                                                            *
  **************************************************************************** */
 void               *
-shared_memory_open (shm, name, size)
+SharedMemory_Open (shm, name, size)
      SHMOBJ_T           *shm;
      char               *name;
      size_t              size;
@@ -283,7 +283,7 @@ shared_memory_open (shm, name, size)
  *                                                                            *
  **************************************************************************** */
 void
-shared_memory_close (shm)
+SharedMemory_Close (shm)
      SHMOBJ_T           *shm;
 {
   if (shm == NULL)
@@ -310,7 +310,7 @@ shared_memory_close (shm)
  *                                                                            *
  **************************************************************************** */
 size_t
-shared_memory_size (shm)
+SharedMemory_Size (shm)
      SHMOBJ_T           *shm;
 {
   struct stat         st;
@@ -330,7 +330,7 @@ shared_memory_size (shm)
  *                                                                            *
  **************************************************************************** */
 size_t
-shared_memory_resize (shm, size)
+SharedMemory_Resize (shm, size)
      SHMOBJ_T           *shm;
      size_t              size;
 {

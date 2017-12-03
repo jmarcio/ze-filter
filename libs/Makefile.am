@@ -27,7 +27,6 @@ libcommon_a_SOURCES   = 	ze-base64.c \
 				ze-uudecode.c \
 				ze-unattach.c \
 				ze-load.c \
-				ze-cyclic.c \
 				ze-bestof-n.c
 
 libchkvirus_a_SOURCES   =       ze-avclient.c

@@ -382,7 +382,7 @@ typedef struct {
 
 static XFILE_T      toto = XFILE_INITIALIZER;
 
-static j_table_T    htbl;
+static zeTbl_T    htbl;
 
 static pthread_mutex_t st_mutex = PTHREAD_MUTEX_INITIALIZER;
 

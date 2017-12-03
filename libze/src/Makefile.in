@@ -114,8 +114,9 @@ am_libze_a_OBJECTS = zeString.$(OBJEXT) zeStrings.$(OBJEXT) \
 	zeMap.$(OBJEXT) zeSyslog.$(OBJEXT) zeRdFile.$(OBJEXT) \
 	zeRegex.$(OBJEXT) zeDivers.$(OBJEXT) zeMD5.$(OBJEXT) \
 	zeSHA1.$(OBJEXT) zeLinkedList.$(OBJEXT) zeBTree.$(OBJEXT) \
-	ze-buffer.$(OBJEXT) ze-inet.$(OBJEXT) ze-shmem.$(OBJEXT) \
-	zeTable.$(OBJEXT) zeTime.$(OBJEXT) zeKStats.$(OBJEXT)
+	ze-buffer.$(OBJEXT) ze-inet.$(OBJEXT) zeShared.$(OBJEXT) \
+	zeTable.$(OBJEXT) zeTime.$(OBJEXT) zeCycTasks.$(OBJEXT) \
+	zeKStats.$(OBJEXT)
 libze_a_OBJECTS = $(am_libze_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -348,9 +349,10 @@ libze_a_SOURCES = zeString.c \
 				zeBTree.c \
 				ze-buffer.c \
 				ze-inet.c \
-				ze-shmem.c \
+				zeShared.c \
 				zeTable.c \
 				zeTime.c \
+				zeCycTasks.c \
 				zeKStats.c 
 
 
@@ -406,8 +408,8 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-buffer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-inet.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-shmem.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeBTree.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeCycTasks.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeDb.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeDivers.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeFileTools.Po@am__quote@
@@ -418,6 +420,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeRdFile.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeRegex.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeSHA1.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeShared.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeStrConvert.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeString.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeStrings.Po@am__quote@

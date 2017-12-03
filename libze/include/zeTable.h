@@ -23,9 +23,9 @@
 
 #ifndef __JTABLE_H_
 
-typedef struct j_table_T j_table_T;
+typedef struct zeTbl_T zeTbl_T;
 
-struct j_table_T {
+struct zeTbl_T {
   size_t              sz;
   size_t              rsz;
   int                 chunk;
@@ -38,23 +38,23 @@ struct j_table_T {
 
 #define    JTABLE_INITIALIZER   {0,0,0,0,0,0,NULL,NULL}
 
-int                 zeTable_Init (j_table_T *, size_t, int,
+int                 zeTable_Init (zeTbl_T *, size_t, int,
                                   int (*)(const void *, const void *));
-int                 zeTable_Free (j_table_T *);
-int                 zeTable_Clear (j_table_T *);
-int                 zeTable_Add (j_table_T *, void *);
-int                 zeTable_Count (j_table_T *);
-int                 zeTable_Fetch (j_table_T *, void *);
-int                 zeTable_Get_Ind (j_table_T *, void *, int);
-int                 zeTable_Get_First (j_table_T *, void *);
-int                 zeTable_Get_Next (j_table_T *, void *);
-int                 zeTable_Sort (j_table_T *);
-int                 j_table_find (j_table_T *, void *);
+int                 zeTable_Free (zeTbl_T *);
+int                 zeTable_Clear (zeTbl_T *);
+int                 zeTable_Add (zeTbl_T *, void *);
+int                 zeTable_Count (zeTbl_T *);
+int                 zeTable_Fetch (zeTbl_T *, void *);
+int                 zeTable_Get_Ind (zeTbl_T *, void *, int);
+int                 zeTable_Get_First (zeTbl_T *, void *);
+int                 zeTable_Get_Next (zeTbl_T *, void *);
+int                 zeTable_Sort (zeTbl_T *);
+int                 j_table_find (zeTbl_T *, void *);
 
-void               *zeTable_Fetch_ptr (j_table_T *, void *);
-void               *zeTable_Get_Ind_ptr (j_table_T *, int);
-void               *zeTable_Get_First_Ptr (j_table_T *);
-void               *zeTable_Get_Next_Ptr (j_table_T *);
+void               *zeTable_Fetch_ptr (zeTbl_T *, void *);
+void               *zeTable_Get_Ind_ptr (zeTbl_T *, int);
+void               *zeTable_Get_First_Ptr (zeTbl_T *);
+void               *zeTable_Get_Next_Ptr (zeTbl_T *);
 
 #define __JTABLE_H_
 #endif

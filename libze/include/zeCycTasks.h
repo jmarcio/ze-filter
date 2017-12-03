@@ -26,11 +26,11 @@
 
 typedef int    (*CYCLIC_F) (void *);
 
-bool           cyclic_tasks_init(time_t interval);
+bool           CycTasks_Init(time_t interval);
 
-bool           cyclic_tasks_register(CYCLIC_F task, void *arg, time_t period);
+bool           CycTasks_Register(CYCLIC_F task, void *arg, time_t period);
 
-void           cyclic_tasks_time_stats();
+void           CycTasks_Stats();
 
 # define ZE_CYCLIC_H    1
 #endif             /* J_CYCLIC_H */

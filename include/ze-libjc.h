@@ -64,7 +64,6 @@
 #include "ze-unattach.h"
 #include "ze-load.h"
 
-#include "ze-cyclic.h"
 #include "ze-mbox.h"
 #include "ze-msg-score.h"
 #include "ze-bestof-n.h"

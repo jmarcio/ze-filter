@@ -121,8 +121,7 @@ am_libcommon_a_OBJECTS = ze-base64.$(OBJEXT) ze-decode.$(OBJEXT) \
 	ze-name2id.$(OBJEXT) ze-parse-dns.$(OBJEXT) ze-qp.$(OBJEXT) \
 	ze-regex.$(OBJEXT) ze-server.$(OBJEXT) ze-client.$(OBJEXT) \
 	ze-smtp-divers.$(OBJEXT) ze-uudecode.$(OBJEXT) \
-	ze-unattach.$(OBJEXT) ze-load.$(OBJEXT) ze-cyclic.$(OBJEXT) \
-	ze-bestof-n.$(OBJEXT)
+	ze-unattach.$(OBJEXT) ze-load.$(OBJEXT) ze-bestof-n.$(OBJEXT)
 libcommon_a_OBJECTS = $(am_libcommon_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -365,7 +364,6 @@ libcommon_a_SOURCES = ze-base64.c \
 				ze-uudecode.c \
 				ze-unattach.c \
 				ze-load.c \
-				ze-cyclic.c \
 				ze-bestof-n.c
 
 libchkvirus_a_SOURCES = ze-avclient.c
@@ -429,7 +427,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-bestof-n.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-client.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-convert-8to7.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-cyclic.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-decode.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-demime.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-dns-parse.Po@am__quote@

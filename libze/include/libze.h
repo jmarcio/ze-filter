@@ -43,10 +43,11 @@
 #include <zeBTree.h>
 #include <ze-buffer.h>
 #include <ze-inet.h>
-#include <ze-shmem.h>
+#include <zeShared.h>
 #include <ze-strconvert.h>
 #include <zeTable.h>
 #include <zeTime.h>
+#include <zeCycTasks.h>
 
 # define ZMLIBS_H    1
 #endif /* ZMLIBS_H */

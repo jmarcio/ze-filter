@@ -77,7 +77,7 @@ lr_initialize(arg)
   char               *cdb_dir = NULL;
 
   {
-    bool                is_thread = (bool) arg;
+    bool                is_thread = (arg != NULL);
 
     if (is_thread) {
       pthread_t           tid;

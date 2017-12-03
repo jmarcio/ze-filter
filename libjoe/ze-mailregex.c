@@ -86,7 +86,7 @@ typedef struct {
   int                 count;
 } REGEX_REC;
 
-static j_table_T    htbl = JTABLE_INITIALIZER;
+static zeTbl_T    htbl = JTABLE_INITIALIZER;
 
 static pthread_mutex_t st_mutex = PTHREAD_MUTEX_INITIALIZER;
 

@@ -239,7 +239,7 @@ resolve_cache_init(dbdir, rwmode)
 
       memset(browsekey, 0, sizeof (browsekey));
       ZE_MessageInfo(10, "*** Registering resolve cache cyclic task...");
-      cyclic_tasks_register(resolve_cyclic_task, NULL, RESOLVE_DT_LOOP);
+      CycTasks_Register(resolve_cyclic_task, NULL, RESOLVE_DT_LOOP);
     }
   }
 

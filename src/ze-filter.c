@@ -547,7 +547,7 @@ zeFilter()
     }
   }
 
-  cyclic_tasks_init(10 SECONDS);
+  CycTasks_Init(10 SECONDS);
   (void) setup_filter_signal_handler();
   /*
    * alarm(2 * DT_SIGALRM); 

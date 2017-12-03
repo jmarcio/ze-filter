@@ -56,6 +56,7 @@ static int          check_unwanted_expressions(char *, char *, bestof_T *);
 static int          count_html_tags(char *);
 static int          count_html_comments(char *);
 
+static int          count_uint32bits(uint32_t);
 
 /* ****************************************************************************
  *                                                                            *
@@ -1788,3 +1789,21 @@ check_unwanted_expressions(id, buf, best)
 
   return n;
 }
+
+/* ****************************************************************************
+ *                                                                            *
+ *                                                                            *
+ ******************************************************************************/
+static int
+count_uint32bits(val)
+     uint32_t            val;
+{
+  int                 r = 0;
+  int                 i;
+
+  for (i = 0; i < 8 * sizeof (val); i++)
+    if (GET_BIT(val, i))
+      r++;
+  return r;
+}
+

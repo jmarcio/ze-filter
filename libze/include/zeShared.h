@@ -35,15 +35,15 @@ typedef struct {
 #define SHM_INITIALIZER {SIGNATURE, -1, NULL, 0, NULL}
 
 
-void               *shared_file_open (SHMOBJ_T *, char *, size_t);
-void                shared_file_close (SHMOBJ_T *);
-size_t              shared_file_size (SHMOBJ_T *);
-size_t              shared_file_resize (SHMOBJ_T *, size_t);
+void               *SharedFile_Open (SHMOBJ_T *, char *, size_t);
+void                SharedFile_Close (SHMOBJ_T *);
+size_t              SharedFile_Size (SHMOBJ_T *);
+size_t              SharedFile_Resize (SHMOBJ_T *, size_t);
 
-void               *shared_memory_open (SHMOBJ_T *, char *, size_t);
-void                shared_memory_close (SHMOBJ_T *);
-size_t              shared_memory_size (SHMOBJ_T *);
-size_t              shared_memory_resize (SHMOBJ_T *, size_t);
+void               *SharedMemory_Open (SHMOBJ_T *, char *, size_t);
+void                SharedMemory_Close (SHMOBJ_T *);
+size_t              SharedMemory_Size (SHMOBJ_T *);
+size_t              SharedMemory_Resize (SHMOBJ_T *, size_t);
 
 #define __JSHMEM_H__
 #endif

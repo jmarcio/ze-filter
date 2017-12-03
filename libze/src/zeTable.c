@@ -31,7 +31,7 @@
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
-static int          zeTable_Resize(j_table_T *);
+static int          zeTable_Resize(zeTbl_T *);
 
 #define    RECPTR(t, i)   ((char *) t->data + i * t->sz)
 
@@ -43,7 +43,7 @@ static int          zeTable_Resize(j_table_T *);
 
 int
 zeTable_Init(tbh, sz, dim, comp)
-     j_table_T          *tbh;
+     zeTbl_T          *tbh;
      size_t              sz;
      int                 dim;
      int                 (*comp) (const void *, const void *);
@@ -79,7 +79,7 @@ zeTable_Init(tbh, sz, dim, comp)
  **************************************************************************** */
 static int
 zeTable_Resize(tbh)
-     j_table_T          *tbh;
+     zeTbl_T          *tbh;
 {
   int                 newsz;
   void               *ptr;
@@ -111,7 +111,7 @@ zeTable_Resize(tbh)
  **************************************************************************** */
 int
 zeTable_Free(tbh)
-     j_table_T          *tbh;
+     zeTbl_T          *tbh;
 {
   if (tbh == NULL)
     return -1;
@@ -134,7 +134,7 @@ zeTable_Free(tbh)
  **************************************************************************** */
 int
 zeTable_Clear(tbh)
-     j_table_T          *tbh;
+     zeTbl_T          *tbh;
 {
   if (tbh == NULL)
     return -1;
@@ -153,7 +153,7 @@ zeTable_Clear(tbh)
  **************************************************************************** */
 int
 zeTable_Add(tbh, data)
-     j_table_T          *tbh;
+     zeTbl_T          *tbh;
      void               *data;
 {
   if (tbh == NULL)
@@ -179,7 +179,7 @@ zeTable_Add(tbh, data)
  **************************************************************************** */
 int
 zeTable_Fetch(tbh, data)
-     j_table_T          *tbh;
+     zeTbl_T          *tbh;
      void               *data;
 {
   if (tbh == NULL)
@@ -207,7 +207,7 @@ zeTable_Fetch(tbh, data)
  **************************************************************************** */
 int
 zeTable_Count(tbh)
-     j_table_T          *tbh;
+     zeTbl_T          *tbh;
 {
   if (tbh == NULL)
     return -1;
@@ -224,7 +224,7 @@ zeTable_Count(tbh)
  **************************************************************************** */
 int
 zeTable_Get_Ind(tbh, data, ind)
-     j_table_T          *tbh;
+     zeTbl_T          *tbh;
      void               *data;
      int                 ind;
 {
@@ -248,7 +248,7 @@ zeTable_Get_Ind(tbh, data, ind)
  **************************************************************************** */
 int
 zeTable_Get_First(tbh, data)
-     j_table_T          *tbh;
+     zeTbl_T          *tbh;
      void               *data;
 {
   if (tbh == NULL)
@@ -275,7 +275,7 @@ zeTable_Get_First(tbh, data)
  **************************************************************************** */
 int
 zeTable_Get_Next(tbh, data)
-     j_table_T          *tbh;
+     zeTbl_T          *tbh;
      void               *data;
 {
   if (tbh == NULL)
@@ -303,7 +303,7 @@ zeTable_Get_Next(tbh, data)
  **************************************************************************** */
 void               *
 zeTable_Get_First_Ptr(tbh)
-     j_table_T          *tbh;
+     zeTbl_T          *tbh;
 {
   if (tbh == NULL)
     return NULL;
@@ -325,7 +325,7 @@ zeTable_Get_First_Ptr(tbh)
  **************************************************************************** */
 void               *
 zeTable_Get_Next_Ptr(tbh)
-     j_table_T          *tbh;
+     zeTbl_T          *tbh;
 {
   if (tbh == NULL)
     return NULL;
@@ -347,7 +347,7 @@ zeTable_Get_Next_Ptr(tbh)
  **************************************************************************** */
 int
 zeTable_Sort(tbh)
-     j_table_T          *tbh;
+     zeTbl_T          *tbh;
 {
   if (tbh == NULL)
     return -1;
