@@ -21,6 +21,8 @@
 
 #ifndef ZMLIBS_H
 
+#define SIGNATURE        0x70071234
+
 #include <zeMacros.h>
 
 #include <zeSyslog.h>
@@ -37,14 +39,14 @@
 #include <zeMD5.h>
 #include <zeSHA1.h>
 
-#include <kstats.h>
-#include <ze-btree.h>
+#include <zeKStats.h>
+#include <zeBTree.h>
 #include <ze-buffer.h>
 #include <ze-inet.h>
 #include <ze-shmem.h>
 #include <ze-strconvert.h>
-#include <ze-table.h>
-#include <ze-time.h>
+#include <zeTable.h>
+#include <zeTime.h>
 
 # define ZMLIBS_H    1
 #endif /* ZMLIBS_H */

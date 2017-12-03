@@ -31,7 +31,7 @@
 
 #include "macros.h"
 
-#include "kstats.h"
+#include "zeKStats.h"
 #include "ze-logit.h"
 #include "ze-name2id.h"
 #include "ze-regex.h"

@@ -38,7 +38,7 @@
 #define JREGCOMP_FLAGS         (REG_ICASE | REG_EXTENDED)
 #define JREGEXEC_FLAGS          0
 
-#include "ze-libjc.h"
+#include "libze.h"
 
 #include <ze-regex.h>
 

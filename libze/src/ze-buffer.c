@@ -23,7 +23,7 @@
 
 #include <ze-sys.h>
 
-#include "ze-libjc.h"
+#include "libze.h"
 
 
 /* ***************************************************************************
@@ -275,7 +275,7 @@ text_word_length(buf, st, size)
   if ((buf == NULL) || (st == NULL))
     return FALSE;
 
-  kstats_reset(st);
+  zeKStatsReset(st);
 
 	p = buf;
 	i = 0;
@@ -290,7 +290,7 @@ text_word_length(buf, st, size)
 
     if (pi == 0)
     {
-      kstats_update(st, (double) (pf - pi));
+      zeKStatsUpdate(st, (double) (pf - pi));
       p += pf;
       sz -= pf;
     } else {

@@ -46,7 +46,7 @@ mlfi_close(ctx)
 #if HAVE_GETHRTIME
   priv->t_close = gethrtime();
 #else
-  priv->t_close = time_ms();
+  priv->t_close = zeTime_ms();
 #endif
   now = time(NULL);
 #if _FFR_MODULES

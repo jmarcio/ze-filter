@@ -16,8 +16,15 @@ if ($#Dirs < 0) {
     ze-bayes-tbx
     scratch 
     libzechk/src
+    libzechk/include
     libze/src
     libze/include
+    libml/src
+    libml/include
+    libsmtp/src
+    libsmtp/include
+    libbody/src
+    libbody/include
   );
 }
 
@@ -30,14 +37,14 @@ foreach my $fin (@ARGV) {
 foreach my $dir (@Dirs) {
   printf "* DIR = $dir\n";
 
-  foreach my $k (sort keys %New) {
+  foreach my $k (reverse sort keys %New) {
     my $v = $New{$k};
     my @Files = <$dir/*.c>;
     foreach my $fin (@Files) {
       my $r = 0;
       $r = system("grep -d skip -q $k $fin 2>/dev/null");
       next if $r != 0;
-      $r = system("sed -i s/$k/$v/ $fin");
+      $r = system("sed -i s/$k/$v/g $fin");
       printf "  %-5s %-40s %s\n", $r, $fin, $k;
     }
     @Files = <$dir/*.h>;
@@ -45,7 +52,7 @@ foreach my $dir (@Dirs) {
       my $r = 0;
       $r = system("grep -d skip -q $k $fin 2>/dev/null");
       next if $r != 0;
-      $r = system("sed -i s/$k/$v/ $fin");
+      $r = system("sed -i s/$k/$v/g $fin");
       printf "  %-5s %-40s %s\n", $r, $fin, $k;
     }
   }

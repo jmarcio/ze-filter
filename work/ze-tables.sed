@@ -1,0 +1,15 @@
+s/add/Add/
+s/clear/Clear/
+s/count/Count/
+s/fetch/Fetch/
+s/first/First/
+s/free/Free/
+s/get/Get/
+s/ind/Ind/
+s/init/Init/
+s/j_table/zeTable/
+s/j-table/zeTable/
+s/next/Next/
+s/ptr/Ptr/
+s/resize/Resize/
+s/sort/Sort/

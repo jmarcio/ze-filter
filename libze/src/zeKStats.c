@@ -37,10 +37,10 @@
 
 #include <ze-sys.h>
 
-#include "kstats.h"
+#include "zeKStats.h"
 
 double
-kmean (s)
+zeKMean (s)
      kstats_T              *s;
 {
   if ((s == NULL) || (s->n == 0))
@@ -50,7 +50,7 @@ kmean (s)
 }
 
 double
-kstddev (s)
+zeKStdDev (s)
      kstats_T              *s;
 {
   if ((s == NULL) || (s->n < 2))
@@ -59,7 +59,7 @@ kstddev (s)
 }
 
 double
-kmin (s)
+zeKMin (s)
      kstats_T              *s;
 {
   if ((s == NULL) || (s->n == 0))
@@ -69,7 +69,7 @@ kmin (s)
 }
 
 double
-kmax (s)
+zeKMax (s)
      kstats_T              *s;
 {
   if ((s == NULL) || (s->n == 0))
@@ -79,7 +79,7 @@ kmax (s)
 }
 
 long
-kcount(s)
+zeKCount(s)
      kstats_T              *s;
 {
   if ((s == NULL) || (s->n == 0))
@@ -89,7 +89,7 @@ kcount(s)
 }
 
 void
-kstats_reset (s)
+zeKStatsReset (s)
      kstats_T              *s;
 {
   if (s == NULL)
@@ -98,7 +98,7 @@ kstats_reset (s)
 }
 
 void
-kstats_update (s, t)
+zeKStatsUpdate (s, t)
      kstats_T              *s;
      double              t;
 {
@@ -127,10 +127,10 @@ print_inference (s, p, c)
     if (c != NULL)
       printf ("%s <--", c);
     printf ("\n");
-    printf ("    Mean Value        : %9.4f\n", kmean (s));
-    printf ("    Std. Deviation    : %9.4f\n", kstddev (s));
+    printf ("    Mean Value        : %9.4f\n", zeKMean (s));
+    printf ("    Std. Deviation    : %9.4f\n", zeKStdDev (s));
     printf ("    Confidence (%4.2f) : %9.4f\n", p,
-            confidence_interval (p, kstddev (s), s->n));
+            confidence_interval (p, zeKStdDev (s), s->n));
     printf ("    Notes             : %9d\n", s->n);
   }
 }

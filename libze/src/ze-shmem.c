@@ -31,7 +31,7 @@
 
 #include <ze-sys.h>
 
-#include "ze-libjc.h"
+#include "libze.h"
 
 #include "ze-shmem.h"
 

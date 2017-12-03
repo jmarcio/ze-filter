@@ -26,8 +26,8 @@
 
 typedef uint64_t timems_T;
 
-uint64_t            time_ms();
-time_t              sleep_ms(time_t);
+uint64_t            zeTime_ms();
+time_t              zeSleep_ms(time_t);
 
 # define ZE_TIME_H    1
 #endif /* J_TIME_H */

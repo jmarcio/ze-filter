@@ -113,9 +113,9 @@ am_libze_a_OBJECTS = zeString.$(OBJEXT) zeStrings.$(OBJEXT) \
 	zeStrConvert.$(OBJEXT) zeFileTools.$(OBJEXT) zeDb.$(OBJEXT) \
 	zeMap.$(OBJEXT) zeSyslog.$(OBJEXT) zeRdFile.$(OBJEXT) \
 	zeRegex.$(OBJEXT) zeDivers.$(OBJEXT) zeMD5.$(OBJEXT) \
-	zeSHA1.$(OBJEXT) zeLinkedList.$(OBJEXT) ze-btree.$(OBJEXT) \
+	zeSHA1.$(OBJEXT) zeLinkedList.$(OBJEXT) zeBTree.$(OBJEXT) \
 	ze-buffer.$(OBJEXT) ze-inet.$(OBJEXT) ze-shmem.$(OBJEXT) \
-	ze-table.$(OBJEXT) ze-time.$(OBJEXT) kstats.$(OBJEXT)
+	zeTable.$(OBJEXT) zeTime.$(OBJEXT) zeKStats.$(OBJEXT)
 libze_a_OBJECTS = $(am_libze_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -345,13 +345,13 @@ libze_a_SOURCES = zeString.c \
 				zeMD5.c \
 				zeSHA1.c \
 				zeLinkedList.c \
-				ze-btree.c \
+				zeBTree.c \
 				ze-buffer.c \
 				ze-inet.c \
 				ze-shmem.c \
-				ze-table.c \
-				ze-time.c \
-				kstats.c 
+				zeTable.c \
+				zeTime.c \
+				zeKStats.c 
 
 
 #LDADD                 = @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@
@@ -404,16 +404,14 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/kstats.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-btree.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-buffer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-inet.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-shmem.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-table.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-time.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeBTree.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeDb.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeDivers.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeFileTools.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeKStats.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeLinkedList.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeMD5.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeMap.Po@am__quote@
@@ -424,6 +422,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeString.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeStrings.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeSyslog.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeTable.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zeTime.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

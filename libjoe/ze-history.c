@@ -188,7 +188,7 @@ static void         histraw2histres(HistRes_T *, HistRaw_T *);
 
 struct History_T {
   size_t              nb;
-  JBT_T               jdbh;
+  ZEBT_T               jdbh;
   HistRes_T           glob;
 };
 
@@ -543,13 +543,13 @@ histraw2histres(dst, src)
     dst->nb_reject++;
 #endif
 
-  kstats_update(&dst->st_length, (double) src->t_length);
+  zeKStatsUpdate(&dst->st_length, (double) src->t_length);
   if ((dst->t_length_min == 0) || (src->t_length < dst->t_length_min))
     dst->t_length_min = src->t_length;
   if ((dst->t_length_max == 0) || (src->t_length > dst->t_length_max))
     dst->t_length_max = src->t_length;
 
-  kstats_update(&dst->st_work, (double) src->t_work);
+  zeKStatsUpdate(&dst->st_work, (double) src->t_work);
   if ((dst->t_work_min == 0) || (src->t_work < dst->t_work_min))
     dst->t_work_min = src->t_work;
   if ((dst->t_work_max == 0) || (src->t_work > dst->t_work_max))
@@ -588,7 +588,7 @@ res_history_add_noeud(c, h, verbose)
   memset(&buf, 0, sizeof (buf));
   strlcpy(buf.ip, h->ip, sizeof (buf.ip));
 
-  ptr = jbt_get(&c->jdbh, &buf);
+  ptr = zeBTree_Get(&c->jdbh, &buf);
 
   if (ptr != NULL) {
     histraw2histres(ptr, h);
@@ -599,7 +599,7 @@ res_history_add_noeud(c, h, verbose)
     histraw2histres(&buf, h);
     c->nb++;
 
-    if (!jbt_add(&c->jdbh, &buf)) {
+    if (!zeBTree_Add(&c->jdbh, &buf)) {
       ZE_LogMsgWarning(0, "Can't add record to tree...");
     }
   }
@@ -644,8 +644,8 @@ res_history_update(hst, ip, tf, dt, verbose)
   if (hst == NULL)
     hst = &history;
 
-  jbt_init(&hst->jdbh, sizeof (HistRes_T), histrescmp);
-  jbt_set_btree_size(&hst->jdbh, FALSE, -1);
+  zeBTree_Init(&hst->jdbh, sizeof (HistRes_T), histrescmp);
+  zeBTree_Set_BTree_Size(&hst->jdbh, FALSE, -1);
 
   verbose = verbose || (ip != NULL);
 
@@ -747,15 +747,15 @@ print_noeud_summary(void *rec, void *arg)
   printf(" Throttle Max       : %7d / 10 min\n", p->throttle_max);
   printf
     (" Duration (sec)     : %7.3f %7.3f %8.3f %7.3f (min mean max std-dev)\n",
-     ((double) p->t_length_min) / 1000, kmean(&p->st_length) / 1000,
-     ((double) p->t_length_max) / 1000, kstddev(&p->st_length) / 1000);
+     ((double) p->t_length_min) / 1000, zeKMean(&p->st_length) / 1000,
+     ((double) p->t_length_max) / 1000, zeKStdDev(&p->st_length) / 1000);
   printf
     (" Work (sec)         : %7.3f %7.3f %8.3f %7.3f (min mean max std-dev)\n",
-     ((double) p->t_work_min) / 1000, kmean(&p->st_work) / 1000,
-     ((double) p->t_work_max) / 1000, kstddev(&p->st_work) / 1000);
-  if ((p->nb_conn > 0) && (kmean(&p->st_length) > 0))
+     ((double) p->t_work_min) / 1000, zeKMean(&p->st_work) / 1000,
+     ((double) p->t_work_max) / 1000, zeKStdDev(&p->st_work) / 1000);
+  if ((p->nb_conn > 0) && (zeKMean(&p->st_length) > 0))
     printf(" Mean Throuput      : %7.3f KBytes/sec\n",
-           (1000. * p->nb_bytes) / (1024 * p->nb_conn * kmean(&p->st_length)));
+           (1000. * p->nb_bytes) / (1024 * p->nb_conn * zeKMean(&p->st_length)));
 
   printf("Counts\n");
   printf(" Messages           : %7d\n", p->nb_msgs);
@@ -835,15 +835,15 @@ print_global_summary(data, arg)
          p->throttle_max);
   printf
     (" Duration (sec)    : %7.3f %7.3f %8.3f %7.3f (min mean max std-dev)\n",
-     ((double) p->t_length_min) / 1000, kmean(&p->st_length) / 1000,
-     ((double) p->t_length_max) / 1000, kstddev(&p->st_length) / 1000);
+     ((double) p->t_length_min) / 1000, zeKMean(&p->st_length) / 1000,
+     ((double) p->t_length_max) / 1000, zeKStdDev(&p->st_length) / 1000);
   printf
     (" Work (sec)        : %7.3f %7.3f %8.3f %7.3f (min mean max std-dev)\n",
-     ((double) p->t_work_min) / 1000, kmean(&p->st_work) / 1000,
-     ((double) p->t_work_max) / 1000, kstddev(&p->st_work) / 1000);
-  if ((p->nb_conn > 0) && (kmean(&p->st_length) > 0))
+     ((double) p->t_work_min) / 1000, zeKMean(&p->st_work) / 1000,
+     ((double) p->t_work_max) / 1000, zeKStdDev(&p->st_work) / 1000);
+  if ((p->nb_conn > 0) && (zeKMean(&p->st_length) > 0))
     printf(" Mean Throuput     : %7.3f KBytes/sec\n",
-           (1000. * p->nb_bytes) / (1024 * p->nb_conn * kmean(&p->st_length)));
+           (1000. * p->nb_bytes) / (1024 * p->nb_conn * zeKMean(&p->st_length)));
 
   printf("Counts\n");
   printf(" Messages           : %7d\n", p->nb_msgs);
@@ -1155,7 +1155,7 @@ res_history_summary(hst, ip, tf, dt, verbose, hostnames, type, nbrecs)
   switch (log_type) {
     case H_SUMMARY:
       if (verbose || (ip != NULL))
-        nb = jbt_browse(&hst->jdbh, print_noeud_summary, &log);
+        nb = zeBTree_Browse(&hst->jdbh, print_noeud_summary, &log);
 
       if (ip == NULL)
         print_global_summary(hst, &log);
@@ -1163,7 +1163,7 @@ res_history_summary(hst, ip, tf, dt, verbose, hostnames, type, nbrecs)
 
     default:
       log_hostnames = TRUE;
-      nb = jbt_browse(&hst->jdbh, print_noeud_data, &log);
+      nb = zeBTree_Browse(&hst->jdbh, print_noeud_data, &log);
       break;
 
   }
@@ -1171,7 +1171,7 @@ res_history_summary(hst, ip, tf, dt, verbose, hostnames, type, nbrecs)
   printf("\n*** Records found : %d\n\n", nb);
 
 #if 0
-  jbt_clear(&hst->jdbh);
+  zeBTree_Clear(&hst->jdbh);
 #endif
 }
 

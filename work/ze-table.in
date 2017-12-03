@@ -1,0 +1,13 @@
+j_table_init
+j_table_resize
+j_table_free
+j_table_clear
+j_table_add
+j_table_fetch
+j_table_count
+j_table_get_ind
+j_table_get_first
+j_table_get_next
+j_table_get_first_ptr
+j_table_get_next_ptr
+j_table_sort

@@ -210,19 +210,19 @@ update_throttle(t)
 
     hdata.min[j].nb += hdata.sec[i].nb;
   }
-  kstats_reset(&st_sec);
-  kstats_reset(&st_min);
+  zeKStatsReset(&st_sec);
+  zeKStatsReset(&st_min);
 
   for (i = 0; i < DIM_HI; i++)
-    kstats_update(&st_sec, (double) hdata.sec[i].nb);
+    zeKStatsUpdate(&st_sec, (double) hdata.sec[i].nb);
 
   for (i = 0; i < DIM_LO; i++)
-    kstats_update(&st_min, (double) hdata.min[i].nb);
+    zeKStatsUpdate(&st_min, (double) hdata.min[i].nb);
 
   ZE_MessageInfo(12,
                  "THROTTLE : short=[%7.3f/%7.3f] long=[%7.3f/%7.3f] (mean/std dev)",
-                 kmean(&st_sec), kstddev(&st_sec), kmean(&st_min),
-                 kstddev(&st_min));
+                 zeKMean(&st_sec), zeKStdDev(&st_sec), zeKMean(&st_min),
+                 zeKStdDev(&st_min));
 
   THROTTLE_UNLOCK();
 
@@ -261,16 +261,16 @@ update_throttle_dos()
   int                 i;
   kstats_T            stats;
 
-  kstats_reset(&stats);
+  zeKStatsReset(&stats);
 
   THROTTLE_LOCK();
   for (i = 0; i < (DIM_LO - 1); i++)
-    kstats_update(&stats, (double) hdata.min[i].nb);
+    zeKStatsUpdate(&stats, (double) hdata.min[i].nb);
   last_mean = (double) hdata.min[DIM_LO - 1].nb;
   THROTTLE_UNLOCK();
 
-  gmean = mean = kmean(&stats);
-  stddev = kstddev(&stats);
+  gmean = mean = zeKMean(&stats);
+  stddev = zeKStdDev(&stats);
 
   /*
    * shall see this again later 
@@ -312,8 +312,8 @@ update_throttle_dos()
 void
 log_throttle_stats()
 {
-  double              mean = kmean(&st_min);
-  double              stddev = kstddev(&st_min);
+  double              mean = zeKMean(&st_min);
+  double              stddev = zeKStdDev(&st_min);
 
   double              last_mean = (double) hdata.min[DIM_LO - 1].nb;
 

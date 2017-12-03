@@ -108,11 +108,11 @@ dump_regex_table()
   REGEX_REC           p;
 
   printf("*** Regular Expressions lookup table : \n");
-  if (j_table_get_first(&htbl, &p) == 0) {
+  if (zeTable_Get_First(&htbl, &p) == 0) {
     printf(" ** WHERE        : SCORE - Regular Expression\n");
     do {
       printf(" -> %-12s : %5d - /%s/\n", p.action, p.score, p.regex);
-    } while (j_table_get_next(&htbl, &p) == 0);
+    } while (zeTable_Get_Next(&htbl, &p) == 0);
   }
 }
 
@@ -212,7 +212,7 @@ add_regex_rec(vk, vv)
 
   strlcpy(r.action, v, sizeof (r.action));
 
-  return j_table_add(&htbl, &r);
+  return zeTable_Add(&htbl, &r);
 }
 
 /* ***************************************************************************
@@ -224,7 +224,7 @@ clear_compiled_regex()
 {
   REGEX_REC          *q;
 
-  if ((q = (REGEX_REC *) j_table_get_first_ptr(&htbl)) != NULL) {
+  if ((q = (REGEX_REC *) zeTable_Get_First_Ptr(&htbl)) != NULL) {
     do {
       regfree(&q->re);
 #if USE_PCRE
@@ -237,7 +237,7 @@ clear_compiled_regex()
       q->pcre_ok = FALSE;
 #endif             /* USE_PCRE */
 
-    } while ((q = (REGEX_REC *) j_table_get_next_ptr(&htbl)) != NULL);
+    } while ((q = (REGEX_REC *) zeTable_Get_Next_Ptr(&htbl)) != NULL);
   }
 }
 
@@ -270,14 +270,14 @@ load_regex_table(cfdir, fname)
 
   if (htbl_ok == FALSE) {
     memset(&htbl, 0, sizeof (htbl));
-    res = j_table_init(&htbl, sizeof (REGEX_REC), 256, NULL);
+    res = zeTable_Init(&htbl, sizeof (REGEX_REC), 256, NULL);
     if (res == 0)
       htbl_ok = TRUE;
   }
 
   if (res == 0) {
     clear_compiled_regex();
-    res = j_table_clear(&htbl);
+    res = zeTable_Clear(&htbl);
   }
 
   if (res == 0)
@@ -317,7 +317,7 @@ check_regex(id, ip, msg, where)
   DATA_LOCK();
 
 
-  if ((q = (REGEX_REC *) j_table_get_first_ptr(&htbl)) != NULL) {
+  if ((q = (REGEX_REC *) zeTable_Get_First_Ptr(&htbl)) != NULL) {
     do {
       if ((q->where & where) != 0) {
         char               *ptr = msg;
@@ -412,7 +412,7 @@ check_regex(id, ip, msg, where)
         if (result >= score_min)
           break;
       }
-    } while ((q = (REGEX_REC *) j_table_get_next_ptr(&htbl)) != NULL);
+    } while ((q = (REGEX_REC *) zeTable_Get_Next_Ptr(&htbl)) != NULL);
   }
   DATA_UNLOCK();
 
@@ -451,7 +451,7 @@ check_rurlbl(id, ip, msg)
   int                 result = 0;
   int                 score_min = cf_get_int(CF_REGEX_MAX_SCORE);
 
-  time_t              ti = time_ms();
+  time_t              ti = zeTime_ms();
 
   if (msg == NULL || strlen(msg) == 0)
     return result;
@@ -580,7 +580,7 @@ check_rurlbl(id, ip, msg)
         /*
          ** URLs defined at ze-regex
          */
-        if ((q = (REGEX_REC *) j_table_get_first_ptr(&htbl)) != NULL) {
+        if ((q = (REGEX_REC *) zeTable_Get_First_Ptr(&htbl)) != NULL) {
           do {
             if (q->where == MAIL_URLSTR) {
               char               *sb;
@@ -601,7 +601,7 @@ check_rurlbl(id, ip, msg)
               if (url_found)
                 break;
             }
-          } while ((q = (REGEX_REC *) j_table_get_next_ptr(&htbl)) != NULL);
+          } while ((q = (REGEX_REC *) zeTable_Get_Next_Ptr(&htbl)) != NULL);
         }
 
         if (url_found || result >= score_min)
@@ -621,7 +621,7 @@ check_rurlbl(id, ip, msg)
           char               *dest = NULL;
           size_t              size;
 
-          time_t              ti = time_ms();
+          time_t              ti = zeTime_ms();
 
           char                urlbl[64];
 
@@ -639,7 +639,7 @@ check_rurlbl(id, ip, msg)
             (void) log_found_regex(id, ip, urlbl, 1, result, dest);
           }
           ZE_MessageInfo(URLBL_LOG, "%s DB  URLBL handling time = %ld ms", id,
-                         time_ms() - ti);
+                         zeTime_ms() - ti);
           FREE(dest);
         }
 
@@ -650,7 +650,7 @@ check_rurlbl(id, ip, msg)
          ** Check DNS RURLBL
          */
         if (dirurl != NULL) {
-          time_t              ti = time_ms();
+          time_t              ti = zeTime_ms();
           uint32_t            flags;
 
           urlbl_T             rbl;
@@ -682,7 +682,7 @@ check_rurlbl(id, ip, msg)
           }
 
           ZE_MessageInfo(URLBL_LOG, "%s DNS URLBL handling time = %ld ms", id,
-                         time_ms() - ti);
+                         zeTime_ms() - ti);
         }
         if (url_found || result >= score_min)
           goto url_domain_ok;
@@ -732,7 +732,7 @@ check_rurlbl(id, ip, msg)
         /*
          * To be filled up 
          */
-        if ((q = (REGEX_REC *) j_table_get_first_ptr(&htbl)) != NULL) {
+        if ((q = (REGEX_REC *) zeTable_Get_First_Ptr(&htbl)) != NULL) {
           do {
             if (q->where == MAIL_URLEXPR) {
               bool                found = FALSE;
@@ -756,7 +756,7 @@ check_rurlbl(id, ip, msg)
               if (found || result >= score_min)
                 break;
             }
-          } while ((q = (REGEX_REC *) j_table_get_next_ptr(&htbl)) != NULL);
+          } while ((q = (REGEX_REC *) zeTable_Get_Next_Ptr(&htbl)) != NULL);
         }
       } else {
         ZE_LogSysError("malloc(%d)", size);
@@ -773,7 +773,7 @@ check_rurlbl(id, ip, msg)
     char               *env = getenv("URLBL_TIMING");
 
     if (n < 500 && env != NULL && strcasecmp(env, "yes") == 0) {
-      time_t              dt = time_ms() - ti;
+      time_t              dt = zeTime_ms() - ti;
 
       ZE_MessageInfo(9, "%s URLBL total handling time = %ld ms (%ld)", id, dt,
                      n);

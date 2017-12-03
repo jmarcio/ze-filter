@@ -537,9 +537,9 @@ entropy_mime_part(buf, size, id, level, type, arg, mime_part)
 
   }
 
-  dt = time_ms();
+  dt = zeTime_ms();
   text_buffer_entropy(wbuf, strlen(wbuf) + 1, &h0, &h1, &h2);
-  dt = time_ms() - dt;
+  dt = zeTime_ms() - dt;
   ZE_MessageInfo(9, "DT = %ld", dt);
 
   h3 = entropy_token_class(wbuf, strlen(wbuf) + 1);
@@ -555,7 +555,7 @@ entropy_mime_part(buf, size, id, level, type, arg, mime_part)
   ZE_MessageInfo(9,
                  "%s WORDS   = %7.3f %7.3f %7.3f %7.3f - SIZE = %5d %5d %5d %7.2f",
                  mtype,
-                 kmin(&st), kmean(&st), kmax(&st), kstddev(&st),
+                 zeKMin(&st), zeKMean(&st), zeKMax(&st), zeKStdDev(&st),
                  size, strlen(buf), strlen(wbuf), ratio);
 
   if (0) {

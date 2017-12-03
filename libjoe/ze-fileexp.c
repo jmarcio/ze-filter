@@ -401,11 +401,11 @@ dump_xfiles_table()
 
   printf("Let's dump x-files_table : \n");
   DATA_LOCK();
-  if (j_table_get_first(&htbl, &p) == 0) {
+  if (zeTable_Get_First(&htbl, &p) == 0) {
     do {
       printf("-> %s %-20s %7d/%7d : %s\n",
              STRBOOL(p.mimecond, " ", "!"), p.mime, p.min, p.max, p.expr);
-    } while (j_table_get_next(&htbl, &p) == 0);
+    } while (zeTable_Get_Next(&htbl, &p) == 0);
   }
   DATA_UNLOCK();
 }
@@ -551,7 +551,7 @@ add_xfiles(vk, vv)
     FREE(ts);
   }
 
-  return j_table_add(&htbl, &r);
+  return zeTable_Add(&htbl, &r);
 }
 
 /* ***************************************************************************
@@ -585,12 +585,12 @@ load_xfiles_table(cfdir, fname)
 
   if (htbl_ok == FALSE) {
     memset(&htbl, 0, sizeof (htbl));
-    res = j_table_init(&htbl, sizeof (XFILE_T), 256, xfiles_comp);
+    res = zeTable_Init(&htbl, sizeof (XFILE_T), 256, xfiles_comp);
     if (res == 0)
       htbl_ok = TRUE;
   }
   if (res == 0)
-    res = j_table_clear(&htbl);
+    res = zeTable_Clear(&htbl);
 
   if (res == 0)
     result = read_conf_data_file(cfdir, fname, "ze-xfiles", read_it);
@@ -642,7 +642,7 @@ check_xfiles(fname, mime, msgsize, saction, bufsize)
   {
     XFILE_T            *q;
 
-    if ((q = (XFILE_T *) j_table_get_first_ptr(&htbl)) != NULL) {
+    if ((q = (XFILE_T *) zeTable_Get_First_Ptr(&htbl)) != NULL) {
       do {
         int                 id = get_id_by_name(names, q->expr);
 
@@ -698,7 +698,7 @@ check_xfiles(fname, mime, msgsize, saction, bufsize)
           break;
         }
 
-      } while ((q = (XFILE_T *) j_table_get_next_ptr(&htbl)) != NULL);
+      } while ((q = (XFILE_T *) zeTable_Get_Next_Ptr(&htbl)) != NULL);
     }
   }
   DATA_UNLOCK();

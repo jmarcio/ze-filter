@@ -311,10 +311,10 @@ oracle_stats_update(score)
      int                 score;
 {
   ORACLE_DATA_LOCK();
-  kstats_update(&st_ora_global, (double) score);
+  zeKStatsUpdate(&st_ora_global, (double) score);
   nb_tot++;
   if (score > 0) {
-    kstats_update(&st_ora_tagged, (double) score);
+    zeKStatsUpdate(&st_ora_tagged, (double) score);
     nb_tag++;
   }
   ORACLE_DATA_UNLOCK();
@@ -335,16 +335,16 @@ oracle_stats_get(gm, gs, gnb, tm, ts, tnb)
 {
   ORACLE_DATA_LOCK();
   if (gm != NULL)
-    *gm = kmean(&st_ora_global);
+    *gm = zeKMean(&st_ora_global);
   if (gs != 0)
-    *gs = kstddev(&st_ora_global);
+    *gs = zeKStdDev(&st_ora_global);
   if (gnb != NULL)
     *gnb = nb_tot;
 
   if (tm != NULL)
-    *tm = kmean(&st_ora_tagged);
+    *tm = zeKMean(&st_ora_tagged);
   if (ts != 0)
-    *ts = kstddev(&st_ora_tagged);
+    *ts = zeKStdDev(&st_ora_tagged);
   if (tnb != NULL)
     *tnb = nb_tag;
 

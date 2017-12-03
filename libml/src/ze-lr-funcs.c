@@ -39,7 +39,7 @@
 typedef struct
 {
   bool                ok;
-  JBT_T               bt;
+  ZEBT_T               bt;
   int                 dummy;
 }
 DATA_T;
@@ -90,7 +90,7 @@ typedef struct
 {
   bool                ok;
   pthread_mutex_t     mutex;
-  JBT_T               lrbt;
+  ZEBT_T               lrbt;
 
   char               *fname;    /* data file name */
 
@@ -123,7 +123,7 @@ static LR_T         lr_data = LR_INITIALIZER;
  **************************************************************************** */
 static int
 lr_data_read(bt, fname)
-     JBT_T              *bt;
+     ZEBT_T              *bt;
      char               *fname;
 {
   FILE               *fin = NULL;
@@ -216,7 +216,7 @@ lr_data_read(bt, fname)
       if (sscanf(buf, "%x %lg %d %d %d", &tok.tok.utok, &tok.weight,
                  &tok.nb, &tok.nbs, &tok.nbh) == 5)
       {
-        if (!jbt_add(bt, &tok))
+        if (!zeBTree_Add(bt, &tok))
         {
 
         }
@@ -257,7 +257,7 @@ lr_data_open(fname)
   {
     char               *env = NULL;
 
-    (void) jbt_init(&lr_data.lrbt, sizeof (lrtok_T), lrtokcmp);
+    (void) zeBTree_Init(&lr_data.lrbt, sizeof (lrtok_T), lrtokcmp);
 
     /* JOE XXX hmm ... and if fname is NULL ??? */
     if ((lr_data.fname = strdup(fname)) == NULL)
@@ -355,7 +355,7 @@ lr_data_close()
   MUTEX_LOCK(&lr_data.mutex);
   if (lr_data.ok)
   {
-    (void) jbt_destroy(&lr_data.lrbt);
+    (void) zeBTree_Destroy(&lr_data.lrbt);
 
     FREE(lr_data.fname);
     lr_data.ok = FALSE;
@@ -443,7 +443,7 @@ lr_data_dump(fname)
   {
     FILE               *fout = NULL;
     int                 nb;
-    JBT_T              *bt = &lr_data.lrbt;
+    ZEBT_T              *bt = &lr_data.lrbt;
     time_t              now;
 
     fout = fopen(fname, "w");
@@ -456,7 +456,7 @@ lr_data_dump(fname)
     fprintf(fout, "date=%ld\n", now);
     fprintf(fout, "toktype=%d\n", 1);
     fprintf(fout, "toklength=%d\n", 4);
-    fprintf(fout, "count=%d\n", jbt_count(bt));
+    fprintf(fout, "count=%d\n", zeBTree_Count(bt));
     fprintf(fout, "spams=%d\n", lr_data.ns);
     fprintf(fout, "hams=%d\n", lr_data.nh);
     fprintf(fout, "spamsu=%d\n", lr_data.nsu);
@@ -467,7 +467,7 @@ lr_data_dump(fname)
     fprintf(fout, "bodylength=%ld\n", lr_data.opts.bodyLength);
     fprintf(fout, "</HEAD>\n");
     fprintf(fout, "<DATA>\n");
-    nb = jbt_browse(bt, lr_browse_dump, fout);
+    nb = zeBTree_Browse(bt, lr_browse_dump, fout);
     fprintf(fout, "</DATA>\n");
     fclose(fout);
   fin:
@@ -556,7 +556,7 @@ static char        *mymtas[] = {
 
 static              bool
 scan_msg_part(bt, s)
-     JBT_T              *bt;
+     ZEBT_T              *bt;
      char               *s;
 {
   int                 i, slen, tlen = 4;
@@ -579,10 +579,10 @@ scan_msg_part(bt, s)
     token.tok.utok = tok;
 
     token.nb = 1;
-    if ((t = jbt_get(bt, &token)) != NULL)
+    if ((t = zeBTree_Get(bt, &token)) != NULL)
       t->nb++;
     else
-      (void) jbt_add(bt, &token);
+      (void) zeBTree_Add(bt, &token);
   }
 
   return TRUE;
@@ -602,7 +602,7 @@ bt_browse_classify(void *vtok, void *varg)
 
   tok = *((lrtok_T *) vtok);
 #endif
-  if ((ptok = jbt_get(&lr_data.lrbt, vtok)) != NULL)
+  if ((ptok = zeBTree_Get(&lr_data.lrbt, vtok)) != NULL)
     *score += ptok->weight;
 
   return 1;
@@ -629,7 +629,7 @@ bt_browse_adjust(void *vtok, void *varg)
   double             *delta = (double *) varg;
 
   tok = *((lrtok_T *) vtok);
-  if ((ptok = jbt_get(&lr_data.lrbt, &tok)) == NULL)
+  if ((ptok = zeBTree_Get(&lr_data.lrbt, &tok)) == NULL)
   {
     tok.weight += *delta;
     tok.nb = 1;
@@ -637,7 +637,7 @@ bt_browse_adjust(void *vtok, void *varg)
       tok.nbs++;
     else
       tok.nbh++;
-    if (!jbt_add(&lr_data.lrbt, &tok))
+    if (!zeBTree_Add(&lr_data.lrbt, &tok))
     {
     }
   } else
@@ -818,7 +818,7 @@ lr_task(id, fname, cargs, margs, mscore, task, learn, spam)
   }
 
   id = STREMPTY(id, "NOID");
-  if (!jbt_init(&data.bt, sizeof (lrtok_T), lrtokcmp))
+  if (!zeBTree_Init(&data.bt, sizeof (lrtok_T), lrtokcmp))
     goto fin;
 
   if (lr_data.opts.useRawMsg)
@@ -850,11 +850,11 @@ lr_task(id, fname, cargs, margs, mscore, task, learn, spam)
   }
 
   if (task == LR_TASK_EXTRACT) {
-    nb = jbt_browse(&data.bt, bt_browse_dump_tokens, id);
+    nb = zeBTree_Browse(&data.bt, bt_browse_dump_tokens, id);
     goto fin;
   }
 
-  nb = jbt_browse(&data.bt, bt_browse_classify, &score);
+  nb = zeBTree_Browse(&data.bt, bt_browse_classify, &score);
   if (nb <= 0)
     goto fin;
   prob = 1. / (1. + exp(-score));
@@ -910,7 +910,7 @@ lr_task(id, fname, cargs, margs, mscore, task, learn, spam)
       }
       delta = dp * lr_data.opts.lrate;
       /* si apprentissage, correct weights */
-      nb = jbt_browse(&data.bt, bt_browse_adjust, &delta);
+      nb = zeBTree_Browse(&data.bt, bt_browse_adjust, &delta);
     }
 
     if (spam)
@@ -929,7 +929,7 @@ lr_task(id, fname, cargs, margs, mscore, task, learn, spam)
       }
       margs->learnt = TRUE;
       if (cargs != NULL)
-        cargs->nFeatures = jbt_count(&lr_data.lrbt);
+        cargs->nFeatures = zeBTree_Count(&lr_data.lrbt);
     }
     if (nb <= 0)
     {
@@ -939,7 +939,7 @@ lr_task(id, fname, cargs, margs, mscore, task, learn, spam)
   }
 
 fin:
-  (void) jbt_destroy(&data.bt);
+  (void) zeBTree_Destroy(&data.bt);
   return result;
 }
 

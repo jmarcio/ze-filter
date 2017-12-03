@@ -631,14 +631,14 @@ group_token_files(argc, argv, msgMin, scli_crypt)
      int                 msgMin;
      char               *scli_crypt;
 {
-  JBT_T               bt = JBT_INITIALIZER;
+  ZEBT_T               bt = JBT_INITIALIZER;
   LISTR_T            *list = NULL, *plist;
   char               *fname = NULL;
   int                 i, nl = 0, nt = 0;
   int                 icli_crypt = HASH_PLAIN;
   int                 file_crypt = HASH_PLAIN;
 
-  if (!jbt_init(&bt, sizeof (sfilter_token_T), sfilter_token_cmp))
+  if (!zeBTree_Init(&bt, sizeof (sfilter_token_T), sfilter_token_cmp))
     goto fin;
 
   icli_crypt = hash_label2code(scli_crypt);
@@ -760,9 +760,9 @@ group_token_files(argc, argv, msgMin, scli_crypt)
             strlcpy(tok.token, buf, sizeof (tok.token));
           tok.nbs = ns;
           tok.nbh = nh;
-          if ((t = jbt_get(&bt, &tok)) == NULL)
+          if ((t = zeBTree_Get(&bt, &tok)) == NULL)
           {
-            if (!jbt_add(&bt, &tok))
+            if (!zeBTree_Add(&bt, &tok))
             {
               ZE_LogMsgError(0, "ERROR inserting new token");
               continue;
@@ -820,7 +820,7 @@ group_token_files(argc, argv, msgMin, scli_crypt)
     memset(&arg, 0, sizeof (arg));
     arg.nbmin = msgMin;
 
-    nt = jbt_browse(&bt, btok_browse, &arg);
+    nt = zeBTree_Browse(&bt, btok_browse, &arg);
 
     printf("Count:%-32s %d %d\n", "msgs", nts, nth);
     printf("Count:%-32s %d %d\n", "features", arg.nfspam, arg.nfham);
@@ -829,7 +829,7 @@ group_token_files(argc, argv, msgMin, scli_crypt)
     printf("Count:%-32s %d %d\n", "tokens", arg.nts, arg.nth);
   }
 
-  jbt_destroy(&bt);
+  zeBTree_Destroy(&bt);
   zeLinkedList_Clear(list, NULL);
 
   printf("# Tokens browsed : %d\n", nt);
@@ -860,7 +860,7 @@ agregate_tokens(argc, argv, multinomial)
      char              **argv;
      bool                multinomial;
 {
-  JBT_T               bt = JBT_INITIALIZER;
+  ZEBT_T               bt = JBT_INITIALIZER;
 
   LISTR_T            *list = NULL, *plist;
   char               *fname = NULL;
@@ -873,7 +873,7 @@ agregate_tokens(argc, argv, multinomial)
     FILE               *fin = NULL;
     int                 nts, nth;
 
-    if (!jbt_init(&bt, sizeof (sfilter_token_T), sfilter_token_cmp))
+    if (!zeBTree_Init(&bt, sizeof (sfilter_token_T), sfilter_token_cmp))
       goto fin;
 
     fname = argv[i];
@@ -988,9 +988,9 @@ agregate_tokens(argc, argv, multinomial)
             tok.nbs = nb;
           else
             tok.nbh = nb;
-          if ((t = jbt_get(&bt, &tok)) == NULL)
+          if ((t = zeBTree_Get(&bt, &tok)) == NULL)
           {
-            if (!jbt_add(&bt, &tok))
+            if (!zeBTree_Add(&bt, &tok))
             {
               ZE_LogMsgError(0, "ERROR inserting new token");
               continue;
@@ -1034,15 +1034,15 @@ agregate_tokens(argc, argv, multinomial)
         printf("INFO:%-40s %s count=(%d %d)\n", fname, info, nts, nth);
       }
 
-      nt = jbt_browse(&bt, dtok_browse, NULL);
-      jbt_clear(&bt);
+      nt = zeBTree_Browse(&bt, dtok_browse, NULL);
+      zeBTree_Clear(&bt);
 
       printf("__END__\n");
     }
     zeLinkedList_Clear(list, NULL);
   }
 
-  jbt_destroy(&bt);
+  zeBTree_Destroy(&bt);
 
   printf("# Tokens browsed : %d\n", nt);
 

@@ -345,14 +345,14 @@ resolve_cyclic_task(arg)
   if (last_check + dt_check <= now) {
     timems_T            ti, tf;
 
-    ti = time_ms();
+    ti = zeTime_ms();
 
     zeMap_Browse(&map, clean_up_cache, &now, browsekey, sizeof (browsekey),
                  1000);
     last_check = now;
 
     if (resolve_cache_show_cyclic_task) {
-      tf = time_ms();
+      tf = zeTime_ms();
       ZE_MessageInfo(10, "Cleaning up resolve cache map dt = %lu",
                      (long) (tf - ti));
     }
@@ -362,13 +362,13 @@ resolve_cyclic_task(arg)
     timems_T            ti, tf;
     static int          i = 0;
 
-    ti = time_ms();
+    ti = zeTime_ms();
 
     resolve_cache_sync();
     last_sync = now;
 
     if (resolve_cache_show_cyclic_task && (++i % 6) == 0) {
-      tf = time_ms();
+      tf = zeTime_ms();
       ZE_MessageInfo(10, "Syncing resolve cache map dt = %lu",
                      (long) (tf - ti));
     }

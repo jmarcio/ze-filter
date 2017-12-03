@@ -925,7 +925,7 @@ install-dbtools:
 	@$(mkdir_p) $(DESTDIR)@WORKROOT@/dbtools 
 	@chmod 755 $(DESTDIR)@WORKROOT@/dbtools
 	@list='$(DBTOOLS)'; for p in $$list ; do \
-		$(install_sh_PROGRAM) berkdb/$$p \
+		$(install_sh_PROGRAM) libdb/$$p \
 			$(DESTDIR)@WORKROOT@/dbtools/ze-$$p ;\
 	done
 

@@ -14,13 +14,13 @@ libze_a_SOURCES       = 	zeString.c \
 				zeMD5.c \
 				zeSHA1.c \
 				zeLinkedList.c \
-				ze-btree.c \
+				zeBTree.c \
 				ze-buffer.c \
 				ze-inet.c \
 				ze-shmem.c \
-				ze-table.c \
-				ze-time.c \
-				kstats.c 
+				zeTable.c \
+				zeTime.c \
+				zeKStats.c 
 
 
 

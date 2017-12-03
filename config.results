@@ -1,11 +1,11 @@
 
-Configuration results : Sat Dec  2 22:46:44 CET 2017
+Configuration results : Sun Dec  3 00:30:07 CET 2017
 -----------------------
   configure arguments      : 
 
   Source directory         : /data/FOSS/dev-ze-filter/ze-filter
   Package                  : ze-filter
-  Version                  : ze-filter-develop-171202
+  Version                  : ze-filter-develop-171203
   Host type                : x86_64-pc-linux-gnu
   Host OS                  : linux-gnu
   Host CPU                 : x86_64
@@ -26,7 +26,7 @@ Configuration results : Sat Dec  2 22:46:44 CET 2017
   MODULES                  : 
   
   CC                       : gcc
-  CPPFLAGS                 :  -DOTHER_IS_KNOWN=1 -D_FFR_LOGREG=1 -I../pcre.dir -I. -I../berkdb -I../include -I/data/FOSS/dev-ze-filter/ze-filter/libze/include -I/data/FOSS/dev-ze-filter/ze-filter/libzechk/include -I/data/FOSS/dev-ze-filter/ze-filter/libml/include -I/data/FOSS/dev-ze-filter/ze-filter/libzefilter/include
+  CPPFLAGS                 :  -DOTHER_IS_KNOWN=1 -D_FFR_LOGREG=1 -I../pcre.dir -I. -I../libdb -I../include -I/data/FOSS/dev-ze-filter/ze-filter/libze/include -I/data/FOSS/dev-ze-filter/ze-filter/libzechk/include -I/data/FOSS/dev-ze-filter/ze-filter/libml/include -I/data/FOSS/dev-ze-filter/ze-filter/libzefilter/include
   CFLAGS                   : -pthread 
   LIBS                     : -lmilter -ldl -lrt -lm -lresolv -lc -lresolv -lldap -lnsl -lpthread  
   LDFLAGS                  : 

@@ -138,7 +138,7 @@ typedef struct SmtpRate_T {
   bool                ok;
   pthread_mutex_t     mutex;
 
-  JBT_T               db_rate;  /* tree with results per host */
+  ZEBT_T               db_rate;  /* tree with results per host */
   time_t              last_update;  /* results data update */
   time_t              last;
 
@@ -303,10 +303,10 @@ smtprate_init(sza, szb)
 
     memset(&hdata.gres, 0, sizeof (hdata.gres));
 
-    if (!jbt_init(&hdata.db_rate, sizeof (Res_T), res_t_cmp_by_addr))
+    if (!zeBTree_Init(&hdata.db_rate, sizeof (Res_T), res_t_cmp_by_addr))
       ZE_LogMsgError(0, "Can't initialize db_rate");
 
-    jbt_set_btree_size(&hdata.db_rate, FALSE, 0);
+    zeBTree_Set_BTree_Size(&hdata.db_rate, FALSE, 0);
 
     hdata.last_update = time(NULL);
 
@@ -334,7 +334,7 @@ smtprate_free()
     memset(&hdata.hist[i], 0, sizeof (hdata.hist[i]));
   }
 
-  jbt_destroy(&hdata.db_rate);
+  zeBTree_Destroy(&hdata.db_rate);
   hdata.ok = FALSE;
 
   DATA_UNLOCK();
@@ -429,7 +429,7 @@ smtprate_add_entry(which, key, name, nb, t)
   memset(&p, 0, sizeof (p));
   strlcpy(p.key, key, sizeof (p.key));
 
-  ptr = jbt_get(&hdata.db_rate, &p);
+  ptr = zeBTree_Get(&hdata.db_rate, &p);
 
   if (ptr != NULL) {
     ZE_LogMsgInfo(DEBUG_LEVEL, "Found in tree : %s", key);
@@ -451,7 +451,7 @@ smtprate_add_entry(which, key, name, nb, t)
 
     p.rate[which] = calc_bucket_rate(p.Srate, which, t, rateDef[which].wsz);
 
-    if (!jbt_add(&hdata.db_rate, &p))
+    if (!zeBTree_Add(&hdata.db_rate, &p))
       ZE_LogMsgError(0, "Error adding new leaf to db");
   }
 
@@ -508,7 +508,7 @@ smtprate_check(which, key, win)
   if (win <= 0)
     win = rateDef[which].wsz;
   if (strlen(key) > 0) {
-    if ((t = jbt_get(&hdata.db_rate, &p)) != NULL)
+    if ((t = zeBTree_Get(&hdata.db_rate, &p)) != NULL)
       res = calc_bucket_rate(t->Srate, which, now, win);
   } else {
     res = calc_bucket_rate(hdata.gres.Srate, which, now, win);
@@ -571,15 +571,15 @@ smtprate_cleanup_table(now, win)
 
 #if _PERIODIC_DEBUG
   ZE_MessageInfo(9, "smtprate_cleanup_table : before  : %d nodes",
-                 jbt_count(&hdata.db_rate));
+                 zeBTree_Count(&hdata.db_rate));
 #endif
 
-  if (!jbt_cleanup(&hdata.db_rate, cleanup_select, &win))
+  if (!zeBTree_Cleanup(&hdata.db_rate, cleanup_select, &win))
     ZE_LogMsgError(0, "Can't initialize temporary btree");
 
 #if _PERIODIC_DEBUG
   ZE_MessageInfo(9, "smtprate_cleanup_table : after   : %d nodes",
-                 jbt_count(&hdata.db_rate));
+                 zeBTree_Count(&hdata.db_rate));
 #endif
 
   hdata.last_update = now;
@@ -618,11 +618,11 @@ smtprate_update_table(w_width)
 
 #if _PERIODIC_DEBUG
   ZE_MessageInfo(9, "smtprate_update_table : before  : %d nodes",
-                 jbt_count(&hdata.db_rate));
+                 zeBTree_Count(&hdata.db_rate));
 #endif
 
 #if 0
-  jbt_clear(&hdata.db_rate);
+  zeBTree_Clear(&hdata.db_rate);
 #endif
   memset(&hdata.gres, 0, sizeof (hdata.gres));
 
@@ -665,7 +665,7 @@ smtprate_update_table(w_width)
         memset(&p, 0, sizeof (p));
         strlcpy(p.key, h->key, sizeof (p.key));
 
-        if ((t = jbt_get(&hdata.db_rate, &p)) != NULL) {
+        if ((t = zeBTree_Get(&hdata.db_rate, &p)) != NULL) {
           ZE_LogMsgInfo(DEBUG_LEVEL, "   %-20s already there...", p.key);
 
           if (t->Srate[ibucket].date < tbucket) {
@@ -683,7 +683,7 @@ smtprate_update_table(w_width)
           p.Srate[ibucket].date = tbucket;
           p.Srate[ibucket].nb[which] += h->nb;
 
-          if (!jbt_add(&hdata.db_rate, &p))
+          if (!zeBTree_Add(&hdata.db_rate, &p))
             ZE_LogMsgError(0, "Error adding new leaf to db");
           else
             hdata.hist[which].nb += h->nb;
@@ -708,7 +708,7 @@ smtprate_update_table(w_width)
 
 #if _PERIODIC_DEBUG
   ZE_MessageInfo(9, "smtprate_update_table : after   : %d nodes",
-                 jbt_count(&hdata.db_rate));
+                 zeBTree_Count(&hdata.db_rate));
 #endif
 
   hdata.last = now;
@@ -1045,11 +1045,11 @@ smtprate_print_table(fd, allhosts, verbose, hostnames, win, flags, nbrecs)
    * Let's print data.. 
    */
   if (allhosts) {
-    JBT_T               db_tmp = JBT_INITIALIZER;
+    ZEBT_T               db_tmp = JBT_INITIALIZER;
 
     MUTEX_LOCK(&fdmutex);
     outfd = fd;
-    if (jbt_init(&db_tmp, sizeof (Res_T), res_t_cmp_by_value)) {
+    if (zeBTree_Init(&db_tmp, sizeof (Res_T), res_t_cmp_by_value)) {
       smtp_select_T       sel;
       int                 i;
 
@@ -1061,7 +1061,7 @@ smtprate_print_table(fd, allhosts, verbose, hostnames, win, flags, nbrecs)
       sel.hostnames = hostnames;
       sel.nbrecs = nbrecs;
 
-      jbt_set_btree_size(&db_tmp, FALSE, 0);
+      zeBTree_Set_BTree_Size(&db_tmp, FALSE, 0);
 
       FD_PRINTF(fd, "                    -");
       for (i = 0; i < RATE_DIM; i++) {
@@ -1125,14 +1125,14 @@ smtprate_print_table(fd, allhosts, verbose, hostnames, win, flags, nbrecs)
       }
       FD_PRINTF(fd, "\n");
 
-      if (jbt_cpy(&db_tmp, &hdata.db_rate, select_node, &sel)) {
+      if (zeBTree_Cpy(&db_tmp, &hdata.db_rate, select_node, &sel)) {
         int                 n;
 
-        n = jbt_browse(&db_tmp, print_node, &sel);
+        n = zeBTree_Browse(&db_tmp, print_node, &sel);
 
         FD_PRINTF(fd, "\n %d records handled \n\n", n);
       }
-      jbt_destroy(&db_tmp);
+      zeBTree_Destroy(&db_tmp);
     }
 
     MUTEX_UNLOCK(&fdmutex);

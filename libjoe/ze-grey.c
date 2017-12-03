@@ -1852,10 +1852,10 @@ grey_set_dewhite_flags(s, reset)
 
 #define TIMER_INIT(t)						\
   do {								\
-    t = time_ms();						\
+    t = zeTime_ms();						\
   } while (0)
 
-#define TIMER_NOW(t) (time_ms() - t)
+#define TIMER_NOW(t) (zeTime_ms() - t)
 
 #define TIMER_LOG(s, t)						\
   do {								\

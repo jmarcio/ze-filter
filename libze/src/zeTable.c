@@ -22,16 +22,16 @@
  */
 
 #include <ze-sys.h>
-#include <ze-table.h>
+#include <zeTable.h>
 
-#include "ze-libjc.h"
+#include "libze.h"
 
 
 /* ****************************************************************************
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
-static int          j_table_resize(j_table_T *);
+static int          zeTable_Resize(j_table_T *);
 
 #define    RECPTR(t, i)   ((char *) t->data + i * t->sz)
 
@@ -42,7 +42,7 @@ static int          j_table_resize(j_table_T *);
 #define ALIGN_SIZE     16
 
 int
-j_table_init(tbh, sz, dim, comp)
+zeTable_Init(tbh, sz, dim, comp)
      j_table_T          *tbh;
      size_t              sz;
      int                 dim;
@@ -78,7 +78,7 @@ j_table_init(tbh, sz, dim, comp)
  *                                                                            *
  **************************************************************************** */
 static int
-j_table_resize(tbh)
+zeTable_Resize(tbh)
      j_table_T          *tbh;
 {
   int                 newsz;
@@ -110,7 +110,7 @@ j_table_resize(tbh)
  *                                                                            *
  **************************************************************************** */
 int
-j_table_free(tbh)
+zeTable_Free(tbh)
      j_table_T          *tbh;
 {
   if (tbh == NULL)
@@ -133,7 +133,7 @@ j_table_free(tbh)
  *                                                                            *
  **************************************************************************** */
 int
-j_table_clear(tbh)
+zeTable_Clear(tbh)
      j_table_T          *tbh;
 {
   if (tbh == NULL)
@@ -152,7 +152,7 @@ j_table_clear(tbh)
  *                                                                            *
  **************************************************************************** */
 int
-j_table_add(tbh, data)
+zeTable_Add(tbh, data)
      j_table_T          *tbh;
      void               *data;
 {
@@ -162,7 +162,7 @@ j_table_add(tbh, data)
   if (tbh->data == NULL)
     return -1;
 
-  if ((tbh->nb >= tbh->dim) && (j_table_resize(tbh) < 0))
+  if ((tbh->nb >= tbh->dim) && (zeTable_Resize(tbh) < 0))
   {
     return -1;
   }
@@ -178,7 +178,7 @@ j_table_add(tbh, data)
  *                                                                            *
  **************************************************************************** */
 int
-j_table_fetch(tbh, data)
+zeTable_Fetch(tbh, data)
      j_table_T          *tbh;
      void               *data;
 {
@@ -206,7 +206,7 @@ j_table_fetch(tbh, data)
  *                                                                            *
  **************************************************************************** */
 int
-j_table_count(tbh)
+zeTable_Count(tbh)
      j_table_T          *tbh;
 {
   if (tbh == NULL)
@@ -223,7 +223,7 @@ j_table_count(tbh)
  *                                                                            *
  **************************************************************************** */
 int
-j_table_get_ind(tbh, data, ind)
+zeTable_Get_Ind(tbh, data, ind)
      j_table_T          *tbh;
      void               *data;
      int                 ind;
@@ -247,7 +247,7 @@ j_table_get_ind(tbh, data, ind)
  *                                                                            *
  **************************************************************************** */
 int
-j_table_get_first(tbh, data)
+zeTable_Get_First(tbh, data)
      j_table_T          *tbh;
      void               *data;
 {
@@ -274,7 +274,7 @@ j_table_get_first(tbh, data)
  *                                                                            *
  **************************************************************************** */
 int
-j_table_get_next(tbh, data)
+zeTable_Get_Next(tbh, data)
      j_table_T          *tbh;
      void               *data;
 {
@@ -302,7 +302,7 @@ j_table_get_next(tbh, data)
  *                                                                            *
  **************************************************************************** */
 void               *
-j_table_get_first_ptr(tbh)
+zeTable_Get_First_Ptr(tbh)
      j_table_T          *tbh;
 {
   if (tbh == NULL)
@@ -324,7 +324,7 @@ j_table_get_first_ptr(tbh)
  *                                                                            *
  **************************************************************************** */
 void               *
-j_table_get_next_ptr(tbh)
+zeTable_Get_Next_Ptr(tbh)
      j_table_T          *tbh;
 {
   if (tbh == NULL)
@@ -346,7 +346,7 @@ j_table_get_next_ptr(tbh)
  *                                                                            *
  **************************************************************************** */
 int
-j_table_sort(tbh)
+zeTable_Sort(tbh)
      j_table_T          *tbh;
 {
   if (tbh == NULL)

@@ -119,7 +119,7 @@ mlfi_connect(ctx, hostname, hostaddr)
 #if HAVE_GETHRTIME
   priv->t_open = gethrtime();
 #else
-  priv->t_open = time_ms();
+  priv->t_open = zeTime_ms();
 #endif
   priv->fd = -1;
 

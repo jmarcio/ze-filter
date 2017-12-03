@@ -52,8 +52,8 @@ stats_init()
   MUTEX_LOCK(&mutex);
 
   for (i = CALLBACK_FIRST; i <= CALLBACK_LAST; i++)
-    kstats_reset(&callback_st[i]);
-  kstats_reset(&callback_gst);
+    zeKStatsReset(&callback_st[i]);
+  zeKStatsReset(&callback_gst);
   st_ok = TRUE;
 
   MUTEX_UNLOCK(&mutex);
@@ -76,8 +76,8 @@ callback_stats_update(callback, dt)
     stats_init();
 
   MUTEX_LOCK(&mutex);
-  kstats_update(&(callback_st[callback]), (double) dt);
-  kstats_update(&callback_gst, (double) dt);
+  zeKStatsUpdate(&(callback_st[callback]), (double) dt);
+  zeKStatsUpdate(&callback_gst, (double) dt);
   MUTEX_UNLOCK(&mutex);
 
   return TRUE;
@@ -108,7 +108,7 @@ callback_stats_dump(fd, line)
     strlcat(buf, str, sizeof (buf));
     for (i = CALLBACK_FIRST; i <= CALLBACK_LAST; i++) {
       snprintf(str, sizeof (str), "%s=(%.1f) ", CALLBACK_LABEL(i),
-               kmean(&callback_st[i]));
+               zeKMean(&callback_st[i]));
       strlcat(buf, str, sizeof (buf));
     }
     FD_PRINTF(fd, "%s\n", buf);
@@ -133,17 +133,17 @@ callback_stats_dump(fd, line)
       if (fd >= 0)
         FD_PRINTF(fd, "*  %-15s : %8d %10.1f %10.1f %10.1f %10.1f  ms\n",
                   CALLBACK_LABEL(i),
-                  kcount(&callback_st[i]),
-                  kmin(&callback_st[i]),
-                  kmax(&callback_st[i]),
-                  kmean(&callback_st[i]), kstddev(&callback_st[i]));
+                  zeKCount(&callback_st[i]),
+                  zeKMin(&callback_st[i]),
+                  zeKMax(&callback_st[i]),
+                  zeKMean(&callback_st[i]), zeKStdDev(&callback_st[i]));
       else
         ZE_MessageInfo(9, "*  %-15s : %8d %10.1f %10.1f %10.1f %10.1f  ms",
                        CALLBACK_LABEL(i),
-                       kcount(&callback_st[i]),
-                       kmin(&callback_st[i]),
-                       kmax(&callback_st[i]),
-                       kmean(&callback_st[i]), kstddev(&callback_st[i]));
+                       zeKCount(&callback_st[i]),
+                       zeKMin(&callback_st[i]),
+                       zeKMax(&callback_st[i]),
+                       zeKMean(&callback_st[i]), zeKStdDev(&callback_st[i]));
     }
     if (fd >= 0) {
       FD_PRINTF(fd, "*  %-15s : %8s %10s %10s %10s %10s\n",
@@ -151,20 +151,20 @@ callback_stats_dump(fd, line)
                 "*********", "*********");
       FD_PRINTF(fd, "*  %-15s : %8d %10.1f %10.1f %10.1f %10.1f  ms\n",
                 "Global",
-                kcount(&callback_gst),
-                kmin(&callback_gst),
-                kmax(&callback_gst),
-                kmean(&callback_gst), kstddev(&callback_gst));
+                zeKCount(&callback_gst),
+                zeKMin(&callback_gst),
+                zeKMax(&callback_gst),
+                zeKMean(&callback_gst), zeKStdDev(&callback_gst));
     } else {
       ZE_MessageInfo(9, "*  %-15s : %8s %10s %10s %10s %10s",
                      "********", "********", "*********", "*********",
                      "*********", "*********");
       ZE_MessageInfo(9, "*  %-15s : %8d %10.1f %10.1f %10.1f %10.1f  ms",
                      "Global",
-                     kcount(&callback_gst),
-                     kmin(&callback_gst),
-                     kmax(&callback_gst),
-                     kmean(&callback_gst), kstddev(&callback_gst));
+                     zeKCount(&callback_gst),
+                     zeKMin(&callback_gst),
+                     zeKMax(&callback_gst),
+                     zeKMean(&callback_gst), zeKStdDev(&callback_gst));
     }
   }
 

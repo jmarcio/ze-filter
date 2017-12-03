@@ -23,15 +23,15 @@
 
 
 #include <ze-sys.h>
-#include <ze-libjc.h>
-#include <ze-time.h>
+#include <libze.h>
+#include <zeTime.h>
 
 /* ****************************************************************************
  *                                                                            * 
  *                                                                            *
  **************************************************************************** */
 uint64_t
-time_ms()
+zeTime_ms()
 {
 #if HAVE_GETHRTIME
   return (uint64_t) (gethrtime() / 1000000);
@@ -49,7 +49,7 @@ time_ms()
  *                                                                            *
  **************************************************************************** */
 time_t
-sleep_ms(ms)
+zeSleep_ms(ms)
      time_t              ms;
 {
   struct timeval      tv;

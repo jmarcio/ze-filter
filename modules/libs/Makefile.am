@@ -6,7 +6,7 @@ VPATH                 = ../../libs
 pkglib_LTLIBRARIES    = 	libcommon.la libchkvirus.la 
 
 libcommon_la_SOURCES   = 	ze-base64.c \
-				ze-btree.c \
+				zeBTree.c \
 				ze-buffer.c \
 				ze-linkedlist.c \
 				ze-db.c \

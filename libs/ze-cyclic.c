@@ -192,9 +192,9 @@ cyclic_tasks(arg)
       tasks[i].last = now;
 
       /* XXX do something with result ??? */
-      tms = time_ms();
+      tms = zeTime_ms();
       (void) tasks[i].function(tasks[i].arg);
-      tasks[i].work += (time_ms() - tms);
+      tasks[i].work += (zeTime_ms() - tms);
       tasks[i].count++;
     }
   }

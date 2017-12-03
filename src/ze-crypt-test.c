@@ -49,7 +49,7 @@ main(argc, argv)
   printf(" * %7d tokens read\n", i);
 
 
-  ti = time_ms();
+  ti = zeTime_ms();
   for (i = 0; i < 1000000 && tok[i] != NULL; i++) {
     char                sout[256];
 
@@ -58,10 +58,10 @@ main(argc, argv)
     printf("MD5  %s\n", sout);
 #endif
   }
-  tf = time_ms();
+  tf = zeTime_ms();
   printf(" * MD5  = %4ld ms elapsed\n", tf - ti);
 
-  ti = time_ms();
+  ti = zeTime_ms();
   for (i = 0; i < 1000000 && tok[i] != NULL; i++) {
     char                sout[256];
 
@@ -70,7 +70,7 @@ main(argc, argv)
     printf("SHA1 %s\n", sout);
 #endif
   }
-  tf = time_ms();
+  tf = zeTime_ms();
   printf(" * SHA1 = %4d ms elapsed\n", tf - ti);
 
   if (0) {

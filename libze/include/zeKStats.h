@@ -35,18 +35,18 @@ typedef struct kstats_T {
 
 #define   KSTATS_INITIALIZER     {0, 0., 0., 0., 0.}
 
-double  kmean(kstats_T *s);
-double  kstddev(kstats_T *s);
-double  kmin(kstats_T *s);
-double  kmax(kstats_T *s);
-long    kcount(kstats_T *s);
+double  zeKMean(kstats_T *s);
+double  zeKStdDev(kstats_T *s);
+double  zeKMin(kstats_T *s);
+double  zeKMax(kstats_T *s);
+long    zeKCount(kstats_T *s);
 
-void    kstats_reset(kstats_T *);
-void    kstats_update(kstats_T *, double );
+void    zeKStatsReset(kstats_T *);
+void    zeKStatsUpdate(kstats_T *, double );
 void    kstats_print(kstats_T *);
 void    print_inference(kstats_T *, double , char *);
 
-
+#if 0
 double FGauss(double x);
 double erf(double x);
 double erfc(double x);
@@ -56,6 +56,7 @@ double erfi(double x);
 double erfci(double x);
 
 double confidence_interval(double p, double stddev, int n);
+#endif
 
 #define _KSTATS_
 

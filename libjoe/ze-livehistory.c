@@ -90,7 +90,7 @@ static struct {
 
   pthread_mutex_t     mutex;
 
-  JBT_T               db_empty;
+  ZEBT_T               db_empty;
 
   struct Bucket_T     bucket[K_MIN];
 } hdata = {
@@ -141,7 +141,7 @@ livehistory_init()
 
   DATA_LOCK();
   if (!hdata.ok) {
-    if (!jbt_init(&hdata.db_empty, sizeof (ShortHist_T), livehistory_cmp))
+    if (!zeBTree_Init(&hdata.db_empty, sizeof (ShortHist_T), livehistory_cmp))
       ZE_LogMsgError(0, "Can't initialize db_empty");
 
     hdata.ok = TRUE;
@@ -162,7 +162,7 @@ livehistory_reset()
 {
   DATA_LOCK();
 
-  jbt_destroy(&hdata.db_empty);
+  zeBTree_Destroy(&hdata.db_empty);
   hdata.nb = 0;
 
   DATA_UNLOCK();
@@ -221,13 +221,13 @@ livehistory_clean_table()
   DATA_LOCK();
 
   if ((hdata.last + DTCLEANUP / 2 < now) && ((hdata.last + DTCLEANUP < now)
-                                             || (jbt_count(&hdata.db_empty) >
+                                             || (zeBTree_Count(&hdata.db_empty) >
                                                  NB_BTCLEANUP))) {
-    JBT_T               tmp = JBT_INITIALIZER;
+    ZEBT_T               tmp = JBT_INITIALIZER;
 
-    if (jbt_init(&tmp, sizeof (ShortHist_T), livehistory_cmp)) {
-      if (jbt_cpy(&tmp, &hdata.db_empty, select_function, (void *) &now)) {
-        jbt_destroy(&hdata.db_empty);
+    if (zeBTree_Init(&tmp, sizeof (ShortHist_T), livehistory_cmp)) {
+      if (zeBTree_Cpy(&tmp, &hdata.db_empty, select_function, (void *) &now)) {
+        zeBTree_Destroy(&hdata.db_empty);
         hdata.db_empty = tmp;
       } else
         ZE_LogMsgError(0, "Can't copy btrees...");
@@ -284,7 +284,7 @@ livehistory_add_entry(ip, now, n, what)
   memset(&p, 0, sizeof (p));
   strlcpy(p.ip, ip, sizeof (p.ip));
 
-  ptr = jbt_get(&hdata.db_empty, &p);
+  ptr = zeBTree_Get(&hdata.db_empty, &p);
 
   if (ptr != NULL) {
     if (ptr->bucket[ti].t != tr) {
@@ -307,7 +307,7 @@ livehistory_add_entry(ip, now, n, what)
 
     p.bucket[ti].count[what] = n;
 
-    if (!jbt_add(&hdata.db_empty, &p))
+    if (!zeBTree_Add(&hdata.db_empty, &p))
       ZE_LogMsgError(0, "Error adding new leaf to db");
 
     res = n;
@@ -323,7 +323,7 @@ livehistory_add_entry(ip, now, n, what)
   DATA_UNLOCK();
 
   if ((hdata.last + DTCLEANUP / 2 < now) && ((hdata.last + DTCLEANUP < now)
-                                             || (jbt_count(&hdata.db_empty) >
+                                             || (zeBTree_Count(&hdata.db_empty) >
                                                  NB_BTCLEANUP)))
     livehistory_clean_table();
 
@@ -370,7 +370,7 @@ livehistory_check_host(ip, win, what)
   memset(&p, 0, sizeof (p));
   strlcpy(p.ip, ip, sizeof (p.ip));
 
-  ptr = jbt_get(&hdata.db_empty, &p);
+  ptr = zeBTree_Get(&hdata.db_empty, &p);
 
   if (ptr != NULL) {
     for (i = 0; i < K_MIN; i++) {
@@ -496,7 +496,7 @@ livehistory_log_table(fd, resolve)
   FD_PRINTF(fd, "  %-17s : %s\n", "HOST IP",
             "..BADRCPT .SPAMTRAP EMPTYCONN EMPTYMSGS ....BADMX .LONGCONN");
 
-  nb = jbt_browse(&hdata.db_empty, log_rec, &results);
+  nb = zeBTree_Browse(&hdata.db_empty, log_rec, &results);
 
   {
     int                 i;

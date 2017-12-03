@@ -218,7 +218,7 @@ ok:
 fin:
   CHECK_CALLBACK_DELAY();
   MUTEX_LOCK(&st_mutex);
-  kstats_update(&st_time, (double) (tfms - tims));
+  zeKStatsUpdate(&st_time, (double) (tfms - tims));
   MUTEX_UNLOCK(&st_mutex);
   /*
    * continue processing 

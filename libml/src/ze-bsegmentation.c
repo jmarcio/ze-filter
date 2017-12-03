@@ -33,7 +33,7 @@
 
 typedef struct msg_btsm_T
 {
-  JBT_T               bt;
+  ZEBT_T               bt;
   bfilter_T          *bf;
   void               *priv;
 } msg_btsm_T;
@@ -1237,12 +1237,12 @@ msg_btsm_add_token(bm, token)
 
   strlcpy(tok.token, token, sizeof (tok.token));
   tok.prob = UT_PROB;
-  if ((t = jbt_get(&bm->bt, &tok)) == NULL)
+  if ((t = zeBTree_Get(&bm->bt, &tok)) == NULL)
   {
     tok.prob = UT_PROB;
     tok.nb = 1;
 
-    if (!jbt_add(&bm->bt, &tok))
+    if (!zeBTree_Add(&bm->bt, &tok))
     {
       ZE_LogMsgError(0, "ERROR inserting new token");
       res = FALSE;
@@ -1261,7 +1261,7 @@ msg_btsm_init(bm)
   ASSERT(bm != NULL);
   ASSERT(bm->bt.signature == SIGNATURE);
 
-  if (!jbt_init(&bm->bt, sizeof (sfilter_token_T), token_cmp))
+  if (!zeBTree_Init(&bm->bt, sizeof (sfilter_token_T), token_cmp))
   {
     return FALSE;
   }
@@ -1276,7 +1276,7 @@ msg_btsm_end(bm)
   ASSERT(bm != NULL);
   ASSERT(bm->bt.signature == SIGNATURE);
 
-  (void) jbt_destroy(&bm->bt);
+  (void) zeBTree_Destroy(&bm->bt);
 
   return TRUE;
 }
@@ -1368,7 +1368,7 @@ bfilter_handle_message(id, fname, func, arg)
     int                 n;
 
     if (func != NULL)
-      n = jbt_browse(&bm.bt, func, arg);
+      n = zeBTree_Browse(&bm.bt, func, arg);
 
     res = TRUE;
   }

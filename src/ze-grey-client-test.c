@@ -165,7 +165,7 @@ do_test(conf_T * cargs)
   atexit(remote_grey_quit);
 
   memset(ipbuf, 0, sizeof (ipbuf));
-  ti = time_ms();
+  ti = zeTime_ms();
   srandom(ti);
   for (n = 0; n < cargs->count; n++) {
     int                 r = GREY_OK;
@@ -206,7 +206,7 @@ do_test(conf_T * cargs)
       sleep(1);
     }
   }
-  tf = time_ms();
+  tf = zeTime_ms();
 
   ZE_MessageInfo(1, "Entries checked : %5d\n", n);
   ZE_MessageInfo(1, "Time elapsed    : %5d ms", tf - ti);

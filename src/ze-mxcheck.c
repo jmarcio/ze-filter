@@ -49,7 +49,7 @@ static struct {
 
   pthread_mutex_t     mutex;
 
-  JBT_T               db_open;
+  ZEBT_T               db_open;
 } hdata = {
 FALSE, (time_t) 0, 0, PTHREAD_MUTEX_INITIALIZER, JBT_INITIALIZER};
 
@@ -120,7 +120,7 @@ check_sender_mx(ctx, mail_host)
   }
 #endif             /* _FFR_USE_MX_CACHE */
 
-  ti = time_ms();
+  ti = zeTime_ms();
 
   {
     DNS_HOSTARR_T       mx;
@@ -264,7 +264,7 @@ fin:
   if (result == SMFIS_UNDEF)
     result = SMFIS_CONTINUE;
 
-  tf = time_ms();
+  tf = zeTime_ms();
   if (ti != 0 && tf > ti) {
     static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
     static kstats_T     st = KSTATS_INITIALIZER;
@@ -276,13 +276,13 @@ fin:
 
     dt = (double) (tf - ti);
 
-    kstats_update(&st, dt);
+    zeKStatsUpdate(&st, dt);
 
     if ((++ns % 1000) == 0) {
       ZE_MessageInfo(10,
                      "MX CHECK delay : nb=%d min=%5.3f mean=%5.3f max=%5.3f stddev=%5.3f ",
-                     ns, kmin(&st), kmean(&st), kmax(&st), kstddev(&st));
-      kstats_reset(&st);
+                     ns, zeKMin(&st), zeKMean(&st), zeKMax(&st), zeKStdDev(&st));
+      zeKStatsReset(&st);
       ns = 0;
     }
 

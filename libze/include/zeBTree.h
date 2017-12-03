@@ -22,39 +22,39 @@
  */
 
 
-#ifndef __JBTREE_H__
+#ifndef __ZEBTREE_H__
 
-typedef struct JBT_T JBT_T;
-typedef struct JBTREC_T JBTREC_T;
+typedef struct ZEBT_T ZEBT_T;
+typedef struct ZEBTREC_T ZEBTREC_T;
 
-typedef int    (*JBT_CMP_F) (void *, void *);
-typedef bool   (*JBT_SEL_F) (void *, void *);
-typedef int    (*JBT_BROWSE_F) (void *, void *);
+typedef int    (*ZEBT_CMP_F) (void *, void *);
+typedef bool   (*ZEBT_SEL_F) (void *, void *);
+typedef int    (*ZEBT_BROWSE_F) (void *, void *);
 
-bool            jbt_lock (JBT_T *);
-bool            jbt_unlock (JBT_T *);
+bool            zeBTree_Lock (ZEBT_T *);
+bool            zeBTree_unLock (ZEBT_T *);
 
-bool            jbt_init (JBT_T *, size_t, JBT_CMP_F);
+bool            zeBTree_Init (ZEBT_T *, size_t, ZEBT_CMP_F);
 
-bool            jbt_set_btree_size(JBT_T *, bool, int);
+bool            zeBTree_Set_BTree_Size(ZEBT_T *, bool, int);
 
-bool            jbt_destroy (JBT_T *);
+bool            zeBTree_Destroy (ZEBT_T *);
 
-bool            jbt_clear (JBT_T *);
+bool            zeBTree_Clear (ZEBT_T *);
 
-int             jbt_count(JBT_T *);
+int             zeBTree_Count(ZEBT_T *);
 
-int             jbt_browse (JBT_T *, JBT_BROWSE_F, void *);
+int             zeBTree_Browse (ZEBT_T *, ZEBT_BROWSE_F, void *);
 
-bool            jbt_cpy(JBT_T *, JBT_T *, JBT_SEL_F, void *);
+bool            zeBTree_Cpy(ZEBT_T *, ZEBT_T *, ZEBT_SEL_F, void *);
 
-bool            jbt_cleanup(JBT_T *, JBT_SEL_F, void *);
+bool            zeBTree_Cleanup(ZEBT_T *, ZEBT_SEL_F, void *);
 
-void           *jbt_get (JBT_T *, void *);
+void           *zeBTree_Get (ZEBT_T *, void *);
 
-bool            jbt_add (JBT_T *, void *);
+bool            zeBTree_Add (ZEBT_T *, void *);
 
-bool            jbt_del (JBT_T *, void *);
+bool            zeBTree_Del (ZEBT_T *, void *);
 
 
 #ifndef MAX_BTNODES
@@ -65,12 +65,12 @@ bool            jbt_del (JBT_T *, void *);
 # define NB_BTCLEANUP    ((4 * MAX_BTNODES) / 5)
 #endif
 
-struct JBT_T {
+struct ZEBT_T {
   uint32_t        signature;
   int             count;
   size_t          size;
-  JBTREC_T       *root;
-  JBT_CMP_F       reccmp;
+  ZEBTREC_T       *root;
+  ZEBT_CMP_F       reccmp;
   bool            chkCount;
   int             maxCount;
   int             nbErr;
@@ -83,6 +83,6 @@ struct JBT_T {
         FALSE, MAX_BTNODES, 0, PTHREAD_MUTEX_INITIALIZER \
       }
 
-#define __JBTREE_H__
+#define __ZEBTREE_H__
 #endif
 

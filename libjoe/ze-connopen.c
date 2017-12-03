@@ -62,7 +62,7 @@ static struct {
 
   pthread_mutex_t     mutex;
 
-  JBT_T               db_open;
+  ZEBT_T               db_open;
 
 } hdata = {
 FALSE, (time_t) 0, 0, PTHREAD_MUTEX_INITIALIZER, JBT_INITIALIZER};
@@ -116,7 +116,7 @@ connopen_init()
   DATA_LOCK();
 
   if (!hdata.ok) {
-    if (jbt_init(&hdata.db_open, sizeof (OpenConn_T), connopen_cmp)) {
+    if (zeBTree_Init(&hdata.db_open, sizeof (OpenConn_T), connopen_cmp)) {
       hdata.ok = TRUE;
       hdata.last = time(NULL);
     } else
@@ -137,7 +137,7 @@ connopen_reset()
 {
   DATA_LOCK();
 
-  jbt_destroy(&hdata.db_open);
+  zeBTree_Destroy(&hdata.db_open);
   hdata.nb = 0;
 
   DATA_UNLOCK();
@@ -180,7 +180,7 @@ connopen_check_host(ip, name, nb)
   memset(&p, 0, sizeof (p));
   strlcpy(p.ip, ip, sizeof (p.ip));
 
-  ptr = jbt_get(&hdata.db_open, &p);
+  ptr = zeBTree_Get(&hdata.db_open, &p);
 
   if (ptr != NULL) {
     if (nb != 0) {
@@ -196,7 +196,7 @@ connopen_check_host(ip, name, nb)
 
       p.nb = nb;
       p.update = now;
-      if (jbt_add(&hdata.db_open, &p)) {
+      if (zeBTree_Add(&hdata.db_open, &p)) {
         res = p.nb;
         hdata.nb += nb;
       } else
@@ -208,7 +208,7 @@ connopen_check_host(ip, name, nb)
 
   if ((hdata.last + DTCLEANUP / 2 < now) &&
       ((hdata.last + DTCLEANUP < now)
-       || (jbt_count(&hdata.db_open) > NB_BTCLEANUP)))
+       || (zeBTree_Count(&hdata.db_open) > NB_BTCLEANUP)))
     connopen_clean_table();
 
   return res;
@@ -257,28 +257,28 @@ connopen_clean_table()
 
   if ((hdata.last + DTCLEANUP / 2 < now) &&
       ((hdata.last + DTCLEANUP < now)
-       || (jbt_count(&hdata.db_open) > NB_BTCLEANUP))) {
+       || (zeBTree_Count(&hdata.db_open) > NB_BTCLEANUP))) {
 
 #if 1
-    JBT_T               tmp = JBT_INITIALIZER;
+    ZEBT_T               tmp = JBT_INITIALIZER;
 
     ZE_MessageInfo(19, "connopen_clean_table : before  : %d nodes",
-                   jbt_count(&hdata.db_open));
+                   zeBTree_Count(&hdata.db_open));
 
-    if (jbt_init(&tmp, sizeof (OpenConn_T), connopen_cmp)) {
-      if (jbt_cpy(&tmp, &hdata.db_open, select_function, NULL)) {
-        jbt_destroy(&hdata.db_open);
+    if (zeBTree_Init(&tmp, sizeof (OpenConn_T), connopen_cmp)) {
+      if (zeBTree_Cpy(&tmp, &hdata.db_open, select_function, NULL)) {
+        zeBTree_Destroy(&hdata.db_open);
         hdata.db_open = tmp;
       } else
         ZE_LogMsgError(0, "Can't copy btrees...");
     } else
 #else
-    if (!jbt_cleanup(&hdata.db_open, connopen_cmp, NULL))
+    if (!zeBTree_Cleanup(&hdata.db_open, connopen_cmp, NULL))
 #endif
       ZE_LogMsgError(0, "Can't initialize temporary btree");
 
     ZE_MessageInfo(19, "connopen_clean_table : after   : %d nodes",
-                   jbt_count(&hdata.db_open));
+                   zeBTree_Count(&hdata.db_open));
 
     hdata.last = now;
   }
@@ -326,7 +326,7 @@ connopen_print_table(fd)
   else
     FD_PRINTF(logfd, "*** Open connections :\n");
 
-  nb = jbt_browse(&hdata.db_open, log_rec, NULL);
+  nb = zeBTree_Browse(&hdata.db_open, log_rec, NULL);
 
   if (logfd < 0)
     ZE_MessageInfo(10, "    %d entries on database", nb);

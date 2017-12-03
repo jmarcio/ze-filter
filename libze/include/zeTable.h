@@ -38,23 +38,23 @@ struct j_table_T {
 
 #define    JTABLE_INITIALIZER   {0,0,0,0,0,0,NULL,NULL}
 
-int                 j_table_init (j_table_T *, size_t, int,
+int                 zeTable_Init (j_table_T *, size_t, int,
                                   int (*)(const void *, const void *));
-int                 j_table_free (j_table_T *);
-int                 j_table_clear (j_table_T *);
-int                 j_table_add (j_table_T *, void *);
-int                 j_table_count (j_table_T *);
-int                 j_table_fetch (j_table_T *, void *);
-int                 j_table_get_ind (j_table_T *, void *, int);
-int                 j_table_get_first (j_table_T *, void *);
-int                 j_table_get_next (j_table_T *, void *);
-int                 j_table_sort (j_table_T *);
+int                 zeTable_Free (j_table_T *);
+int                 zeTable_Clear (j_table_T *);
+int                 zeTable_Add (j_table_T *, void *);
+int                 zeTable_Count (j_table_T *);
+int                 zeTable_Fetch (j_table_T *, void *);
+int                 zeTable_Get_Ind (j_table_T *, void *, int);
+int                 zeTable_Get_First (j_table_T *, void *);
+int                 zeTable_Get_Next (j_table_T *, void *);
+int                 zeTable_Sort (j_table_T *);
 int                 j_table_find (j_table_T *, void *);
 
-void               *j_table_fetch_ptr (j_table_T *, void *);
-void               *j_table_get_ind_ptr (j_table_T *, int);
-void               *j_table_get_first_ptr (j_table_T *);
-void               *j_table_get_next_ptr (j_table_T *);
+void               *zeTable_Fetch_ptr (j_table_T *, void *);
+void               *zeTable_Get_Ind_ptr (j_table_T *, int);
+void               *zeTable_Get_First_Ptr (j_table_T *);
+void               *zeTable_Get_Next_Ptr (j_table_T *);
 
 #define __JTABLE_H_
 #endif

@@ -134,13 +134,13 @@ static char        *SYMPA_CMDS[] = {
 
 #define   INIT_CALLBACK_DELAY()               \
   time_t  ti = time(NULL), tf = time(NULL);   \
-  uint64_t tims = time_ms(), tfms = time_ms()
+  uint64_t tims = zeTime_ms(), tfms = zeTime_ms()
 
 #define UPDATE_SVCTIME()						\
   (void) smtprate_add_entry(RATE_SVCTIME, priv->peer_addr,		\
 			    priv->peer_name, (tfms - tims), time(NULL));
 
-#define   CHECK_CALLBACK_NOW()  (time_ms() - tims)
+#define   CHECK_CALLBACK_NOW()  (zeTime_ms() - tims)
 
 
 #define   CHECK_CALLBACK_DELAY()					\
@@ -153,7 +153,7 @@ static char        *SYMPA_CMDS[] = {
 		     (long ) (tf - ti), (long ) JSM_TO);		\
       /* priv->save_msg = TRUE; */					\
     }									\
-    tfms = time_ms();							\
+    tfms = zeTime_ms();							\
     if ((tfms - tims) > 1000 * JSM_TO) {				\
     }									\
     if (priv != NULL) {							\

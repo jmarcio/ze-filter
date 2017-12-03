@@ -1348,8 +1348,8 @@ dnl
 echo "*** Checking how Berkeley DB shall be integrated..."
 
 WITH_BDB=bundled
-BDBDIR="berkdb"
-AC_CONFIG_SUBDIRS(berkdb)
+BDBDIR="libdb"
+AC_CONFIG_SUBDIRS(libdb)
 BDBLIBS="-L../$BDBDIR -ldb"
 dnl BDBLIBS="../$BDBDIR/libdb.a"
 BDBINCS="-I../$BDBDIR/"
@@ -1505,9 +1505,9 @@ log_conf ()
 }
 
 BDBVER=
-if test -f berkdb/bdb.version 
+if test -f libdb/bdb.version 
 then
-  BDBVER=`cat berkdb/bdb.version | head -1`
+  BDBVER=`cat libdb/bdb.version | head -1`
   BDBVER=`basename $BDBVER`
 fi
 

@@ -24,6 +24,8 @@
 
 
 #include <ze-sys.h>
+#include <libze.h>
+#include <libml.h>
 #include <ze-filter.h>
 #include <ze-lr-init.h>
 

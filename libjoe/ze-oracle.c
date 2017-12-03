@@ -71,7 +71,7 @@ dump_oradata_table()
   oradata_T           p;
 
   printf("# Let's dump j_oradata_table : \n");
-  if (j_table_get_first(&htbl, &p) == 0) {
+  if (zeTable_Get_First(&htbl, &p) == 0) {
     do {
       char                sodds[32];
 
@@ -82,7 +82,7 @@ dump_oradata_table()
       printf("-> %-10s %-8s %8.2f : %s\n", p.type, p.action, (double) p.pOdds,
              p.data);
 #endif
-    } while (j_table_get_next(&htbl, &p) == 0);
+    } while (zeTable_Get_Next(&htbl, &p) == 0);
   }
 }
 
@@ -188,7 +188,7 @@ add_oradata_rec(vs, arg)
   ZE_MessageInfo(12, "TYPE=%-15s SCORE=%.2f VALUE=%s\n", r.type,
                  (double) r.score, r.data);
 
-  return j_table_add(&htbl, &r);
+  return zeTable_Add(&htbl, &r);
 }
 
 /* ***************************************************************************
@@ -228,12 +228,12 @@ load_oradata_table(cfdir, fname)
 
   if (htbl_ok == FALSE) {
     memset(&htbl, 0, sizeof (htbl));
-    res = j_table_init(&htbl, sizeof (oradata_T), 256, oradata_comp);
+    res = zeTable_Init(&htbl, sizeof (oradata_T), 256, oradata_comp);
     if (res == 0)
       htbl_ok = TRUE;
   }
   if (res == 0)
-    res = j_table_clear(&htbl);
+    res = zeTable_Clear(&htbl);
 
   if (res == 0)
     result =
@@ -271,7 +271,7 @@ count_oradata(id, type, data, find, odds)
   bestof_init(&best, 3, NULL);
 
   ORA_LOCK();
-  if (j_table_get_first(&htbl, &p) == 0) {
+  if (zeTable_Get_First(&htbl, &p) == 0) {
     do {
       if (strcasecmp(type, p.type) != 0)
         continue;
@@ -285,7 +285,7 @@ count_oradata(id, type, data, find, odds)
         if (find)
           break;
       }
-    } while (j_table_get_next(&htbl, &p) == 0);
+    } while (zeTable_Get_Next(&htbl, &p) == 0);
   }
   ORA_UNLOCK();
 

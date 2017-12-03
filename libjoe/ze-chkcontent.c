@@ -253,7 +253,7 @@ check_mime_part(buf, size, id, level, type, arg, mime_part)
    * spam_oracle 
    */
   if (type != MIME_TYPE_TEXT) {
-    kstats_update(&data->mksize.other, (double) size);
+    zeKStatsUpdate(&data->mksize.other, (double) size);
     return TRUE;
   }
 #if 1
@@ -319,7 +319,7 @@ check_mime_part(buf, size, id, level, type, arg, mime_part)
     size_t              real_size = 0;
     int                 nb_tags;
 
-    kstats_update(&data->mksize.html, (double) size);
+    zeKStatsUpdate(&data->mksize.html, (double) size);
 
     data->nb_text_html++;
 
@@ -427,7 +427,7 @@ check_mime_part(buf, size, id, level, type, arg, mime_part)
    **
    */
   if (strcasecmp("text/plain", mime_part->mime) == 0) {
-    kstats_update(&data->mksize.plain, (double) size);
+    zeKStatsUpdate(&data->mksize.plain, (double) size);
 
     data->nb_text_plain++;
 
@@ -514,7 +514,7 @@ check_mime_part(buf, size, id, level, type, arg, mime_part)
    **
    */
   if (simple_text) {
-    kstats_update(&data->mksize.simple, (double) size);
+    zeKStatsUpdate(&data->mksize.simple, (double) size);
 
     if (data->scores.do_oracle) {
       if (size > data->plain.len_raw) {
@@ -612,13 +612,13 @@ scan_body_contents(id, ip, fname, maxsize, data, flags, scores)
 
   bestof_init(&data->best, 4, NULL);
 
-  kstats_reset(&data->mksize.plain);
-  kstats_reset(&data->mksize.plain_clean);
-  kstats_reset(&data->mksize.html);
-  kstats_reset(&data->mksize.html_clean);
-  kstats_reset(&data->mksize.simple);
-  kstats_reset(&data->mksize.other);
-  kstats_reset(&data->mksize.attach);
+  zeKStatsReset(&data->mksize.plain);
+  zeKStatsReset(&data->mksize.plain_clean);
+  zeKStatsReset(&data->mksize.html);
+  zeKStatsReset(&data->mksize.html_clean);
+  zeKStatsReset(&data->mksize.simple);
+  zeKStatsReset(&data->mksize.other);
+  zeKStatsReset(&data->mksize.attach);
 
   /*
    **
@@ -819,7 +819,7 @@ scan_body_contents(id, ip, fname, maxsize, data, flags, scores)
      */
 #if 1
     {
-      if (kmean(&data->mksize.plain) < 1.);
+      if (zeKMean(&data->mksize.plain) < 1.);
     }
 #endif
 
@@ -856,16 +856,16 @@ scan_body_contents(id, ip, fname, maxsize, data, flags, scores)
         bool                ldiff = FALSE;
         bool                ko = FALSE;
 
-        whtml[0] = kmin(&data->html.st_wlen);
-        whtml[1] = kmax(&data->html.st_wlen);
-        whtml[2] = kmean(&data->html.st_wlen);
-        whtml[3] = kstddev(&data->html.st_wlen);
+        whtml[0] = zeKMin(&data->html.st_wlen);
+        whtml[1] = zeKMax(&data->html.st_wlen);
+        whtml[2] = zeKMean(&data->html.st_wlen);
+        whtml[3] = zeKStdDev(&data->html.st_wlen);
         whtml[4] = (double) data->html.len_clean;
 
-        wplain[0] = kmin(&data->plain.st_wlen);
-        wplain[1] = kmax(&data->plain.st_wlen);
-        wplain[2] = kmean(&data->plain.st_wlen);
-        wplain[3] = kstddev(&data->plain.st_wlen);
+        wplain[0] = zeKMin(&data->plain.st_wlen);
+        wplain[1] = zeKMax(&data->plain.st_wlen);
+        wplain[2] = zeKMean(&data->plain.st_wlen);
+        wplain[3] = zeKStdDev(&data->plain.st_wlen);
         wplain[4] = (double) data->plain.len_clean;
 
         vcoef = vector_compare(whtml, wplain, 5);

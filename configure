@@ -818,7 +818,7 @@ CPPFLAGS
 LT_SYS_LIBRARY_PATH
 CPP'
 ac_subdirs_all='pcre.dir
-berkdb'
+libdb'
 
 # Initialize some variables set by options.
 ac_init_help=
@@ -16820,8 +16820,8 @@ echo ""
 echo "*** Checking how Berkeley DB shall be integrated..."
 
 WITH_BDB=bundled
-BDBDIR="berkdb"
-subdirs="$subdirs berkdb"
+BDBDIR="libdb"
+subdirs="$subdirs libdb"
 
 BDBLIBS="-L../$BDBDIR -ldb"
 BDBINCS="-I../$BDBDIR/"
@@ -19429,9 +19429,9 @@ log_conf ()
 }
 
 BDBVER=
-if test -f berkdb/bdb.version
+if test -f libdb/bdb.version
 then
-  BDBVER=`cat berkdb/bdb.version | head -1`
+  BDBVER=`cat libdb/bdb.version | head -1`
   BDBVER=`basename $BDBVER`
 fi
 

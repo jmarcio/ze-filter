@@ -23,3 +23,9 @@ jbt_browse_tree      zeBTree_Browse_Tree
 jbt_browse           zeBTree_Browse
 jbt_add_node         zeBTree_Add_Node
 jbt_add              zeBTree_Add
+JBT_T                ZEBT_T
+JBT_CMP_F            ZEBT_CMP_F
+JBTREC_T             ZEBTREC_T
+JBTREE_H             ZEBTREE_H
+JBT_SEL_F            ZEBT_SEL_F
+JBT_BROWSE_F         ZEBT_BROWSE_F
