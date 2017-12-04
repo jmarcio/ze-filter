@@ -1322,8 +1322,8 @@ echo "*** Checking how PCRE shall be integrated..."
 PCRE_PATH=""
 USE_LIBPCRE="bundled"
 
-PCREDIR="pcre.dir"
-AC_CONFIG_SUBDIRS(pcre.dir)
+PCREDIR="libpcre"
+AC_CONFIG_SUBDIRS(libpcre)
 dnl BDBLIBS="../$BDBDIR/libpcre.a"
 dnl BDBINCS="-I../$BDBDIR/"
 
@@ -1512,9 +1512,9 @@ then
 fi
 
 PCREVER=
-if test -f pcre.dir/pcre.version
+if test -f libpcre/pcre.version
 then
-  PCREVER=`cat pcre.dir/pcre.version | head -1`
+  PCREVER=`cat libpcre/pcre.version | head -1`
   PCREVER=`basename $PCREVER`
 fi
 

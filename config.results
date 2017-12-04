@@ -1,11 +1,11 @@
 
-Configuration results : Sun Dec  3 15:34:51 CET 2017
+Configuration results : Mon Dec  4 13:41:52 CET 2017
 -----------------------
   configure arguments      : 
 
-  Source directory         : /data/FOSS/dev-ze-filter/ze-filter
+  Source directory         : /export/dev-j-chkmail/ze-filter
   Package                  : ze-filter
-  Version                  : ze-filter-develop-171203
+  Version                  : ze-filter-develop-171204
   Host type                : x86_64-pc-linux-gnu
   Host OS                  : linux-gnu
   Host CPU                 : x86_64
@@ -26,11 +26,11 @@ Configuration results : Sun Dec  3 15:34:51 CET 2017
   MODULES                  : 
   
   CC                       : gcc
-  CPPFLAGS                 :  -DOTHER_IS_KNOWN=1 -D_FFR_LOGREG=1 -I../pcre.dir -I. -I../libdb -I../include -I/data/FOSS/dev-ze-filter/ze-filter/libze/include -I/data/FOSS/dev-ze-filter/ze-filter/libzechk/include -I/data/FOSS/dev-ze-filter/ze-filter/libml/include -I/data/FOSS/dev-ze-filter/ze-filter/libzefilter/include
+  CPPFLAGS                 :  -DOTHER_IS_KNOWN=1 -D_FFR_LOGREG=1 -I../libpcre -I. -I../libdb -I../include -I/export/dev-j-chkmail/ze-filter/libze/include -I/export/dev-j-chkmail/ze-filter/libzechk/include -I/export/dev-j-chkmail/ze-filter/libml/include -I/export/dev-j-chkmail/ze-filter/libzefilter/include
   CFLAGS                   : -pthread 
   LIBS                     : -lmilter -ldl -lrt -lm -lresolv -lc -lresolv -lldap -lnsl -lpthread  
   LDFLAGS                  : 
-  JLIBS                    :  -L/data/FOSS/dev-ze-filter/ze-filter/libjoe -ljoe -L/data/FOSS/dev-ze-filter/ze-filter/libml/src -lml -L/data/FOSS/dev-ze-filter/ze-filter/libzechk/src -lzechk -L/data/FOSS/dev-ze-filter/ze-filter/libs -lcommon -L/data/FOSS/dev-ze-filter/ze-filter/libze/src -lze
+  JLIBS                    :  -L/export/dev-j-chkmail/ze-filter/libjoe -ljoe -L/export/dev-j-chkmail/ze-filter/libml/src -lml -L/export/dev-j-chkmail/ze-filter/libzechk/src -lzechk -L/export/dev-j-chkmail/ze-filter/libs -lcommon -L/export/dev-j-chkmail/ze-filter/libze/src -lze
   
 
   Before upgrading from a previous version, it's absolutely necessary
