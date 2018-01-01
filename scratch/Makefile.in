@@ -352,7 +352,7 @@ ze_lr_sim_SOURCES = ze-lr-sim.c
 #ze_uufile_SOURCES 	 = ze-uufile.c 
 ze_mfilter_SOURCES = ze-mfilter.c
 LDADD = @JCHKLIBS@   @LDLIBPCRE@ @BDBLIBS@
-AM_CPPFLAGS = -I../zeinc -I../zechkinc @BDBINCS@
+AM_CPPFLAGS = @ZEINCS@ @BDBINCS@
 all: all-am
 
 .SUFFIXES:

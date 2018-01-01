@@ -324,7 +324,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 ze_logserver_SOURCES = ze-logserver.c 
 LDADD = @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@
-AM_CPPFLAGS = -I../zeinc @BDBINCS@
+AM_CPPFLAGS = @ZEINCS@ @BDBINCS@
 all: all-am
 
 .SUFFIXES:

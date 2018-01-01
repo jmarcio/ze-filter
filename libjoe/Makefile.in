@@ -384,7 +384,7 @@ libjoe_a_SOURCES = ze-oracle-scores.c \
 			ze-modules.c 
 
 LDADD = @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@
-AM_CPPFLAGS = -I../zeinc -I../zechkinc @BDBINCS@
+AM_CPPFLAGS = @ZEINCS@ @BDBINCS@
 all: all-am
 
 .SUFFIXES:

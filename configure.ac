@@ -1,5 +1,5 @@
+
 AC_INIT(ze-filter, 0.0.1, jose.marcio.mc@gmail.com)
-AC_CONFIG_MACRO_DIRS([m4])
 AC_COPYRIGHT([Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz])
 AC_CONFIG_SRCDIR([src/ze-filter.c])
 AM_INIT_AUTOMAKE([no-define])
@@ -22,7 +22,7 @@ export VERSION
 
 AM_CONFIG_HEADER(include/config.h)
 
-dnl AC_CONFIG_MACRO_DIRS([m4])
+AC_CONFIG_MACRO_DIRS([m4])
 AC_CANONICAL_HOST
 
 AC_SUBST(PACKAGE)
@@ -1431,7 +1431,7 @@ dnl
 TOPDIR=`pwd`
 AC_SUBST(TOPDIR)
 
-ZEINCS="-I$TOPDIR/libze/include -I$TOPDIR/libzechk/include -I$TOPDIR/libml/include -I$TOPDIR/libzefilter/include"
+ZEINCS="-I$TOPDIR/libze/include -I$TOPDIR/libzechk/include -I$TOPDIR/libml/include -I$TOPDIR/libzefilter/include -I$TOPDIR/libpcre -I$TOPDIR/libdb"
 AC_SUBST(ZEINCS)
 
 dnl from line 963

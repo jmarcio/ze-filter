@@ -23,7 +23,8 @@ SUBDIRS = $(subdirs) \
 #	modules/libs 
 
 DBTOOLS = db_archive db_checkpoint db_deadlock db_dump db_hotbackup \
-	db_load db_printlog db_log_verify db_recover db_stat db_upgrade db_verify
+	db_load db_printlog db_log_verify db_recover db_stat db_upgrade \
+	db_verify
 
 clean-hook:
 	rm -f *~ */*~ */*/*~ */*/*/*~ */*/*/*/*~ #*# */#*# */*/#*# */*/*/#*#
@@ -74,7 +75,7 @@ install-dbtools:
 	@chmod 755 $(DESTDIR)@WORKROOT@/dbtools
 	@list='$(DBTOOLS)'; for p in $$list ; do \
 		$(install_sh_PROGRAM) libdb/$$p \
-			$(DESTDIR)@WORKROOT@/dbtools/ze-$$p ;\
+		$(DESTDIR)@WORKROOT@/dbtools/ze-$$p ;\
 	done
 
 install-workdirs:

@@ -24,7 +24,7 @@ man_MANS               = ze-filter.8 ze-filter.cf.4
 #LDADD                 = ../libjoe/libjoe.a ../zelib/libze.a @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@
 LDADD                  = @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@
 
-AM_CPPFLAGS            = -I../zechkinc -I../zeinc @BDBINCS@
+AM_CPPFLAGS            = @ZEINCS@ @BDBINCS@
 
 ze_filter_LDFLAGS      = ../libs/libchkvirus.a
 

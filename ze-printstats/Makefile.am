@@ -5,7 +5,7 @@ ze_printstats_SOURCES 	= ze-printstats.c
 
 LDADD              	= @JCHKLIBS@   @LDLIBPCRE@ @BDBLIBS@
 
-AM_CPPFLAGS             = -I../zeinc -I../zechkinc @BDBINCS@
+AM_CPPFLAGS             = @ZEINCS@ @BDBINCS@
 
 man_MANS                = ze-printstats.1 
 

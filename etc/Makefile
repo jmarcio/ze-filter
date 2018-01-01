@@ -90,10 +90,10 @@ build_triplet = x86_64-pc-linux-gnu
 host_triplet = x86_64-pc-linux-gnu
 subdir = etc
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
-	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
-	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
-	$(top_srcdir)/acinclude.m4 $(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/m4/acinclude.m4 \
+	$(top_srcdir)/m4/libtool.m4 $(top_srcdir)/m4/ltoptions.m4 \
+	$(top_srcdir)/m4/ltsugar.m4 $(top_srcdir)/m4/ltversion.m4 \
+	$(top_srcdir)/m4/lt~obsolete.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 DIST_COMMON = $(srcdir)/Makefile.am $(am__DIST_COMMON)
@@ -154,13 +154,13 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.org.in \
 	$(srcdir)/get-bayes.org.in $(srcdir)/get-urlbl.org.in \
 	$(top_srcdir)/mkinstalldirs
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-ACLOCAL = ${SHELL} /export/dev-j-chkmail/ze-filter/missing aclocal-1.15
+ACLOCAL = ${SHELL} /data/FOSS/dev-ze-filter/ze-filter/missing aclocal-1.15
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
 AR = ar
-AUTOCONF = ${SHELL} /export/dev-j-chkmail/ze-filter/missing autoconf
-AUTOHEADER = ${SHELL} /export/dev-j-chkmail/ze-filter/missing autoheader
-AUTOMAKE = ${SHELL} /export/dev-j-chkmail/ze-filter/missing automake-1.15
+AUTOCONF = ${SHELL} /data/FOSS/dev-ze-filter/ze-filter/missing autoconf
+AUTOHEADER = ${SHELL} /data/FOSS/dev-ze-filter/ze-filter/missing autoheader
+AUTOMAKE = ${SHELL} /data/FOSS/dev-ze-filter/ze-filter/missing automake-1.15
 AWK = gawk
 BDBDIR = libdb
 BDBINCS = -I../libdb/
@@ -171,7 +171,7 @@ CFARGS =
 CFLAGS = -pthread 
 CONFDIR = /etc/ze-filter
 CPP = gcc -E
-CPPFLAGS =  -DOTHER_IS_KNOWN=1 -D_FFR_LOGREG=1 -I../libpcre -I. -I../libdb -I../include -I/export/dev-j-chkmail/ze-filter/libze/include -I/export/dev-j-chkmail/ze-filter/libzechk/include -I/export/dev-j-chkmail/ze-filter/libml/include -I/export/dev-j-chkmail/ze-filter/libzefilter/include
+CPPFLAGS =  -DOTHER_IS_KNOWN=1 -D_FFR_LOGREG=1 -I../libpcre -I. -I../libdb -I../include -I/data/FOSS/dev-ze-filter/ze-filter/libze/include -I/data/FOSS/dev-ze-filter/ze-filter/libzechk/include -I/data/FOSS/dev-ze-filter/ze-filter/libml/include -I/data/FOSS/dev-ze-filter/ze-filter/libzefilter/include -I/data/FOSS/dev-ze-filter/ze-filter/libpcre -I/data/FOSS/dev-ze-filter/ze-filter/libdb
 CYGPATH_W = echo
 DEFS = -DHAVE_CONFIG_H
 DEPDIR = .deps
@@ -191,7 +191,7 @@ INSTALL_DATA = ${INSTALL} -m 644
 INSTALL_PROGRAM = ${INSTALL}
 INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
-JCHKLIBS =  -L/export/dev-j-chkmail/ze-filter/libjoe -ljoe -L/export/dev-j-chkmail/ze-filter/libml/src -lml -L/export/dev-j-chkmail/ze-filter/libzechk/src -lzechk -L/export/dev-j-chkmail/ze-filter/libs -lcommon -L/export/dev-j-chkmail/ze-filter/libze/src -lze
+JCHKLIBS =  -L/data/FOSS/dev-ze-filter/ze-filter/libjoe -ljoe -L/data/FOSS/dev-ze-filter/ze-filter/libml/src -lml -L/data/FOSS/dev-ze-filter/ze-filter/libzechk/src -lzechk -L/data/FOSS/dev-ze-filter/ze-filter/libs -lcommon -L/data/FOSS/dev-ze-filter/ze-filter/libze/src -lze
 JGREYDDIR = /var/ze-filter/ze-greydb
 LANGSPEC = EN
 LD = /usr/bin/ld -m elf_x86_64
@@ -204,7 +204,7 @@ LIPO =
 LN_S = ln -s
 LTLIBOBJS = 
 LT_SYS_LIBRARY_PATH = 
-MAKEINFO = ${SHELL} /export/dev-j-chkmail/ze-filter/missing makeinfo
+MAKEINFO = ${SHELL} /data/FOSS/dev-ze-filter/ze-filter/missing makeinfo
 MANIFEST_TOOL = :
 MKDIR_P = /usr/bin/mkdir -p
 MODDIRS = 
@@ -241,17 +241,17 @@ SHELL = /bin/sh
 SPOOLDIR = /var/spool/ze-filter
 STATEDIR = /var/run/ze-filter
 STRIP = strip
-TOPDIR = /export/dev-j-chkmail/ze-filter
-UNAME = Linux jose-desktop.cmm.fontainebleau.ensmp.fr 4.13.15-200.fc26.x86_64 #1 SMP Tue Nov 21 21:10:40 UTC 2017 x86_64 x86_64 x86_64 GNU/Linux
+TOPDIR = /data/FOSS/dev-ze-filter/ze-filter
+UNAME = Linux perere.paris.ensmp.fr 4.13.5-200.fc26.x86_64 #1 SMP Thu Oct 5 16:53:13 UTC 2017 x86_64 x86_64 x86_64 GNU/Linux
 USER = ze-filter
-VERSION = ze-filter-develop-171204
+VERSION = ze-filter-develop-180101
 WORKROOT = /var/ze-filter
 XFILES_DEF = ade adp app bas bat bin btm chm cmd com cpl csh dll drv exe fxp hlp hta inf ini ins isp js jse ksh lnk mdb mde mdt mdw msc msi msp mst ops pcd pif prg reg scr sct shb shs sys url vb vbe vbs vxd wsc wsf wsh xmf
-ZEINCS = -I/export/dev-j-chkmail/ze-filter/libze/include -I/export/dev-j-chkmail/ze-filter/libzechk/include -I/export/dev-j-chkmail/ze-filter/libml/include -I/export/dev-j-chkmail/ze-filter/libzefilter/include
-abs_builddir = /export/dev-j-chkmail/ze-filter/etc
-abs_srcdir = /export/dev-j-chkmail/ze-filter/etc
-abs_top_builddir = /export/dev-j-chkmail/ze-filter
-abs_top_srcdir = /export/dev-j-chkmail/ze-filter
+ZEINCS = -I/data/FOSS/dev-ze-filter/ze-filter/libze/include -I/data/FOSS/dev-ze-filter/ze-filter/libzechk/include -I/data/FOSS/dev-ze-filter/ze-filter/libml/include -I/data/FOSS/dev-ze-filter/ze-filter/libzefilter/include -I/data/FOSS/dev-ze-filter/ze-filter/libpcre -I/data/FOSS/dev-ze-filter/ze-filter/libdb
+abs_builddir = /data/FOSS/dev-ze-filter/ze-filter/etc
+abs_srcdir = /data/FOSS/dev-ze-filter/ze-filter/etc
+abs_top_builddir = /data/FOSS/dev-ze-filter/ze-filter
+abs_top_srcdir = /data/FOSS/dev-ze-filter/ze-filter
 ac_ct_AR = ar
 ac_ct_CC = gcc
 ac_ct_DUMPBIN = 
@@ -280,7 +280,7 @@ host_vendor = pc
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /export/dev-j-chkmail/ze-filter/install-sh
+install_sh = ${SHELL} /data/FOSS/dev-ze-filter/ze-filter/install-sh
 libdir = ${exec_prefix}/lib64
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
