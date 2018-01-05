@@ -29,6 +29,7 @@ DBTOOLS = db_archive db_checkpoint db_deadlock db_dump db_hotbackup \
 clean-hook:
 	rm -f *~ */*~ */*/*~ */*/*/*~ */*/*/*/*~ #*# */#*# */*/#*# */*/*/#*#
 	rm -f config.results
+	rm -f etc/Makefile
 
 clean-db:
 	if [ -d libdb ]; then cd libdb; ./Build clean; cd ..; fi
@@ -36,7 +37,7 @@ clean-db:
 clean-cache:
 	rm -rf autom4te.cache/* */autom4te.cache/*
 
-realclean: clean-hook clean-cache distclean
+realclean: distclean clean-cache clean-hook
 
 clean-data:
 	rm -f $(DESTDIR)@WORKROOT@/ze-history
