@@ -1,10 +1,11 @@
 
+bin_PROGRAMS            = ze-lr
+
 # ze-dettach  ze-uufile
 noinst_PROGRAMS =  \
 		ze-msg-entropy \
 		ze-extract-url \
                 ze-mfilter \
-		ze-lr \
 		ze-lr-sim
 
 #ze_detach_SOURCES 	 = ze-detach.c 

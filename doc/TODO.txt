@@ -1,0 +1,40 @@
+
+* Script to migrate files from j-chkmail to ze-filter
+
+* Check if ze-filter user exists. If not, create it.
+
+  useradd -d /var/ze-filter -s /bin/bash -m ze-filter
+
+* Startup script (systemd)
+
+* Update postfix main.cf configuration file - Check if the following is correct :
+
+  http://www.postfix.org/MILTER_README.html
+
+#
+#
+smtpd_milters = unix:/var/run/ze-filter/ze-filter.sock
+milter_protocol = 6
+
+milter_connect_macros = j {daemon_name} v {client_name} _ {client_addr} 
+                        {client_ptr} {client_resolve} {daemon_addr} 
+                        {daemon_name} {daemon_port} {if_addr} {if_name}
+milter_data_macros = i {msg_id}
+milter_end_of_data_macros = i {msg_id}
+milter_helo_macros = {tls_version} {cipher} {cipher_bits} {cert_subject} 
+                     {cert_issuer}
+milter_macro_daemon_name = $myhostname
+milter_macro_v = $mail_name $mail_version
+milter_mail_macros = i {auth_type} {auth_authen} {auth_author} {mail_addr} 
+                     {auth_ssf} {mail_addr} {mail_host} {mail_mailer}
+milter_rcpt_macros = i {rcpt_addr} {nrcpts} {rcpt_host} {rcpt_mailer}
+milter_unknown_command_macros =
+
+milter_command_timeout = 30s
+milter_connect_timeout = 30s
+milter_content_timeout = 40s
+
+milter_default_action = tempfail
+non_smtpd_milters =
+
+

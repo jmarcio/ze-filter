@@ -1,0 +1,239 @@
+#! /usr/bin/perl -w
+#
+#  Description :
+#
+#  Author      : Jose-Marcio Martins da Cruz
+#                mailto:jose-marcio.martins@mines-paristech.fr
+#                Ecole des Mines de Paris
+#
+#  History     :
+#
+#  TODO        :
+#
+use strict;
+use Getopt::Long;
+use Pod::Usage;
+use POSIX;
+
+use FindBin qw($Bin);
+use lib "$Bin/../lib";
+
+# ------------------------------------------------
+#
+#
+my $appl = `basename $0`;
+chomp $appl;
+
+my %StaticData = ();
+GetStaticData(\%StaticData);
+
+# === begin options conf ===
+
+# Defining CL options and default values
+my $help    = 0;
+my $debug   = 0;
+my $verbose = 0;
+my $op      = "";
+
+my %Conf = (
+  "prefix" => "/tmp",
+  "remove" => 0,
+);
+
+my %ConfCli = ();
+foreach my $k (keys %Conf) {
+  $ConfCli{$k} = undef;
+}
+
+# Reading CL options
+my $ok = GetOptions(
+  "h!"       => \$help,
+  "help!"    => \$help,
+  "d!"       => \$debug,
+  "debug!"   => \$debug,
+  "v!"       => \$verbose,
+  "op=s"     => \$op,
+  "prefix=s" => \$ConfCli{prefix},
+  "remove!"  => \$ConfCli{remove},
+);
+
+ReadConfigurationFile();
+
+foreach my $k (keys %Conf) {
+  if (defined $ConfCli{$k}) {
+    $Conf{$k} = $ConfCli{$k};
+  }
+}
+
+# === end options conf ===
+
+if ($help || $op =~ /help/i) {
+  usage();
+  exit 0;
+}
+
+$op = lc $op;
+
+my $prefix = $Conf{prefix};
+
+if ($op =~ /^(copy|move)$/) {
+  chdir "/var";
+  mkdir -p "$prefix/var/ze-filter";
+  #my $cmd = "rsync -av jchkmail $prefix/var/ze-filter"; 
+}
+
+if ($op =~ /^optionb$/i) {
+
+}
+
+unless (doit(1, 2)) {
+
+  exit 1;
+}
+
+exit 0;
+
+# ------------------------------------------------
+#
+#
+sub doit {
+  my ($a, $b, undef) = @_;
+
+  return 1;
+}
+
+# ------------------------------------------------
+#
+#
+sub ReadConfigurationFile {
+  my @ccEtc = ("$Bin/../etc", "/etc");
+  my $ConfFile = "$appl.conf";
+
+  #  my ($r, undef) = cc_conf_init($ConfFile, @ccEtc);
+  #  if ($r) {
+  #    $r = cc_conf_read();
+  #  }
+
+  # add your code here to handle configuration files
+}
+
+# ------------------------------------------------
+#
+#
+sub usage {
+  my @X = qw();
+  @X = StaticDataArray("help", "USAGE");
+  if ($#X >= 0) {
+    print "\n";
+    foreach (@X) {
+      s/^\+//;
+      s/__APPL__/$appl/;
+      print $_, "\n";
+    }
+  } else {
+    print "\n Usage : $appl [OPTIONS]\n";
+  }
+
+  @X = StaticDataArray("help", "HEAD");
+  foreach (@X) {
+    s/^\+//;
+    print $_, "\n";
+  }
+
+  @X = StaticDataArray("help", "BODY");
+  foreach (@X) {
+    s/^\+//;
+    print $_, "\n";
+  }
+
+  @X = StaticDataArray("help", "FOOT");
+  foreach (@X) {
+    s/^\+//;
+    print $_, "\n";
+  }
+}
+
+# ------------------------------------------------
+#
+#
+sub GetStaticData {
+  my ($h, undef) = @_;
+  my @DATA = <DATA>;
+  my @SOPT = qw();
+  chomp @DATA;
+  my $in  = 0;
+  my $key = "";
+  foreach my $s (@DATA) {
+    if ($key eq "") {
+      if ($s =~ /==\s+BEGIN\s+(\S+)\s+==/) {
+        $key = lc($1);
+      }
+      next;
+    }
+    if ($s =~ /==\s+END\s+(\S*\s+)?==/) {
+      $key = "";
+      next;
+    }
+    next if $s =~ /^\s*$/;
+    push @{$h->{$key}{_data_}}, $s;
+    my ($a, $b) = split " ", $s, 2;
+    next unless defined $a && $a ne "";
+    $b = "" unless defined $b;
+    if ($b =~ /[+]{2}(.*)/) {
+      if (exists $h->{$key}{$a}) {
+        $h->{$key}{$a} .= " $1";
+      } else {
+        $h->{$key}{$a} = $1;
+      }
+    } else {
+      $h->{$key}{$a} = $b;
+    }
+  }
+}
+
+# ------------------------------------------------
+#
+#
+sub StaticDataArray {
+  my ($key, $tag, undef) = @_;
+
+  my @LINES = grep {$_ =~ /^$tag\s+/i} @{$StaticData{$key}{_data_}};
+  foreach (@LINES) {
+    s/^$tag\s+//;
+  }
+  return @LINES;
+}
+
+# ------------------------------------------------
+#
+#
+
+__DATA__
+
+== BEGIN HELP ==
+
+# === begin usage conf ===
+BODY +
+BODY +  -h            This message
+BODY +                default : false
+BODY +  --help        This message
+BODY +                default : false
+BODY +  -d            Debug mode
+BODY +                default : false
+BODY +  --debug       Debug mode
+BODY +                default : false
+BODY +  -v            Verbose
+BODY +                default : false
+BODY +  --op          What to do ???
+BODY +                default : 
+BODY +  --prefix      Prefix
+BODY +                default : /tmp
+BODY +  --remove      Remove old content
+BODY +                default : false
+BODY +
+# === end usage conf ===
+
+== END ==
+
+__END__
+
