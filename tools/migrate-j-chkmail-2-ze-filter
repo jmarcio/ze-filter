@@ -14,6 +14,8 @@ use strict;
 use Getopt::Long;
 use Pod::Usage;
 use POSIX;
+use File::Path;
+use File::Find;
 
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
@@ -27,6 +29,27 @@ chomp $appl;
 my %StaticData = ();
 GetStaticData(\%StaticData);
 
+my $h = \%{$StaticData{dirs}};
+my %Dirs = map {$_ => $h->{$_}} grep {$_ !~ /_data_/} keys %{$h};
+
+
+my @Files2Update = StaticDataArray("tasks", "FILES2UPDATE");
+foreach (@Files2Update) {
+  s/\+\s*//;
+}
+
+my %ReplacePattern = ();
+{
+  my @Tmp = StaticDataArray("tasks", "REPLACE");
+  foreach (@Tmp) {
+    s/\+\s*//;
+    if (/(\d+)\s+(\S+)\s+(\S.*)/) {
+      $ReplacePattern{$1}{in}  = $2;
+      $ReplacePattern{$1}{out} = $3;
+    }
+  }
+}
+
 # === begin options conf ===
 
 # Defining CL options and default values
@@ -36,8 +59,10 @@ my $verbose = 0;
 my $op      = "";
 
 my %Conf = (
-  "prefix" => "/tmp",
+  "prefix" => "/tmp/ze",
   "remove" => 0,
+  "user"   => "ze-filter",
+  "group"  => "ze-filter",
 );
 
 my %ConfCli = ();
@@ -55,6 +80,8 @@ my $ok = GetOptions(
   "op=s"     => \$op,
   "prefix=s" => \$ConfCli{prefix},
   "remove!"  => \$ConfCli{remove},
+  "user=s"   => \$ConfCli{user},
+  "group=s"  => \$ConfCli{group},
 );
 
 ReadConfigurationFile();
@@ -76,34 +103,118 @@ $op = lc $op;
 
 my $prefix = $Conf{prefix};
 
-if ($op =~ /^(copy|move)$/) {
-  chdir "/var";
-  mkdir -p "$prefix/var/ze-filter";
-  #my $cmd = "rsync -av jchkmail $prefix/var/ze-filter"; 
+if ($op =~ /^(copy|move|rename)$/) {
+  printf "* Directories to $op\n";
+  foreach my $k (keys %Dirs) {
+    printf "  * Dir : %-24s => %s\n", $k, $prefix . $Dirs{$k};
+  }
+  printf "\n";
 }
 
-if ($op =~ /^optionb$/i) {
+if ($op =~ /^(copy)$/) {
+  foreach my $k (keys %Dirs) {
+    unless (-d $k) {
+      printf "ERROR : directory %s doesn't exists\n", $k;
+      next;
+    }
+    my $dst = $prefix . $Dirs{$k};
+    rmtree $dst;
+    printf "* will create $dst\n";
+    File::Path::make_path "$dst";
 
+    my $cmd = "rsync -aq $k/ $dst/";
+    system("$cmd");
+  }
 }
 
-unless (doit(1, 2)) {
+if ($op =~ /^(move|rename)$/) {
+  foreach my $k (keys %Dirs) {
+    unless (-d $k) {
+      printf "ERROR : directory %s doesn't exists\n", $k;
+      next;
+    }
+    my $dst = $prefix . $Dirs{$k};
+    if (-d $dst) {
+      printf "ERROR : directory %s already exists\n", $dst;
+      next;
+    }
+    rmtree $dst;
 
-  exit 1;
+    printf "* will rename $k to $dst\n";
+    my $cmd = "mv $k $dst";
+    system("$cmd");
+  }
+}
+
+if ($op =~ /^(copy|move|rename)$/) {
+  foreach my $k (keys %Dirs) {
+    my $dst = $prefix . $Dirs{$k};
+    my $cmd = "find $dst -type d";
+    my $n   = 0;
+    do {
+      $n = 0;
+      open DIRS, "$cmd |" || die $@;
+      my @Dirs = <DIRS>;
+      close DIRS;
+      chomp @Dirs;
+      foreach my $jd (@Dirs) {
+        my $zd = $jd;
+        $zd =~ s/jchkmail/ze-filter/;
+        $zd =~ s/jgreyd/ze-greyd/;
+        $zd =~ s/j-/ze-/;
+        next unless $jd ne $zd;
+        rename $jd, $zd;
+        $n++;
+      }
+    } while $n > 0;
+
+    $cmd = "find $dst -type f";
+    open FILES, "$cmd |" || die $@;
+    my @Files = <FILES>;
+    close FILES;
+    chomp @Files;
+    foreach my $jd (@Files) {
+      my $zd = $jd;
+      $zd =~ s/j-chkmail/ze-filter/;
+      $zd =~ s/jchkmail/ze-filter/;
+      $zd =~ s/j-/ze-/;
+      next unless $jd ne $zd;
+      rename $jd, $zd;
+    }
+  }
+  foreach my $k (keys %Dirs) {
+    my $dst = $prefix . $Dirs{$k};
+    my $cmd = "chown -hR $Conf{user}:$Conf{group} $dst";
+    system($cmd);
+  }
+  foreach my $fg (@Files2Update) {
+    my @Files = glob($prefix . $fg);
+    foreach my $fin (@Files) {
+      printf " Updating file : %s\n", $fin if $verbose;
+      open FUPD, "< $fin" || next;
+      my @Tmp = <FUPD>;
+      close FUPD;
+      rename "$fin", "$fin.org";
+      foreach my $line (@Tmp) {
+        foreach my $k (sort {$a <=> $b} keys %ReplacePattern) {
+          my $in  = $ReplacePattern{$k}{in};
+          my $out = $ReplacePattern{$k}{out};
+          $line =~ s/$in/$out/g;
+        }
+        $line =~ s/ze-filter dot ensmp dot fr/foss dot jose-marcio dot org/;
+      }
+      open FUPD, "> $fin" || next;
+      print FUPD @Tmp;
+      close FUPD;
+    }
+  }
+  exit 0;
 }
 
 exit 0;
 
 # ------------------------------------------------
-#
-#
-sub doit {
-  my ($a, $b, undef) = @_;
-
-  return 1;
-}
-
-# ------------------------------------------------
-#
+#/tmp/ze/etc/ze-filter/ze-filter.cf
 #
 sub ReadConfigurationFile {
   my @ccEtc = ("$Bin/../etc", "/etc");
@@ -230,9 +341,33 @@ BODY +  --prefix      Prefix
 BODY +                default : /tmp
 BODY +  --remove      Remove old content
 BODY +                default : false
+BODY +  --user        User
+BODY +                default : ze-filter
+BODY +  --group       Group
+BODY +                default : ze-filter
 BODY +
 # === end usage conf ===
 
+== END ==
+
+== BEGIN DIRS ==
+/etc/mail/jchkmail    /etc/ze-filter
+/var/jchkmail         /var/ze-filter
+/var/spool/jchkmail   /var/spool/ze-filter
+== END ==
+
+== BEGIN TASKS ==
+FILES2UPDATE +        /etc/ze-filter/*
+FILES2UPDATE +        /var/ze-filter/cdb/get-*
+FILES2UPDATE +        /var/ze-filter/cdb/Makefile*
+
+REPLACE +             1 dnsbl.j-chkmail.org  dnsbl.jose-marcio.org
+REPLACE +             1 rsync.j-chkmail.org  rsync.jose-marcio.org
+REPLACE +             1 j-chkmail.ensmp.fr   rsync.jose-marcio.org
+REPLACE +             2 j-chkmail            ze-filter
+REPLACE +             3 jchkmail             ze-filter
+REPLACE +             4 jgreyd               ze-greyd
+REPLACE +             5 j-                   ze-
 == END ==
 
 __END__
