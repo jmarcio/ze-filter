@@ -102,7 +102,8 @@ am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/include/config.h
 CONFIG_CLEAN_FILES = include/version.h include/defs.h \
-	bin/ze-filter.init bin/ze-greyd.init bin/ze-filter.init.rhel
+	bin/ze-filter.init bin/ze-greyd.init bin/ze-filter.init.rhel \
+	bin/ze-filter.service
 CONFIG_CLEAN_VPATH_FILES =
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -163,12 +164,13 @@ DIST_SUBDIRS = $(SUBDIRS)
 am__DIST_COMMON = $(srcdir)/Makefile.in \
 	$(top_srcdir)/bin/ze-filter.init.in \
 	$(top_srcdir)/bin/ze-filter.init.rhel.in \
+	$(top_srcdir)/bin/ze-filter.service.in \
 	$(top_srcdir)/bin/ze-greyd.init.in \
 	$(top_srcdir)/include/config.h.in \
 	$(top_srcdir)/include/defs.h.in \
 	$(top_srcdir)/include/version.h.in AUTHORS COPYING ChangeLog \
-	INSTALL NEWS README compile config.guess config.sub depcomp \
-	install-sh ltmain.sh missing mkinstalldirs
+	INSTALL NEWS README compile config.guess config.sub install-sh \
+	ltmain.sh missing mkinstalldirs
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -443,6 +445,8 @@ bin/ze-filter.init: $(top_builddir)/config.status $(top_srcdir)/bin/ze-filter.in
 bin/ze-greyd.init: $(top_builddir)/config.status $(top_srcdir)/bin/ze-greyd.init.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 bin/ze-filter.init.rhel: $(top_builddir)/config.status $(top_srcdir)/bin/ze-filter.init.rhel.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+bin/ze-filter.service: $(top_builddir)/config.status $(top_srcdir)/bin/ze-filter.service.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 
 mostlyclean-libtool:

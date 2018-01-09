@@ -1478,6 +1478,7 @@ AC_CONFIG_FILES(etc/get-bayes.org)
 AC_CONFIG_FILES(bin/ze-filter.init)
 AC_CONFIG_FILES(bin/ze-greyd.init)
 AC_CONFIG_FILES(bin/ze-filter.init.rhel)
+AC_CONFIG_FILES(bin/ze-filter.service)
 
 dnl AC_CONFIG_FILES([$MODMAKE])
 
