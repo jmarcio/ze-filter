@@ -1,15 +1,21 @@
-
+#
+#
 smtpd_milters = unix:/var/run/ze-filter/ze-filter.sock
-milter_protocol = 4
+milter_protocol = 6
 
-milter_connect_macros = j {daemon_name} v {client_name}
-milter_data_macros = i
-milter_end_of_data_macros = i
-milter_helo_macros = {tls_version} {cipher} {cipher_bits} {cert_subject} {cert_issuer}
 milter_macro_daemon_name = $myhostname
 milter_macro_v = $mail_name $mail_version
-milter_mail_macros = i {auth_type} {auth_authen} {auth_author} {mail_addr}
-milter_rcpt_macros = i {rcpt_addr}
+
+milter_connect_macros = j {daemon_name} v {client_name} _ {client_addr} 
+                        {client_ptr} {client_resolve} {daemon_addr} 
+                        {daemon_name} {daemon_port} {if_addr} {if_name}
+milter_helo_macros = {tls_version} {cipher} {cipher_bits} {cert_subject}
+                     {cert_issuer}
+milter_mail_macros = i {auth_type} {auth_authen} {auth_author} 
+                     {auth_ssf} {mail_addr} {mail_host} {mail_mailer}
+milter_rcpt_macros = i {rcpt_addr} {nrcpts} {rcpt_host} {rcpt_mailer}
+milter_data_macros = i {msg_id}
+milter_end_of_data_macros = i {msg_id}
 milter_unknown_command_macros = 
 
 milter_command_timeout = 30s
