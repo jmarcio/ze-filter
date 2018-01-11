@@ -1,0 +1,30 @@
+#! /usr/bin/perl -w
+
+use MIME::Parser;
+
+my $parser = MIME::Parser->new();
+
+foreach my $MsgFile (@ARGV) {
+  unless (-f $MsgFile) {
+    next;
+  }
+
+  my $name = `basename $MsgFile`;
+  chomp $name;
+  $name =~ s/ /_/g;
+  my $dir = "/tmp/$name-dir";
+  mkdir $dir;
+  $parser->output_dir($dir);
+
+  my $message = $parser->parse_open($MsgFile);    # die( )s if can't parse
+  #my $head     = $message->head();                # object--see docs
+  #my $preamble = $message->preamble;              # ref to array of lines
+  #my $epilogue = $message->epilogue;              # ref to array of lines
+
+  #my $num_parts = $message->parts;
+  #for (my $i = 0 ; $i < $num_parts ; $i++) {
+  #  my $part         = $message->parts($i);
+  #  my $content_type = $part->mime_type;
+  #  my $body         = $part->as_string;
+  #}
+}

@@ -1,0 +1,478 @@
+#! /usr/bin/perl -w
+#
+#  Description :
+#
+#  Author      : Jose-Marcio Martins da Cruz
+#                mailto:jose-marcio.martins@mines-paristech.fr
+#                Ecole des Mines de Paris
+#
+#  History     :
+#
+#  TODO        :
+#
+use strict;
+use Getopt::Long;
+use Pod::Usage;
+use POSIX;
+use MIME::Words qw(:all);
+use IO::Socket;
+use Sys::Syslog;
+use Net::CIDR;
+
+use FindBin qw($Bin);
+use lib "$Bin/../lib";
+use CCMail;
+use CCQuarTools;
+
+# ------------------------------------------------
+#
+#
+my $appl = `basename $0`;
+chomp $appl;
+
+my $log_opts    = 'pid,cons,ndelay,nowait';
+my $log_program = $appl;
+
+my %StaticData = ();
+GetStaticData(\%StaticData);
+
+# === begin options conf ===
+
+# Defining CL options and default values
+my $help    = 0;
+my $debug   = 0;
+my $verbose = 0;
+my $op      = "";
+
+my %Conf = (
+  "facility" => "local3",
+  "smbin"    => "/usr/sbin/sendmail",
+  "smopt"    => "-oi",
+  "agemin"   => 0,
+  "agemax"   => 24,
+  "domains"  => "domain.com,mines-paristech.fr",
+  "nets"     => "194.214.158.134/32",
+  "dirspool" => "/var/spool/ze-filter",
+  "dirgood"  => "/var/spool/ze-filter-good",
+  "dirbad"   => "/var/spool/ze-filter-spam",
+  "mreplyto" => "preserve",
+  "mfrom"    => "root+570926583\@domain.com",
+  "doit"     => 0,
+);
+
+# Reading CL options
+my $ok = GetOptions(
+  "h"          => \$help,
+  "help"       => \$help,
+  "d"          => \$debug,
+  "debug"      => \$debug,
+  "v"          => \$verbose,
+  "op=s"       => \$op,
+  "facility=s" => \$Conf{facility},
+  "smbin=s"    => \$Conf{smbin},
+  "smopt=s"    => \$Conf{smopt},
+  "agemin=i"   => \$Conf{agemin},
+  "agemax=i"   => \$Conf{agemax},
+  "domains=s"  => \$Conf{domains},
+  "nets=s"     => \$Conf{nets},
+  "dirspool=s" => \$Conf{dirspool},
+  "dirgood=s"  => \$Conf{dirgood},
+  "dirbad=s"   => \$Conf{dirbad},
+  "mreplyto=s" => \$Conf{mreplyto},
+  "mfrom=s"    => \$Conf{mfrom},
+  "doit"       => \$Conf{doit},
+);
+
+# === end options conf ===
+
+$Conf{smopt} = "-Am -bm";
+
+if ($help || $op =~ /help/i) {
+  usage();
+  exit 0;
+}
+
+my $Now      = time();
+my $Hostname = `hostname`;
+chomp $Hostname;
+my $Date = `date`;
+chomp $Date;
+
+openlog($log_program, $log_opts, $Conf{facility});
+
+syslog("debug", "Starting $appl");
+
+$Conf{agemax} *= 3600;
+$Conf{agemin} *= 3600;
+
+mkdir $Conf{dirgood} unless -d $Conf{dirgood};
+mkdir $Conf{dirbad}  unless -d $Conf{dirbad};
+
+my @Nets = qw();
+{
+  my $local = $Conf{nets};
+  if (defined $local && $local ne "") {
+    my @X = grep {$_ ne ""} split /[ ,]/, $local;
+    foreach my $ip (@X) {
+      $ip = Net::CIDR::cidrvalidate($ip);
+      if (defined $ip) {
+        @Nets = Net::CIDR::cidradd($ip, @Nets);
+      }
+    }
+  }
+  if ($#Nets < 0) {
+    @Nets = Net::CIDR::cidradd("0.0.0.0/0", @Nets);
+  }
+}
+
+my $SpoolDir = "/var/spool/ze-filter";
+
+my %Spool = ();
+
+GetSpoolContent(\%Spool);
+my @MsgsOK = sort keys %Spool;
+printf "* Messages : %6d\n", $#MsgsOK + 1 if $debug;
+SelectMsgKind(\%Spool, \@MsgsOK, "spam");
+printf "* Messages : %6d\n", $#MsgsOK + 1 if $debug;
+
+if ($op eq "freemsg") {
+  RemoveSpooledOutMsgs(\%Spool, \@MsgsOK, $SpoolDir);
+  printf "* Messages : %6d\n", $#MsgsOK + 1 if $debug;
+  RemoveBadMatches(\%Spool, \@MsgsOK, $Conf{match});
+  printf "* Messages : %6d\n", $#MsgsOK + 1 if $debug;
+  SelectFromDomains(\%Spool, \@MsgsOK, $Conf{domains});
+  printf "* Messages : %6d\n", $#MsgsOK + 1 if $debug;
+  SelectSMTPClients(\%Spool, \@MsgsOK, \@Nets);
+  printf "* Messages : %6d\n", $#MsgsOK + 1 if $debug;
+  CheckMsgAge(\%Spool, \@MsgsOK);
+  printf "* Messages : %6d\n", $#MsgsOK + 1 if $debug;
+
+  my $h = \%Spool;
+
+  foreach my $id (@MsgsOK) {
+    printf "* OK %s %-16s %-40s %-40s\n", $id, $h->{$id}{addr},
+      $h->{$id}{efrom},
+      $h->{$id}{hfrom};
+    syslog("info", "Freeing $id");
+    $h->{$id}{result} = 0;
+    my ($r, $m) = DoFreeMsg(\%Conf, $id, \%{$h->{$id}});
+    printf "  %3d %s\n", $r, $m;
+    syslog("info", " Message freed : %s %3d %s", $id, $r, $m);
+  }
+}
+
+if ($op eq "purge") {
+}
+
+if ($op eq "summary") {
+
+}
+
+closelog();
+
+exit 0;
+
+# ------------------------------------------------
+#
+#
+sub GetSpoolContent {
+  my ($h, undef) = @_;
+
+  return unless defined $h;
+
+  while (<>) {
+    chomp;
+
+    next if /^\s*$/;
+
+    my ($ID, $TAG, $RESTE) = split(" ", $_, 3);
+    next unless defined $ID  && $ID ne "";
+    next unless defined $TAG && $TAG ne "";
+
+    $TAG = lc $TAG;
+
+    if ($TAG eq "conn") {
+      my ($date, $addr, $hostname, undef) = split " ", $RESTE;
+      $h->{$ID}{date}     = $date;
+      $h->{$ID}{addr}     = $addr;
+      $h->{$ID}{hostname} = $hostname;
+      next;
+    }
+
+    if ($TAG eq "from") {
+      $h->{$ID}{from} = lc decode_mimewords($RESTE);
+      if ($h->{$ID}{from} =~ /<(.*)>/) {
+        $h->{$ID}{hfrom} = $1;
+      } else {
+        $h->{$ID}{hfrom} = $h->{$ID}{from};
+      }
+      next;
+    }
+
+    if ($TAG eq "env_from") {
+      $h->{$ID}{env_from} = lc decode_mimewords($RESTE);
+      if ($h->{$ID}{env_from} =~ /<(.*)>/) {
+        $h->{$ID}{efrom} = $1;
+      } else {
+        $h->{$ID}{efrom} = $h->{$ID}{env_from};
+      }
+      next;
+    }
+    if ($TAG eq "subj") {
+      $h->{$ID}{$TAG} = decode_mimewords($RESTE);
+      next;
+    }
+
+    if ($TAG eq "why") {
+      if ($RESTE =~ /\.([^.]+)\.?$/) {
+        $h->{$ID}{$TAG} = $1;
+      }
+      next;
+    }
+
+    if ($TAG eq "rcpt") {
+      $RESTE = lc decode_mimewords($RESTE);
+      my ($ok, $email) = split " ", $RESTE, 2;
+      if ($ok !~ /^\d+$/ || $ok) {
+        next;
+      }
+      push @{$h->{$ID}{rcpt}}, $email;
+      next;
+    }
+
+    if ($TAG eq "file") {
+      if ($RESTE =~ /^XXX/) {
+        push @{$h->{$ID}{xfile}}, $RESTE;
+      } else {
+        push @{$h->{$ID}{yfile}}, $RESTE;
+      }
+      next;
+    }
+
+    $h->{$ID}{$TAG} = $RESTE;
+  }
+
+  return 1;
+}
+
+# ------------------------------------------------
+#
+#
+sub SelectMsgKind {
+  my ($h, $good, $why, undef) = @_;
+
+  my @X = grep {defined $h->{$_}{why} && $h->{$_}{why} eq $why} @{$good};
+  @{$good} = @X;
+}
+
+
+# ------------------------------------------------
+#
+#
+sub RemoveSpooledOutMsgs {
+  my ($h, $good, $dir, undef) = @_;
+
+  my @X = grep {-f "$dir/$h->{$_}{quar}"} @{$good};
+  @{$good} = @X;
+
+  return;
+
+  foreach my $id (keys %{$h}) {
+    unless (-f "$dir/$h->{$id}{quar}") {
+      delete $h->{$id};
+    }
+  }
+}
+
+# ------------------------------------------------
+#
+#
+sub CheckMsgAge {
+  my ($h, $good, undef) = @_;
+
+  my @X = grep {
+         ($Now - $h->{$_}{date} >= $Conf{agemin})
+      && ($Now - $h->{$_}{date} <= $Conf{agemax})
+  } @{$good};
+  @{$good} = @X;
+}
+
+# ------------------------------------------------
+#
+#
+sub SelectFromDomains {
+  my ($h, $good, $domains, undef) = @_;
+
+  return unless defined $domains && $domains ne "";
+  my %Domains = map {$_ => 1} (split ",", $domains);
+
+  my @X = grep {
+    my ($u, $d) = split '\@', $h->{$_}{efrom}, 2;
+    defined $d && exists $Domains{$d} && $Domains{$d}
+  } @{$good};
+  @{$good} = @X;
+}
+
+# ------------------------------------------------
+#
+#
+sub RemoveBadMatches {
+  my ($h, $good, $match, undef) = @_;
+
+  my @X = grep {$h->{$_}{efrom} eq $h->{$_}{hfrom}} @{$good};
+  @{$good} = @X;
+}
+
+# ------------------------------------------------
+#
+#
+sub SelectSMTPClients {
+  my ($h, $good, $nets, undef) = @_;
+
+  my @X = grep {Net::CIDR::cidrlookup($h->{$_}{addr}, @{$nets});} @{$good};
+  @{$good} = @X;
+}
+
+
+# ------------------------------------------------
+#
+#
+sub do_log {
+  foreach (@_) {
+    syslog('notice', $_);
+  }
+}
+
+# ------------------------------------------------
+#
+#
+sub usage {
+  print <<EOT;
+  Usage : $appl [OPTIONS]
+EOT
+
+  my @X = qw();
+  @X = StaticDataArray("help", "HEAD");
+  foreach (@X) {
+    s/^\+//;
+    print $_, "\n";
+  }
+
+  @X = StaticDataArray("help", "BODY");
+  foreach (@X) {
+    s/^\+//;
+    print $_, "\n";
+  }
+
+  @X = StaticDataArray("help", "FOOT");
+  foreach (@X) {
+    s/^\+//;
+    print $_, "\n";
+  }
+}
+
+# ------------------------------------------------
+#
+#
+sub GetStaticData {
+  my ($h, undef) = @_;
+  my @DATA = <DATA>;
+  my @SOPT = qw();
+  chomp @DATA;
+  my $in  = 0;
+  my $key = "";
+  foreach my $s (@DATA) {
+    if ($key eq "") {
+      if ($s =~ /==\s+BEGIN\s+(\S+)\s+==/) {
+        $key = lc($1);
+      }
+      next;
+    }
+    if ($s =~ /==\s+END\s+(\S*\s+)?==/) {
+      $key = "";
+      next;
+    }
+    next if $s =~ /^\s*$/;
+    push @{$h->{$key}{_data_}}, $s;
+    my ($a, $b) = split " ", $s, 2;
+    next unless defined $a && $a ne "";
+    $b = "" unless defined $b;
+    if ($b =~ /[+]{2}(.*)/) {
+      if (exists $h->{$key}{$a}) {
+        $h->{$key}{$a} .= " $1";
+      } else {
+        $h->{$key}{$a} = $1;
+      }
+    } else {
+      $h->{$key}{$a} = $b;
+    }
+  }
+}
+
+# ------------------------------------------------
+#
+#
+sub StaticDataArray {
+  my ($key, $tag, undef) = @_;
+
+  my @LINES = grep {$_ =~ /^$tag\s+/i} @{$StaticData{$key}{_data_}};
+  foreach (@LINES) {
+    s/^$tag\s+//;
+  }
+  return @LINES;
+}
+
+# ------------------------------------------------
+#
+#
+
+__DATA__
+
+== BEGIN HELP ==
+# === begin usage conf ===
+BODY +
+BODY +  -h            This message
+BODY +                default : false
+BODY +  --help        This message
+BODY +                default : false
+BODY +  -d            Debug mode
+BODY +                default : false
+BODY +  --debug       Debug mode
+BODY +                default : false
+BODY +  -v            Verbose
+BODY +                default : false
+BODY +  --op          What to do ???
+BODY +                default : 
+BODY +  --facility    Syslog facility
+BODY +                default : local3
+BODY +  --smbin       Path to sendmail binary (or auto)
+BODY +                default : /usr/sbin/sendmail
+BODY +  --smopt       sendmail CLI options
+BODY +                default : -oi
+BODY +  --agemin      minimum quarantine age
+BODY +                default : 0
+BODY +  --agemax      maximum quarantine age
+BODY +                default : 24
+BODY +  --domains     Domains in the from field to whitelist
+BODY +                default : domain.com,mines-paristech.fr
+BODY +  --nets        Networks of IP address of to whitelist
+BODY +                default : 194.214.158.134/32
+BODY +  --dirspool    Quarantine spool path
+BODY +                default : /var/spool/ze-filter
+BODY +  --dirgood     Where to move clean messages
+BODY +                default : /var/spool/ze-filter-good
+BODY +  --dirbad      Where to move spam messages
+BODY +                default : /var/spool/ze-filter-spam
+BODY +  --mreplyto    Freed messages ReplyTo header 
+BODY +                default : preserve
+BODY +  --mfrom       Email address for free messages
+BODY +                default : root+570926583@domain.com
+BODY +  --doit        The opposite of dry-run
+BODY +                default : false
+BODY +
+# === end usage conf ===
+== END ==
+
+__END__
+
+

@@ -319,7 +319,7 @@ mlfi_eom(ctx)
              mac_cl_name, mac_cl_ptr, mac_cl_addr,
              priv->helohost, priv->env_from);
 
-    smfi_addheader(ctx, "X-ze-filter-Enveloppe", hbuf);
+    smfi_addheader(ctx, "X-ze-filter-Envelope", hbuf);
   }
 
   /*

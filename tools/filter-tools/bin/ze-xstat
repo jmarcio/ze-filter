@@ -1,0 +1,418 @@
+#! /usr/bin/perl -w
+#
+#  Description :
+#
+#  Author      : Jose-Marcio Martins da Cruz
+#                mailto:jose-marcio.martins@mines-paristech.fr
+#                Ecole des Mines de Paris
+#
+#  History     :
+#
+#  TODO        :
+#
+use strict;
+use Getopt::Long;
+use Pod::Usage;
+use POSIX;
+use Time::Local;
+
+use FindBin qw($Bin);
+use lib "$Bin/../lib";
+use CCConf;
+
+# ------------------------------------------------
+#
+#
+my $appl = `basename $0`;
+chomp $appl;
+my $now      = time();
+my $hostname = `hostname`;
+chomp $hostname;
+my $date = `date`;
+chomp $date;
+
+my %StaticData = ();
+GetStaticData(\%StaticData);
+
+# === begin options conf ===
+
+# Defining CL options and default values
+my $help    = 0;
+my $verbose = 0;
+
+my %Conf = (
+  "xfiles"     => 1,
+  "days"       => 7,
+  "shift"      => 0,
+  "extensions" => "all",
+);
+
+ReadConfigurationFile();
+
+# Reading CL options
+my $ok = GetOptions(
+  "h!"           => \$help,
+  "help!"        => \$help,
+  "v!"           => \$verbose,
+  "xfiles!"      => \$Conf{xfiles},
+  "days=i"       => \$Conf{days},
+  "shift=i"      => \$Conf{shift},
+  "extensions=s" => \$Conf{extensions},
+);
+
+# === end options conf ===
+
+if ($help) {
+  usage();
+  exit 0;
+}
+
+ReadConfigurationFile();
+
+my @Files2Check = qw();
+if ($#ARGV >= 0) {
+  foreach my $file (@ARGV) {
+    if (-f $file) {
+      push @Files2Check, $file;
+    }
+  }
+} else {
+  my @X = split /[, ]/, $StaticData{defaults}{JFILES};
+  foreach my $file (@X) {
+    if (-f $file) {
+      push @Files2Check, $file;
+      last;
+    }
+  }
+}
+
+StatsXFiles(@Files2Check);
+
+exit 0;
+
+# ------------------------------------------------
+#
+#
+sub StatsXFiles {
+  my (@Files, undef) = @_;
+
+  my %EXT        = ();
+  my %StatByDay  = ();
+  my %FilesByDay = ();
+  my %DayStr     = ();
+  my $tlast      = 0;
+  my $tfirst     = 999999;
+
+  my %ExtOK = (all => 1);
+  if ($Conf{extensions} ne '') {
+    %ExtOK = map {$_ => 1} split /,/, $Conf{extensions};
+  }
+
+  foreach my $fname (@Files) {
+    next unless -f $fname;
+    open FIN, $fname or die "*** Can't open input file $fname";
+
+    while (my $line = <FIN>) {
+      chomp $line;
+      my %Line  = ();
+      my $reste = $line;
+      ($Line{clk}, $Line{conn}, $reste) = split " ", $line, 3;
+      next unless defined $Line{clk} && defined $Line{conn};
+      while ($reste =~ /^(\S+)=\((\S+)\)\s+(.+)/) {
+        my $key = lc $1;
+        $Line{$key} = $2;
+        $reste = $3;
+      }
+      next unless defined $reste && $reste ne "";
+
+      {
+        my @X = split '', $reste;
+        foreach (@X) {
+          if (ord $_ < 32 || ord $_ >= 127) {
+            $_ = "_";
+          }
+        }
+        $reste = join '', @X;
+      }
+      $Line{xfile} = $reste;
+
+      next unless defined $Line{class};
+      next unless $Conf{xfiles} ^ ($Line{class} ne "XXX");
+
+      my $day = int($Line{clk} / 86400);
+      $DayStr{$day} = Clock2DayStr($Line{clk});
+      $tlast  = $day if $day > $tlast;
+      $tfirst = $day if $day < $tfirst;
+
+      if (defined($Line{xfile}) && ($Line{xfile} =~ /[.]([a-z0-9]{0,6})$/i)) {
+        my $ext = lc $1;
+        next unless $ExtOK{all} || $ExtOK{$ext};
+
+        $EXT{$ext} = 1;
+        $StatByDay{$day}{$ext}++;
+        $StatByDay{$day}{_tot_}++;
+        push @{$FilesByDay{$day}{$ext}}, $Line{xfile};
+      }
+    }
+    close FIN;
+  }
+
+  unless ($tlast > 0) {
+    print <<TXT2;
+
+    $date
+
+    No records found
+
+TXT2
+    return;
+  }
+
+  print <<TXT1;
+
+  ze-filter weekly report on $date
+
+  Unsafe files detected on server : $hostname
+
+TXT1
+
+  if ($Conf{shift} > 0 && $tfirst < $tlast - $Conf{shift}) {
+    $tlast -= $Conf{shift};
+  }
+  my $ndays = $Conf{days};
+  if ($tlast - $tfirst < $ndays) {
+    $ndays = $tlast - $tfirst + 1;
+  }
+
+  my ($day, $total) = ("", 0);
+  my @Days = $tlast - $ndays + 1 .. $tlast;
+  foreach $day (@Days) {
+    $StatByDay{$day}{_tot_} = 0 unless exists($StatByDay{$day}{_tot_});
+  }
+
+  my $ColWidth = 12;
+  printf "%s|", "-" x 10;
+  for (my $i = 0 ; $i < $ndays ; $i++) {printf "%s", "-" x 8;}
+  printf "|%s\n", "-" x 9;
+
+  printf "%s|", " " x 10;
+  foreach $day (sort @Days) {
+    printf " %6s ", Day2DayStr($day);
+  }
+  printf "|\n";
+
+  printf "%s|", "-" x 10;
+  for (my $i = 0 ; $i < $ndays ; $i++) {printf "%s", "-" x 8;}
+  printf "|%s\n", "-" x 9;
+
+  foreach my $ext (sort keys %EXT) {
+    my $nbext = 0;
+    my $line  = "";
+    $line = sprintf "* .%-6s |", $ext;
+    foreach $day (sort @Days) {
+      my $n = exists $StatByDay{$day}{$ext} ? $StatByDay{$day}{$ext} : 0;
+      $line .= sprintf " %6d ", $n;
+      $nbext += $n;
+    }
+    printf "%s| %6d \n", $line, $nbext if $nbext > 0;
+    $total += $nbext;
+  }
+
+  printf "%s|", "-" x 10;
+  for (my $i = 0 ; $i < $ndays ; $i++) {printf "%s", "-" x 8;}
+  printf "|%s\n", "-" x 9;
+
+  printf "  %-7s |", "Total";
+
+  foreach $day (sort @Days) {
+    printf " %6d ", $StatByDay{$day}{_tot_};
+  }
+  printf "| %6d\n", $total if defined($total);
+  printf "\n";
+}
+
+# ------------------------------------------------
+#
+#
+sub CompleteStr {
+  my ($s, $len, $c, undef) = @_;
+
+  $len -= length $s;
+  if ($len > 0) {
+    $s .= " " x $len;
+  }
+  return $s;
+}
+
+# ------------------------------------------------
+#
+#
+sub Day2DayStr {
+  my ($c, undef) = @_;
+  return 0 if !defined($c);
+  $c *= 86400;
+  $c++;
+  my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday) = gmtime($c);
+  return sprintf "%02d/%02d", $mday, $mon + 1;
+  return sprintf "%02d/%02d", $mon + 1, $mday;
+  return sprintf "%02d/%02d", $mday, $mon + 1;
+}
+
+# ------------------------------------------------
+#
+#
+sub Clock2DayStr {
+  my ($c, undef) = @_;
+  return 0 if !defined($c);
+  my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday) = gmtime($c);
+  return sprintf "%02d/%02d", $mday, $mon + 1;
+}
+
+# ------------------------------------------------
+#
+#
+sub clock2month {
+  my ($c, undef) = @_;
+  return 0 if !defined($c);
+  my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday) = gmtime($c);
+  return $mon + 1;
+}
+
+# ------------------------------------------------
+#
+#
+sub ReadConfigurationFile {
+  my @ccEtc = ("$Bin/../etc", "/etc");
+  my $ConfFile = "$appl.conf";
+  my ($r, undef) = cc_conf_init($ConfFile, @ccEtc);
+  if ($r) {
+    $r = cc_conf_read();
+  }
+}
+
+# ------------------------------------------------
+#
+#
+sub usage {
+  my @X = qw();
+  @X = StaticDataArray("help", "USAGE");
+  if ($#X >= 0) {
+    print "\n";
+    foreach (@X) {
+      s/^\+//;
+      s/__APPL__/$appl/;
+      print $_, "\n";
+    }
+  } else {
+    print "\n Usage : $appl [OPTIONS]\n";
+  }
+
+  @X = StaticDataArray("help", "HEAD");
+  foreach (@X) {
+    s/^\+//;
+    print $_, "\n";
+  }
+
+  @X = StaticDataArray("help", "BODY");
+  foreach (@X) {
+    s/^\+//;
+    print $_, "\n";
+  }
+
+  @X = StaticDataArray("help", "FOOT");
+  foreach (@X) {
+    s/^\+//;
+    print $_, "\n";
+  }
+}
+
+# ------------------------------------------------
+#
+#
+sub GetStaticData {
+  my ($h, undef) = @_;
+  my @DATA = <DATA>;
+  my @SOPT = qw();
+  chomp @DATA;
+  my $in  = 0;
+  my $key = "";
+  foreach my $s (@DATA) {
+    if ($key eq "") {
+      if ($s =~ /==\s+BEGIN\s+(\S+)\s+==/) {
+        $key = lc($1);
+      }
+      next;
+    }
+    if ($s =~ /==\s+END\s+(\S*\s+)?==/) {
+      $key = "";
+      next;
+    }
+    next if $s =~ /^\s*$/;
+    push @{$h->{$key}{_data_}}, $s;
+    my ($a, $b) = split " ", $s, 2;
+    next unless defined $a && $a ne "";
+    $b = "" unless defined $b;
+    if ($b =~ /[+]{2}(.*)/) {
+      if (exists $h->{$key}{$a}) {
+        $h->{$key}{$a} .= " $1";
+      } else {
+        $h->{$key}{$a} = $1;
+      }
+    } else {
+      $h->{$key}{$a} = $b;
+    }
+  }
+}
+
+# ------------------------------------------------
+#
+#
+sub StaticDataArray {
+  my ($key, $tag, undef) = @_;
+
+  my @LINES = grep {$_ =~ /^$tag\s+/i} @{$StaticData{$key}{_data_}};
+  foreach (@LINES) {
+    s/^$tag\s+//;
+  }
+  return @LINES;
+}
+
+# ------------------------------------------------
+#
+#
+
+__DATA__
+
+== BEGIN DEFAULTS ==
+JFILES   ze-files,/var/ze-filter/files/ze-files
+== END ==
+
+== BEGIN HELP ==
+
+USAGE +   Usage : __APPL__ [OPTIONS] [file file file ...]
+HEAD +
+HEAD +    Stats about attached files (Xfiles and Regular files) found by ze-filter
+
+# === begin usage conf ===
+BODY +
+BODY +  -h            This message
+BODY +                default : false
+BODY +  --help        This message
+BODY +                default : false
+BODY +  -v            Verbose
+BODY +                default : false
+BODY +  --xfiles      Kind of files to check (--xfiles or --noxfiles)
+BODY +                default : true
+BODY +  --days        Number of days to analyse
+BODY +                default : 7
+BODY +  --shift       Number of days to shift back the analysis
+BODY +                default : 0
+BODY +  --extensions  Check only these extensions
+BODY +                default : all
+BODY +
+# === end usage conf ===
+== END ==
+
+__END__
+
+

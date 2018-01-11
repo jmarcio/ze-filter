@@ -13,6 +13,7 @@ SUBDIRS = $(subdirs) \
 	etc \
 	scratch \
 	ze-bayes-tbx \
+	ze-logreg \
 	ze-makemap \
 	ze-printstats \
 	ze-scanfile \

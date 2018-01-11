@@ -1,0 +1,21 @@
+#! /usr/bin/perl -w
+
+use strict;
+use Getopt::Long;
+
+my $field = "RCPT";
+my $tolower = 0;
+
+my $ok = GetOptions('f=s'     => \$field,
+                    'tolower' => \$tolower);
+
+while (<>) {
+  chomp;
+
+  next unless / $field=\(([^\)]*)\)/i;
+
+  my $s = $1;
+  $s =~ tr/A-Z/a-z/ if $tolower;
+  print $s, "\n";
+}
+

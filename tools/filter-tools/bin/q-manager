@@ -1,0 +1,1551 @@
+#! /opt/perl/bin/perl -w
+#
+#  Description :
+#
+#  Author      : Jose-Marcio Martins da Cruz
+#                mailto:jose-marcio.martins@mines-paristech.fr
+#                Ecole des Mines de Paris
+#
+#  History     :
+#
+#  TODO        :
+#
+use strict;
+use Getopt::Long;
+use Pod::Usage;
+use POSIX;
+use MIME::Words qw(:all);
+use IO::Socket;
+use Sys::Syslog;
+
+use FindBin qw($Bin);
+use lib "$Bin/../lib";
+use CCMail;
+use CCConf;
+
+# ------------------------------------------------
+#
+#
+my $appl = `basename $0`;
+chomp $appl;
+
+my $log_opts    = 'pid,cons,ndelay,nowait';
+my $log_program = 'q-manager';
+
+my %StaticData = ();
+GetStaticData(\%StaticData);
+
+# === begin options conf ===
+
+# Defining CL options and default values
+my $help     = 0;
+my $debug    = 0;
+my $verbose  = 0;
+my $op       = "";
+my $profile  = "default";
+my $ConfFile = "filter-tools.conf";
+
+my %Conf = (
+  "facility"   => "local3",
+  "clamdscan"  => "/usr/bin/clamdscan",
+  "smbin"      => "/usr/sbin/sendmail",
+  "smopt"      => "-oi",
+  "agemin"     => 6,
+  "agemax"     => 72,
+  "scale"      => "hour",
+  "dirspool"   => "/var/spool/ze-filter",
+  "dirgood"    => "/var/spool/ze-filter-good",
+  "dirbad"     => "/var/spool/ze-filter-bad",
+  "extensions" => "all",
+  "maxfree"    => 3,
+  "nohold"     => 0,
+  "minhold"    => 10,
+  "mreplyto"   => "preserve",
+  "mfrom"      => "some-secret-key\@domain.fr",
+  "notifyfrom" => "thefilteraddr\@domain.fr",
+  "notifyto"   => "thefilteraddr\@domain.fr",
+  "report"     => 0,
+  "mreport"    => "thefilteraddr\@domain.fr",
+  "doit"       => 0,
+  "notify"     => "all",
+);
+
+my %ConfCli = ();
+foreach my $k (keys %Conf) {
+  $ConfCli{$k} = undef;
+}
+
+# Reading CL options
+my $ok = GetOptions(
+  "h!"           => \$help,
+  "help!"        => \$help,
+  "d!"           => \$debug,
+  "debug!"       => \$debug,
+  "v!"           => \$verbose,
+  "op=s"         => \$op,
+  "profile=s"    => \$profile,
+  "cf=s"         => \$ConfFile,
+  "facility=s"   => \$ConfCli{facility},
+  "clamdscan=s"  => \$ConfCli{clamdscan},
+  "smbin=s"      => \$ConfCli{smbin},
+  "smopt=s"      => \$ConfCli{smopt},
+  "agemin=i"     => \$ConfCli{agemin},
+  "agemax=i"     => \$ConfCli{agemax},
+  "scale=s"      => \$ConfCli{scale},
+  "dirspool=s"   => \$ConfCli{dirspool},
+  "dirgood=s"    => \$ConfCli{dirgood},
+  "dirbad=s"     => \$ConfCli{dirbad},
+  "extensions=s" => \$ConfCli{extensions},
+  "maxfree=i"    => \$ConfCli{maxfree},
+  "nohold!"      => \$ConfCli{nohold},
+  "minhold=i"    => \$ConfCli{minhold},
+  "mreplyto=s"   => \$ConfCli{mreplyto},
+  "mfrom=s"      => \$ConfCli{mfrom},
+  "notifyfrom=s" => \$ConfCli{notifyfrom},
+  "notifyto=s"   => \$ConfCli{notifyto},
+  "report!"      => \$ConfCli{report},
+  "mreport=s"    => \$ConfCli{mreport},
+  "doit!"        => \$ConfCli{doit},
+  "notify=s"     => \$ConfCli{notify},
+);
+
+ReadConfigurationFile();
+
+foreach my $k (keys %Conf) {
+  if (defined $ConfCli{$k}) {
+    $Conf{$k} = $ConfCli{$k};
+  }
+}
+
+# === end options conf ===
+
+if ($help || $op =~ /help/i) {
+  usage();
+  exit 0;
+}
+
+my $Now      = time();
+my $Hostname = `hostname`;
+chomp $Hostname;
+my $Date = `date`;
+chomp $Date;
+
+openlog($log_program, $log_opts, $Conf{facility});
+
+if (lc $Conf{scale} eq "hour") {
+  $Conf{agemax} *= 3600;
+  $Conf{agemin} *= 3600;
+}
+if (lc $Conf{scale} eq "minutes") {
+  $Conf{agemax} *= 60;
+  $Conf{agemin} *= 60;
+}
+
+mkdir $Conf{dirgood} unless -d $Conf{dirgood};
+mkdir $Conf{dirbad}  unless -d $Conf{dirbad};
+
+# ------------------------------------------------
+#
+#
+
+if ($op =~ /^conf$/i) {
+  foreach my $k (sort keys %Conf) {
+    printf "* %-15s : %s\n", $k, $Conf{$k};
+  }
+  exit 0;
+}
+
+if ($op =~ /^optionb$/i) {
+
+}
+
+my %MSGS = ();
+
+my %FExt = ();
+{
+  my @X = split /,/, $Conf{extensions};
+  foreach my $s (@X) {
+    next if $s =~ /^\s*$/;
+    $FExt{$s} = 1;
+  }
+}
+
+my $nMsgsFree    = 0;
+my $nMsgsDiscard = 0;
+my $nMsgs        = 0;
+
+{
+  my ($id, $ip, $hostname, $date, $why, $file, $msg, $size, $from, $subj);
+  my @rcpt  = qw();
+  my @xfile = qw();
+  my @yfile = qw();
+
+  $id = $ip = $hostname = $date = $why = $file = $msg = $from = $size = $subj =
+    "";
+  @xfile = @yfile = @rcpt = qw();
+
+  while (<>) {
+    chomp;
+
+    next if /^\s*$/;
+
+    my ($ID, $TAG, $RESTE) = split(" ", $_, 3);
+    next unless defined $TAG;
+
+    if ($TAG eq "CONN") {
+      #
+      # save previous message
+      #
+      if ($id ne "" && defined $file && $file ne "" && $#rcpt >= 0) {
+        SaveMsgData(
+          $id,   $ip,   $hostname, $date,  $why,    $file,
+          $from, $subj, $size,     \@rcpt, \@xfile, \@yfile
+        );
+      }
+
+      # clean up current data
+      $id = $ip = $hostname = $date = $why = $file = $msg = $from = $size =
+        $subj = "";
+      @xfile = @yfile = @rcpt = qw();
+
+      ($date, $ip, $hostname) = split(" ", $RESTE);
+      $id = $ID;
+
+      next;
+    }
+
+    next if $id eq "";
+
+    if ($TAG eq "QUAR") {
+      next unless defined $id && $id ne "";
+      $file = $RESTE;
+      next;
+    }
+
+    if ($TAG eq "FROM") {
+      next unless defined $id && $id ne "";
+      $from = $RESTE;
+      $from = decode_mimewords($RESTE);
+      next;
+    }
+
+    if ($TAG eq "SUBJ") {
+      next unless defined $id && $id ne "";
+      $subj = $RESTE;
+      $subj = decode_mimewords($RESTE);
+      next;
+    }
+
+    if ($TAG eq "RCPT") {
+      next unless defined $id && $id ne "";
+      $RESTE = lc($RESTE);
+
+      my ($ok, $email) = split " ", $RESTE, 2;
+      if ($ok =~ /^\d+$/) {
+        next if $ok != 0;
+      } else {
+        $email = $RESTE;
+      }
+
+      my $r = $email;
+      if ($r =~ /<([^>]*)>/) {
+        $r = $1;
+        next if $r eq $Conf{mfrom};
+      }
+      push @rcpt, $email;
+      next;
+    }
+
+    if ($TAG eq "SIZE") {
+      next unless defined $id && $id ne "";
+      $size = $RESTE;
+      next;
+    }
+
+    if ($TAG eq "WHY") {
+      next unless defined $id && $id ne "";
+      $why = $RESTE;
+      if ($RESTE =~ /\.([^.]+)\.?$/) {
+        $why = $1;
+      }
+      next;
+    }
+
+    if ($TAG eq "FILE") {
+      next unless defined $id && $id ne "";
+      if ($RESTE =~ /^XXX/) {
+        push(@xfile, $RESTE);
+      } else {
+        push(@yfile, $RESTE);
+      }
+      next;
+    }
+  }
+
+  #
+  # save last message
+  #
+  if (defined $id && $id ne "" && defined $file && $file ne "" && $#rcpt >= 0) {
+    SaveMsgData(
+      $id,   $ip,   $hostname, $date,  $why,    $file,
+      $from, $subj, $size,     \@rcpt, \@xfile, \@yfile
+    );
+  }
+}
+
+# ------------------------------------------------
+#
+#
+foreach my $id (sort keys %MSGS) {
+  my ($ip, $hostname, $date, $why, $file, $size, $from, $subj);
+  my @rcpt  = qw();
+  my @xfile = qw();
+  my @yfile = qw();
+
+  $ip       = $MSGS{$id}{ip};
+  $hostname = $MSGS{$id}{hostname};
+  $date     = $MSGS{$id}{date};
+  $why      = $MSGS{$id}{why};
+  $file     = $MSGS{$id}{file};
+  $from     = $MSGS{$id}{from};
+  $subj     = $MSGS{$id}{subj};
+  $size     = $MSGS{$id}{size};
+
+  @rcpt  = @{$MSGS{$id}{rcpt}};
+  @xfile = @{$MSGS{$id}{xfile}};
+  @yfile = @{$MSGS{$id}{yfile}};
+
+  next unless $why eq "xfile";
+
+  next if $#rcpt < 0;
+
+  # check if good file type to check...
+  unless (CheckFileType(\@xfile)) {
+    $MSGS{$id}{result} = 3;
+    $MSGS{$id}{msg}    = "not yet";
+    next;
+  }
+
+  my ($result, $msg) = ClamCheckXfile($id, $file);
+
+  # ??? XXX JOE - or ici ?
+  $MSGS{$id}{result} = $result;
+  $MSGS{$id}{msg}    = $msg;
+
+  $nMsgs++;
+}
+
+my $NbTotGood = 0;
+my $NbGood    = 0;
+my $NbBad     = 0;
+my $NbError   = 0;
+
+{
+  #   -1 : error
+  #    0 : unquarantined
+  #    1 : virus detected
+  #    2 : error while message scanning
+  #    3 : not yet !
+  my @X = qw();
+
+  @X = grep {($MSGS{$_}{result} == 0)} keys %MSGS;
+  $NbTotGood = $#X + 1;
+
+  @X = grep {
+         ($MSGS{$_}{result} == 0)
+      && ($MSGS{$_}{date} + $Conf{agemax} >= $Now)
+      && ($MSGS{$_}{date} + $Conf{agemin} <= $Now)
+  } keys %MSGS;
+  $NbGood = $#X + 1;
+
+  @X = grep {$MSGS{$_}{result} == 1} keys %MSGS;
+  $NbBad = $#X + 1;
+
+  @X = grep {$MSGS{$_}{result} == -1 || $MSGS{$_}{result} == 2} keys %MSGS;
+  $NbError = $#X + 1;
+}
+
+if ($debug) {
+  printf "Good Total : %5d\n", $NbTotGood;
+  printf "Good       : %5d\n", $NbGood;
+  printf "Bad        : %5d\n", $NbBad;
+  printf "Ugly       : %5d\n", $NbError;
+}
+
+#
+# purge from already known
+#
+
+if ($debug) {
+  foreach my $id (sort keys %MSGS) {
+    printf "* ID : %s %3d %s\n", $id, $MSGS{$id}{result}, $MSGS{$id}{msg};
+  }
+}
+
+foreach my $id (grep {$MSGS{$_}{result} == 1} sort keys %MSGS) {
+  if (DoDiscardMsg($id, \%{$MSGS{$id}})) {
+  }
+}
+
+my $HoldQueue = 0;
+
+if ($NbTotGood > $Conf{minhold}) {
+  unless ($Conf{nohold}) {
+    DoAlert($NbGood, $NbBad, $NbError, $NbTotGood);
+    $HoldQueue = 1;
+  }
+}
+
+if (!$HoldQueue) {
+  foreach my $id (grep {$MSGS{$_}{result} == 0} sort keys %MSGS) {
+    last if $nMsgsFree >= $Conf{maxfree};
+
+    next if ($MSGS{$id}{date} + $Conf{agemax} < $Now);
+    next if ($MSGS{$id}{date} + $Conf{agemin} > $Now);
+
+    $nMsgsFree++;
+    if (DoFreeMsg($id, \%{$MSGS{$id}})) {
+    }
+  }
+}
+
+my %Dest = ();
+
+FillDestData(\%MSGS, \%Dest);
+
+# ------------------------------------------------
+#
+#
+report(\%MSGS, \%Dest) if $Conf{report};
+
+if (0) {
+  my @nopt = split ",", $Conf{notify};
+  my $sel = 0;
+  foreach (@nopt) {
+    if (/^good$/) {
+      $sel |= 1;
+      next;
+    }
+    if (/^bad$/) {
+      $sel |= 2;
+      next;
+    }
+    if (/^error$/) {
+      $sel |= 4;
+      next;
+    }
+    if (/^good$/) {
+      $sel |= 7;
+      last;
+    }
+  }
+  if ($sel != 0) {
+    notify_action($sel);
+  }
+}
+
+closelog();
+
+exit 0;
+
+# ------------------------------------------------
+#
+#
+sub SaveMsgData {
+  my (
+    $id,   $ip,   $hostname, $date,  $why,   $file, $from,
+    $subj, $size, $rcpt,     $xfile, $yfile, undef
+  ) = @_;
+
+  return unless defined $file && $file ne "" && -f "$Conf{dirspool}/$file";
+
+  return unless $why =~ /xfile/;
+
+  $MSGS{$id}{ip}       = $ip;
+  $MSGS{$id}{hostname} = $hostname;
+  $MSGS{$id}{date}     = $date;
+  $MSGS{$id}{why}      = $why;
+  $MSGS{$id}{file}     = $file;
+  $MSGS{$id}{from}     = $from;
+  $MSGS{$id}{subj}     = $subj;
+  $MSGS{$id}{size}     = $size;
+  $MSGS{$id}{result}   = 0;
+  $MSGS{$id}{msg}      = "";
+  $MSGS{$id}{action}   = "";
+
+  @{$MSGS{$id}{rcpt}}  = @{$rcpt};
+  @{$MSGS{$id}{xfile}} = @{$xfile};
+  @{$MSGS{$id}{yfile}} = @{$yfile};
+
+  @{$MSGS{$id}{xxx}} = qw();
+  foreach (@{$MSGS{$id}{xfile}}) {
+    if (/\.([^\.])+$/) {
+      push @{$MSGS{$id}{xxx}}, $1;
+    }
+  }
+}
+
+# ------------------------------------------------
+#
+#
+sub DoAlert {
+  my ($nbOK, $nbKO, $nbErr, $nbTotOK, undef) = @_;
+
+  my $nbTot = $nbTotOK + $nbKO + $nbErr;
+
+  my $from = $StaticData{alert}{FROM};
+  my $rcpt = $StaticData{alert}{RCPT};
+  my $subj = $StaticData{alert}{SUBJECT};
+
+  $subj =~ s/__HOSTNAME__/$Hostname/;
+
+  $nbOK    = sprintf "%5d", $nbOK;
+  $nbKO    = sprintf "%5d", $nbKO;
+  $nbErr   = sprintf "%5d", $nbErr;
+  $nbTotOK = sprintf "%5d", $nbTotOK;
+  $nbTot   = sprintf "%5d", $nbTot;
+
+  my @body = StaticDataArray("alert", "BODY");
+  foreach (@body) {
+    s/__HOSTNAME__/$Hostname/;
+    s/__MSGS_TOT_GOOD__/$nbTotOK/;
+    s/__MSGS_GOOD__/$nbOK/;
+    s/__MSGS_BAD__/$nbKO/;
+    s/__MSGS_ERR__/$nbErr/;
+    s/__MSGS__/$nbTot/;
+  }
+
+  my $body = join "\r\n", @body;
+
+  #print "BODY = $body\n";
+
+  CCMailSendMsg($from, $rcpt, $subj, $body);
+}
+
+# ------------------------------------------------
+#
+#
+sub DoFreeMsg {
+  my ($id, $h, undef) = @_;
+
+  my ($file, $from, $subj, $size, $xfile, @rcpt, $result);
+
+  printf "* Letting pass %s\n", $id if $debug;
+
+  $file   = $h->{file};
+  @rcpt   = @{$h->{rcpt}};
+  $result = $h->{result};
+
+  my $msg = "";
+
+  return (-1, "") unless defined $file && $file ne "";
+  my $qfile = "$Conf{dirspool}/$file";
+  return (-1, "Spool file not found") unless -f $qfile;
+  return (0,  "Not a clean file")     unless $result == 0;
+
+  # OK
+  my $ok = 1;
+
+  my $qok = 1;
+  if ($verbose) {
+    printf "  Unquaranting message %s\n", ($Conf{doit} ? "" : "(dry run)");
+  }
+  foreach my $to (@rcpt) {
+    if ($Conf{doit}) {
+      my $r = unquarantine($id, $file, $to);
+      do_log("$id : Clean $to ");
+    } else {
+      do_log("$id : Clean $to (dry run)");
+    }
+  }
+  if ($Conf{doit}) {
+    system("mv $qfile $Conf{dirgood}") if $ok;
+  }
+  $h->{action} = "free";
+
+  return ($result, $msg);
+}
+
+# ------------------------------------------------
+#
+#
+sub DoDiscardMsg {
+  my ($id, $h, undef) = @_;
+
+  my ($file, $from, $subj, $size, $xfile, @rcpt, $result, $msg);
+
+  printf "* Discarding %s\n", $id if $debug;
+
+  $file   = $h->{file};
+  @rcpt   = @{$h->{rcpt}};
+  $result = $h->{result};
+  $msg    = $h->{msg};
+
+  return (-1, "") unless defined $file && $file ne "";
+  my $qfile = "$Conf{dirspool}/$file";
+  return (-1, "Spool file not found") unless -f $qfile;
+
+  # virus
+  if ($result == 1) {
+    $nMsgsDiscard++;
+    my $sdry = $Conf{doit} ? "" : "(dry-run)";
+
+    print "  Moving infected file to virus spool\n" if $verbose || $debug;
+    foreach my $to (@rcpt) {
+      do_log("$id : Virus $to ($msg) $sdry");
+    }
+    if ($Conf{doit}) {
+      system("mv $qfile $Conf{dirbad}");
+    }
+    $h->{action} = "block";
+  }
+
+  return ($result, $msg);
+}
+
+# ------------------------------------------------
+#
+#
+sub DoShowMsg {
+
+  #  print <<EOT;
+
+  #  ID        : $id
+  #  FILE      : $file
+  #  SIZE      : $size
+  #  RESULTAT  : $r  (0 = OK, 1 = VIRUS, 2 = ERROR);
+  #  FROM      : $from
+  #  SUBJECT   : $subj
+  #EOT
+
+  #  foreach my $f (@{$xfile}) {
+  #    printf "  XFILE     : %s\n", $f;
+  #  }
+  #  foreach my $dst (@rcpt) {
+  #    print "  RCPT      : $dst\n";
+  #  }
+  #  printf "  ACTION    : %s\n", GetActionString($result);
+  #  printf "  VIRUS     : %s\n", $msg if defined $msg && $msg ne "";
+}
+
+# ------------------------------------------------
+#
+#
+# return values :
+#   -1 : error
+#    0 : unquarantined
+#    1 : virus detected
+#    2 : error while message scanning
+sub ClamCheckXfile {
+  my ($id, $file, undef) = @_;
+  my $result = 0;
+  my $msg    = "";
+
+  return (-1, "") unless defined $file && $file ne "";
+  my $qfile = "$Conf{dirspool}/$file";
+  return (-1, "Spool file not found") unless -f $qfile;
+
+  my $r = system("$Conf{clamdscan} $qfile > /dev/null");
+  $r /= 256;
+  if ($r == 1) {
+    open FIN, "$Conf{clamdscan} $qfile |" || die "$qfile";
+    while (my $x = <FIN>) {
+      if ($x =~ /\s+(\S+)\s+FOUND/i) {
+        $msg = $1;
+        last;
+      }
+    }
+    close FIN;
+  }
+
+  $result = $r;
+
+  return ($result, $msg);
+}
+
+# ------------------------------------------------
+#
+#
+sub CheckFileType {
+  my ($xfile, undef) = @_;
+
+  if ($FExt{"*"} || $FExt{all}) {
+    return 1;
+  }
+
+  foreach my $x (@{$xfile}) {
+    my ($Xclass, $Mime, $FName) = split /\s+/, $x, 3;
+    my $ok = 0;
+
+    foreach my $k (keys %FExt) {
+      if ($FName =~ /[.]$k$/i) {
+        $ok = 1;
+        last;
+      }
+    }
+    return 0 unless $ok;
+  }
+
+  return 1;
+}
+
+# ------------------------------------------------
+#
+#
+# return values :
+#   -1 : error
+#    0 : unquarantined
+#    1 : virus detected
+#    2 : error while message scanning
+sub check_msg_xfile {
+  my ($id, $file, $from, $subj, $size, $xfile, @rcpt) = @_;
+  my $result = 0;
+  my $msg    = "";
+
+  return (-1, "") unless defined $file && $file ne "";
+  my $qfile = "$Conf{dirspool}/$file";
+  return (-1, "Spool file not found") unless -f $qfile;
+
+  $result = 0;
+
+  if ($verbose) {
+    print <<EOT;
+
+  ID        : $id
+  FILE      : $file
+  SIZE      : $size
+  RESULTAT  : $result  (0 = OK, 1 = VIRUS, 2 = ERROR);
+  FROM      : $from
+  SUBJECT   : $subj
+EOT
+
+    foreach my $f (@{$xfile}) {
+      printf "  XFILE     : %s\n", $f;
+      if (0 && $f =~ /\.([^.]+)$/) {
+        my $ext = $1;
+        printf "            : %s\n", $ext;
+
+        #printf "  AUTH      : %s\n", exists $EXT{$ext} ? $EXT{$ext} : "?";
+      }
+    }
+
+    foreach my $dst (@rcpt) {
+      print "  RCPT      : $dst\n";
+    }
+    printf "  ACTION    : %s\n", GetActionString($result);
+    printf "  VIRUS     : %s\n", $msg if defined $msg && $msg ne "";
+  }
+
+  if ($verbose) {
+    print "\n";
+  }
+
+  return ($result, $msg);
+}
+
+# ------------------------------------------------
+#
+#
+sub unquarantine {
+  my ($id, $file, $rcpt, undef) = @_;
+  my $result = 0;
+
+  if ($rcpt =~ /<(.+)>/) {
+    $rcpt = $1;
+  }
+
+  if ($verbose) {
+    print "        $rcpt\n";
+  }
+
+  my $ftmp = "/tmp/$file.tmp";
+  ChangeReply($file, $ftmp);
+
+  if (-f $ftmp) {
+    my $cmd = "$Conf{smbin} -Ac -f $Conf{mfrom}  $rcpt < $ftmp";
+
+    my $r = system("$cmd");
+    $result = ($r == 0);
+
+    unlink $ftmp;
+  }
+
+  return $result;
+}
+
+# ------------------------------------------------
+#
+#
+sub ChangeReply {
+  my ($fmsg, $fout, undef) = @_;
+
+  return 0 unless defined $fmsg && $fmsg ne "";
+  $fmsg = "$Conf{dirspool}/$fmsg";
+
+  return 0 unless -f $fmsg;
+
+  unlink $fout if -f $fout;
+  open FOUT, ">$fout" || die "$fout";
+  open FMSG, "<$fmsg" || die "$fmsg";
+
+  my $nl = 0;
+  while (<FMSG>) {
+    my $in_header = 1 .. /^$/;
+
+    unless ($in_header) {
+      if (/^\.$/) {
+        print FOUT " \n";
+      } else {
+        print FOUT $_;
+      }
+      next;
+    }
+
+    next if /^From /;
+
+    if (/^(Return-Path|Reply-To):/) {
+      unless ($Conf{mreplyto} eq "preserve") {
+        print FOUT "X-", $_;
+        next;
+      }
+      if ($Conf{mreplyto} eq "preserve") {
+        print FOUT $_;
+        next;
+      }
+      next;
+    }
+
+    $nl++;
+
+    if ($nl == 1 && $Conf{mreplyto} !~ /^(remove|preserve)$/) {
+      print FOUT "Return-Path: $Conf{mreplyto}\n";
+      print FOUT "Reply-To: $Conf{mreplyto}\n";
+    }
+    print FOUT $_;
+  }
+
+  close FMSG;
+  close FOUT;
+}
+
+# ------------------------------------------------
+#
+#
+sub FillDestData {
+  my ($h, $d, undef) = @_;
+
+  foreach my $id (keys %{$h}) {
+    foreach my $to (@{$h->{$id}{rcpt}}) {
+      unless (exists $d->{$to}) {
+        @{$d->{$to}{free}}  = qw();
+        @{$d->{$to}{block}} = qw();
+      }
+      if ($h->{$id}{action} eq "free") {
+        push @{$d->{$to}{free}}, $id;
+      }
+      if ($h->{$id}{action} eq "block") {
+        push @{$d->{$to}{block}}, $id;
+      }
+    }
+  }
+
+  if ($debug) {
+    foreach my $to (sort keys %{$d}) {
+      printf "* %s\n", $to;
+      if ($#{$d->{$to}{free}} >= 0) {
+        printf "  good : %s\n", (join " ", @{$d->{$to}{free}});
+      }
+      if ($#{$d->{$to}{block}} >= 0) {
+        printf "  bad  : %s\n", (join " ", @{$d->{$to}{block}});
+      }
+    }
+  }
+}
+
+# ------------------------------------------------
+#
+#
+sub report {
+  my ($h, $d, undef) = @_;
+
+  my $rcpt;
+  my @MAILTXT = qw();
+  my $nmsg    = 0;
+
+  printf "* Preparing report\n" if $debug;
+
+  my @Users2Report = qw();
+  my %CNT          = ();
+
+  foreach (sort keys %{$d}) {
+    if ($debug) {
+      printf " -- %-50s %5d %5d\n", $_, $#{$d->{$_}{free}} + 1,
+        $#{$d->{$_}{block}} + 1;
+    }
+    if (($#{$d->{$_}{free}} >= 0) || ($#{$d->{$_}{block}} >= 0)) {
+      push @Users2Report, $_;
+      $CNT{$_} = $#{$d->{$_}{free}} + $#{$d->{$_}{block}} + 2;
+    }
+  }
+
+  my $DryRun = $Conf{doit} ? "" : " D R Y   R U N ";
+  push @MAILTXT,
+    (". $DryRun\n"),
+    ("  " . "-" x 64),
+    (sprintf "  Date                       : %s", clock2date($Now)),
+    ("  Intervalle d'analyse"),
+    (
+    sprintf "     De                      : %s",
+    clock2date($Now - $Conf{agemax})
+    ),
+    (
+    sprintf "     A                       : %s",
+    clock2date($Now - $Conf{agemin})
+    ),
+    (sprintf "  Hostname                   : %s",  $Hostname),
+    (sprintf "  Nombre de virus detectes   : %4d", $nMsgsDiscard),
+    (sprintf "  Nombre de messages liberes : %4d", $nMsgsFree),
+    (sprintf "  Nombre de messages scannes : %4d", $nMsgs),
+    ("  " . "-" x 64 . "\n\n");
+
+  foreach (sort @Users2Report) {
+    my $UserOK = 0;
+    my @ULINES = qw();
+
+    push @ULINES, sprintf "-> RCPT    : %s",    $_;
+    push @ULINES, sprintf "   MSGS    : %5d\n", $CNT{$_};
+
+    foreach my $id (sort @{$d->{$_}{free}}, @{$d->{$_}{block}}) {
+      $UserOK = 1;
+
+      my ($file, $from, $ip, $hostname, $date, $subj, $size, $action, $msg);
+
+      $nmsg++;
+      $size     = $MSGS{$id}{size};
+      $from     = $MSGS{$id}{from};
+      $ip       = $MSGS{$id}{ip};
+      $hostname = $MSGS{$id}{hostname};
+      $date     = $MSGS{$id}{date};
+      $subj     = $MSGS{$id}{subj};
+      $action   = $MSGS{$id}{result};
+      $msg      = $MSGS{$id}{msg};
+
+      $date = localtime($date);
+
+      # $subj =~ tr/\n\r/  /;
+
+      push @ULINES, "
+   MSGID        $id   ($size Bytes)
+   DATE         $date
+   SUBJECT      $subj
+   FROM         $from
+   MAILSERVER   $ip $hostname
+   FILES";
+
+      foreach $file (sort @{$MSGS{$id}{xfile}}) {
+        push @ULINES, sprintf "      %s", $file;
+      }
+      foreach $file (sort @{$MSGS{$id}{yfile}}) {
+        push @ULINES, sprintf "      %s", $file;
+      }
+      push @ULINES, sprintf "   VIRUS        %s", $msg
+        if defined $msg && $msg ne "";
+      push @ULINES, sprintf "   ACTION       %s", GetActionString($action);
+      push @ULINES, "";
+    }
+
+    push @ULINES, <<TX;
+
+  ***************************************************************
+TX
+    if ($UserOK) {
+      push @MAILTXT, @ULINES;
+    }
+  }
+
+  if ($nmsg > 0) {
+    my $to = $Conf{mreport};
+
+    my $MAILPROGRAM = "| $Conf{smbin} -oi $to";
+
+    if (open(MAIL, $MAILPROGRAM)) {
+      select MAIL;
+
+      print "Reply-To: $Conf{notifyfrom}\n";
+      print "From: $Conf{notifyfrom}\n";
+      print "To: $to\n";
+      print "Subject: [QUARANTAINE $Hostname] Rapport de gestion\n";
+
+      foreach my $s (@MAILTXT) {
+        print $s, "\n";
+      }
+
+      select(STDOUT);
+      close MAIL;
+    } else {
+    }
+  }
+}
+
+# ------------------------------------------------
+#
+#
+sub notify_action {
+  my ($sel, undef) = @_;
+
+  return 0 unless defined $sel && $sel != 0;
+  my $nok    = ($sel & 0x1) != 0 ? 1 : 0;
+  my $nvirus = ($sel & 0x2) != 0 ? 1 : 0;
+  my $nerror = ($sel & 0x4) != 0 ? 1 : 0;
+  my $nall   = ($sel & 0x7) == 7 ? 1 : 0;
+
+  my %CNT = ();
+  foreach (sort keys %MSGS) {
+
+    #printf "ID %s %s\n", $_, $MSGS{$_}{size};
+    foreach my $rcpt (@{$MSGS{$_}{rcpt}}) {
+      $CNT{$rcpt}++;
+    }
+  }
+
+  my $mta = `hostname`;
+  chomp $mta;
+
+  foreach my $rcpt (sort keys %Dest) {
+    my @MAILTXT = qw();
+    my $nbrecs  = 0;
+
+    if ($nok) {
+      push @MAILTXT, notify_header(1);
+    }
+
+    if ($nvirus) {
+      push @MAILTXT, notify_header(0);
+    }
+
+    push @MAILTXT, sprintf "   Destinataire          : %s", $rcpt;
+    push @MAILTXT, sprintf "   Serveur de messagerie : %s", $mta;
+
+    foreach my $id (sort @{$Dest{$rcpt}{free}}, @{$Dest{$rcpt}{block}}) {
+      my ($msg, $file, $from, $ip, $hostname, $date, $subj, $size, $action);
+
+      $size     = $MSGS{$id}{size};
+      $from     = $MSGS{$id}{from};
+      $ip       = $MSGS{$id}{ip};
+      $hostname = $MSGS{$id}{hostname};
+      $date     = $MSGS{$id}{date};
+      $subj     = $MSGS{$id}{subj};
+      $action   = $MSGS{$id}{result};
+      $msg      = $MSGS{$id}{msg};
+
+      $date = localtime($date);
+
+      next
+        unless ($nall
+        || ($action == 2 && $nerror)
+        || ($action == 1 && $nvirus)
+        || ($action == 0 && $nok));
+
+      $nbrecs++;
+
+      push @MAILTXT, "   " . "-" x 72 . "\n";
+      push @MAILTXT, "   MSGID        $id   ($size Bytes)";
+      push @MAILTXT, "   DATE         $date";
+      push @MAILTXT, "   OBJET        $subj";
+      push @MAILTXT, "   EXPEDITEUR   $from";
+      push @MAILTXT, "   FICHIERS";
+      foreach $file (sort @{$MSGS{$id}{xfile}}) {
+        push @MAILTXT, sprintf "      %s", $file;
+      }
+      foreach $file (sort @{$MSGS{$id}{yfile}}) {
+        push @MAILTXT, sprintf "      %s", $file;
+      }
+      push @MAILTXT, sprintf "   ACTION       %s", GetActionString($action);
+      push @MAILTXT, sprintf "   VIRUS        %s", $msg
+        if defined $msg
+        && $msg ne "";
+      push @MAILTXT, "";
+    }
+
+    push @MAILTXT, notify_footer(0);
+
+    if ($nbrecs > 0) {
+
+      if ($Conf{doit}) {
+        my $to = $rcpt;
+        if ($to =~ /<([^>]*)>/) {
+          $to = $1;
+        }
+
+        #$to = $notifyTo  if defined $notifyTo && $notifyTo ne "";
+
+        do_log("Sending notification to $to");
+
+        my $MAILPROGRAM = "| $Conf{smbin} -oi $to";
+
+        if (open(MAIL, $MAILPROGRAM)) {
+          select MAIL;
+
+          print "Reply-To: $Conf{notifyfrom}\n";
+          print "From: $Conf{notifyfrom}\n";
+          print "To: $to\n";
+          print "Subject: Rapport de gestion de quarantaine de filtrage\n";
+
+          foreach my $s (@MAILTXT) {
+            print $s, "\n";
+          }
+
+          select(STDOUT);
+          close MAIL;
+        } else {
+        }
+      }
+    }
+  }
+}
+
+# ------------------------------------------------
+#
+#
+sub notify_header {
+  my ($remise, undef) = @_;
+
+  my $s = "";
+
+  if ($remise == 0) {
+    $s = <<EOT;
+.
+      Bonjour,
+
+Les messages ci-dessous, ont ete filtres par notre serveur de messagerie.
+Apres un sejour en quarantaine et analyse par un logiciel antivirus, ils
+sont liberes si l'antivirus ne trouve pas de code malveillant. Voir
+ci-dessous l'action prise pour chaque message.
+
+OBS : L'analyse par l'antivirus n'etant pas parfaite, certains virus
+   pourraient ne pas etre detectes comme tels. Dans ce cas, il est
+   important, d'avoir son antivirus a jour et de ne pas ouvrir des
+   fichiers attaches qui ne sont pas attendus ou envoyes par des
+   expediteurs inconnus.
+
+Cordialement,
+
+Le Centre de Calcul et Systemes d'Information
+EOT
+    return $s;
+  }
+  return $s;
+}
+
+# ------------------------------------------------
+#
+#
+sub notify_footer {
+  my ($remise, undef) = @_;
+
+  my $s = "";
+
+  if ($remise == 1) {
+    $s = <<EOT;
+
+EOT
+  }
+
+  if ($remise == 0) {
+    $s = <<EOT;
+
+EOT
+  }
+
+  $s .= <<EOT;
+
+  $Date/$Hostname
+  ------------------------------------------------------------------------
+           CCSI - Centre de Calcul et des Systemes d'Information
+
+EOT
+
+  return $s;
+}
+
+# ------------------------------------------------
+#
+#
+sub GetActionString {
+  my ($code, undef) = @_;
+
+  my %ActionStr = (
+    0 => "Rien trouve par l'antivirus : message libere",
+    1 => "Virus detecte",
+    2 => "Erreur pendant verification du message"
+  );
+
+  if (defined $code && exists $ActionStr{$code}) {
+    return $ActionStr{$code};
+  }
+
+  return "Erreur inconnue";
+}
+
+# ------------------------------------------------
+#
+#
+sub clock2date {
+  my ($c, undef) = @_;
+  return 0 unless defined($c);
+  my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday) = localtime($c);
+  return sprintf "%02d/%02d/%04d - %02d:%02d:%02d",
+    $mday, $mon + 1, $year + 1900,
+    $hour, $min, $sec;
+}
+
+# ------------------------------------------------
+#
+#
+sub do_log {
+  foreach (@_) {
+    syslog('notice', $_);
+  }
+}
+
+# ------------------------------------------------
+#
+#
+sub ReadConfigurationFile {
+  my @ccEtc = ("$Bin/../etc", "/etc");
+
+  #unless (defined $ConfFile && $ConfFile ne "") {
+  my $ConfFile = "filter-tools.conf";
+
+  #}
+
+  my ($r, undef) = cc_conf_init($ConfFile, @ccEtc);
+  if ($r) {
+    $r = cc_conf_read();
+  }
+
+  my @Cf = qw(mreplyto
+    mfrom
+    mreport
+    notify
+    notifyfrom
+    notifyto
+    dirspool
+    dirgood
+    dirbad
+    agemin
+    agemax
+    maxfree
+    minhold
+    nohold
+    clamdscan
+    smbin);
+
+  @Cf = keys %Conf;
+
+  my %ConfFromFile = ();
+  for my $p (@Cf) {
+    my $n = cc_conf_get_count($p, "profile", "default");
+    if ($n > 0) {
+      $ConfFromFile{$p} = cc_conf_get_ind($p, 0, "profile", "default");
+    }
+  }
+  if (defined $profile && $profile ne "" && $profile ne "default") {
+    for my $p (@Cf) {
+      my $n = cc_conf_get_count($p, "profile", $profile);
+      if ($n > 0) {
+        $ConfFromFile{$p} = cc_conf_get_ind($p, 0, "profile", $profile);
+      }
+    }
+  }
+  foreach my $key (keys %ConfFromFile) {
+    $Conf{$key} = $ConfFromFile{$key};
+  }
+
+  if ($debug) {
+    my @Sections = cc_conf_get_sections();
+    foreach my $s (@Sections) {
+      printf "* Section : %s\n", $s;
+      my @Names = cc_conf_get_names($s);
+      foreach my $n (@Names) {
+        printf "  * Name : %s\n", $n;
+      }
+    }
+    printf "\n";
+
+    # obs : this doesn't work : this code is called before cli options call
+    printf "* Options read from configuration file $ConfFile\n";
+    for my $k (sort keys %ConfFromFile) {
+      printf "* %-15s %s\n", $k, $ConfFromFile{$k};
+    }
+    printf "* %s\n", "=" x 64;
+    exit(0);
+  }
+}
+
+# ------------------------------------------------
+#
+#
+sub usage {
+  my @X = qw();
+  @X = StaticDataArray("help", "USAGE");
+  if ($#X >= 0) {
+    print "\n";
+    foreach (@X) {
+      s/^\+//;
+      s/__APPL__/$appl/;
+      print $_, "\n";
+    }
+  } else {
+    print "\n Usage : $appl [OPTIONS]\n";
+  }
+
+  @X = StaticDataArray("help", "HEAD");
+  foreach (@X) {
+    s/^\+//;
+    print $_, "\n";
+  }
+
+  @X = StaticDataArray("help", "BODY");
+  foreach (@X) {
+    s/^\+//;
+    print $_, "\n";
+  }
+
+  @X = StaticDataArray("help", "FOOT");
+  foreach (@X) {
+    s/^\+//;
+    print $_, "\n";
+  }
+}
+
+# ------------------------------------------------
+#
+#
+sub GetStaticData {
+  my ($h, undef) = @_;
+  my @DATA = <DATA>;
+  my @SOPT = qw();
+  chomp @DATA;
+  my $in  = 0;
+  my $key = "";
+  foreach my $s (@DATA) {
+    if ($key eq "") {
+      if ($s =~ /==\s+BEGIN\s+(\S+)\s+==/) {
+        $key = lc($1);
+      }
+      next;
+    }
+    if ($s =~ /==\s+END\s+(\S*\s+)?==/) {
+      $key = "";
+      next;
+    }
+    next if $s =~ /^\s*$/;
+    push @{$h->{$key}{_data_}}, $s;
+    my ($a, $b) = split " ", $s, 2;
+    next unless defined $a && $a ne "";
+    $b = "" unless defined $b;
+    if ($b =~ /^[+]{2}(.*)/) {
+      if (exists $h->{$key}{$a}) {
+        $h->{$key}{$a} .= " $1";
+      } else {
+        $h->{$key}{$a} = $1;
+      }
+      next;
+    }
+    if ($b =~ /^[\/]{2}(.*)/) {
+      if (exists $h->{$key}{$a}) {
+        $h->{$key}{$a} .= "\n" . " $1";
+      } else {
+        $h->{$key}{$a} = $1;
+      }
+      next;
+    }
+    $h->{$key}{$a} = $b;
+  }
+}
+
+# ------------------------------------------------
+#
+#
+sub StaticDataArray {
+  my ($key, $tag, undef) = @_;
+
+  my @LINES = grep {$_ =~ /^$tag\s+/i} @{$StaticData{$key}{_data_}};
+  foreach (@LINES) {
+    s/^$tag\s+//;
+  }
+
+  return @LINES;
+}
+
+__DATA__
+
+== BEGIN NOTIFY ==
+TOP    .
+TOP          Bonjour,
+TOP    
+TOP    Les messages ci-dessous, ont ete filtres par notre serveur de messagerie.
+TOP    Apres un sejour en quarantaine et analyse par un logiciel antivirus, ils
+TOP    sont liberes si l'antivirus ne trouve pas de code malveillant. Voir
+TOP    ci-dessous l'action prise pour chaque message.
+TOP    
+TOP    OBS : L'analyse par l'antivirus n'etant pas parfaite, certains virus
+TOP       pourraient ne pas etre detectes comme tels. Dans ce cas, il est
+TOP       important, d'avoir son antivirus a jour et de ne pas ouvrir des
+TOP       fichiers attaches qui ne sont pas attendus ou envoyes par des
+TOP       expediteurs inconnus.
+TOP    
+TOP    Cordialement,
+TOP    
+TOP    Le Centre de Calcul et Systemes d'Information
+
+
+
+FOOTER
+FOOTER  __DATE__/__HOSTNAME__
+FOOTER  ------------------------------------------------------------------------
+FOOTER  CCSI - Centre de Calcul et des Systemes d'Information
+FOOTER
+
+== END ==
+
+== BEGIN REPORT ==
+TOP        .
+TOP        -
+TOP        -  ----------------------------------------------------------------
+TOP        -  Date                       : __DATE__
+TOP        -  Intervalle d'analyse :
+TOP        -     De                      : __DATE_START__
+TOP        -     A                       : __DATE_END__
+TOP        -  Hostname                   : __HOSTNAME__
+TOP        -  Nombre de virus detectes   : __MSGS_BAD__
+TOP        -  Nombre de messages liberes : __MSGS_GOOD__
+TOP        -  Nombre de messages scannes : __MSGS__
+TOP        -  ----------------------------------------------------------------
+
+BODY       -   RCPT    :  __RCPT__
+BODY       -   MSGS    : %5d\n", $CNT{$_};
+
+BODY       -   MSGID        __MSG_ID__   (__MSG_SIZE__ Bytes)
+BODY       -   DATE         __MSG_DATE__
+BODY       -   SUBJECT      __SUBJECT__
+BODY       -   FROM         __FROM__
+BODY       -   MAILSERVER   __ADDR__ __HOSTNAME__
+BODY       -   FILES";
+
+      foreach $file (sort @{$MSGS{$id}{xfile}}) {
+BODY       -      %s", $file;
+      }
+      foreach $file (sort @{$MSGS{$id}{yfile}}) {
+BODY       -        push @MAILTXT, sprintf "      %s", $file;
+      }
+BODY       -   VIRUS        %s", $msg if defined $msg && $msg ne "";
+BODY       -   ACTION       %s", GetActionString($action);
+BODY       -
+    }
+
+BODY       -
+BODY       -  ----------------------------------------------------------------
+
+FOOTER
+FOOTER
+== END ==
+
+== BEGIN ALERT ==
+FROM       filtermaster@mines-paristech.fr
+RCPT       filtermaster@mines-paristech.fr,root@paris.domain.com
+SUBJECT    [ALERTE QUARANTAINE __HOSTNAME__] Messages en attente
+
+BODY       -
+BODY       - Quarantaine ze-filter (__HOSTNAME__) contient :
+BODY       -   Messages Total OK   : __MSGS_TOT_GOOD__
+BODY       -   Messages OK         : __MSGS_GOOD__ (prets a etre liberes)
+BODY       -   Malware             : __MSGS_BAD__
+BODY       -   Erreurs             : __MSGS_ERR__
+BODY       - *******************************
+BODY       -   Total               : __MSGS__
+BODY       - 
+BODY       -   La quarantaine de filtrage est verrouillee pour le moment
+BODY       -
+BODY       -  Quarantaine :
+BODY       -   http://__HOSTNAME__.domain.com/ze-filter/ze-spool.txt
+BODY       -
+== END ==
+
+== BEGIN HELP ==
+
+USAGE +
+USAGE +   Usage : __APPL__ [OPTIONS] < file
+USAGE +
+HEAD  +     Management of ze-filter quarantine
+
+# === begin usage conf ===
+BODY +
+BODY +  -h            This message
+BODY +                default : false
+BODY +  --help        This message
+BODY +                default : false
+BODY +  -d            Debug mode
+BODY +                default : false
+BODY +  --debug       Debug mode
+BODY +                default : false
+BODY +  -v            Verbose
+BODY +                default : false
+BODY +  --op          What to do ???
+BODY +                default : 
+BODY +  --profile     Profile
+BODY +                default : default
+BODY +  --cf          Configuration file
+BODY +                default : filter-tools.cf
+BODY +  --facility    Syslog facility
+BODY +                default : local3
+BODY +  --clamdscan   Path to clamdscan binary (or auto)
+BODY +                default : /usr/bin/clamdscan
+BODY +  --smbin       Path to sendmail binary (or auto)
+BODY +                default : /usr/sbin/sendmail
+BODY +  --smopt       sendmail CLI options
+BODY +                default : -oi
+BODY +  --agemin      minimum quarantine age
+BODY +                default : 6
+BODY +  --agemax      maximum quarantine age
+BODY +                default : 72
+BODY +  --scale       Time scale
+BODY +                default : hour
+BODY +  --dirspool    Quarantine spool path
+BODY +                default : /var/spool/ze-filter
+BODY +  --dirgood     Where to move clean messages
+BODY +                default : /var/spool/ze-filter-good
+BODY +  --dirbad      Where to move infected messages
+BODY +                default : /var/spool/ze-filter-bad
+BODY +  --extensions  File extensions to check
+BODY +                default : all
+BODY +  --maxfree     The max number of messages to free each run
+BODY +                default : 3
+BODY +  --nohold      Don't put the quarantine in hold state
+BODY +                default : false
+BODY +  --minhold     The amount of clean messages which puts the quarantine in hold state
+BODY +                default : 10
+BODY +  --mreplyto    Freed messages ReplyTo header 
+BODY +                default : preserve
+BODY +  --mfrom       Email address for free messages
+BODY +                default : some-secret-key@domain.fr
+BODY +  --notifyfrom  Email address for notifications
+BODY +                default : thefilteraddr@domain.fr
+BODY +  --notifyto    Quarantine manager email address
+BODY +                default : thefilteraddr@domain.fr
+BODY +  --report      Send summary report to quarantine manager after each run
+BODY +                default : false
+BODY +  --mreport     Email address for summary
+BODY +                default : thefilteraddr@domain.fr
+BODY +  --doit        The opposite of dry-run
+BODY +                default : false
+BODY +  --notify      Notify the quarantine manager
+BODY +                default : all
+BODY +
+# === end usage conf ===
+== END ==
+
+__END__
+
+

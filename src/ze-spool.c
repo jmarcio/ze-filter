@@ -173,7 +173,7 @@ Received: from qxxge.proxad.net (sge78-3-82-247-96-164.fbx.proxad.net [82.247.96
       ZE_LogSysError("can't write fake Received: line to %s", priv->fname);
 
     snprintf(rbuf, sizeof (rbuf),
-             "X-ze-filter-Enveloppe: %s from %s/%s/%s/%s/%s%s",
+             "X-ze-filter-Envelope: %s from %s/%s/%s/%s/%s%s",
              CONNID_STR(priv->id),
              mac_cl_name, mac_cl_ptr, mac_cl_addr,
              priv->helohost, priv->env_from, rc);
@@ -186,7 +186,7 @@ Received: from qxxge.proxad.net (sge78-3-82-247-96-164.fbx.proxad.net [82.247.96
      * rc);
      */
     if (write(priv->fd, rbuf, strlen(rbuf)) != strlen(rbuf))
-      ZE_LogSysError("can't write fake X-ze-filter-Enveloppe: line to %s",
+      ZE_LogSysError("can't write fake X-ze-filter-Envelope: line to %s",
                      priv->fname);
   }
 

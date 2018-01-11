@@ -16932,6 +16932,8 @@ ac_config_files="$ac_config_files scratch/Makefile"
 
 ac_config_files="$ac_config_files ze-bayes-tbx/Makefile"
 
+ac_config_files="$ac_config_files ze-logreg/Makefile"
+
 ac_config_files="$ac_config_files ze-makemap/Makefile"
 
 ac_config_files="$ac_config_files ze-scanfile/Makefile"
@@ -16957,8 +16959,6 @@ ac_config_files="$ac_config_files bin/ze-filter.init"
 ac_config_files="$ac_config_files bin/ze-greyd.init"
 
 ac_config_files="$ac_config_files bin/ze-filter.init.rhel"
-
-ac_config_files="$ac_config_files bin/ze-filter.service"
 
 
 
@@ -17987,6 +17987,7 @@ do
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "scratch/Makefile") CONFIG_FILES="$CONFIG_FILES scratch/Makefile" ;;
     "ze-bayes-tbx/Makefile") CONFIG_FILES="$CONFIG_FILES ze-bayes-tbx/Makefile" ;;
+    "ze-logreg/Makefile") CONFIG_FILES="$CONFIG_FILES ze-logreg/Makefile" ;;
     "ze-makemap/Makefile") CONFIG_FILES="$CONFIG_FILES ze-makemap/Makefile" ;;
     "ze-scanfile/Makefile") CONFIG_FILES="$CONFIG_FILES ze-scanfile/Makefile" ;;
     "ze-printstats/Makefile") CONFIG_FILES="$CONFIG_FILES ze-printstats/Makefile" ;;
@@ -17999,7 +18000,6 @@ do
     "bin/ze-filter.init") CONFIG_FILES="$CONFIG_FILES bin/ze-filter.init" ;;
     "bin/ze-greyd.init") CONFIG_FILES="$CONFIG_FILES bin/ze-greyd.init" ;;
     "bin/ze-filter.init.rhel") CONFIG_FILES="$CONFIG_FILES bin/ze-filter.init.rhel" ;;
-    "bin/ze-filter.service") CONFIG_FILES="$CONFIG_FILES bin/ze-filter.service" ;;
     "default") CONFIG_COMMANDS="$CONFIG_COMMANDS default" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;

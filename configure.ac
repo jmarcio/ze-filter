@@ -1464,6 +1464,7 @@ AC_CONFIG_FILES(src/Makefile)
 AC_CONFIG_FILES(scratch/Makefile)
 
 AC_CONFIG_FILES(ze-bayes-tbx/Makefile)
+AC_CONFIG_FILES(ze-logreg/Makefile)
 AC_CONFIG_FILES(ze-makemap/Makefile)
 AC_CONFIG_FILES(ze-scanfile/Makefile)
 AC_CONFIG_FILES(ze-printstats/Makefile)
@@ -1478,7 +1479,6 @@ AC_CONFIG_FILES(etc/get-bayes.org)
 AC_CONFIG_FILES(bin/ze-filter.init)
 AC_CONFIG_FILES(bin/ze-greyd.init)
 AC_CONFIG_FILES(bin/ze-filter.init.rhel)
-AC_CONFIG_FILES(bin/ze-filter.service)
 
 dnl AC_CONFIG_FILES([$MODMAKE])
 

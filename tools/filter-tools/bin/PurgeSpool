@@ -1,0 +1,17 @@
+#! /bin/bash
+
+PATH=${PATH}:/opt/clamav/bin
+
+BAD=/var/spool/ze-filter-bad
+DIR="$*"
+
+[ -n "$DIR" ] || DIR=/var/spool/ze-filter
+[ -d "$BAD" ] || mkdir -p $BAD || exit 1
+
+for dir in $DIR
+do
+  [ -d $dir ] || continue
+  echo "* Purging xfiles on $dir"
+  clamdscan -v --move=$BAD $dir/*xfile
+done
+

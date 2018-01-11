@@ -1,0 +1,239 @@
+#! /usr/bin/perl -w
+#
+#
+use strict;
+use Getopt::Long;
+use Pod::Usage;
+use POSIX;
+
+use FindBin qw($Bin);
+use lib "$Bin/../lib";
+
+# ------------------------------------------------
+#
+#
+my $appl = `basename $0`;
+chomp $appl;
+
+my $usage   = 0;
+my $debug   = 0;
+my $verbose = 0;
+my $Op      = "";
+
+my $SpoolDir = "/var/spool/ze-filter";
+
+my $ok = GetOptions(
+  'help'    => \$usage,
+  'h'       => \$usage,
+  'd'       => \$debug,
+  'v'       => \$verbose,
+  'op=s'    => \$Op,
+  'spool=s' => \$SpoolDir,
+);
+
+if ($usage || $Op =~ /help/i) {
+  usage();
+  exit 0;
+}
+
+my %Report = ();
+
+my $nb = 0;
+
+my @Lines = qw();
+
+push @Lines, "",
+  (sprintf " ===== ze-filter quarantine spool on %s =====", $SpoolDir),
+  "";
+
+my $fQuarantine = undef;
+foreach (qw(ze-quarantine ze-xreport)) {
+  my $f = "/var/ze-filter/files/$_";
+  if (-f $f) {
+    $fQuarantine = $f;
+    last;
+  }
+}
+unless (defined $fQuarantine) {
+  printf STDERR "Quarantine file not found\n";
+  exit 1;
+}
+
+GetFromFile($fQuarantine, \%Report);
+foreach my $k (sort keys %Report) {
+  next unless $Report{$k}{WHY} eq ".xfile";
+  next unless -f "$SpoolDir/$Report{$k}{QUAR}";
+  push @Lines, (sprintf " %5d - %s", ++$nb, $k);
+  push @Lines, (sprintf "         CONN %s", $Report{$k}{CONN});
+  push @Lines, (sprintf "         FROM %s", $Report{$k}{FROM});
+  push @Lines, (sprintf "         SUBJ %s", $Report{$k}{SUBJ});
+  push @Lines, (sprintf "         SIZE %s", $Report{$k}{SIZE});
+  foreach my $f (@{$Report{$k}{FILE}}) {
+    push @Lines, (sprintf "         FILE %s", $f);
+  }
+  foreach my $f (@{$Report{$k}{RCPT}}) {
+    push @Lines, (sprintf "         RCPT %s", $f);
+  }
+
+  if (1) {
+    my $xFile = "$SpoolDir/$Report{$k}{QUAR}";
+    my $r     = "unknown";
+    my @Clam  = `clamdscan -v $xFile`;
+    if ($? == 0) {
+      chomp @Clam;
+      my ($l, undef) = grep {/$Report{$k}{QUAR}/} @Clam;
+      (undef, $r) = split " ", $l;
+    } else {
+      my ($line, undef) = grep { /$xFile/ } @Clam; 
+      (undef, $r) = split ':', $line, 2;
+    }
+    push @Lines, "", (sprintf "         CLAM %s", $r);
+  }
+
+  push @Lines, "";
+  push @Lines, (sprintf "         # pour mettre de cote... ");
+  push @Lines,
+    (
+    sprintf "         mv %s/%s %s",
+    $SpoolDir, $Report{$k}{QUAR}, "/var/spool/ze-filter-unfree"
+    );
+  push @Lines, "";
+  push @Lines, (sprintf "         # pour liberer... ");
+  foreach my $f (@{$Report{$k}{RCPT}}) {
+    push @Lines, (sprintf "         unquarantine -c -m %s -t %s", $k, $f);
+  }
+  push @Lines,
+    (
+    sprintf "         mv %s/%s %s",
+    $SpoolDir, $Report{$k}{QUAR}, "/var/spool/ze-filter-free"
+    );
+
+  push @Lines, "";
+}
+
+foreach (@Lines) {
+  print $_, "\n";
+}
+
+if ($Op =~ /^a$/i) {
+
+}
+
+if ($Op =~ /^optionb$/i) {
+
+}
+
+exit 0;
+
+# ------------------------------------------------
+#
+#
+
+# ------------------------------------------------
+#
+#
+sub GetFromFile {
+  my ($fin, $h, undef) = @_;
+
+  open FIN, "< $fin" || die "$@";
+  while (my $x = <FIN>) {
+    chomp $x;
+    next if $x =~ /^\s*$/;
+    my ($id, $tag, $reste) = split " ", $x, 3;
+
+    if ($tag eq "QUAR") {
+      $h->{$id}{QUAR} = $reste;
+      next;
+    }
+    if ($tag eq "CONN") {
+      $h->{$id}{CONN} = $reste;
+      next;
+    }
+    if ($tag eq "FROM") {
+      $h->{$id}{FROM} = $reste;
+      next;
+    }
+    if ($tag eq "RCPT") {
+      if ($reste =~ /0 <(.+)>/) {
+        push @{$h->{$id}{RCPT}}, $1;
+      }
+      next;
+    }
+    if ($tag eq "FILE") {
+      push @{$h->{$id}{FILE}}, $reste;
+      next;
+    }
+    if ($tag eq "SIZE") {
+      $h->{$id}{SIZE} = $reste;
+      next;
+    }
+    if ($tag eq "SUBJ") {
+      $h->{$id}{SUBJ} = $reste;
+
+      next;
+    }
+    if ($tag eq "WHY") {
+      $h->{$id}{WHY} = $reste;
+      next;
+    }
+  }
+  close FIN;
+}
+
+# ------------------------------------------------
+#
+#
+sub GetFromSpool {
+
+}
+
+# ------------------------------------------------
+#
+#
+sub usage {
+  print <<EOT;
+  Usage : $appl [OPTIONS]
+    --help
+    -h      : Ce message
+EOT
+}
+
+__DATA__
+
+hello world !!!
+
+__END__
+
+=head1 NAME
+
+    sample - Using GetOpt::Long and Pod::Usage
+
+=head1 SYNOPSIS
+
+    sample [options] [file ...]
+
+      Options:
+        --help            brief help message
+        --man             full documentation
+
+=head1 OPTIONS
+
+=over 8
+
+=item B<-help>
+
+Print a brief help message and exits.
+
+=item B<-man>
+
+Prints the manual page and exits.
+
+=back
+
+=head1 DESCRIPTION
+
+B<This program> will read the given input file(s) and do something
+         useful with the contents thereof.
+
+=cut
+
