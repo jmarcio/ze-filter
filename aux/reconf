@@ -17,9 +17,10 @@ aux/set-version
 
 set -x
 
-# autoheader
+autoheader
 aclocal
-libtoolize -c -f --automake
-automake -a -c  
+libtoolize -i -c --no-warnings -q --recursive
+#libtoolize -c -f --automake
+automake --add-missing -c
 autoconf 
 

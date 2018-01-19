@@ -10,7 +10,8 @@ SUBDIRS = $(subdirs) \
 	libs \
 	libjoe \
 	src \
-	etc \
+	config/etc \
+        config/cdb \
 	scratch \
 	ze-bayes-tbx \
 	ze-logreg \
@@ -23,6 +24,7 @@ SUBDIRS = $(subdirs) \
 
 #	modules/libs 
 
+#ACLOCAL_AMFLAGS = "-I m4"
 DBTOOLS = db_archive db_checkpoint db_deadlock db_dump db_hotbackup \
 	db_load db_printlog db_log_verify db_recover db_stat db_upgrade \
 	db_verify
@@ -30,7 +32,7 @@ DBTOOLS = db_archive db_checkpoint db_deadlock db_dump db_hotbackup \
 clean-hook:
 	rm -f *~ */*~ */*/*~ */*/*/*~ */*/*/*/*~ #*# */#*# */*/#*# */*/*/#*#
 	rm -f config.results
-	rm -f etc/Makefile
+	rm -f config/etc/Makefile
 
 clean-db:
 	if [ -d libdb ]; then cd libdb; ./Build clean; cd ..; fi
@@ -155,5 +157,5 @@ upgrade : all
 	$(MAKE) $(AM_MAKEFLAGS) install
 	echo $(MAKE) $(AM_MAKEFLAGS) dbrestore
 	$(MAKE) $(AM_MAKEFLAGS) dbupgrade
-	cd etc && $(MAKE) $(AM_MAKEFLAGS) upgrade 
+	cd config/etc && $(MAKE) $(AM_MAKEFLAGS) upgrade 
 

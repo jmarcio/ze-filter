@@ -5,13 +5,13 @@
 
 .SUFFIXES: .txt .db 
 
-VPATH = @sysconfdir@
+VPATH = /etc/ze-filter
 
 #
 # Databases to create
 #
 OBJ     = ze-urlbl.db ze-policy.db ze-rcpt.db ze-bayes.db
-JBINDIR = @prefix@/bin
+JBINDIR = /usr/bin
 
 #
 # POLICY_SRC variable defines which files to include in your
@@ -25,6 +25,9 @@ POLICYSRC = $(wildcard ze-policy.*.txt)
 # - List text files by hand
 #POLICYSRC = ze-policy.grey.txt ze-policy.badmx.txt ze-policy.base.txt
 
+POLICYSRC = $(wildcard ze-policy.??-*.txt ze-policy.??-*.txt | sort)
+POLICYDEF = $(wildcard ze-policy.z-*.txt | sort)
+
 .txt.db :
 	@echo "** Building $@ ..."
 	@if [ -f $@ ] ; then \
@@ -34,8 +37,8 @@ POLICYSRC = $(wildcard ze-policy.*.txt)
 
 all : $(OBJ) done
 
-ze-policy.txt : $(POLICYSRC)
-	cat  $(POLICYSRC) > $@
+ze-policy.txt : $(POLICYSRC) $(POLICYDEF)
+	cat  $(POLICYSRC) $(POLICYDEF) > $@
 
 ze-rcpt.db : ze-rcpt.txt
 	@if [ -f ze-rcpt.db ] ; then \

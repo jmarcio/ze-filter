@@ -1,32 +1,26 @@
 
 AC_INIT(ze-filter, 0.0.1, jose.marcio.mc@gmail.com)
-AC_COPYRIGHT([Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz])
-AC_CONFIG_SRCDIR([src/ze-filter.c])
 AM_INIT_AUTOMAKE([no-define])
+AC_COPYRIGHT([Copyright (c) 2001-2018 - Jose-Marcio Martins da Cruz])
 
 PACKAGE="ze-filter"
-if [ test -f aux/timestamp ]; then
-  DATE=`head -1 aux/timestamp`
-else
-  DATE=`date +%y%m%d`
-fi
+
+DATE=$(date +%y%m%d)
+[ test -f aux/timestamp ] &&  DATE=$(head -1 aux/timestamp)
 export DATE
 
-VERSION="2.7.0-$DATE"
-if [ test -f aux/version ]; then
-  VERSION=`head -1 aux/version`
-else
-  VERSION="2.7.0-$DATE"
-fi
+VERSION="0.0.1-$DATE"
+[ test -f aux/version ] && VERSION=$(head -1 aux/version)
 export VERSION
-
-AM_CONFIG_HEADER(include/config.h)
-
-AC_CONFIG_MACRO_DIRS([m4])
-AC_CANONICAL_HOST
 
 AC_SUBST(PACKAGE)
 AC_SUBST(VERSION)
+
+AC_CONFIG_SRCDIR([src/ze-filter.c])
+AM_CONFIG_HEADER([include/config.h])
+
+AC_CONFIG_MACRO_DIRS([m4])
+AC_CANONICAL_HOST
 
 AC_PROG_MAKE_SET
 
@@ -34,9 +28,9 @@ dnl ############################################################
 dnl
 dnl
 dnl
-AC_CHECK_PROG(ACLOCAL,aclocal,aclocal,echo)
-AC_CHECK_PROG(AUTOMAKE,automake,automake,echo)
-AC_CHECK_PROG(AUTOCONF,autoconf,autoconf,echo)
+AC_CHECK_PROG(ACLOCAL,   aclocal,aclocal,echo)
+AC_CHECK_PROG(AUTOMAKE,  automake,automake,echo)
+AC_CHECK_PROG(AUTOCONF,  autoconf,autoconf,echo)
 AC_CHECK_PROG(AUTOHEADER,autoheader,autoheader,echo)
 
 AC_PATH_PROG(PERL,perl)
@@ -46,10 +40,7 @@ dnl
 dnl
 dnl
 CONF_FILE=compile.conf
-if test -f ../compile.conf
-then
-  CONF_FILE=../compile.conf
-fi
+[ test -f ../compile.conf ] && CONF_FILE=../compile.conf
 
 CONF_USER=
 CONF_GROUP=
@@ -225,8 +216,7 @@ os=`uname -s`
 AC_MSG_RESULT($os)
 AC_MSG_RESULT(     Building for $build...)
 
-
-UNAME="`uname -a`"
+UNAME=$(uname -a)
 AC_SUBST(UNAME)
 
 AC_PATH_PROG(PSBIN,ps)
@@ -235,7 +225,8 @@ AC_SUBST(PSBIN)
 PSOPT=""
 AC_MSG_CHECKING(whether ps -edf works)
 ps -edf > /dev/null 2>&1
-if test "$?" = "0" ; then
+if [ test "$?" = "0" ]
+then
   res="yes"
   PSOPT="-edf"
 else
@@ -243,16 +234,17 @@ else
 fi
 AC_MSG_RESULT($res)
 
-if test "$res" = "no" ; then
-AC_MSG_CHECKING(whether ps -axu works)
-ps -axu > /dev/null 2>&1
-if test "$?" = "0" ; then
-  res="yes"
-  PSOPT="-axu"
-else
-  res="no"
-fi
-AC_MSG_RESULT($res)
+if test "$res" = "no"
+then
+  AC_MSG_CHECKING(whether ps -axu works)
+  ps -axu > /dev/null 2>&1
+  if test "$?" = "0" ; then
+    res="yes"
+    PSOPT="-axu"
+  else
+    res="no"
+  fi
+  AC_MSG_RESULT($res)
 fi
 AC_SUBST(PSOPT)
 
@@ -1472,10 +1464,11 @@ AC_CONFIG_FILES(ze-greyd/Makefile)
 AC_CONFIG_FILES(ze-logserver/Makefile)
 
 
-AC_CONFIG_FILES(etc/Makefile)
-AC_CONFIG_FILES(etc/Makefile.org)
-AC_CONFIG_FILES(etc/get-urlbl.org)
-AC_CONFIG_FILES(etc/get-bayes.org)
+AC_CONFIG_FILES(config/etc/Makefile)
+AC_CONFIG_FILES(config/cdb/Makefile)
+AC_CONFIG_FILES(config/cdb/Makefile.org)
+AC_CONFIG_FILES(config/cdb/get-urlbl.org)
+AC_CONFIG_FILES(config/cdb/get-bayes.org)
 AC_CONFIG_FILES(bin/ze-filter.init)
 AC_CONFIG_FILES(bin/ze-greyd.init)
 AC_CONFIG_FILES(bin/ze-filter.init.rhel)
@@ -1485,8 +1478,8 @@ dnl AC_CONFIG_FILES([$MODMAKE])
 AC_CONFIG_COMMANDS([default],[[chmod 755 bin/ze-filter.init]
 			      [chmod 755 bin/ze-filter.init.rhel]
 			      [chmod 755 bin/ze-greyd.init]
-			      [chmod 755 etc/get-urlbl.org]
-			      [chmod 755 etc/get-bayes.org]
+			      [chmod 755 config/cdb/get-urlbl.org]
+			      [chmod 755 config/cdb/get-bayes.org]
                               [echo ""]
                               [echo "*** Configuring PCRE"]],
                               [[]])

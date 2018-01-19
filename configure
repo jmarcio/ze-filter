@@ -11,7 +11,7 @@
 # This configure script is free software; the Free Software Foundation
 # gives unlimited permission to copy, distribute and modify it.
 #
-# Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz
+# Copyright (c) 2001-2018 - Jose-Marcio Martins da Cruz
 ## -------------------- ##
 ## M4sh Initialization. ##
 ## -------------------- ##
@@ -1557,7 +1557,7 @@ Copyright (C) 2012 Free Software Foundation, Inc.
 This configure script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it.
 
-Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz
+Copyright (c) 2001-2018 - Jose-Marcio Martins da Cruz
 _ACEOF
   exit
 fi
@@ -2552,8 +2552,6 @@ ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
-
-
 am__api_version='1.15'
 
 ac_aux_dir=
@@ -3154,21 +3152,20 @@ END
 fi
 
 
+
 PACKAGE="ze-filter"
-if  test -f aux/timestamp ; then
-  DATE=`head -1 aux/timestamp`
-else
-  DATE=`date +%y%m%d`
-fi
+
+DATE=$(date +%y%m%d)
+ test -f aux/timestamp  &&  DATE=$(head -1 aux/timestamp)
 export DATE
 
-VERSION="2.7.0-$DATE"
-if  test -f aux/version ; then
-  VERSION=`head -1 aux/version`
-else
-  VERSION="2.7.0-$DATE"
-fi
+VERSION="0.0.1-$DATE"
+ test -f aux/version  && VERSION=$(head -1 aux/version)
 export VERSION
+
+
+
+
 
 ac_config_headers="$ac_config_headers include/config.h"
 
@@ -3243,9 +3240,6 @@ shift; shift
 host_os=$*
 IFS=$ac_save_IFS
 case $host_os in *\ *) host_os=`echo "$host_os" | sed 's/ /-/g'`;; esac
-
-
-
 
 
 
@@ -3476,10 +3470,7 @@ fi
 
 
 CONF_FILE=compile.conf
-if test -f ../compile.conf
-then
-  CONF_FILE=../compile.conf
-fi
+ test -f ../compile.conf  && CONF_FILE=../compile.conf
 
 CONF_USER=
 CONF_GROUP=
@@ -12764,8 +12755,7 @@ $as_echo "$os" >&6; }
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: Building for $build..." >&5
 $as_echo "Building for $build..." >&6; }
 
-
-UNAME="`uname -a`"
+UNAME=$(uname -a)
 
 
 # Extract the first word of "ps", so it can be a program name with args.
@@ -12814,7 +12804,8 @@ PSOPT=""
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether ps -edf works" >&5
 $as_echo_n "checking whether ps -edf works... " >&6; }
 ps -edf > /dev/null 2>&1
-if test "$?" = "0" ; then
+if  test "$?" = "0"
+then
   res="yes"
   PSOPT="-edf"
 else
@@ -12823,17 +12814,18 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $res" >&5
 $as_echo "$res" >&6; }
 
-if test "$res" = "no" ; then
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether ps -axu works" >&5
+if test "$res" = "no"
+then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether ps -axu works" >&5
 $as_echo_n "checking whether ps -axu works... " >&6; }
-ps -axu > /dev/null 2>&1
-if test "$?" = "0" ; then
-  res="yes"
-  PSOPT="-axu"
-else
-  res="no"
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $res" >&5
+  ps -axu > /dev/null 2>&1
+  if test "$?" = "0" ; then
+    res="yes"
+    PSOPT="-axu"
+  else
+    res="no"
+  fi
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $res" >&5
 $as_echo "$res" >&6; }
 fi
 
@@ -16946,13 +16938,15 @@ ac_config_files="$ac_config_files ze-logserver/Makefile"
 
 
 
-ac_config_files="$ac_config_files etc/Makefile"
+ac_config_files="$ac_config_files config/etc/Makefile"
 
-ac_config_files="$ac_config_files etc/Makefile.org"
+ac_config_files="$ac_config_files config/cdb/Makefile"
 
-ac_config_files="$ac_config_files etc/get-urlbl.org"
+ac_config_files="$ac_config_files config/cdb/Makefile.org"
 
-ac_config_files="$ac_config_files etc/get-bayes.org"
+ac_config_files="$ac_config_files config/cdb/get-urlbl.org"
+
+ac_config_files="$ac_config_files config/cdb/get-bayes.org"
 
 ac_config_files="$ac_config_files bin/ze-filter.init"
 
@@ -17993,10 +17987,11 @@ do
     "ze-printstats/Makefile") CONFIG_FILES="$CONFIG_FILES ze-printstats/Makefile" ;;
     "ze-greyd/Makefile") CONFIG_FILES="$CONFIG_FILES ze-greyd/Makefile" ;;
     "ze-logserver/Makefile") CONFIG_FILES="$CONFIG_FILES ze-logserver/Makefile" ;;
-    "etc/Makefile") CONFIG_FILES="$CONFIG_FILES etc/Makefile" ;;
-    "etc/Makefile.org") CONFIG_FILES="$CONFIG_FILES etc/Makefile.org" ;;
-    "etc/get-urlbl.org") CONFIG_FILES="$CONFIG_FILES etc/get-urlbl.org" ;;
-    "etc/get-bayes.org") CONFIG_FILES="$CONFIG_FILES etc/get-bayes.org" ;;
+    "config/etc/Makefile") CONFIG_FILES="$CONFIG_FILES config/etc/Makefile" ;;
+    "config/cdb/Makefile") CONFIG_FILES="$CONFIG_FILES config/cdb/Makefile" ;;
+    "config/cdb/Makefile.org") CONFIG_FILES="$CONFIG_FILES config/cdb/Makefile.org" ;;
+    "config/cdb/get-urlbl.org") CONFIG_FILES="$CONFIG_FILES config/cdb/get-urlbl.org" ;;
+    "config/cdb/get-bayes.org") CONFIG_FILES="$CONFIG_FILES config/cdb/get-bayes.org" ;;
     "bin/ze-filter.init") CONFIG_FILES="$CONFIG_FILES bin/ze-filter.init" ;;
     "bin/ze-greyd.init") CONFIG_FILES="$CONFIG_FILES bin/ze-greyd.init" ;;
     "bin/ze-filter.init.rhel") CONFIG_FILES="$CONFIG_FILES bin/ze-filter.init.rhel" ;;
@@ -19235,8 +19230,8 @@ ltmain=$ac_aux_dir/ltmain.sh
     "default":C) chmod 755 bin/ze-filter.init
 			      chmod 755 bin/ze-filter.init.rhel
 			      chmod 755 bin/ze-greyd.init
-			      chmod 755 etc/get-urlbl.org
-			      chmod 755 etc/get-bayes.org
+			      chmod 755 config/cdb/get-urlbl.org
+			      chmod 755 config/cdb/get-bayes.org
                               echo ""
                               echo "*** Configuring PCRE" ;;
 
