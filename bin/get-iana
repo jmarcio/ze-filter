@@ -7,7 +7,9 @@ my $reply = "";
 $reply = "ERROR:421:4.5.1:Sender MX in an unallocated or reserved network !";
 
 #my $r = system("wget -qN http://www.iana.org/assignments/ipv4-address-space -O ipv4-address-space");
-my $r = system("wget -qN http://www.iana.org/assignments/ipv4-address-space/ipv4-address-space.txt -O ipv4-address-space");
+my $r = system(
+"wget -qN http://www.iana.org/assignments/ipv4-address-space/ipv4-address-space.txt -O ipv4-address-space"
+);
 
 if ($r != 0) {
   print "Error wget\n";
@@ -50,7 +52,7 @@ EOT
 
 # 10/8 network is already listed
 wr_record("10", "127", "169.254");
-for (my $i = 16; $i < 32; $i++) {
+for (my $i = 16 ; $i < 32 ; $i++) {
   wr_record("172.$i");
 }
 wr_record("192.0.2", "192.168", "255");

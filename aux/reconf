@@ -19,7 +19,7 @@ set -x
 
 autoheader
 aclocal
-libtoolize -i -c --no-warnings -q --recursive
+libtoolize -i -c --no-warnings -q --recursive --automake
 #libtoolize -c -f --automake
 automake --add-missing -c
 autoconf 

@@ -6,10 +6,11 @@ my $score = 20;
 my $code  = "127.1.0.2";
 my $src   = "src";
 
-my $ok = GetOptions('s=i' => \$score,
-                    'c=s' => \$code,
-                    'o=s' => \$src);
-
+my $ok = GetOptions(
+  's=i' => \$score,
+  'c=s' => \$code,
+  'o=s' => \$src
+);
 
 my $date = time();
 

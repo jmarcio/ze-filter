@@ -3,12 +3,14 @@
 use strict;
 use Getopt::Long;
 
-my $action = undef;
-my $domain = "";
+my $action  = undef;
+my $domain  = "";
 my $default = "USER-UNKNOWN";
 
-my $ok = GetOptions('d=s' => \$domain,
-		    'a=s' => \$action);
+my $ok = GetOptions(
+  'd=s' => \$domain,
+  'a=s' => \$action
+);
 
 my $fname = $ARGV[0];
 
@@ -48,8 +50,8 @@ if (length($domain) > 0) {
 my %USERS = ();
 
 $USERS{postmaster} = "OK";
-$USERS{abuse} = "OK";
-$USERS{root} = "KNOWN-NET";
+$USERS{abuse}      = "OK";
+$USERS{root}       = "KNOWN-NET";
 
 while (<>) {
   chomp;
@@ -58,9 +60,9 @@ while (<>) {
   next if /^\s*#/;
   next if /^\s*@/;
 
-  ($_, undef)  = split "#", $_, 2;
+  ($_, undef) = split "#", $_, 2;
 
-  my ($user, $spec, undef)  = split " ", $_;
+  my ($user, $spec, undef) = split " ", $_;
 
   #if (defined($spec) && $spec =~ /^(intranet|local|domain|friend|known)$/i) {
   if (defined($spec)) {
@@ -77,19 +79,21 @@ while (<>) {
 #      DOMAIN-NET   : accept messages only from LOCAL NETs
 #      FRIEND-NET   : accept messages only from LOCAL NETs
 #      USER-UNKNOWN : This is an user unknown (usually
-my %SPEC = ("known" => "KNOWN-NET",
-	    "local" => "LOCAL-NET",
-	    "domain" => "DOMAIN-NET",
-	    "friend" => "FRIEND-NET",
-	    "known"  => "KNOWN-NET",
-            "spamtrap" => "SPAMTRAP",
-	    "intranet" =>"KNOWN-NET");
+my %SPEC = (
+  "known"    => "KNOWN-NET",
+  "local"    => "LOCAL-NET",
+  "domain"   => "DOMAIN-NET",
+  "friend"   => "FRIEND-NET",
+  "known"    => "KNOWN-NET",
+  "spamtrap" => "SPAMTRAP",
+  "intranet" => "KNOWN-NET"
+);
 
 foreach my $user (sort keys %USERS) {
   my $spec = "OK";
 
-  $spec =  $USERS{$user} if length($USERS{$user}) > 0;
-  $spec = $SPEC{$spec} if exists $SPEC{$spec};
+  $spec = $USERS{$user} if length($USERS{$user}) > 0;
+  $spec = $SPEC{$spec}  if exists $SPEC{$spec};
   printf "RcptAccess:%-48s      %s\n", "$user\@$domain", $spec;
 }
 

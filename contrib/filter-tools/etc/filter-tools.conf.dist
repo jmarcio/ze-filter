@@ -4,16 +4,16 @@
 <options quarantine>
 
 mreplyto     preserve
-mfrom        root+570926583@domain.com
+mfrom        root+123456789@domain.com
 mreport      filtermaster@domain.com
 
 notify       all
 notifyfrom   filtermaster@domain.com
 notifyto     filtermaster@domain.com
 
-dirspool     /var/spool/ze-filter
-dirgood      /var/spool/ze-filter-good
-dirbad       /var/spool/ze-filter-bad
+dirspool     /var/spool/ze-tools
+dirgood      /var/spool/ze-tools-good
+dirbad       /var/spool/ze-tools-bad
 
 agemin       6
 agemax       52
@@ -22,7 +22,7 @@ maxfree      3
 minhold      10
 nohold       false
 
-clamdscan    /opt/clamav/bin/clamdscan
+clamdscan    /usr/bin/clamdscan
 smbin        /usr/sbin/sendmail -oi
 
 </options>

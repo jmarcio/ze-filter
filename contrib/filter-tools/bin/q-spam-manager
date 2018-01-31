@@ -3,8 +3,7 @@
 #  Description :
 #
 #  Author      : Jose-Marcio Martins da Cruz
-#                mailto:jose-marcio.martins@mines-paristech.fr
-#                Ecole des Mines de Paris
+#                mailto:jose.marcio.mc@gmail.com
 #
 #  History     :
 #
@@ -50,7 +49,7 @@ my %Conf = (
   "smopt"    => "-oi",
   "agemin"   => 0,
   "agemax"   => 24,
-  "domains"  => "domain.com,mines-paristech.fr",
+  "domains"  => "domain.com",
   "nets"     => "194.214.158.134/32",
   "dirspool" => "/var/spool/ze-filter",
   "dirgood"  => "/var/spool/ze-filter-good",
@@ -454,7 +453,7 @@ BODY +                default : 0
 BODY +  --agemax      maximum quarantine age
 BODY +                default : 24
 BODY +  --domains     Domains in the from field to whitelist
-BODY +                default : domain.com,mines-paristech.fr
+BODY +                default : domain.com
 BODY +  --nets        Networks of IP address of to whitelist
 BODY +                default : 194.214.158.134/32
 BODY +  --dirspool    Quarantine spool path

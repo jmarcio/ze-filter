@@ -1,8 +1,0 @@
-jreg_comp	zeRegexComp
-jreg_count	zeRegexCount
-jreg_error	zeRegexError
-jreg_exec	zeRegexExec
-jreg_free	zeRegexFree
-jreg_lookup	zeRegexLookup
-jregex_t        zeRegex_T
-zmRegex_T       zeRegex_T

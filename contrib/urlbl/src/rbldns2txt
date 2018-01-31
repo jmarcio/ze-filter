@@ -1,6 +1,8 @@
 #! /usr/bin/perl -w
 
-my $OK = 0;
+use strict;
+
+my $ok = 0;
 
 while (<>) {
   chomp;
@@ -20,5 +22,4 @@ while (<>) {
   my ($a, undef) = split;
   printf "$a\n";
 }
-
 

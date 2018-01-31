@@ -1,10 +1,10 @@
  
 .SUFFIXES: .txt .db .rbldnsd .raw
  
-OBJ = j-urlbl.db
+OBJ = ze-urlbl.db
  
 .txt.db :
-	/usr/bin/j-makemap -b $@ -m e < $<
+	/usr/bin/ze-makemap -b $@ -m e < $<
  
 .rbldnsd.raw :
 	./rbldns2txt $< > $@

@@ -1,7 +1,0 @@
-str2long      zeStr2long
-str2ulong     zeStr2ulong
-str2ulonglong zeStr2ulonglong
-str2longlong  zeStr2longlong
-str2double    zeStr2double
-str2size      zeStr2size
-str2time      zeStr2time

@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -33,8 +34,7 @@ static void         usage();
 
 static bool         cli_handle_message(char *fname, int msgNb, void *arg);
 
-typedef struct
-{
+typedef struct {
   int                 nb;
   int                 html_flags[32];
   int                 plain_flags[32];
@@ -101,10 +101,8 @@ main(int argc, char **argv)
   ze_logLevel = 0;
   memset(fname, 0, sizeof (fname));
 
-  while ((c = getopt(argc, argv, args)) != -1)
-  {
-    switch (c)
-    {
+  while ((c = getopt(argc, argv, args)) != -1) {
+    switch (c) {
       case 'h':
         usage();
         exit(0);
@@ -147,33 +145,27 @@ main(int argc, char **argv)
         spam_judgement = TRUE;
         break;
       case 't':
-        if (STRCASEEQUAL(optarg, "mbox"))
-        {
+        if (STRCASEEQUAL(optarg, "mbox")) {
           mtype = M_MBOX;
           break;
         }
-        if (STRNCASEEQUAL(optarg, "file", strlen("file")))
-        {
+        if (STRNCASEEQUAL(optarg, "file", strlen("file"))) {
           mtype = M_FILE;
           break;
         }
-        if (STRCASEEQUAL(optarg, "maildir"))
-        {
+        if (STRCASEEQUAL(optarg, "maildir")) {
           mtype = M_MAILDIR;
           break;
         }
-        if (STRNCASEEQUAL(optarg, "dir", strlen("dir")))
-        {
+        if (STRNCASEEQUAL(optarg, "dir", strlen("dir"))) {
           mtype = M_MAILDIR;
           break;
         }
-        if (STRNCASEEQUAL(optarg, "list", strlen("list")))
-        {
+        if (STRNCASEEQUAL(optarg, "list", strlen("list"))) {
           mtype = M_LIST;
           break;
         }
-        if (STRNCASEEQUAL(optarg, "interactive", strlen("interactive")))
-        {
+        if (STRNCASEEQUAL(optarg, "interactive", strlen("interactive"))) {
           mtype = M_INTERACTIVE;
           break;
         }
@@ -185,8 +177,7 @@ main(int argc, char **argv)
     }
   }
 
-  if (FALSE)
-  {
+  if (FALSE) {
     usage();
     exit(1);
   }
@@ -205,44 +196,36 @@ main(int argc, char **argv)
   while (optind < argc && *argv[optind] == '-')
     optind++;
 
-  if (checks != NULL && strlen(checks) > 0)
-  {
+  if (checks != NULL && strlen(checks) > 0) {
     char               *p = NULL;
     int                 iargc;
     char               *iargv[8];
 
-    if ((p = strdup(checks)) == NULL)
-    {
+    if ((p = strdup(checks)) == NULL) {
       exit(EX_SOFTWARE);
     }
 
     docheck = 0;
 
     iargc = zeStr2Tokens(p, 8, iargv, ";, ");
-    while (iargc-- > 0)
-    {
-      if (strncasecmp(iargv[iargc], "all", strlen(iargv[iargc])) == 0)
-      {
+    while (iargc-- > 0) {
+      if (strncasecmp(iargv[iargc], "all", strlen(iargv[iargc])) == 0) {
         docheck = 0xFFFF;
         continue;
       }
-      if (strncasecmp(iargv[iargc], "oracle", strlen(iargv[iargc])) == 0)
-      {
+      if (strncasecmp(iargv[iargc], "oracle", strlen(iargv[iargc])) == 0) {
         SET_BIT(docheck, 0);
         continue;
       }
-      if (strncasecmp(iargv[iargc], "regex", strlen(iargv[iargc])) == 0)
-      {
+      if (strncasecmp(iargv[iargc], "regex", strlen(iargv[iargc])) == 0) {
         SET_BIT(docheck, 1);
         continue;
       }
-      if (strncasecmp(iargv[iargc], "urlbl", strlen(iargv[iargc])) == 0)
-      {
+      if (strncasecmp(iargv[iargc], "urlbl", strlen(iargv[iargc])) == 0) {
         SET_BIT(docheck, 2);
         continue;
       }
-      if (strncasecmp(iargv[iargc], "bayes", strlen(iargv[iargc])) == 0)
-      {
+      if (strncasecmp(iargv[iargc], "bayes", strlen(iargv[iargc])) == 0) {
         SET_BIT(docheck, 3);
         continue;
       }
@@ -250,15 +233,13 @@ main(int argc, char **argv)
     FREE(p);
   }
 
-  if (docheck == 0)
-  {
+  if (docheck == 0) {
     fprintf(stderr, "No checks defined...\n");
     usage();
     exit(1);
   }
 
-  if (GET_BIT(docheck, 3))
-  {
+  if (GET_BIT(docheck, 3)) {
     char                path[1024];
     char               *dbname = ZE_CDBDIR "/ze-bayes.db";
     char               *cfdir;
@@ -303,8 +284,7 @@ main(int argc, char **argv)
   {
     int                 nb;
 
-    switch (mtype)
-    {
+    switch (mtype) {
       case M_MBOX:
         for (argi = optind; argi < argc; argi++)
           nb += mbox_handle(argv[argi], cli_handle_message, &mstat);
@@ -328,24 +308,20 @@ main(int argc, char **argv)
   }
 
 
-  if (0 && GET_BIT(docheck, 0))
-  {
+  if (0 && GET_BIT(docheck, 0)) {
     int                 i, j;
     char               *p;
 
     ZE_MessageInfo(8, "      MSG.. HTML. PLAIN (%d messages)\n", mstat.nb);
     for (i = 0; i < 32; i++)
       ZE_MessageInfo(7, "%3d : %5ld %5ld %5ld\n", i,
-                   mstat.msg_flags[i], mstat.html_flags[i],
-                   mstat.plain_flags[i]);
+                     mstat.msg_flags[i], mstat.html_flags[i],
+                     mstat.plain_flags[i]);
 
-    for (j = ORACLE_TYPE_MSG; j <= ORACLE_TYPE_PLAIN; j++)
-    {
+    for (j = ORACLE_TYPE_MSG; j <= ORACLE_TYPE_PLAIN; j++) {
       ZE_MessageInfo(8, "");
-      for (i = 0; i < 32; i++)
-      {
-        if ((p = oracle_get_label(j, i)) != NULL && strlen(p) > 0)
-        {
+      for (i = 0; i < 32; i++) {
+        if ((p = oracle_get_label(j, i)) != NULL && strlen(p) > 0) {
           double              v = oracle_get_score(j, i);
 
           ZE_MessageInfo(8, "%3d %3d : %5.2f %s", j, i, v, p);
@@ -401,15 +377,13 @@ get_msg_headers(fname, spam)
   if ((fname == NULL) || (strlen(fname) == 0))
     return FALSE;
 
-  if ((fin = fopen(fname, "r")) == NULL)
-  {
+  if ((fin = fopen(fname, "r")) == NULL) {
     ZE_LogSysError("fopen(%s)", fname);
     return FALSE;
   }
 
   memset(header, 0, sizeof (header));
-  while (fgets(line, sizeof (line), fin) != NULL)
-  {
+  while (fgets(line, sizeof (line), fin) != NULL) {
     char               *s;
 
     if (strspn(line, "\r\n") == strlen(line))
@@ -421,13 +395,11 @@ get_msg_headers(fname, spam)
     zeStrChomp(line);
 
     s = line + strspn(line, "\r\n");
-    if ((*s != ' ') && (*s != '\t'))
-    {
+    if ((*s != ' ') && (*s != '\t')) {
       nh += add_header(header, spam);
       memset(header, 0, sizeof (header));
       snprintf(header, sizeof (header), "%s", s);
-    } else
-    {
+    } else {
       char               *p = header + strlen(header);
 
       strncpy(p, line, strlen(s));
@@ -508,8 +480,7 @@ cli_handle_message(fname, msgNb, arg)
     rScores.do_bayes = TRUE;
 
   fill_msg_scale(&rScores.scale);
-  if (rScores.do_bayes)
-  {
+  if (rScores.do_bayes) {
     sfilter_vsm_T       bcheck;
 
     memset(&bcheck, 0, sizeof (bcheck));
@@ -525,22 +496,20 @@ cli_handle_message(fname, msgNb, arg)
       ZE_MessageInfo(9, "%s Bayes filter score : Unchecked", id);
   }
 
-  if (!get_msg_headers(fname, &spam))
-  {
+  if (!get_msg_headers(fname, &spam)) {
 
   }
 
-  if (rScores.do_oracle || rScores.do_regex || rScores.do_urlbl)
-  {
-    /* check header contents */
-    if (rScores.do_regex)
-    {
+  if (rScores.do_oracle || rScores.do_regex || rScores.do_urlbl) {
+    /*
+     * check header contents 
+     */
+    if (rScores.do_regex) {
       header_T           *h = spam.hdrs;
 
       int                 score = 0;
 
-      for (h = spam.hdrs; h != NULL; h = h->next)
-      {
+      for (h = spam.hdrs; h != NULL; h = h->next) {
         int                 where = MAIL_HEADERS;
 
         if (strcasecmp(h->attr, "subject") == 0)
@@ -572,44 +541,42 @@ cli_handle_message(fname, msgNb, arg)
     (void) create_msg_score_header(sout, sizeof (sout), fname, NULL, &rScores);
     ZE_MessageInfo(8, "%s", sout);
 
-    strlcpy(mstat->header, sout, sizeof(mstat->header));
+    strlcpy(mstat->header, sout, sizeof (mstat->header));
 
-    if ((h = get_msgheader(spam.hdrs, "Subject")) != NULL)
-    {
+    if ((h = get_msgheader(spam.hdrs, "Subject")) != NULL) {
       snprintf(sout, 80, "%s", h->value);
       ZE_MessageInfo(9, "MSGID : %s SUBJECT : %s", id, sout);
     }
-    if ((h = get_msgheader(spam.hdrs, "From")) != NULL)
-    {
+    if ((h = get_msgheader(spam.hdrs, "From")) != NULL) {
       snprintf(sout, 80, "%s", h->value);
       ZE_MessageInfo(9, "MSGID : %s FROM    : %s", id, sout);
     }
     size = zeGetFileSize(fname);
     ZE_MessageInfo(9, "MSGID : %s SIZE    : %7d", id, size);
 
-    if (mstat->spam_judgement)
-    {
-      char    buf[512];
-      int     i;
-      double lscore = 0.0;
+    if (mstat->spam_judgement) {
+      char                buf[512];
+      int                 i;
+      double              lscore = 0.0;
 
       ZE_MessageInfo(8, "MSGID : %s CLASS   : %-5s %7.3f %s", id,
-                   STRBOOL(score > mstat->spam_threshold, "SPAM", "HAM"),
-                   score, fname);
+                     STRBOOL(score > mstat->spam_threshold, "SPAM", "HAM"),
+                     score, fname);
 
       for (i = 2; i < mstat->argc; i++) {
-	strlcat(buf, " ", sizeof (buf));
-	strlcat(buf, mstat->argv[i], sizeof (buf));
+        strlcat(buf, " ", sizeof (buf));
+        strlcat(buf, mstat->argv[i], sizeof (buf));
       }
       lscore = rScores.bayes;
       ZE_MessageInfo(8, "%s %s score=%-9.6f prob=%-9.6f class=%-5s",
-		   fname, buf, logit(lscore), lscore, 
-		   STRBOOL(lscore > mstat->spam_threshold, "spam", "ham"));
+                     fname, buf, logit(lscore), lscore,
+                     STRBOOL(lscore > mstat->spam_threshold, "spam", "ham"));
     }
-    /* 1225493245 joe-0812/spam/msg.0000003 op=class judge=spam class=spam 
-       learn=false query=true  miss=false noisy=false features=911 
-       score=0.303917 prob=0.575400
-    */
+    /*
+     * 1225493245 joe-0812/spam/msg.0000003 op=class judge=spam class=spam 
+     * learn=false query=true  miss=false noisy=false features=911 
+     * score=0.303917 prob=0.575400
+     */
   }
 
   ZE_MessageInfo(10, "");
@@ -623,8 +590,7 @@ cli_handle_message(fname, msgNb, arg)
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
-typedef struct
-{
+typedef struct {
   FILE               *fin;
   char               *fname;
   int                 i;
@@ -641,16 +607,14 @@ get_next_message_file(fin, buf, sz)
   static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
   bool                r = FALSE;
 
-  if (fin == NULL)
-  {
+  if (fin == NULL) {
     sleep(1);
     return r;
   }
 
   MUTEX_LOCK(&mutex);
 
-  if (fgets(buf, sz, fin) != NULL)
-  {
+  if (fgets(buf, sz, fin) != NULL) {
     char               *p;
 
     if ((p = strchr(buf, '\n')) != NULL)
@@ -670,8 +634,7 @@ worker_check_file(arg)
   int                 nb = 0;
   msg_worker_T       *worker = (msg_worker_T *) arg;
 
-  while (get_next_message_file(worker->fin, fname, sizeof (fname)))
-  {
+  while (get_next_message_file(worker->fin, fname, sizeof (fname))) {
     if (zeGetFileSize(fname) > 150000)
       continue;
 
@@ -693,14 +656,12 @@ launch_workers(n, fname, mstatp)
 
   memset(&worker, 0, sizeof (worker));
 
-  if ((fin = fopen(fname, "r")) == NULL)
-  {
+  if ((fin = fopen(fname, "r")) == NULL) {
     ZE_LogSysError("Error opening %s file", fname);
     return FALSE;
   }
 
-  for (i = 0; i < n; i++)
-  {
+  for (i = 0; i < n; i++) {
     int                 r;
 
     worker[i].i = i;
@@ -711,15 +672,13 @@ launch_workers(n, fname, mstatp)
       worker[i].mstat = *mstatp;
 
     r = pthread_create(&worker[i].tid, NULL, worker_check_file, &worker[i]);
-    if (r != 0)
-    {
+    if (r != 0) {
       worker[i].tid = (pthread_t) - 1;
       ZE_LogSysError("Error launching worker");
       break;
     }
   }
-  for (i = 0; i < n; i++)
-  {
+  for (i = 0; i < n; i++) {
     int                 r;
 
     if (worker[i].tid < 0)
@@ -729,8 +688,7 @@ launch_workers(n, fname, mstatp)
 
     r = pthread_join(worker[i].tid, NULL);
     worker[i].tid = (pthread_t) - 1;
-    if (r != 0)
-    {
+    if (r != 0) {
       ZE_LogSysError("Error launching worker");
     }
   }
@@ -751,8 +709,7 @@ cli_toolbox(mstat)
 
   ze_logLevel = 8;
   ZE_MessageInfo(7, "Beginning...");
-  while (fgets(line, sizeof (line), stdin) != NULL)
-  {
+  while (fgets(line, sizeof (line), stdin) != NULL) {
     int                 argc;
     char               *argv[NARG];
 
@@ -763,14 +720,12 @@ cli_toolbox(mstat)
     if (argc == 0)
       break;
 
-    if (STRCASEEQUAL(argv[0], "QUIT"))
-    {
+    if (STRCASEEQUAL(argv[0], "QUIT")) {
       ZE_MessageInfo(7, "200 Exiting...");
       break;
     }
 
-    if (STRCASEEQUAL(argv[0], "REOPEN"))
-    {
+    if (STRCASEEQUAL(argv[0], "REOPEN")) {
       bool                ok;
 
       ok = bfilter_db_reopen();
@@ -779,25 +734,21 @@ cli_toolbox(mstat)
       continue;
     }
 
-    if (STRCASEEQUAL(argv[0], "JUDGE"))
-    {
-      if (argc < 2)
-      {
+    if (STRCASEEQUAL(argv[0], "JUDGE")) {
+      if (argc < 2) {
         ZE_MessageInfo(7, "%s : Error...", argv[0]);
         continue;
       }
 
       mstat->spam_judgement = FALSE;
       if (STRCASEEQUAL(argv[1], "ON") || STRCASEEQUAL(argv[1], "YES"))
-	mstat->spam_judgement = TRUE;
+        mstat->spam_judgement = TRUE;
 
       continue;
     }
 
-    if (STRCASEEQUAL(argv[0], "THRESHOLD"))
-    {
-      if (argc < 2)
-      {
+    if (STRCASEEQUAL(argv[0], "THRESHOLD")) {
+      if (argc < 2) {
         ZE_MessageInfo(7, "%s : Error...", argv[0]);
         continue;
       }
@@ -813,12 +764,10 @@ cli_toolbox(mstat)
       continue;
     }
 
-    if (STRCASEEQUAL(argv[0], "LOGLEVEL"))
-    {
+    if (STRCASEEQUAL(argv[0], "LOGLEVEL")) {
       int                 l;
 
-      if (argc < 2)
-      {
+      if (argc < 2) {
         ZE_MessageInfo(7, "%s : Error...", argv[0]);
         continue;
       }
@@ -827,8 +776,7 @@ cli_toolbox(mstat)
         int                 l;
 
         l = atoi(argv[1]);
-        if (l < 0 || l > 15)
-        {
+        if (l < 0 || l > 15) {
           ZE_MessageInfo(7, "%s %s : Error...", argv[0], argv[1]);
           continue;
         }
@@ -838,25 +786,21 @@ cli_toolbox(mstat)
       continue;
     }
 
-    if (STRCASEEQUAL(argv[0], "TRAIN"))
-    {
+    if (STRCASEEQUAL(argv[0], "TRAIN")) {
       ZE_MessageInfo(7, "%s not yet implemented...", argv[0]);
       continue;
     }
 
-    if (STRCASEEQUAL(argv[0], "CLASSIFY"))
-    {
+    if (STRCASEEQUAL(argv[0], "CLASSIFY")) {
       size_t              size;
 
-      if (argc < 2)
-      {
+      if (argc < 2) {
         ZE_MessageInfo(7, "%s : Error...", argv[0]);
         continue;
       }
 
       size = zeGetFileSize(argv[1]);
-      if (size == 0)
-      {
+      if (size == 0) {
         ZE_MessageInfo(8, "%s File %s not found", argv[0], argv[1]);
         continue;
       }
@@ -899,9 +843,11 @@ usage()
          "       maildir - each argument is a directory with files inside\n"
          "       dir     - the same as maildir\n"
          "       list    - each argument is a file with a list of file names\n"
-         "                 each file contains a single message\n", ZE_CONF_FILE);
+         "                 each file contains a single message\n",
+         ZE_CONF_FILE);
 
-  printf("\n%s - Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz - (C) 2001-2007\n",
-         PACKAGE);
+  printf
+    ("\n  %s \n  Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz - (C) 2001-2007\n",
+     PACKAGE);
   printf("  Compiled on %s %s\n\n", __DATE__, __TIME__);
 }

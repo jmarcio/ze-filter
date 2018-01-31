@@ -13,8 +13,11 @@ VERSION="0.0.1-$DATE"
 [ test -f aux/version ] && VERSION=$(head -1 aux/version)
 export VERSION
 
+COPYRIGHT="Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz"
+
 AC_SUBST(PACKAGE)
 AC_SUBST(VERSION)
+AC_SUBST(COPYRIGHT)
 
 AC_CONFIG_SRCDIR([src/ze-filter.c])
 AM_CONFIG_HEADER([include/config.h])

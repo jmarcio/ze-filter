@@ -1,10 +1,9 @@
-#! /opt/perl/bin/perl -w
+#! /usr/bin/perl -w
 #
 #  Description :
 #
 #  Author      : Jose-Marcio Martins da Cruz
-#                mailto:jose-marcio.martins@mines-paristech.fr
-#                Ecole des Mines de Paris
+#                mailto:jose.marcio.mc@gmail.com
 #
 #  History     :
 #
@@ -14,7 +13,7 @@ use strict;
 use Getopt::Long;
 use Pod::Usage;
 use POSIX;
-use MIME::Words qw(:all);
+use MIME::EncWords qw(:all);
 use IO::Socket;
 use Sys::Syslog;
 
@@ -153,10 +152,6 @@ if ($op =~ /^conf$/i) {
     printf "* %-15s : %s\n", $k, $Conf{$k};
   }
   exit 0;
-}
-
-if ($op =~ /^optionb$/i) {
-
 }
 
 my %MSGS = ();
@@ -1453,8 +1448,8 @@ FOOTER
 == END ==
 
 == BEGIN ALERT ==
-FROM       filtermaster@mines-paristech.fr
-RCPT       filtermaster@mines-paristech.fr,root@paris.domain.com
+FROM       filtermaster@domain.com
+RCPT       filtermaster@domain.com
 SUBJECT    [ALERTE QUARANTAINE __HOSTNAME__] Messages en attente
 
 BODY       -

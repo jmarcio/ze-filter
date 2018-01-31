@@ -1,9 +1,0 @@
-kstddev              zeKStdDev
-kstats_update        zeKStatsUpdate
-kstats_reset         zeKStatsReset
-kmin                 zeKMin
-kmean                zeKMean
-kmax                 zeKMax
-kcount               zeKCount   
-
-kstats.h             zeKStats.h

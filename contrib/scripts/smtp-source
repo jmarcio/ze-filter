@@ -21,12 +21,12 @@ my $debug   = 0;
 my $verbose = 0;
 my $Op      = "";
 
-my $mta  = "localhost";
-my $port = 25;
-my $helo = "localhost.localdomain";
-my $from = "jose\@ensmp.fr";
-my $to   = "devnull\@ensmp.fr";
-my $msg  = "msgfr";
+my $mta     = "localhost";
+my $port    = 25;
+my $helo    = "localhost.localdomain";
+my $from    = "jose\@ensmp.fr";
+my $to      = "devnull\@ensmp.fr";
+my $msg     = "msgfr";
 my $subject = "Test message (smtp-source by Joe)";
 
 my $ok = GetOptions(
@@ -41,7 +41,7 @@ my $ok = GetOptions(
   'helo=s' => \$helo,
   'from=s' => \$from,
   'to=s'   => \$to,
-  'msg=s' =>\$msg
+  'msg=s'  => \$msg
 );
 
 if ($usage || $Op =~ /help/i) {
@@ -63,7 +63,7 @@ if ($Op =~ /^msg$/i) {
 if ($Op =~ /^test$/i) {
   @body = @{$StaticData{msg}{_data_}};
   sendMail($mta, $port, $helo, $from, $to, @body);
-  
+
   exit 0;
 }
 
@@ -79,10 +79,9 @@ if ($Op =~ /^send$/i) {
     }
   }
   sendMail($mta, $port, $helo, $from, $to, @body);
-  
+
   exit 0;
 }
-
 
 exit 0;
 
@@ -131,13 +130,15 @@ end:
 sub clock2date {
   my ($c, undef) = @_;
   return 0 if !defined($c);
-  
-  my @WDay = qw(Mon Tue Wed Thu Fri Sat Sun);
+
+  my @WDay  = qw(Mon Tue Wed Thu Fri Sat Sun);
   my @Month = qw(Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec);
 
   my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday) = localtime($c);
+
   # Fri, 2 May 2014 20:43:46 +0200
-  return sprintf "%s, %d %s %d %02d:%02d:%02d +0200", $WDay[$wday], $mday, $Month[$mon],
+  return sprintf "%s, %d %s %d %02d:%02d:%02d +0200", $WDay[$wday], $mday,
+    $Month[$mon],
     $year + 1900, $hour, $min, $sec;
 
 }
@@ -182,8 +183,6 @@ sub GetStaticData {
     $h->{$key}{$a} = $b;
   }
 }
-
-
 
 __DATA__
 

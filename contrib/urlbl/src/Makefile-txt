@@ -1,7 +1,7 @@
 
 .SUFFIXES: .txt .db .rbldnsd .raw
 
-OBJ = j-urlbl.db
+OBJ = ze-urlbl.db
 
 SOURCE := $(wildcard *.ensmp)
 
@@ -14,7 +14,7 @@ SURBLTXT := $(SURBLSRC:.rbldnsd=.txt)
 #
 #
 .txt.db :
-	j-makemap -b $@ -m s < $<
+	ze-makemap -b $@ -m s < $<
 
 .rbldnsd.raw :
 	../bin/rbldns2txt $< > $@
@@ -51,8 +51,8 @@ mw.surbl.org.txt : mw.surbl.org.raw
 	../bin/mk_dbin -s 10 -o mw.surbl -c 127.1.0.4 $< > $@
 
 lurlbl.txt : lurlbl.raw
-	../bin/mk_dbin -s 10 -o j-chkmail -c 127.2.0.1 $< > $@
+	../bin/mk_dbin -s 10 -o ze-chkmail -c 127.2.0.1 $< > $@
 
-j-urlbl.txt : $(SURBLTXT) lurlbl.txt
+ze-urlbl.txt : $(SURBLTXT) lurlbl.txt
 	cat lurlbl.txt $(SURBLTXT) > $@
 

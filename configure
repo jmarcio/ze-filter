@@ -720,6 +720,7 @@ build_os
 build_vendor
 build_cpu
 build
+COPYRIGHT
 AM_BACKSLASH
 AM_DEFAULT_VERBOSITY
 AM_DEFAULT_V
@@ -3162,6 +3163,9 @@ export DATE
 VERSION="0.0.1-$DATE"
  test -f aux/version  && VERSION=$(head -1 aux/version)
 export VERSION
+
+COPYRIGHT="Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz"
+
 
 
 

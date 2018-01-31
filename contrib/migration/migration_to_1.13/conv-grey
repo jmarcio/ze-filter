@@ -3,16 +3,16 @@
 my $lm = 0;
 
 while (<>) {
-	chomp;
+  chomp;
 
-	my ($k, $v) = split;
+  my ($k, $v) = split;
 
-	if ($k !~ /;/) {
-	  $k =~ tr#/#;#;
-	} 
-	printf "%-40s %s\n", $k, $v;
+  if ($k !~ /;/) {
+    $k =~ tr#/#;#;
+  }
+  printf "%-40s %s\n", $k, $v;
 
-	$lm = length $k if length($k) > $lm;
+  $lm = length $k if length($k) > $lm;
 }
 
 #print "#LM : $lm\n";

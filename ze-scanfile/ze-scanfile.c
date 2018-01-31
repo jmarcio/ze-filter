@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -70,10 +71,8 @@ main(int argc, char **argv)
 
   cf_opt.arg_v = 0;
 
-  while ((c = getopt(argc, argv, args)) != -1)
-  {
-    switch (c)
-    {
+  while ((c = getopt(argc, argv, args)) != -1) {
+    switch (c) {
       case 'h':                /* OK */
         cf_opt.arg_h = TRUE;
         usage();
@@ -82,20 +81,18 @@ main(int argc, char **argv)
       case 'v':
         cf_opt.arg_v++;
         break;
-        /*  */
+        /*
+         */
       case 'c':
-        if (optarg == NULL || *optarg == '\0')
-        {
+        if (optarg == NULL || *optarg == '\0') {
           (void) fprintf(stderr, "Erreur %s\n", optarg);
           exit(RES_ERROR);
         }
-        if (cf_opt.arg_c != NULL)
-        {
+        if (cf_opt.arg_c != NULL) {
           ZE_MessageInfo(0, "Only one c option, please");
           exit(RES_ERROR);
         }
-        if ((cf_opt.arg_c = strdup(optarg)) == NULL)
-        {
+        if ((cf_opt.arg_c = strdup(optarg)) == NULL) {
           ZE_LogSysError("FATAL ERROR - memory allocation cf_opt.arg_c");
           exit(RES_ERROR);
         }
@@ -114,8 +111,7 @@ main(int argc, char **argv)
   {
     int                 nbf = 0;
 
-    while (io < argc)
-    {
+    while (io < argc) {
       fname = argv[io++];
       printf(" HANDLING %s\n", fname);
       nbf += mbox_handle(fname, scan_mbox, NULL);
@@ -168,16 +164,13 @@ scan_mbox(fname, msgNb, arg)
 
   memset(chunk, 0, sizeof (chunk));
   memset(old, 0, sizeof (old));
-  while ((nb = fread(chunk, 1, sizeof (chunk) - 1, fin)) > 0)
-  {
+  while ((nb = fread(chunk, 1, sizeof (chunk) - 1, fin)) > 0) {
     int                 res;
 
-    res =
-      scan_block(NULL, old, sizeof (old) - 1, chunk, nb, &state, &content,
-                 &list);
+    res = scan_block(NULL, old, sizeof (old) - 1, chunk, nb, &state, &content,
+                     &list);
 
-    if (res != 0)
-    {
+    if (res != 0) {
       printf(" scan_block res = %d\n", res);
 #if 1
       goto fin;
@@ -187,23 +180,23 @@ scan_mbox(fname, msgNb, arg)
     }
   }
 
-  if (cf_opt.arg_v > 1)
-  {
+  if (cf_opt.arg_v > 1) {
     p = list;
 
-    while (p != NULL)
-    {
+    while (p != NULL) {
       int                 i;
-      char               *label[] = { "", "Content-Type",
-        "Content-Disposition", "UUencoded file"
+
+      char               *label[] = {
+        "",
+        "Content-Type",
+        "Content-Disposition",
+        "UUencoded file"
       };
 
       printf("%s *** FIELD     : %s\n", id, label[p->field_type]);
       printf("%s     VALEUR    : %s\n", id, p->value ? p->value : "");
-      for (i = 0; i < NB_ATTR; i++)
-      {
-        if (p->attr[i].name)
-        {
+      for (i = 0; i < NB_ATTR; i++) {
+        if (p->attr[i].name) {
           printf("%s     ATTR[%2d]  : %s\n", id, i, p->attr[i].name);
           if (p->attr[i].value)
             printf("%s     DATA[%2d]  : %s\n", id, i, p->attr[i].value);
@@ -220,8 +213,7 @@ scan_mbox(fname, msgNb, arg)
     extract_attachments(list, &ahead);
     p = ahead;
 
-    while (p)
-    {
+    while (p) {
       char               *svirus;
 
       nb++;
@@ -232,15 +224,13 @@ scan_mbox(fname, msgNb, arg)
       if (p->xfile)
         i++;
 
-      if (cf_opt.arg_v > 0 || p->xfile)
-      {
+      if (cf_opt.arg_v > 0 || p->xfile) {
         printf("%s ATTACHED FILE (%7d) (%-5s) : %-10s %-30s %-15s\n",
                id, fsize, svirus,
                STREMPTY(p->disposition, "..."),
                STREMPTY(p->mimetype, "..."), p->name);
       }
       p = p->next;
-
     }
     if (i > 0)
       result = RES_XFILE;
@@ -269,6 +259,6 @@ usage()
          "        -h : help\n"
          "        -c : configuration file\n"
          "        -v : verbose\n"
-         "\n%s - Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz - (C) 2002\n\n",
+         "\n  %s \n  Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz - (C) 2002\n\n",
          PACKAGE, __DATE__, __TIME__, PACKAGE);
 }

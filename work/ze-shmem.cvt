@@ -1,9 +1,0 @@
-shared_memory_size       SharedMemory_Size
-shared_memory_resize     SharedMemory_Resize
-shared_memory_open       SharedMemory_Open
-shared_memory_close      SharedMemory_Close
-shared_file_size         SharedFile_Size
-shared_file_resize       SharedFile_Resize
-shared_file_open         SharedFile_Open
-shared_file_close        SharedFile_Close
-ze-shmem                 zeShared

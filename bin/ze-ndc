@@ -19,9 +19,9 @@ my $help = 0;
 my $quit = 0;
 
 my @CFFILES = qw(/etc/ze-filter/ze-ndc.cf
-		 /etc/ze-ndc.cf
-		 /usr/local/etc/ze-filter/ze-ndc.cf
-		 /usr/local/etc/ze-ndc.cf);
+  /etc/ze-ndc.cf
+  /usr/local/etc/ze-filter/ze-ndc.cf
+  /usr/local/etc/ze-ndc.cf);
 
 my %CF = ();
 
@@ -30,19 +30,19 @@ read_conf(@CFFILES);
 $HOST = $CF{HOST} if exists $CF{HOST};
 $PORT = $CF{PORT} if exists $CF{PORT};
 
-my $ok = GetOptions('h'   => \$help,
-                    'd'   => \$debug,
-                    'q'   => \$quit,
-		    'p=i' => \$PORT,
-		    's=s' => \$HOST);
+my $ok = GetOptions(
+  'h'   => \$help,
+  'd'   => \$debug,
+  'q'   => \$quit,
+  'p=i' => \$PORT,
+  's=s' => \$HOST
+);
 
-if ($debug)
-{
+if ($debug) {
   printf " Debug info...\n";
   printf " * HOST    : %s\n", $HOST;
   printf " * PORT    : %s\n", $PORT;
-  if ($#ARGV >= 0)
-  {
+  if ($#ARGV >= 0) {
     printf " * CMD     : ";
     printf "%s ", $_ foreach (@ARGV);
     printf "\n";
@@ -52,17 +52,16 @@ if ($debug)
 
 if ($help || $#ARGV < 0) {
   usage();
-  exit (1);
+  exit(1);
 }
 
-
 if (!send_cmd(@ARGV)) {
+
   #print "###  Erreur pendant reception fichier \n";
   #exit 1;
 }
 
 exit 0;
-
 
 #
 #
@@ -74,12 +73,14 @@ sub send_cmd {
   my ($fname, undef) = @_;
   my ($fh, $line);
   my $result = 0;
+
   # create a tcp connection to the specified host and port
-  $fh = IO::Socket::INET->new(Proto => "tcp",
-			      PeerAddr => $HOST,
-			      PeerPort => $PORT,
-			      Timeout => 2) ||
-	die "can't connect to port $PORT on $HOST: $!";
+  $fh = IO::Socket::INET->new(
+    Proto    => "tcp",
+    PeerAddr => $HOST,
+    PeerPort => $PORT,
+    Timeout  => 2
+  ) || die "can't connect to port $PORT on $HOST: $!";
 
   $fh->autoflush(1);
 
@@ -87,9 +88,9 @@ sub send_cmd {
 
   print "# [Connected to $HOST:$PORT]\n";
 
-  printf $fh "%s\r\n", join (" ", @_);
+  printf $fh "%s\r\n", join(" ", @_);
 
-  while ($fh->opened && !$fh->error && defined ($line = $fh->getline)) {
+  while ($fh->opened && !$fh->error && defined($line = $fh->getline)) {
     chomp $line;
     print "$line\n";
     last if $line =~ "QUIT";
@@ -103,31 +104,27 @@ sub send_cmd {
 #
 #
 #
-sub read_conf
-{
-  foreach my $cf (@_)
-  {
-    if (-f $cf) 
-    {
+sub read_conf {
+  foreach my $cf (@_) {
+    if (-f $cf) {
       printf "* Trying %s\n", $cf;
       open CF, "<$cf" || die "Can't open configuration file $cf";
-      while (<CF>)
-      {
-	chomp;
-	next if /^\s*$/;
-	next if /^\s*#/;
+      while (<CF>) {
+        chomp;
+        next if /^\s*$/;
+        next if /^\s*#/;
 
-	my ($key, $value) = split "=", $_, 2;
-	if (defined $key && defined $value) {
-	  trim_blanks($key, $value);
+        my ($key, $value) = split "=", $_, 2;
+        if (defined $key && defined $value) {
+          trim_blanks($key, $value);
 
           if ($debug) {
             printf "  * KEY : %-20s : VALUE : %s\n", $key, $value;
           }
 
-	  next if $key eq "";
-	  $CF{$key} = $value;
-	}
+          next if $key eq "";
+          $CF{$key} = $value;
+        }
       }
       close CF;
       return 1;
@@ -141,16 +138,14 @@ sub read_conf
 #
 sub trim_blanks {
   foreach (@_) {
-   $_ =~ s/^[ \t]+|[ \t]+$//g;
+    $_ =~ s/^[ \t]+|[ \t]+$//g;
   }
 }
 
-
 #
 #
 #
-sub usage
-{
+sub usage {
 
   print << "EOF";
 Usage:
@@ -174,7 +169,6 @@ Usage:
             ze-ndc help
 
 EOF
-
 
 }
 
