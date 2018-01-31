@@ -3160,11 +3160,11 @@ DATE=$(date +%y%m%d)
  test -f aux/timestamp  &&  DATE=$(head -1 aux/timestamp)
 export DATE
 
-VERSION="0.0.1-$DATE"
- test -f aux/version  && VERSION=$(head -1 aux/version)
+VERSION="VOID-$DATE"
+ test -f aux/release  && VERSION=$(head -1 aux/release)
 export VERSION
 
-COPYRIGHT="Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz"
+COPYRIGHT="Copyright (c) 2001-2018 - Jose-Marcio Martins da Cruz"
 
 
 

@@ -140,7 +140,7 @@ CCDEPMODE = depmode=gcc3
 CFARGS = 
 CFLAGS = -pthread 
 CONFDIR = /etc/ze-filter
-COPYRIGHT = Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz
+COPYRIGHT = Copyright (c) 2001-2018 - Jose-Marcio Martins da Cruz
 CPP = gcc -E
 CPPFLAGS =  -DOTHER_IS_KNOWN=1 -D_FFR_LOGREG=1 -I../libpcre -I. -I../libdb -I../include -I/data/FOSS/dev-ze-filter/ze-filter/libze/include -I/data/FOSS/dev-ze-filter/ze-filter/libzechk/include -I/data/FOSS/dev-ze-filter/ze-filter/libml/include -I/data/FOSS/dev-ze-filter/ze-filter/libzefilter/include -I/data/FOSS/dev-ze-filter/ze-filter/libpcre -I/data/FOSS/dev-ze-filter/ze-filter/libdb
 CYGPATH_W = echo
@@ -215,7 +215,7 @@ STRIP = strip
 TOPDIR = /data/FOSS/dev-ze-filter/ze-filter
 UNAME = Linux perere.paris.ensmp.fr 4.14.13-300.fc27.x86_64 #1 SMP Thu Jan 11 04:00:01 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
 USER = ze-filter
-VERSION = ze-filter-develop-180119
+VERSION = ze-filter-0.1.0-develop-180131
 WORKROOT = /var/ze-filter
 XFILES_DEF = ade adp app bas bat bin btm chm cmd com cpl csh dll drv exe fxp hlp hta inf ini ins isp js jse ksh lnk mdb mde mdt mdw msc msi msp mst ops pcd pif prg reg scr sct shb shs sys url vb vbe vbs vxd wsc wsf wsh xmf
 ZEINCS = -I/data/FOSS/dev-ze-filter/ze-filter/libze/include -I/data/FOSS/dev-ze-filter/ze-filter/libzechk/include -I/data/FOSS/dev-ze-filter/ze-filter/libml/include -I/data/FOSS/dev-ze-filter/ze-filter/libzefilter/include -I/data/FOSS/dev-ze-filter/ze-filter/libpcre -I/data/FOSS/dev-ze-filter/ze-filter/libdb

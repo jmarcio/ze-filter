@@ -1,0 +1,21 @@
+#! /bin/sh
+
+DATE=$(date +%y%m%d)
+echo $DATE > aux/timestamp
+
+HERE=$(pwd)
+VERSION=$(basename $HERE)
+VERSION=$(echo $VERSION | sed s/zefilter-// | sed s/ze-filter-//)
+
+BRANCH=$(git branch -l | grep '*' | awk '{print $2}')
+
+VERSION=$(cat aux/version | head -1)
+if [ "$BRANCH" = "master" ]
+then
+  echo "ze-filter-$VERSION" > aux/release
+else
+  echo "ze-filter-$VERSION-$BRANCH-$DATE" > aux/release
+fi
+
+# echo "ze-filter-$BRANCH-$DATE" > aux/release
+
