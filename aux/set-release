@@ -8,8 +8,10 @@ VERSION=$(basename $HERE)
 VERSION=$(echo $VERSION | sed s/zefilter-// | sed s/ze-filter-//)
 
 BRANCH=$(git branch -l | grep '*' | awk '{print $2}')
-
 VERSION=$(cat aux/version | head -1)
+
+echo "Doing for $BRANCH $VERSION"
+
 if [ "$BRANCH" = "master" ]
 then
   echo "ze-filter-$VERSION" > aux/release

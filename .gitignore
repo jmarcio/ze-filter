@@ -109,4 +109,5 @@ config.status
 # End of https://www.gitignore.io/api/autotools
 #
 tmp/*
+aux/release
 
