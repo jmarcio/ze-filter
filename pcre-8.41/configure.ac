@@ -141,7 +141,7 @@ enable_cpp=no
 enable_utf8=yes
 enable_unicode_properties=yes
 enable_shared=no
-+
+
 # Handle --enable-pcre32 (disabled by default)
 AC_ARG_ENABLE(pcre32,
               AS_HELP_STRING([--enable-pcre32],

@@ -17388,7 +17388,7 @@ enable_cpp=no
 enable_utf8=yes
 enable_unicode_properties=yes
 enable_shared=no
-+
+
 # Handle --enable-pcre32 (disabled by default)
 # Check whether --enable-pcre32 was given.
 if test "${enable_pcre32+set}" = set; then :
