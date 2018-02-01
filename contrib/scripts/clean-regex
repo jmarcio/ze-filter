@@ -2,7 +2,7 @@
 
 # Usage :
 #
-#   clean-regex   /var/jchkmail/j-regex
+#   clean-regex   /var/ze-filter/ze-regex
 
 use Getopt::Long;
 use Cwd;
@@ -20,7 +20,7 @@ my %EXPR_NB   = ();
 
 $conf    = 0;
 $stat    = 0;
-$cf_file = "/etc/mail/jchkmail/j-regex";
+$cf_file = "/etc/ze-filter/ze-regex";
 
 my $ok = GetOptions(
   'c'   => \$conf,

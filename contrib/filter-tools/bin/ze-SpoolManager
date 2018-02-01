@@ -42,7 +42,7 @@ my $debug    = 0;
 my $verbose  = 0;
 my $op       = "";
 my $profile  = "default";
-my $ConfFile = "filter-tools.conf";
+my $ConfFile = "ze-SpoolManager.conf";
 
 my %Conf = (
   "facility"   => "local3",
@@ -140,8 +140,8 @@ if (lc $Conf{scale} eq "minutes") {
   $Conf{agemin} *= 60;
 }
 
-mkdir $Conf{dirgood} unless -d $Conf{dirgood};
-mkdir $Conf{dirbad}  unless -d $Conf{dirbad};
+mkdir $Conf{dirgood} unless -d $Conf{dirgood} || $Conf{dirgood} eq "remove";
+mkdir $Conf{dirbad}  unless -d $Conf{dirbad} || $Conf{dirbad} eq "remove";
 
 # ------------------------------------------------
 #
@@ -554,7 +554,13 @@ sub DoFreeMsg {
     }
   }
   if ($Conf{doit}) {
-    system("mv $qfile $Conf{dirgood}") if $ok;
+    if ($ok) {
+      if ($Conf{dirgood} eq "remove") {
+        system("/bin/rm -f $qfile");
+      } else {
+        system("/bin/mv $qfile $Conf{dirgood}");
+      }
+    }
   }
   $h->{action} = "free";
 
@@ -590,7 +596,11 @@ sub DoDiscardMsg {
       do_log("$id : Virus $to ($msg) $sdry");
     }
     if ($Conf{doit}) {
-      system("mv $qfile $Conf{dirbad}");
+      if ($Conf{dirbad} eq "remove") {
+        system("/bin/rm -f $qfile");
+      } else {
+        system("/bin/mv $qfile $Conf{dirbad}");
+      }
     }
     $h->{action} = "block";
   }
@@ -1210,7 +1220,7 @@ sub ReadConfigurationFile {
   my @ccEtc = ("$Bin/../etc", "/etc");
 
   #unless (defined $ConfFile && $ConfFile ne "") {
-  my $ConfFile = "filter-tools.conf";
+  my $ConfFile = "ze-SpoolManager.conf";
 
   #}
 
@@ -1492,7 +1502,7 @@ BODY +                default :
 BODY +  --profile     Profile
 BODY +                default : default
 BODY +  --cf          Configuration file
-BODY +                default : filter-tools.cf
+BODY +                default : ze-SpoolManager.conf
 BODY +  --facility    Syslog facility
 BODY +                default : local3
 BODY +  --clamdscan   Path to clamdscan binary (or auto)

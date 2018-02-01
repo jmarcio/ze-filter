@@ -1,20 +1,20 @@
 
 
 Scripts inside this directory may be used to control and monitor
-j-chkmail behaviour :
+ze-filter behaviour :
 
 * clean-regex - use this script to check defined regular expressions
   against expressions really found on messages
 
-* j-ndc - this is a simple script used to connect to the filter
+* ze-ndc - this is a simple script used to connect to the filter
   control channel
 
-* j-regex-stat.pl - this script creates a report with configured
+* ze-regex-stat.pl - this script creates a report with configured
   regular expressions found last week, last time each expression
   was found, expressions never found and smtp clients sending
   messages containing configured regular expressions
 
-* j-xstat.pl - this script generates a report about X-Files and
+* ze-xstat.pl - this script generates a report about X-Files and
   virus, their detection last week and the contents of the
   quarantine directory.
 

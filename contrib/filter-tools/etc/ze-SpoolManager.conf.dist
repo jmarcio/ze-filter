@@ -1,0 +1,90 @@
+
+#
+# ze-SpoolManager configuration file
+#
+
+#
+# default profile options
+#
+<profile default>
+#
+# When freeing a message from quarantine :
+#   mreplyto defines what happens to the header "ReplyTo" :
+#     preserve          : doesn't change
+#     remove            : remove it
+#     an email address  : change it to this email address
+mreplyto     preserve
+#   mfrom : defines what to do to the envelope FROM : 
+mfrom        root+123456789@domain.com
+
+#
+# A report can be sent about what was done by this program
+report       1
+#   mreport : defines to recipient of this run
+mreport      filtermaster@domain.com
+
+#
+# Sending notification about quarantined messages
+# NOT YET IMPLEMENTED. 
+notify       all
+notifyfrom   filtermaster@domain.com
+notifyto     filtermaster@domain.com
+
+#
+#
+# Quarantine directories
+dirspool     /var/spool/jchkmail
+# where to move good messages
+dirgood      /var/spool/jchkmail-good
+# where to move bad messages
+dirbad       /var/spool/jchkmail-bad
+
+#
+# time scale
+scale        minutes
+# minimum file age to be handled by this script
+agemin       25
+# maximum file age to be handled by this script
+agemax       7200
+
+# Max number of files to free at each run
+maxfree      5
+# Number of files at which the quarantine will be blocked
+minhold      10
+# Don't block the quarantine
+nohold       false
+
+# Path of clamdscan file
+clamdscan    /usr/bin/clamdscan
+# sendmail command
+smbin        /usr/sbin/sendmail -oi
+
+# extensions to apply this profile
+extensions   all
+</profile>
+
+
+#
+# doc files
+#
+<profile doc>
+mreplyto     preserve
+mfrom        root+123456789@domain.com
+mreport      filtermaster@domain.com
+
+report       1
+
+notify       all
+notifyfrom   filtermaster@domain.com
+notifyto     filtermaster@domain.com
+
+scale        minutes
+agemin       4
+agemax       1440
+
+maxfree      5
+minhold      15
+
+extensions   doc,docx,docm
+</profile>
+

@@ -34,14 +34,14 @@ OBJ = $(ROBJ) $(LOBJ) $(DOBJ) $(KOBJ) $(UOBJ)
 	mk_rcpt.pl   -a KNOWN-NET    $<  > $@
 
 .txt.db :
-	j-makemap -m e -m u -b $@ < $<
+	ze-makemap -m e -m u -b $@ < $<
 
-all         : j-rcpt.db
+all         : ze-rcpt.db
 
-j-rcpt.txt  : $(OBJ)
-	@ cat $(OBJ) > j-rcpt.txt
+ze-rcpt.txt  : $(OBJ)
+	@ cat $(OBJ) > ze-rcpt.txt
 
 clean		:
-	rm -f $(OBJ) j-rcpt.txt j-rcpt.db *~
+	rm -f $(OBJ) ze-rcpt.txt ze-rcpt.db *~
 
 

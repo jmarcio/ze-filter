@@ -6,7 +6,7 @@
 NB=12
 
 DIR=/var/ze-filter/files
-FILES="ze-regex j-stats j-xreport j-files j-virus j-grey-expire"
+FILES="ze-regex ze-stats ze-xreport ze-files ze-virus ze-grey-expire"
 
 #
 #
