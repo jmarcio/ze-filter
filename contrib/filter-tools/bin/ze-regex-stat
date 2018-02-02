@@ -11,7 +11,7 @@ my $log_origin = 0;
 my %EXPR = ();
 
 if ($#ARGV < 0) {
-  push(@ARGV, "/var/jchkmail/files/j-regex");
+  push(@ARGV, "/var/ze-filter/files/ze-regex");
 }
 
 my $DATE = `date`;
@@ -27,7 +27,7 @@ my $tmin = time() - 4 * 30 * 86400;
 #####
 # Configuration file reading
 #
-open IN, "/etc/mail/jchkmail/j-regex";
+open IN, "/etc/ze-filter/ze-regex";
 while (<IN>) {
   my $s;
 
@@ -242,8 +242,10 @@ T2
     # printf " - %-16s %5d - %s\n", $_, $#ID + 1, ip2name($_) ;
   }
 
-  foreach (reverse sort {$#{$CONNIDBYIP{$a}} <=> $#{$CONNIDBYIP{$b}}}
-    keys %CONNIDBYIP)
+  foreach (
+    reverse sort {$#{$CONNIDBYIP{$a}} <=> $#{$CONNIDBYIP{$b}}}
+    keys %CONNIDBYIP
+    )
   {
     printf " - %-16s %5d - %s\n", $_, $#{$CONNIDBYIP{$_}} + 1, ip2name($_)
       if $#{$CONNIDBYIP{$_}} > 2;

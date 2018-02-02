@@ -4,7 +4,7 @@ PATH=${PATH}:/opt/clamav/bin
 CLAM=clamdscan
 
 FROM=
-UCONF="$(dirname $0)/../etc/q-tools.conf"
+UCONF="$(dirname $0)/../etc/unquarantine.conf"
 [ -f $UCONF ] && source $UCONF
 
 if [ -z "$FROM" ]

@@ -6,7 +6,7 @@ This stuff allows using URL blacklists with ze-filter.
 
 The following files are important to you :
 
-j-urlbl.txt
+ze-urlbl.txt
   This file is a startup database. 
   It contains spammers URLs from two sources :
   - URLs from surlbl.org ( check their site )

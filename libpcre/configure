@@ -27,7 +27,9 @@ echo "MAJOR=$MAJOR" >> pcre.version
 echo "MINOR=$MINOR" >> pcre.version
 
 $PCREROOT/configure --enable-static \
-			--disable-shared
-
-
+		--disable-shared \
+		--enable-unicode-properties \
+		--enable-jit \
+		--enable-pcre16 --enable-pcre32 \
+		$*
 
