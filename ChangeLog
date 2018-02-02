@@ -1,3 +1,23 @@
 
 ze-filter Change Log
 
+Version 0.2.0
+*************
+
+First release of this filter after fork of j-chkmail
+
+* many parts of the filter were rewritten. First of all because
+  of the fork and also to clean-up some code which may be 
+  improved.
+  This is a work in progress.
+
+* Everything was renamed to replace every mention to j-chkmail to
+  ze-filter : configuration files, directories, ...
+
+* Embedded Berkeley DB and PCRE library were upgraded.
+
+* A first version of filter-tools (or ze-tools) were included in the
+  contrib directory. These tools are intended to help people manage
+  quarantine and ze-filter monitoring.
+
+
