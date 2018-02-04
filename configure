@@ -16946,15 +16946,17 @@ ac_config_files="$ac_config_files config/cdb/get-urlbl.org"
 
 ac_config_files="$ac_config_files config/cdb/get-bayes.org"
 
-ac_config_files="$ac_config_files bin/ze-filter.init"
+ac_config_files="$ac_config_files config/startup/ze-filter.init"
 
-ac_config_files="$ac_config_files bin/ze-greyd.init"
+ac_config_files="$ac_config_files config/startup/ze-greyd.init"
 
-ac_config_files="$ac_config_files bin/ze-filter.init.rhel"
+ac_config_files="$ac_config_files config/startup/ze-filter.init.rhel"
 
-ac_config_files="$ac_config_files bin/ze-filter.service"
+ac_config_files="$ac_config_files config/startup/ze-filter.service"
 
-ac_config_files="$ac_config_files bin/ze-greyd.service"
+ac_config_files="$ac_config_files config/startup/ze-greyd.service"
+
+ac_config_files="$ac_config_files config/startup/Makefile"
 
 
 
@@ -17994,11 +17996,12 @@ do
     "config/cdb/Makefile.org") CONFIG_FILES="$CONFIG_FILES config/cdb/Makefile.org" ;;
     "config/cdb/get-urlbl.org") CONFIG_FILES="$CONFIG_FILES config/cdb/get-urlbl.org" ;;
     "config/cdb/get-bayes.org") CONFIG_FILES="$CONFIG_FILES config/cdb/get-bayes.org" ;;
-    "bin/ze-filter.init") CONFIG_FILES="$CONFIG_FILES bin/ze-filter.init" ;;
-    "bin/ze-greyd.init") CONFIG_FILES="$CONFIG_FILES bin/ze-greyd.init" ;;
-    "bin/ze-filter.init.rhel") CONFIG_FILES="$CONFIG_FILES bin/ze-filter.init.rhel" ;;
-    "bin/ze-filter.service") CONFIG_FILES="$CONFIG_FILES bin/ze-filter.service" ;;
-    "bin/ze-greyd.service") CONFIG_FILES="$CONFIG_FILES bin/ze-greyd.service" ;;
+    "config/startup/ze-filter.init") CONFIG_FILES="$CONFIG_FILES config/startup/ze-filter.init" ;;
+    "config/startup/ze-greyd.init") CONFIG_FILES="$CONFIG_FILES config/startup/ze-greyd.init" ;;
+    "config/startup/ze-filter.init.rhel") CONFIG_FILES="$CONFIG_FILES config/startup/ze-filter.init.rhel" ;;
+    "config/startup/ze-filter.service") CONFIG_FILES="$CONFIG_FILES config/startup/ze-filter.service" ;;
+    "config/startup/ze-greyd.service") CONFIG_FILES="$CONFIG_FILES config/startup/ze-greyd.service" ;;
+    "config/startup/Makefile") CONFIG_FILES="$CONFIG_FILES config/startup/Makefile" ;;
     "default") CONFIG_COMMANDS="$CONFIG_COMMANDS default" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;

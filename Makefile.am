@@ -11,7 +11,8 @@ SUBDIRS = $(subdirs) \
 	libjoe \
 	src \
 	config/etc \
-  config/cdb \
+	config/cdb \
+	config/startup \
 	scratch \
 	ze-bayes-tbx \
 	ze-logreg \
@@ -45,6 +46,9 @@ realclean: distclean clean-cache clean-hook
 clean-data:
 	rm -f $(DESTDIR)@WORKROOT@/ze-history
 	rm -f $(DESTDIR)@WORKROOT@/ze-*data
+
+install-data-hook: install-workroot install-dbtools install-workdirs \
+  install-tools checkcf
 
 install-workroot:
 	@echo "  * Installing $(DESTDIR)@WORKROOT@"
@@ -96,16 +100,11 @@ install-workdirs:
 
 install-tools:
 	@echo "  * Installing Tools"
-	$(INSTALL_SCRIPT) bin/ze-filter.init $(DESTDIR)@RCDIR@/@RCSCRIPT@
-	$(INSTALL_SCRIPT) bin/ze-greyd.init   $(DESTDIR)@RCDIR@/@RCGREYD@
 	$(INSTALL_SCRIPT) bin/ze-ndc          $(DESTDIR)@prefix@/bin
 	$(INSTALL_SCRIPT) bin/get-iana       $(DESTDIR)@WORKROOT@/bin
 	$(INSTALL_SCRIPT) tools/ze-easy-install $(DESTDIR)@prefix@/bin
 	$(INSTALL_SCRIPT) tools/update-wdb-databases $(DESTDIR)@WORKROOT@/bin
 	$(INSTALL_SCRIPT) tools/check-mta-conf $(DESTDIR)@WORKROOT@/bin
-
-install-data-hook: install-workroot install-dbtools install-workdirs \
-  install-tools checkcf
 
 install-learn :
 	@echo "  * Installing Bayes Filter toolbox"
@@ -113,7 +112,7 @@ install-learn :
 	@chmod 755 $(DESTDIR)@WORKROOT@/bayes-toolbox
 	@chown @USER@ $(DESTDIR)@WORKROOT@/bayes-toolbox
 	@chgrp @GROUP@ $(DESTDIR)@WORKROOT@/bayes-toolbox
-	@cp  -pr bayes-toolbox $(DESTDIR)@WORKROOT@/
+	@cp  -pr contrib/bayes-toolbox $(DESTDIR)@WORKROOT@/
 
 checkdb :
 	@echo " * Check DB versions"
