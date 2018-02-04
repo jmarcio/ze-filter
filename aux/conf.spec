@@ -94,13 +94,13 @@ SECTION            System parameters and Resources
 DEFINE       201   USER                          STR          256
 DESCR        201   The filter will run as this user ID
 SYNTAX       201   -----
-DEFAULT      201   smmsp
+DEFAULT      201   ze-filter
 LABEL        201   Filter USER ID
 
 DEFINE       202   GROUP                         STR          256
 DESCR        202   The filter will run as this group IP
 SYNTAX       202   -----
-DEFAULT      202   smmsp
+DEFAULT      202   ze-filter
 LABEL        202   Filter GROUP ID
 
 

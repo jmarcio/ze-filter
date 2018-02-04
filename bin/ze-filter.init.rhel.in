@@ -76,8 +76,8 @@ fi
 #
 #
 #
-USR_ID=smmsp
-GRP_ID=smmsp
+USR_ID=ze-filter
+GRP_ID=ze-filter
 
 #
 # Initializing process runtime state files

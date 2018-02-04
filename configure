@@ -3474,32 +3474,11 @@ fi
 
 
 CONF_FILE=compile.conf
- test -f ../compile.conf  && CONF_FILE=../compile.conf
-
-if test -f $CONF_FILE
-then
-  CONF_USER=`$PERL aux/get_compile_opt USER < $CONF_FILE`
-  CONF_GROUP=`$PERL aux/get_compile_opt GROUP < $CONF_FILE`
-  CONF_PREFIX=`$PERL aux/get_compile_opt PREFIX < $CONF_FILE`
-  CONF_CONFDIR=`$PERL aux/get_compile_opt CONFDIR < $CONF_FILE`
-  CONF_WORKROOT=`$PERL aux/get_compile_opt WORKROOT < $CONF_FILE`
-  CONF_SPOOLDIR=`$PERL aux/get_compile_opt SPOOLDIR < $CONF_FILE`
-  CONF_ZEGREYDDIR=`$PERL aux/get_compile_opt ZEGREYDDIR < $CONF_FILE`
-  CONF_RCDIR=`$PERL aux/get_compile_opt STARTUPDIR < $CONF_FILE`
-
-  CONF_CC=`$PERL aux/get_compile_opt CC < $CONF_FILE`
-  CONF_CFLAGS=`$PERL aux/get_compile_opt CFLAGS < $CONF_FILE`
-  CONF_LDFLAGS=`$PERL aux/get_compile_opt LDFLAGS < $CONF_FILE`
-  CONF_CPPFLAGS=`$PERL aux/get_compile_opt CPPFLAGS < $CONF_FILE`
-
-  CONF_RSYNC_SERVER=`$PERL aux/get_compile_opt RSYNC_SERVER < $CONF_FILE`
-fi
 
 function getCompileConf()
 {
   test -z "$CONF_FILE" && echo "" && return
-  test -f $CONF_FILE || (echo "" && return)
-  grep ^$1 $CONF_FILE | \
+  grep ^$1 $CONF_FILE 2>/dev/null | \
     sed -e "s/ *= */=/" | \
     awk -F= '{print $2}' | \
     tail -1
@@ -16861,8 +16840,6 @@ echo ""
 
 echo ""
 
-echo "*** Checking and configuring libconfig..."
-
 if test "$ac_cv_lib_resolv_res_nquery" = "yes" ;
 then
 
@@ -16912,8 +16889,6 @@ ZEINCS="-I$TOPDIR/libze/include -I$TOPDIR/libzechk/include -I$TOPDIR/libml/inclu
 
 
 CPPFLAGS="$CPPFLAGS -I../include $ZEINCS"
-
-#ZELIBS=" ../libjoe/libjoe.a ../libs/libcommon.a ../librepl/librepl.a ../zelib/libzm.a"
 
 ZELIBS=" -L$TOPDIR/libjoe -ljoe"
 ZELIBS="$ZELIBS -L$TOPDIR/libml/src -lml"
@@ -19491,7 +19466,7 @@ echo "  configuration files dir  : $CONFDIR" >> config.results
 echo "  work dir                 : $WORKROOT" >> config.results
 echo "  state dir                : $STATEDIR" >> config.results
 echo "  spool dir                : $SPOOLDIR" >> config.results
-echo "  ze-greyd dir               : $ZEGREYDDIR" >> config.results
+echo "  ze-greyd dir             : $ZEGREYDDIR" >> config.results
 echo "  " >> config.results
 echo "  USE PCRE                 : $USE_LIBPCRE - $PCREVER" >> config.results
 echo "  USE BerkeleyDB           : $USE_LIBDB - $BDBVER" >> config.results

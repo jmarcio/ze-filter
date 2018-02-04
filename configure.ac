@@ -43,32 +43,11 @@ dnl
 dnl
 dnl
 CONF_FILE=compile.conf
-[ test -f ../compile.conf ] && CONF_FILE=../compile.conf
-
-if test -f $CONF_FILE
-then
-  CONF_USER=`$PERL aux/get_compile_opt USER < $CONF_FILE`
-  CONF_GROUP=`$PERL aux/get_compile_opt GROUP < $CONF_FILE`
-  CONF_PREFIX=`$PERL aux/get_compile_opt PREFIX < $CONF_FILE`
-  CONF_CONFDIR=`$PERL aux/get_compile_opt CONFDIR < $CONF_FILE`
-  CONF_WORKROOT=`$PERL aux/get_compile_opt WORKROOT < $CONF_FILE`
-  CONF_SPOOLDIR=`$PERL aux/get_compile_opt SPOOLDIR < $CONF_FILE`
-  CONF_ZEGREYDDIR=`$PERL aux/get_compile_opt ZEGREYDDIR < $CONF_FILE`
-  CONF_RCDIR=`$PERL aux/get_compile_opt STARTUPDIR < $CONF_FILE`
-
-  CONF_CC=`$PERL aux/get_compile_opt CC < $CONF_FILE`
-  CONF_CFLAGS=`$PERL aux/get_compile_opt CFLAGS < $CONF_FILE`
-  CONF_LDFLAGS=`$PERL aux/get_compile_opt LDFLAGS < $CONF_FILE`
-  CONF_CPPFLAGS=`$PERL aux/get_compile_opt CPPFLAGS < $CONF_FILE`
-
-  CONF_RSYNC_SERVER=`$PERL aux/get_compile_opt RSYNC_SERVER < $CONF_FILE`
-fi
 
 function getCompileConf()
 {
   test -z "$CONF_FILE" && echo "" && return
-  test -f $CONF_FILE || (echo "" && return) 
-  grep ^$1 $CONF_FILE | \
+  grep ^$1 $CONF_FILE 2>/dev/null | \
     sed -e "s/[ ]*=[ ]*/=/" | \
     awk -F= '{print $2}' | \
     tail -1
@@ -1384,23 +1363,6 @@ echo ""
 dnl
 dnl
 
-echo "*** Checking and configuring libconfig..."
-dnl 
-dnl libconfig
-dnl
-dnl JOE LIBCONFIGDIR="libconfig"
-dnl JOE AC_CONFIG_SUBDIRS(libconfig)
-dnl JOE LIBCONFIGLIB="../$LIBCONFIGDIR/lib/.libs/libconfig.a"
-dnl JOE LIBCONFIGINC="-I../$LIBCONFIGDIR/lib"
-dnl JOE CPPFLAGS="$CPPFLAGS $LIBCONFIGINC"
-dnl JOE AC_DEFINE(USE_BerkeleyDB,1,[BerkeleyDB])
-dnl JOE AC_DEFINE(HAVE_LIBCONFIG,1,[libconfig library])
-dnl JOE AC_DEFINE(HAVE_LIBCONFIG_H,1,[libconfig include])
-dnl JOE 
-dnl JOE AC_SUBST(LIBCONFIGDIR)
-dnl JOE AC_SUBST(LIBCONFIGLIB)
-dnl JOE AC_SUBST(LIBCONFIGINC)
-
 dnl ############################################################
 dnl
 dnl XXX
@@ -1449,8 +1411,6 @@ AC_SUBST(ZEINCS)
 dnl from line 963
 CPPFLAGS="$CPPFLAGS -I../include $ZEINCS"
 
-#ZELIBS=" ../libjoe/libjoe.a ../libs/libcommon.a ../librepl/librepl.a ../zelib/libzm.a"
-
 ZELIBS=" -L$TOPDIR/libjoe -ljoe"
 ZELIBS="$ZELIBS -L$TOPDIR/libml/src -lml"
 ZELIBS="$ZELIBS -L$TOPDIR/libzechk/src -lzechk"
@@ -1465,7 +1425,6 @@ dnl
 AC_CONFIG_FILES(Makefile)
 AC_CONFIG_FILES(include/version.h include/defs.h)
 
-dnl AC_CONFIG_FILES(libjoe/Makefile libs/Makefile zelib/Makefile zechklib/Makefile)
 AC_CONFIG_FILES(libjoe/Makefile)
 AC_CONFIG_FILES(libs/Makefile)
 AC_CONFIG_FILES(libze/src/Makefile)
@@ -1556,7 +1515,7 @@ echo "  configuration files dir  : $CONFDIR" >> config.results
 echo "  work dir                 : $WORKROOT" >> config.results
 echo "  state dir                : $STATEDIR" >> config.results
 echo "  spool dir                : $SPOOLDIR" >> config.results
-echo "  ze-greyd dir               : $ZEGREYDDIR" >> config.results
+echo "  ze-greyd dir             : $ZEGREYDDIR" >> config.results
 echo "  " >> config.results
 echo "  USE PCRE                 : $USE_LIBPCRE - $PCREVER" >> config.results
 echo "  USE BerkeleyDB           : $USE_LIBDB - $BDBVER" >> config.results
