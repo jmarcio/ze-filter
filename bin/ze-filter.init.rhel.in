@@ -27,9 +27,9 @@
 #
 # VARIABLES
 #
-JCHKMAIL_HOME=/usr/local/sbin
+ZEFILTER_HOME=/usr/local/sbin
 
-JCHKMAIL_BIN=ze-filter
+ZEFILTER_BIN=ze-filter
 
 OPTIONS=" "
 
@@ -76,8 +76,8 @@ fi
 #
 #
 #
-USR_ID=smmsp
-GRP_ID=smmsp
+USR_ID=ze-filter
+GRP_ID=ze-filter
 
 #
 # Initializing process runtime state files
@@ -134,7 +134,7 @@ setupdirs ()
 
 cleanpidfile ()
 {
-  run=`/bin/ps -edf | grep $JCHKMAIL_BIN  | grep -c -v grep`
+  run=`/bin/ps -edf | grep $ZEFILTER_BIN  | grep -c -v grep`
   if [ "$run" = "0" ] ; then
     if [ -f $PIDFILE ] ; then
       echo "Removing old PID file..."
@@ -145,7 +145,7 @@ cleanpidfile ()
 
 cleansockfile ()
 {
-  run=`/bin/ps -edf | grep $JCHKMAIL_BIN  | grep -c -v grep`
+  run=`/bin/ps -edf | grep $ZEFILTER_BIN  | grep -c -v grep`
   if [ "$run" = "0" ] ; then
     if [ -r $SOCKFILE ] ; then
       echo "Removing old SOCK file..."
@@ -167,8 +167,8 @@ start ()
   cleanpidfile
   cleansockfile
 
-  if [ -f $JCHKMAIL_HOME/$JCHKMAIL_BIN ] ; then
-    daemon "$JCHKMAIL_HOME/$JCHKMAIL_BIN $OPTIONS > /dev/null"
+  if [ -f $ZEFILTER_HOME/$ZEFILTER_BIN ] ; then
+    daemon "$ZEFILTER_HOME/$ZEFILTER_BIN $OPTIONS > /dev/null"
   fi
 }
 

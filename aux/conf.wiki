@@ -28,10 +28,10 @@
 
   * **USER** (String) - Filter USER ID
     * The filter will run as this user ID
-    * **Default** : ''smmsp''
+    * **Default** : ''ze-filter''
   * **GROUP** (String) - Filter GROUP ID
     * The filter will run as this group IP
-    * **Default** : ''smmsp''
+    * **Default** : ''ze-filter''
   * **FILE_DESCRIPTORS** (String) - Number of available file descriptors (integer value or MAX)
     * Sets a limit on the number of file descriptors available to the filter : can be any value lower than the value set by the operating system (ulimit), or MAX to use that value.
     * **Default** : ''MAX''

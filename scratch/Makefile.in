@@ -223,8 +223,6 @@ INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
-JCHKLIBS = @JCHKLIBS@
-JGREYDDIR = @JGREYDDIR@
 LANGSPEC = @LANGSPEC@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
@@ -279,7 +277,9 @@ USER = @USER@
 VERSION = @VERSION@
 WORKROOT = @WORKROOT@
 XFILES_DEF = @XFILES_DEF@
+ZEGREYDDIR = @ZEGREYDDIR@
 ZEINCS = @ZEINCS@
+ZELIBS = @ZELIBS@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
@@ -339,7 +339,7 @@ ze_msg_entropy_SOURCES = ze-msg-entropy.c
 ze_extract_url_SOURCES = ze-extract-url.c 
 #ze_uufile_SOURCES 	  = ze-uufile.c 
 ze_mfilter_SOURCES = ze-mfilter.c
-LDADD = @JCHKLIBS@   @LDLIBPCRE@ @BDBLIBS@
+LDADD = @ZELIBS@   @LDLIBPCRE@ @BDBLIBS@
 AM_CPPFLAGS = @ZEINCS@ @BDBINCS@
 all: all-am
 

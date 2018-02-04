@@ -20,9 +20,9 @@ check_PROGRAMS         = av-test policy-test \
 
 man_MANS               = ze-filter.8 ze-filter.cf.4 
 
-#LDADD                 = @LDLIBPCRE@ @BDBLIBS@ @JCHKLIBS@
-#LDADD                 = ../libjoe/libjoe.a ../zelib/libze.a @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@
-LDADD                  = @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@
+#LDADD                 = @LDLIBPCRE@ @BDBLIBS@ @ZELIBS@
+#LDADD                 = ../libjoe/libjoe.a ../zelib/libze.a @ZELIBS@ @LDLIBPCRE@ @BDBLIBS@
+LDADD                  = @ZELIBS@ @LDLIBPCRE@ @BDBLIBS@
 
 AM_CPPFLAGS            = @ZEINCS@ @BDBINCS@
 

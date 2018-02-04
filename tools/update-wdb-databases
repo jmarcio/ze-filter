@@ -91,7 +91,7 @@ wdb_restore()
   rm -f $DBDIR/__*
   rm -f $DBDIR/log.*
 
-  chown smmsp:smmsp $DBDIR/*
+  chown ze-filter:ze-filter $DBDIR/*
   chmod 664         $DBDIR/*
   echo ""
 }

@@ -43,43 +43,33 @@ dnl
 dnl
 dnl
 CONF_FILE=compile.conf
-[ test -f ../compile.conf ] && CONF_FILE=../compile.conf
 
-CONF_USER=
-CONF_GROUP=
-CONF_PREFIX=
-CONF_CONFDIR=
-CONF_WORKROOT=
-CONF_SPOOLDIR=
-CONF_JGREYDDIR=
+function getCompileConf()
+{
+  test -z "$CONF_FILE" && echo "" && return
+  grep ^$1 $CONF_FILE 2>/dev/null | \
+    sed -e "s/[ ]*=[ ]*/=/" | \
+    awk -F= '{print $2}' | \
+    tail -1
+}
 
-CONF_RCDIR=
+CONF_USER=$(getCompileConf USER)
+CONF_GROUP=$(getCompileConf GROUP)
 
-CONF_CC=
-CONF_CFLAGS=
-CONF_LDFLAGS=
-CONF_CPPFLAGS=
+CONF_PREFIX=$(getCompileConf PREFIX)
+CONF_CONFDIR=$(getCompileConf CONFDIR)
+CONF_WORKROOT=$(getCompileConf WORKROOT)
+CONF_SPOOLDIR=$(getCompileConf SPOOLDIR)
+CONF_ZEGREYDDIR=$(getCompileConf ZEGREYDDIR)
 
-CONF_RSYNC_SERVER=""
+CONF_RCDIR=$(getCompileConf RCDIR)
 
-if test -f $CONF_FILE
-then
-  CONF_USER=`$PERL aux/get_compile_opt USER < $CONF_FILE`
-  CONF_GROUP=`$PERL aux/get_compile_opt GROUP < $CONF_FILE`
-  CONF_PREFIX=`$PERL aux/get_compile_opt PREFIX < $CONF_FILE`
-  CONF_CONFDIR=`$PERL aux/get_compile_opt CONFDIR < $CONF_FILE`
-  CONF_WORKROOT=`$PERL aux/get_compile_opt WORKROOT < $CONF_FILE`
-  CONF_SPOOLDIR=`$PERL aux/get_compile_opt SPOOLDIR < $CONF_FILE`
-  CONF_JGREYDDIR=`$PERL aux/get_compile_opt JGREYDDIR < $CONF_FILE`
-  CONF_RCDIR=`$PERL aux/get_compile_opt STARTUPDIR < $CONF_FILE`
+CONF_CC=$(getCompileConf CC)
+CONF_CFLAGS=$(getCompileConf CFLAGS)
+CONF_LDFLAGS=$(getCompileConf LDFLAGS)
+CONF_CPPFLAGS=$(getCompileConf CPPFLAGS)
 
-  CONF_CC=`$PERL aux/get_compile_opt CC < $CONF_FILE`
-  CONF_CFLAGS=`$PERL aux/get_compile_opt CFLAGS < $CONF_FILE`
-  CONF_LDFLAGS=`$PERL aux/get_compile_opt LDFLAGS < $CONF_FILE`
-  CONF_CPPFLAGS=`$PERL aux/get_compile_opt CPPFLAGS < $CONF_FILE`
-
-  CONF_RSYNC_SERVER=`$PERL aux/get_compile_opt RSYNC_SERVER < $CONF_FILE`
-fi
+CONF_RSYNC_SERVER=$(getCompileConf RSYNC_SERVER)
 
 dnl ############################################################
 dnl
@@ -172,12 +162,12 @@ if test -n "$CONF_WORKROOT" ;
 then
   WORKROOT=$CONF_WORKROOT
 fi
-JGREYDDIR=$WORKROOT/ze-greydb
-if test -n "$CONF_JGREYDDIR" ;
+ZEGREYDDIR=$WORKROOT/ze-greydb
+if test -n "$CONF_ZEGREYDDIR" ;
 then
-  JGREYDDIR=$CONF_JGREYDDIR
+  ZEGREYDDIR=$CONF_ZEGREYDDIR
 fi
-#[ -n "$CONF_" ] && =$CONF_
+
 
 dnl ############################################################
 dnl
@@ -348,12 +338,12 @@ AC_SUBST(WORKROOT)
 
 dnl
 dnl
-dnl JGREYDDIR=/var/ze-filter/ze-greydb
+dnl ZEGREYDDIR=/var/ze-filter/ze-greydb
 AC_ARG_WITH(ze-greyd-dir,
   AC_HELP_STRING([--with-ze-greyd-dir=PATH],
                  [set ze-greyd work dir   (default /var/ze-filter/ze-greydb)]),
-  [JGREYDDIR="$withval"])
-AC_SUBST(JGREYDDIR)
+  [ZEGREYDDIR="$withval"])
+AC_SUBST(ZEGREYDDIR)
 
 dnl
 dnl
@@ -391,6 +381,11 @@ sysconfdir=$CONFDIR
 dnl
 dnl
 dnl
+AC_MSG_CHECKING(if system has systemd)
+HAS_SYSTEMD=no
+[ test -d /etc/systemd/system ] && HAS_SYSTEMD=yes
+AC_MSG_RESULT($HAS_SYSTEMD)
+
 AC_MSG_CHECKING([where default start-up scripts are installed])
 
 if test -n "$CONF_RCDIR" ;
@@ -1286,6 +1281,7 @@ dnl
 dnl
 AC_MSG_CHECKING([wheather compiler defines PATH_MAX])
 AC_TRY_LINK([
+#include <stdio.h>
 #if HAVE_LIMITS_H
 #include <limits.h>
 #endif
@@ -1367,23 +1363,6 @@ echo ""
 dnl
 dnl
 
-echo "*** Checking and configuring libconfig..."
-dnl 
-dnl libconfig
-dnl
-dnl JOE LIBCONFIGDIR="libconfig"
-dnl JOE AC_CONFIG_SUBDIRS(libconfig)
-dnl JOE LIBCONFIGLIB="../$LIBCONFIGDIR/lib/.libs/libconfig.a"
-dnl JOE LIBCONFIGINC="-I../$LIBCONFIGDIR/lib"
-dnl JOE CPPFLAGS="$CPPFLAGS $LIBCONFIGINC"
-dnl JOE AC_DEFINE(USE_BerkeleyDB,1,[BerkeleyDB])
-dnl JOE AC_DEFINE(HAVE_LIBCONFIG,1,[libconfig library])
-dnl JOE AC_DEFINE(HAVE_LIBCONFIG_H,1,[libconfig include])
-dnl JOE 
-dnl JOE AC_SUBST(LIBCONFIGDIR)
-dnl JOE AC_SUBST(LIBCONFIGLIB)
-dnl JOE AC_SUBST(LIBCONFIGINC)
-
 dnl ############################################################
 dnl
 dnl XXX
@@ -1432,23 +1411,20 @@ AC_SUBST(ZEINCS)
 dnl from line 963
 CPPFLAGS="$CPPFLAGS -I../include $ZEINCS"
 
-#JCHKLIBS=" ../libjoe/libjoe.a ../libs/libcommon.a ../librepl/librepl.a ../zelib/libzm.a"
-
-JCHKLIBS=" -L$TOPDIR/libjoe -ljoe"
-JCHKLIBS="$JCHKLIBS -L$TOPDIR/libml/src -lml"
-JCHKLIBS="$JCHKLIBS -L$TOPDIR/libzechk/src -lzechk"
-JCHKLIBS="$JCHKLIBS -L$TOPDIR/libs -lcommon"
-JCHKLIBS="$JCHKLIBS -L$TOPDIR/libze/src -lze"
+ZELIBS=" -L$TOPDIR/libjoe -ljoe"
+ZELIBS="$ZELIBS -L$TOPDIR/libml/src -lml"
+ZELIBS="$ZELIBS -L$TOPDIR/libzechk/src -lzechk"
+ZELIBS="$ZELIBS -L$TOPDIR/libs -lcommon"
+ZELIBS="$ZELIBS -L$TOPDIR/libze/src -lze"
 
 
-AC_SUBST(JCHKLIBS)
+AC_SUBST(ZELIBS)
 dnl
 dnl
 
 AC_CONFIG_FILES(Makefile)
 AC_CONFIG_FILES(include/version.h include/defs.h)
 
-dnl AC_CONFIG_FILES(libjoe/Makefile libs/Makefile zelib/Makefile zechklib/Makefile)
 AC_CONFIG_FILES(libjoe/Makefile)
 AC_CONFIG_FILES(libs/Makefile)
 AC_CONFIG_FILES(libze/src/Makefile)
@@ -1475,6 +1451,8 @@ AC_CONFIG_FILES(config/cdb/get-bayes.org)
 AC_CONFIG_FILES(bin/ze-filter.init)
 AC_CONFIG_FILES(bin/ze-greyd.init)
 AC_CONFIG_FILES(bin/ze-filter.init.rhel)
+AC_CONFIG_FILES(bin/ze-filter.service)
+AC_CONFIG_FILES(bin/ze-greyd.service)
 
 dnl AC_CONFIG_FILES([$MODMAKE])
 
@@ -1537,7 +1515,7 @@ echo "  configuration files dir  : $CONFDIR" >> config.results
 echo "  work dir                 : $WORKROOT" >> config.results
 echo "  state dir                : $STATEDIR" >> config.results
 echo "  spool dir                : $SPOOLDIR" >> config.results
-echo "  ze-greyd dir               : $JGREYDDIR" >> config.results
+echo "  ze-greyd dir             : $ZEGREYDDIR" >> config.results
 echo "  " >> config.results
 echo "  USE PCRE                 : $USE_LIBPCRE - $PCREVER" >> config.results
 echo "  USE BerkeleyDB           : $USE_LIBDB - $BDBVER" >> config.results
@@ -1549,7 +1527,7 @@ echo "  CPPFLAGS                 : $CPPFLAGS" >> config.results
 echo "  CFLAGS                   : $CFLAGS" >> config.results
 echo "  LIBS                     : $LIBS" >> config.results
 echo "  LDFLAGS                  : $LDFLAGS" >> config.results
-echo "  JLIBS                    : $JCHKLIBS" >> config.results
+echo "  ZELIBS                   : $ZELIBS" >> config.results
 echo "  " >> config.results
 
 if test -f aux/configure.footer

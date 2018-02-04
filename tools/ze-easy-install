@@ -94,8 +94,8 @@ if ($Actions[0] eq "autoupdate") {
   my $user = get_option("User");
   my $group = get_option("Group");
 
-  $user = "smmsp" unless defined $user && $user ne "";
-  $group = "smmsp" unless defined $group && $group ne "";
+  $user = "ze-filter" unless defined $user && $user ne "";
+  $group = "ze-filter" unless defined $group && $group ne "";
 
   my ($login,$pass,$uid,$ugid) = getpwnam($user);
   my ($name,$passwd,$gid,$members) = getgrnam($group);
@@ -469,7 +469,7 @@ EOT
     push @C, "--with-work-dir=$cf" if ($cf ne "");
 
     $cf = get_option("GreyDir");
-    push @C, "--with-jgrey-dir=$cf" if ($cf ne "");
+    push @C, "--with-ze-greyd-dir=$cf" if ($cf ne "");
 
     $cf = get_option("SpoolDir");
     push @C, "--with-spool-dir=$cf" if ($cf ne "");

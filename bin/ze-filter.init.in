@@ -20,9 +20,9 @@
 #
 # VARIABLES
 #
-JCHKMAIL_HOME=@prefix@/sbin
+ZEFILTER_HOME=@prefix@/sbin
 
-JCHKMAIL_BIN=ze-filter
+ZEFILTER_BIN=ze-filter
 
 OPTIONS=" "
 
@@ -130,7 +130,7 @@ setupdirs ()
 
 cleanpidfile ()
 {
-  run=`@PSBIN@ @PSOPT@ | grep $JCHKMAIL_BIN  | grep -c -v grep`
+  run=`@PSBIN@ @PSOPT@ | grep $ZEFILTER_BIN  | grep -c -v grep`
   if [ "$run" = "0" ] ; then
     if [ -f $PIDFILE ] ; then
       echo "Removing old PID file..."
@@ -141,7 +141,7 @@ cleanpidfile ()
 
 cleansockfile ()
 {
-  run=`@PSBIN@ @PSOPT@ | grep $JCHKMAIL_BIN  | grep -c -v grep`
+  run=`@PSBIN@ @PSOPT@ | grep $ZEFILTER_BIN  | grep -c -v grep`
   if [ "$run" = "0" ] ; then
     if [ -r $SOCKFILE ] ; then
       echo "Removing old SOCK file..."
@@ -163,15 +163,15 @@ start ()
   cleanpidfile
   cleansockfile
 
-  if [ -f $JCHKMAIL_HOME/$JCHKMAIL_BIN ] ; then
-    #echo "Starting $JCHKMAIL_BIN...."
-    $JCHKMAIL_HOME/$JCHKMAIL_BIN $OPTIONS  > /dev/null
-    #echo ".... $JCHKMAIL_BIN started !"
+  if [ -f $ZEFILTER_HOME/$ZEFILTER_BIN ] ; then
+    #echo "Starting $ZEFILTER_BIN...."
+    $ZEFILTER_HOME/$ZEFILTER_BIN $OPTIONS  > /dev/null
+    #echo ".... $ZEFILTER_BIN started !"
   fi
 }
 
 stop () {
-  echo "Stopping $JCHKMAIL_BIN...."
+  echo "Stopping $ZEFILTER_BIN...."
   i=10
   while [ $i -gt 0 -a -f $PIDFILE ]; do
     kill `head -1 $PIDFILE`

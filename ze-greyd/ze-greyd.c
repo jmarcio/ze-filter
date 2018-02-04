@@ -93,8 +93,8 @@ static confargs_T   cargs = {
 };
 
 
-static char        *user = "smmsp";
-static char        *group = "smmsp";
+static char        *user = "ze-filter";
+static char        *group = "ze-filter";
 
 static char        *workdir = ZE_GREYDDIR;
 
@@ -1196,8 +1196,8 @@ usage(arg)
          "  %s\n"
          "  Compiled on %s\n"
          "        -h  : this message\n"
-         "        -u  : run ze-greyd as USER - default = smmsp\n"
-         "        -g  : run ze-greyd as GROUP - default = smmsp\n"
+         "        -u  : run ze-greyd as USER - default = ze-filter\n"
+         "        -g  : run ze-greyd as GROUP - default = ze-filter\n"
          "        -s  : socket\n"
          "              inet:2012@localhost\n"
          "              local:/var/sock\n"

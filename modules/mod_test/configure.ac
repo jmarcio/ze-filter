@@ -54,7 +54,7 @@ fi
 SPOOLDIR=/var/spool/jchkmail
 CONFDIR=/etc/mail/jchkmail
 WORKROOT=/var/jchkmail
-JGREYDDIR=$WORKROOT/jgreydb
+ZEGREYDDIR=$WORKROOT/ze-greydb
 
 dnl ############################################################
 dnl

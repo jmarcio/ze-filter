@@ -190,7 +190,7 @@ define_milter_sock(cf, arg_p, arg_u, arg_i)
   if (sock != NULL && strlen(sock) > 0)
     strlcpy(sm_sock, sock, sizeof (sm_sock));
 
-  if ((sock = getenv("JCHKMAIL_SOCKET")) != NULL)
+  if ((sock = getenv("ZEFILTER_SOCKET")) != NULL)
     strlcpy(sm_sock, sock, sizeof (sm_sock));
 
   if (arg_i != NULL)

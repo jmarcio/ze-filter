@@ -201,6 +201,6 @@ Some main changes in this release are :
                                           cd /var/jchkmail/bayes-toolbox
                                           make
 
-                 /jgreydb       -> live databases created by j-greyd
+                 /ze-greydb       -> live databases created by j-greyd
 
 -------------------------------------------------------------------------------

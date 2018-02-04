@@ -3,7 +3,7 @@ bin_PROGRAMS            = ze-printstats
 
 ze_printstats_SOURCES 	= ze-printstats.c 
 
-LDADD              	= @JCHKLIBS@   @LDLIBPCRE@ @BDBLIBS@
+LDADD              	= @ZELIBS@   @LDLIBPCRE@ @BDBLIBS@
 
 AM_CPPFLAGS             = @ZEINCS@ @BDBINCS@
 

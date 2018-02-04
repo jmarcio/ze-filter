@@ -20,4 +20,13 @@ First release of this filter after fork of j-chkmail
   contrib directory. These tools are intended to help people manage
   quarantine and ze-filter monitoring.
 
+* A script :
+    migrate-j-chkmail-2-ze-filter
+  can help people to migrate from j-chkmail to ze-filter
+
+More info soon at the wiki.
+
+ze-filter source tarball is available at : http://foss.jose-marcio.org/download
+  or at http://github.com/jmarcio/ze-filter
+
 

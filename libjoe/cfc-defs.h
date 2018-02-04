@@ -114,8 +114,8 @@ cf_define ()
   cf_add_id_str  (CF_FILTER_URL, STRING(FILTER_URL), 256, "http : // foss dot jose-marcio dot org");
   cf_add_id_str  (CF_POLICY_URL, STRING(POLICY_URL), 256, "");
   cf_add_id_str  (CF_DAEMON_FILTER_DISABLE, STRING(DAEMON_FILTER_DISABLE), 256, "");
-  cf_add_id_str  (CF_USER, STRING(USER), 256, "smmsp");
-  cf_add_id_str  (CF_GROUP, STRING(GROUP), 256, "smmsp");
+  cf_add_id_str  (CF_USER, STRING(USER), 256, "ze-filter");
+  cf_add_id_str  (CF_GROUP, STRING(GROUP), 256, "ze-filter");
   cf_add_id_str  (CF_FILE_DESCRIPTORS, STRING(FILE_DESCRIPTORS), 32, "MAX");
   cf_add_id_int  (CF_FD_FREE_SOFT_LIMIT, STRING(FD_FREE_SOFT_LIMIT), "100");
   cf_add_id_int  (CF_FD_FREE_HARD_LIMIT, STRING(FD_FREE_HARD_LIMIT), "50");
@@ -313,8 +313,8 @@ cf_defaults ()
   cf_set_val (CF_FILTER_URL, "http : // foss dot jose-marcio dot org");
   cf_set_val (CF_POLICY_URL, "");
   cf_set_val (CF_DAEMON_FILTER_DISABLE, "");
-  cf_set_val (CF_USER, "smmsp");
-  cf_set_val (CF_GROUP, "smmsp");
+  cf_set_val (CF_USER, "ze-filter");
+  cf_set_val (CF_GROUP, "ze-filter");
   cf_set_val (CF_FILE_DESCRIPTORS, "MAX");
   cf_set_val (CF_FD_FREE_SOFT_LIMIT, "100");
   cf_set_val (CF_FD_FREE_HARD_LIMIT, "50");
@@ -576,20 +576,20 @@ static cfvar_t cfvar[] = {
              /* Filter USER ID */
              {CF_USER, ZE_STR, NULL, 256,
               "USER", 
-              "smmsp",
+              "ze-filter",
               "System parameters and Resources",
               "Filter USER ID",
               "-----",
-              "smmsp"},
+              "ze-filter"},
 
              /* Filter GROUP ID */
              {CF_GROUP, ZE_STR, NULL, 256,
               "GROUP", 
-              "smmsp",
+              "ze-filter",
               "System parameters and Resources",
               "Filter GROUP ID",
               "-----",
-              "smmsp"},
+              "ze-filter"},
 
              /* Number of available file descriptors (integer value or MAX) */
              {CF_FILE_DESCRIPTORS, ZE_STR, NULL, 32,

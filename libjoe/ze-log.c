@@ -51,7 +51,7 @@ configure_log(app)
     char               *envloglevel = NULL;
     int                 level;
 
-    if ((envloglevel = getenv("JCHKMAIL_LOG_LEVEL")) != NULL) {
+    if ((envloglevel = getenv("ZEFILTER_LOG_LEVEL")) != NULL) {
       level = atoi(envloglevel);
       if (level > 0)
         ze_logLevel = level;

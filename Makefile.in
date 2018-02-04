@@ -102,7 +102,8 @@ am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/include/config.h
 CONFIG_CLEAN_FILES = include/version.h include/defs.h \
-	bin/ze-filter.init bin/ze-greyd.init bin/ze-filter.init.rhel
+	bin/ze-filter.init bin/ze-greyd.init bin/ze-filter.init.rhel \
+	bin/ze-filter.service bin/ze-greyd.service
 CONFIG_CLEAN_VPATH_FILES =
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -163,7 +164,9 @@ DIST_SUBDIRS = $(SUBDIRS)
 am__DIST_COMMON = $(srcdir)/Makefile.in \
 	$(top_srcdir)/bin/ze-filter.init.in \
 	$(top_srcdir)/bin/ze-filter.init.rhel.in \
+	$(top_srcdir)/bin/ze-filter.service.in \
 	$(top_srcdir)/bin/ze-greyd.init.in \
+	$(top_srcdir)/bin/ze-greyd.service.in \
 	$(top_srcdir)/include/config.h.in \
 	$(top_srcdir)/include/defs.h.in \
 	$(top_srcdir)/include/version.h.in AUTHORS COPYING ChangeLog \
@@ -249,8 +252,6 @@ INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
-JCHKLIBS = @JCHKLIBS@
-JGREYDDIR = @JGREYDDIR@
 LANGSPEC = @LANGSPEC@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
@@ -305,7 +306,9 @@ USER = @USER@
 VERSION = @VERSION@
 WORKROOT = @WORKROOT@
 XFILES_DEF = @XFILES_DEF@
+ZEGREYDDIR = @ZEGREYDDIR@
 ZEINCS = @ZEINCS@
+ZELIBS = @ZELIBS@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
@@ -369,7 +372,7 @@ SUBDIRS = $(subdirs) \
 	libjoe \
 	src \
 	config/etc \
-        config/cdb \
+  config/cdb \
 	scratch \
 	ze-bayes-tbx \
 	ze-logreg \
@@ -448,6 +451,10 @@ bin/ze-filter.init: $(top_builddir)/config.status $(top_srcdir)/bin/ze-filter.in
 bin/ze-greyd.init: $(top_builddir)/config.status $(top_srcdir)/bin/ze-greyd.init.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 bin/ze-filter.init.rhel: $(top_builddir)/config.status $(top_srcdir)/bin/ze-filter.init.rhel.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+bin/ze-filter.service: $(top_builddir)/config.status $(top_srcdir)/bin/ze-filter.service.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+bin/ze-greyd.service: $(top_builddir)/config.status $(top_srcdir)/bin/ze-greyd.service.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 
 mostlyclean-libtool:
@@ -943,10 +950,10 @@ install-workdirs:
 	@chmod 750 $(DESTDIR)@SPOOLDIR@
 	@chown @USER@ $(DESTDIR)@SPOOLDIR@ 
 	@chgrp @GROUP@ $(DESTDIR)@SPOOLDIR@ 
-	@$(mkdir_p) $(DESTDIR)@JGREYDDIR@ 
-	@chmod 755 $(DESTDIR)@JGREYDDIR@ 
-	@chown @USER@ $(DESTDIR)@JGREYDDIR@ 
-	@chgrp @GROUP@ $(DESTDIR)@JGREYDDIR@ 
+	@$(mkdir_p) $(DESTDIR)@ZEGREYDDIR@ 
+	@chmod 755 $(DESTDIR)@ZEGREYDDIR@ 
+	@chown @USER@ $(DESTDIR)@ZEGREYDDIR@ 
+	@chgrp @GROUP@ $(DESTDIR)@ZEGREYDDIR@ 
 
 install-tools:
 	@echo "  * Installing Tools"
@@ -958,7 +965,8 @@ install-tools:
 	$(INSTALL_SCRIPT) tools/update-wdb-databases $(DESTDIR)@WORKROOT@/bin
 	$(INSTALL_SCRIPT) tools/check-mta-conf $(DESTDIR)@WORKROOT@/bin
 
-install-data-hook: install-workroot install-dbtools install-workdirs install-tools checkcf
+install-data-hook: install-workroot install-dbtools install-workdirs \
+  install-tools checkcf
 
 install-learn :
 	@echo "  * Installing Bayes Filter toolbox"

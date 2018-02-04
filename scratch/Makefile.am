@@ -13,7 +13,7 @@ ze_extract_url_SOURCES    = ze-extract-url.c
 
 ze_mfilter_SOURCES        = ze-mfilter.c
 
-LDADD                     = @JCHKLIBS@   @LDLIBPCRE@ @BDBLIBS@
+LDADD                     = @ZELIBS@   @LDLIBPCRE@ @BDBLIBS@
 
 AM_CPPFLAGS               = @ZEINCS@ @BDBINCS@
 
