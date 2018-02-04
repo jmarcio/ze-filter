@@ -41,7 +41,7 @@ libjoe_a_SOURCES   =   	ze-oracle-scores.c \
 			ze-msg-score.c \
 			ze-modules.c 
 
-LDADD                 = @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@
+LDADD                 = @ZELIBS@ @LDLIBPCRE@ @BDBLIBS@
 
 AM_CPPFLAGS           = @ZEINCS@ @BDBINCS@
 

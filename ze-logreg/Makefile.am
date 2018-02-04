@@ -6,7 +6,7 @@ bin_PROGRAMS =  \
 ze_lr_SOURCES             = ze-lr.c 
 ze_lr_sim_SOURCES         = ze-lr-sim.c 
 
-LDADD                    = @JCHKLIBS@   @LDLIBPCRE@ @BDBLIBS@
+LDADD                    = @ZELIBS@   @LDLIBPCRE@ @BDBLIBS@
 
 AM_CPPFLAGS              = @ZEINCS@ @BDBINCS@
 

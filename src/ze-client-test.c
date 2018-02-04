@@ -46,7 +46,7 @@ typedef struct conf_T conf_T;
 
 #define CONF_INITIALIZER   {"/tmp/ze-grey-bench", 10000, DEF_TIMES, DEF_TUPLE}
 
-static char        *workdir = "/var/jgreyd";
+static char        *workdir = "/var/ze-greyd";
 
 static char        *ntuple = NULL;
 

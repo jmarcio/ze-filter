@@ -35,7 +35,7 @@
 #define ZE_WDBDIR           "@WORKROOT@/wdb" 
 #define ZE_CONFDIR          "@CONFDIR@"
 
-#define ZE_GREYDDIR         "@JGREYDDIR@"
+#define ZE_GREYDDIR         "@ZEGREYDDIR@"
 #define ZE_GREYD_PID_FILE   "@STATEDIR@/ze-greyd.pid"
 #define ZE_CONF_FILE        "@CONFDIR@/ze-filter.cf"
 

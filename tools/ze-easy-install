@@ -469,7 +469,7 @@ EOT
     push @C, "--with-work-dir=$cf" if ($cf ne "");
 
     $cf = get_option("GreyDir");
-    push @C, "--with-jgrey-dir=$cf" if ($cf ne "");
+    push @C, "--with-ze-greyd-dir=$cf" if ($cf ne "");
 
     $cf = get_option("SpoolDir");
     push @C, "--with-spool-dir=$cf" if ($cf ne "");

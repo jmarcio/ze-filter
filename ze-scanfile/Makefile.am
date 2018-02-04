@@ -5,7 +5,7 @@ ze_scanfile_SOURCES        = ze-scanfile.c
 
 ze_message_tbx_SOURCES     = ze-message-tbx.c
 
-LDADD                     = @JCHKLIBS@  @LDLIBPCRE@ @BDBLIBS@
+LDADD                     = @ZELIBS@  @LDLIBPCRE@ @BDBLIBS@
 
 AM_CPPFLAGS               = @ZEINCS@ @BDBINCS@
 

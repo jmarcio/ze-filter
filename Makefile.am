@@ -11,7 +11,7 @@ SUBDIRS = $(subdirs) \
 	libjoe \
 	src \
 	config/etc \
-        config/cdb \
+  config/cdb \
 	scratch \
 	ze-bayes-tbx \
 	ze-logreg \
@@ -89,10 +89,10 @@ install-workdirs:
 	@chmod 750 $(DESTDIR)@SPOOLDIR@
 	@chown @USER@ $(DESTDIR)@SPOOLDIR@ 
 	@chgrp @GROUP@ $(DESTDIR)@SPOOLDIR@ 
-	@$(mkdir_p) $(DESTDIR)@JGREYDDIR@ 
-	@chmod 755 $(DESTDIR)@JGREYDDIR@ 
-	@chown @USER@ $(DESTDIR)@JGREYDDIR@ 
-	@chgrp @GROUP@ $(DESTDIR)@JGREYDDIR@ 
+	@$(mkdir_p) $(DESTDIR)@ZEGREYDDIR@ 
+	@chmod 755 $(DESTDIR)@ZEGREYDDIR@ 
+	@chown @USER@ $(DESTDIR)@ZEGREYDDIR@ 
+	@chgrp @GROUP@ $(DESTDIR)@ZEGREYDDIR@ 
 
 install-tools:
 	@echo "  * Installing Tools"
@@ -104,8 +104,8 @@ install-tools:
 	$(INSTALL_SCRIPT) tools/update-wdb-databases $(DESTDIR)@WORKROOT@/bin
 	$(INSTALL_SCRIPT) tools/check-mta-conf $(DESTDIR)@WORKROOT@/bin
 
-install-data-hook: install-workroot install-dbtools install-workdirs install-tools checkcf
-
+install-data-hook: install-workroot install-dbtools install-workdirs \
+  install-tools checkcf
 
 install-learn :
 	@echo "  * Installing Bayes Filter toolbox"

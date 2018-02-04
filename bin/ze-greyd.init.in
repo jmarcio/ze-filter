@@ -20,9 +20,9 @@
 #
 # VARIABLES
 #
-JGREYD_HOME=@prefix@/sbin
+ZEGREYD_HOME=@prefix@/sbin
 
-JGREYD_BIN=ze-greyd
+ZEGREYD_BIN=ze-greyd
 
 OPTIONS=" "
 
@@ -33,8 +33,8 @@ CONFDIR=@CONFDIR@
 
 # Get config.
 
-test -f /etc/sysconfig/jgreyd && . /etc/sysconfig/jgreyd
-test -f /etc/default/jgreyd   && . /etc/default/jgreyd
+test -f /etc/sysconfig/ze-greyd && . /etc/sysconfig/ze-greyd
+test -f /etc/default/ze-greyd   && . /etc/default/ze-greyd
 
 
 GREYD_PIDFILE=$STATEDIR/ze-greyd.pid
@@ -126,7 +126,7 @@ setupdirs ()
 
 cleanpidfile ()
 {
-  run=`@PSBIN@ @PSOPT@ | grep $JGREYD_BIN  | grep -c -v grep`
+  run=`@PSBIN@ @PSOPT@ | grep $ZEGREYD_BIN  | grep -c -v grep`
   if [ "$run" = "0" ] ; then
     if [ -f $GREYD_PIDFILE ] ; then
       echo "Removing old PID file..."
@@ -137,7 +137,7 @@ cleanpidfile ()
 
 cleansockfile ()
 {
-  run=`@PSBIN@ @PSOPT@ | grep $JGREYD_BIN  | grep -c -v grep`
+  run=`@PSBIN@ @PSOPT@ | grep $ZEGREYD_BIN  | grep -c -v grep`
   if [ "$run" = "0" ] ; then
     if [ -r $SOCKFILE ] ; then
       echo "Removing old SOCK file..."
@@ -159,15 +159,15 @@ start ()
   cleanpidfile
   cleansockfile
 
-  if [ -f $JGREYD_HOME/$JGREYD_BIN ] ; then
-    echo "Starting $JGREYD_BIN...."
-    $JGREYD_HOME/$JGREYD_BIN $OPTIONS 
-    echo ".... $JGREYD_BIN started !"
+  if [ -f $ZEGREYD_HOME/$ZEGREYD_BIN ] ; then
+    echo "Starting $ZEGREYD_BIN...."
+    $ZEGREYD_HOME/$ZEGREYD_BIN $OPTIONS 
+    echo ".... $ZEGREYD_BIN started !"
   fi
 }
 
 stop () {
-  echo "Stopping $JGREYD_BIN...."
+  echo "Stopping $ZEGREYD_BIN...."
   i=10
   while [ $i -gt 0 -a -f $GREYD_PIDFILE ]; do
     kill `head -1 $GREYD_PIDFILE`

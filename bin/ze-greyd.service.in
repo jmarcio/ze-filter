@@ -1,0 +1,13 @@
+[Unit]
+Description=ze-filter mail filtering service
+
+[Service]
+Type=forking
+PIDFile=/var/run/ze-filter/ze-greyd.pid
+Environment=OPTS=
+EnvironmentFile=-/etc/sysconfig/ze-greyd
+ExecStart=/usr/sbin/ze-greyd $OPTIONS
+
+[Install]
+#WantedBy=multi-user.target
+

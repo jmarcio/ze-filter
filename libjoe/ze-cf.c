@@ -1132,7 +1132,7 @@ configure_after(app)
     char               *envloglevel = NULL;
     int                 level;
 
-    if ((envloglevel = getenv("JCHKMAIL_LOG_LEVEL")) != NULL) {
+    if ((envloglevel = getenv("ZEFILTER_LOG_LEVEL")) != NULL) {
       level = atoi(envloglevel);
       if (level > 0)
         ze_logLevel = level;
@@ -1252,7 +1252,7 @@ configure(app, fname, only_cf)
     {
       char               *envsock = NULL;
 
-      if ((envsock = getenv("JCHKMAIL_SOCKET")) != NULL)
+      if ((envsock = getenv("ZEFILTER_SOCKET")) != NULL)
         strlcpy(sm_sock, envsock, sizeof (sm_sock));
     }
     ZE_MessageInfo(12, "SM_SOCK = %s", sm_sock);

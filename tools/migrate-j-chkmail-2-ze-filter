@@ -366,8 +366,9 @@ REPLACE +             1 rsync.j-chkmail.org  rsync.jose-marcio.org
 REPLACE +             1 j-chkmail.ensmp.fr   rsync.jose-marcio.org
 REPLACE +             2 j-chkmail            ze-filter
 REPLACE +             3 jchkmail             ze-filter
-REPLACE +             4 jgreyd               ze-greyd
-REPLACE +             5 j-                   ze-
+REPLACE +             4 jgreydb              ze-greydb
+REPLACE +             5 jgreyd               ze-greyd
+REPLACE +             6 j-                   ze-
 == END ==
 
 __END__

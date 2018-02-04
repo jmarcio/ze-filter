@@ -31,7 +31,7 @@ libcommon_a_SOURCES   = 	ze-base64.c \
 
 libchkvirus_a_SOURCES   =       ze-avclient.c
 
-LDADD                 = @JCHKLIBS@ @LDLIBPCRE@ @BDBLIBS@
+LDADD                 = @ZELIBS@ @LDLIBPCRE@ @BDBLIBS@
 
 AM_CPPFLAGS           =	@ZEINCS@ @BDBINCS@
 
