@@ -492,18 +492,17 @@ realclean: clean-hook clean-cache distclean
 install-exec-hook:
 	@if [ -d $(SYSTEMD_DIR) ]; \
 	then \
-		/usr/bin/echo " * Installing systemd scripts at $(SYSTEMD_DIR)";\
+		/bin/echo " * Installing systemd scripts at $(SYSTEMD_DIR)";\
 		list='$(SYSTEMD_OBJ)'; \
 		for file in $$list; \
 		do \
-			/usr/bin/cp -p  $$file $(SYSTEMD_DIR);\
-			/usr/bin/chown root:root $(SYSTEMD_DIR)/$$file;\
+			$(INSTALL_SCRIPT) $$file $(SYSTEMD_DIR)/$$file ; \
 		done;\
 	fi
-	@if [ !-d $(SYSTEMD_DIR) -a -d $(RC_DIR) ]; \
-	then \
-		/usr/bin/echo " * Installing init.d scripts at $(RC_DIR)";\
-	fi
+#	@if [ !-d $(SYSTEMD_DIR) -a -d $(RC_DIR) ]; \
+#	then \
+#		/bin/echo " * Installing init.d scripts at $(RC_DIR)";\
+#	fi
 
 uninstall-hook:
 	@if [ -d $(SYSTEMD_DIR) ]; \

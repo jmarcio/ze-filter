@@ -10,5 +10,5 @@ ExecStart=/usr/sbin/ze-greyd $OPTIONS
 ExecStop=/usr/bin/kill $PIDFile 
 
 [Install]
-#WantedBy=multi-user.target
+WantedBy=multi-user.target
 
