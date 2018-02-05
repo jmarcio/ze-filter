@@ -560,7 +560,6 @@ dnl
 
 dnl
 dnl Now let's really check them
-
 dnl Replace `main' with a function in -lmilter:
 dnl Debian Linux install libmilter at /usr/lib/libmilter while
 dnl everybody do it at /usr/lib.

@@ -13481,7 +13481,6 @@ esac
 
 
 
-
 if test ! -f /usr/lib/libmilter$SMLMV.a ;
 then
   if test -f /usr/lib/libmilter/libmilter.a ;
