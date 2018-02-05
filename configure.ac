@@ -438,7 +438,7 @@ AC_MSG_CHECKING([file extensions defined at xfiles.def file])
 XFILES_DEF=""
 cp /dev/null > include/xfiles.inc > /dev/null 2>&1
 cp /dev/null > include/xfilesdef.h > /dev/null 2>&1
-if [ test -f aux/xfiles.def -a -x aux/mk_ext ] ;
+if [ test -f tools/xfiles.def -a -x tools/mk-xfilesdef ] ;
 then
   XFILES_DEF=`tools/mk-xfilesdef tools/xfiles.def`
   $PERL tools/mk-xfilesdef -l tools/xfiles.def > include/xfiles.inc
@@ -1448,6 +1448,7 @@ AC_CONFIG_FILES(config/cdb/Makefile)
 AC_CONFIG_FILES(config/cdb/Makefile.org)
 AC_CONFIG_FILES(config/cdb/get-urlbl.org)
 AC_CONFIG_FILES(config/cdb/get-bayes.org)
+AC_CONFIG_FILES(config/cdb/update-db.sh.org)
 AC_CONFIG_FILES(config/startup/ze-filter.init)
 AC_CONFIG_FILES(config/startup/ze-greyd.init)
 AC_CONFIG_FILES(config/startup/ze-filter.init.rhel)

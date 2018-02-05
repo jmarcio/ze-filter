@@ -18,15 +18,14 @@ cdb_install = 	ze-policy.z-grey.txt.org \
 cdb_remove = 	ze-policy.grey.txt.org \
  ze-policy.badmx.txt.org
 
-cdb_preserve = 	ze-policy.base.txt.org \
- ze-policy.local.txt.org \
+cdb_preserve = 	ze-policy.20-base.txt.org \
+ ze-policy.30-local.txt.org \
  ze-rcpt.txt.org \
  ze-bayes.txt.org \
  ze-urlbl.txt.org \
  Makefile.org
 
-script_preserve = get-urlbl.org \
- get-bayes.org
+script_preserve = update-db.sh.org
 
 OBJECTS = ze-policy.txt.org 
 

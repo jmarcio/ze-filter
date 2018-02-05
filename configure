@@ -13025,11 +13025,11 @@ $as_echo_n "checking file extensions defined at xfiles.def file... " >&6; }
 XFILES_DEF=""
 cp /dev/null > include/xfiles.inc > /dev/null 2>&1
 cp /dev/null > include/xfilesdef.h > /dev/null 2>&1
-if  test -f aux/xfiles.def -a -x aux/mk_ext  ;
+if  test -f tools/xfiles.def -a -x tools/mk-xfilesdef  ;
 then
-  XFILES_DEF=`aux/mk_ext aux/xfiles.def`
-  $PERL aux/mk_ext -l aux/xfiles.def > include/xfiles.inc
-  $PERL aux/mk_ext -i aux/xfiles.def > include/xfilesdef.h
+  XFILES_DEF=`tools/mk-xfilesdef tools/xfiles.def`
+  $PERL tools/mk-xfilesdef -l tools/xfiles.def > include/xfiles.inc
+  $PERL tools/mk-xfilesdef -i tools/xfiles.def > include/xfilesdef.h
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
 $as_echo "ok" >&6; }
@@ -16946,6 +16946,8 @@ ac_config_files="$ac_config_files config/cdb/get-urlbl.org"
 
 ac_config_files="$ac_config_files config/cdb/get-bayes.org"
 
+ac_config_files="$ac_config_files config/cdb/update-db.sh.org"
+
 ac_config_files="$ac_config_files config/startup/ze-filter.init"
 
 ac_config_files="$ac_config_files config/startup/ze-greyd.init"
@@ -17996,6 +17998,7 @@ do
     "config/cdb/Makefile.org") CONFIG_FILES="$CONFIG_FILES config/cdb/Makefile.org" ;;
     "config/cdb/get-urlbl.org") CONFIG_FILES="$CONFIG_FILES config/cdb/get-urlbl.org" ;;
     "config/cdb/get-bayes.org") CONFIG_FILES="$CONFIG_FILES config/cdb/get-bayes.org" ;;
+    "config/cdb/update-db.sh.org") CONFIG_FILES="$CONFIG_FILES config/cdb/update-db.sh.org" ;;
     "config/startup/ze-filter.init") CONFIG_FILES="$CONFIG_FILES config/startup/ze-filter.init" ;;
     "config/startup/ze-greyd.init") CONFIG_FILES="$CONFIG_FILES config/startup/ze-greyd.init" ;;
     "config/startup/ze-filter.init.rhel") CONFIG_FILES="$CONFIG_FILES config/startup/ze-filter.init.rhel" ;;

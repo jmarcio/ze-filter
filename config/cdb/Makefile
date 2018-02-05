@@ -98,7 +98,8 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 DIST_COMMON = $(srcdir)/Makefile.am $(am__DIST_COMMON)
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/include/config.h
-CONFIG_CLEAN_FILES = Makefile.org get-urlbl.org get-bayes.org
+CONFIG_CLEAN_FILES = Makefile.org get-urlbl.org get-bayes.org \
+	update-db.sh.org
 CONFIG_CLEAN_VPATH_FILES =
 AM_V_P = $(am__v_P_$(V))
 am__v_P_ = $(am__v_P_$(AM_DEFAULT_VERBOSITY))
@@ -122,7 +123,7 @@ am__can_run_installinfo = \
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.org.in \
 	$(srcdir)/get-bayes.org.in $(srcdir)/get-urlbl.org.in \
-	$(top_srcdir)/mkinstalldirs
+	$(srcdir)/update-db.sh.org.in $(top_srcdir)/mkinstalldirs
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = ${SHELL} /data/FOSS/dev-ze-filter/ze-filter/missing aclocal-1.15
 AMTAR = $${TAR-tar}
@@ -288,16 +289,14 @@ cdb_install = ze-policy.z-grey.txt.org \
 cdb_remove = ze-policy.grey.txt.org \
  ze-policy.badmx.txt.org
 
-cdb_preserve = ze-policy.base.txt.org \
- ze-policy.local.txt.org \
+cdb_preserve = ze-policy.20-base.txt.org \
+ ze-policy.30-local.txt.org \
  ze-rcpt.txt.org \
  ze-bayes.txt.org \
  ze-urlbl.txt.org \
  Makefile.org
 
-script_preserve = get-urlbl.org \
- get-bayes.org
-
+script_preserve = update-db.sh.org
 OBJECTS = ze-policy.txt.org 
 all: all-am
 
@@ -336,6 +335,8 @@ Makefile.org: $(top_builddir)/config.status $(srcdir)/Makefile.org.in
 get-urlbl.org: $(top_builddir)/config.status $(srcdir)/get-urlbl.org.in
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 get-bayes.org: $(top_builddir)/config.status $(srcdir)/get-bayes.org.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+update-db.sh.org: $(top_builddir)/config.status $(srcdir)/update-db.sh.org.in
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 
 mostlyclean-libtool:

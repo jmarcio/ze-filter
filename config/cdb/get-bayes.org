@@ -18,7 +18,7 @@ do
   [ "$?" = "0" ] && $MAKE -f Makefile
 done
 
-LR2GET="ze-toolbox/ze-lr.txt"
-$RSYNC -avz rsync://$RSERVER/$LR2GET .
+LR2GET="lr-data/"
+$RSYNC -avz rsync://$RSERVER/$LR2GET $LR2GET
 [ "$?" = "0" ] && ze-ndc reload lrdata
 
