@@ -440,9 +440,9 @@ cp /dev/null > include/xfiles.inc > /dev/null 2>&1
 cp /dev/null > include/xfilesdef.h > /dev/null 2>&1
 if [ test -f aux/xfiles.def -a -x aux/mk_ext ] ;
 then
-  XFILES_DEF=`aux/mk_ext aux/xfiles.def`
-  $PERL aux/mk_ext -l aux/xfiles.def > include/xfiles.inc
-  $PERL aux/mk_ext -i aux/xfiles.def > include/xfilesdef.h
+  XFILES_DEF=`tools/mk-xfilesdef tools/xfiles.def`
+  $PERL tools/mk-xfilesdef -l tools/xfiles.def > include/xfiles.inc
+  $PERL tools/mk-xfilesdef -i tools/xfiles.def > include/xfilesdef.h
 fi
 AC_MSG_RESULT(ok)
 AC_SUBST(XFILES_DEF)
