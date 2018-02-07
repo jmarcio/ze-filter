@@ -169,6 +169,31 @@ chomp $Date;
 # ------------------------------------------------
 #
 #
+if ($op eq "profiles") {
+  printf "* Profiles defined :\n";
+  my @Profiles = keys %ProfilesOK;
+  if ($#Profiles <= 0) {
+    printf "  * No configuration file or no profile defined ???\n";
+    exit 0;
+  }
+  foreach my $n (@Profiles) {
+    printf "  * Name : %s\n", $n;
+  }
+  printf "\n";
+  exit 0;
+}
+
+# ------------------------------------------------
+#
+#
+if ($profile ne "" && ! exists $ProfilesOK{$profile}) {
+  printf STDERR "* Unknown profile : %s\n", $profile;
+  exit 1;
+}
+
+# ------------------------------------------------
+#
+#
 if ($op =~ /^conf$/i) {
   printf "  %-15s : %-32s - %s\n", "", "Default", "Profile ($profile)";
   printf "%s\n", "-" x 80;
@@ -186,21 +211,10 @@ if ($op =~ /^conf$/i) {
   exit 0;
 }
 
-# ------------------------------------------------
-#
-#
-if ($op eq "profiles") {
-  printf "* Profiles defined :\n";
-  my @Profiles = keys %ProfilesOK;
-  if ($#Profiles <= 0) {
-    printf "  * No configuration file or no profile defined ???\n";
-    exit 0;
-  }
-  foreach my $n (@Profiles) {
-    printf "  * Name : %s\n", $n;
-  }
-  printf "\n";
-  exit 0;
+if ($op ne "" && $op ne "check") {
+  printf STDERR "* Option unknown : %s\n", $op;
+  printf STDERR "  What do you want to do ???\n";
+  exit 1;
 }
 
 # ------------------------------------------------
@@ -1023,8 +1037,9 @@ sub report {
       foreach $file (sort @{$MSGS{$id}{yfile}}) {
         push @ULINES, sprintf "      %s", $file;
       }
-      push @ULINES, sprintf "   VIRUS        %s", $msg
-        if defined $msg && $msg ne "";
+      if (defined $msg && $msg ne "") {
+        push @ULINES, sprintf "   VIRUS        %s", $msg;
+      }
       push @ULINES, sprintf "   ACTION       %s", GetActionString($action);
       push @ULINES, "";
     }
