@@ -16941,10 +16941,6 @@ ac_config_files="$ac_config_files config/cdb/Makefile"
 
 ac_config_files="$ac_config_files config/cdb/Makefile.org"
 
-ac_config_files="$ac_config_files config/cdb/get-urlbl.org"
-
-ac_config_files="$ac_config_files config/cdb/get-bayes.org"
-
 ac_config_files="$ac_config_files config/cdb/update-db.sh.org"
 
 ac_config_files="$ac_config_files config/startup/ze-filter.init"
@@ -17995,8 +17991,6 @@ do
     "config/etc/Makefile") CONFIG_FILES="$CONFIG_FILES config/etc/Makefile" ;;
     "config/cdb/Makefile") CONFIG_FILES="$CONFIG_FILES config/cdb/Makefile" ;;
     "config/cdb/Makefile.org") CONFIG_FILES="$CONFIG_FILES config/cdb/Makefile.org" ;;
-    "config/cdb/get-urlbl.org") CONFIG_FILES="$CONFIG_FILES config/cdb/get-urlbl.org" ;;
-    "config/cdb/get-bayes.org") CONFIG_FILES="$CONFIG_FILES config/cdb/get-bayes.org" ;;
     "config/cdb/update-db.sh.org") CONFIG_FILES="$CONFIG_FILES config/cdb/update-db.sh.org" ;;
     "config/startup/ze-filter.init") CONFIG_FILES="$CONFIG_FILES config/startup/ze-filter.init" ;;
     "config/startup/ze-greyd.init") CONFIG_FILES="$CONFIG_FILES config/startup/ze-greyd.init" ;;
@@ -19239,8 +19233,6 @@ ltmain=$ac_aux_dir/ltmain.sh
     "default":C) chmod 755 bin/ze-filter.init
 			      chmod 755 bin/ze-filter.init.rhel
 			      chmod 755 bin/ze-greyd.init
-			      chmod 755 config/cdb/get-urlbl.org
-			      chmod 755 config/cdb/get-bayes.org
                               echo ""
                               echo "*** Configuring PCRE" ;;
 

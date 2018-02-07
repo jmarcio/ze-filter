@@ -29,10 +29,42 @@ my $appl = `basename $0`;
 chomp $appl;
 
 my $log_opts    = 'pid,cons,ndelay,nowait';
-my $log_program = 'q-manager';
+my $log_program = $appl;
 
 my %StaticData = ();
 GetStaticData(\%StaticData);
+
+my %ProfilesOK     = ();
+my @ProfileOptions = qw(
+  scale
+  agemax
+  agemin
+  maxfree
+  nohold
+  minhold
+  NL
+  dirbad
+  dirgood
+  dirspool
+  NL
+  extensions
+  NL
+  report
+  mfrom
+  mreplyto
+  mreport
+  NL
+  notify
+  notifyfrom
+  notifyto
+  NL
+  facility
+  clamdscan
+  smbin
+  smopt);
+
+my %ConfDefaultProfile = ();
+my %ConfProfile        = ();
 
 # === begin options conf ===
 
@@ -118,17 +150,62 @@ foreach my $k (keys %Conf) {
 
 # === end options conf ===
 
-if ($help || $op =~ /help/i) {
+$op = lc $op;
+
+if ($help || $op eq "help") {
   usage();
   exit 0;
 }
 
+# ------------------------------------------------
+#
+#
 my $Now      = time();
 my $Hostname = `hostname`;
 chomp $Hostname;
 my $Date = `date`;
 chomp $Date;
 
+# ------------------------------------------------
+#
+#
+if ($op =~ /^conf$/i) {
+  printf "  %-15s : %-32s - %s\n", "", "Default", "Profile ($profile)";
+  printf "%s\n", "-" x 80;
+  foreach my $k (@ProfileOptions) {
+    if ($k eq "NL") {
+      printf "\n";
+      next;
+    }
+    my $hx = \%Conf;
+    my $hy = \%ConfDefaultProfile;
+    my $x  = defined $hx->{$k} ? $hx->{$k} : "undefined";
+    my $y  = defined $hy->{$k} ? $hy->{$k} : "undefined";
+    printf "* %-15s : %-32s - %s\n", $k, $y, $x;
+  }
+  exit 0;
+}
+
+# ------------------------------------------------
+#
+#
+if ($op eq "profiles") {
+  printf "* Profiles defined :\n";
+  my @Profiles = keys %ProfilesOK;
+  if ($#Profiles <= 0) {
+    printf "  * No configuration file or no profile defined ???\n";
+    exit 0;
+  }
+  foreach my $n (@Profiles) {
+    printf "  * Name : %s\n", $n;
+  }
+  printf "\n";
+  exit 0;
+}
+
+# ------------------------------------------------
+#
+#
 openlog($log_program, $log_opts, $Conf{facility});
 
 if (lc $Conf{scale} eq "hour") {
@@ -139,21 +216,14 @@ if (lc $Conf{scale} eq "minutes") {
   $Conf{agemax} *= 60;
   $Conf{agemin} *= 60;
 }
+$Conf{scale} = "seconds";
 
 mkdir $Conf{dirgood} unless -d $Conf{dirgood} || $Conf{dirgood} eq "remove";
-mkdir $Conf{dirbad}  unless -d $Conf{dirbad} || $Conf{dirbad} eq "remove";
+mkdir $Conf{dirbad}  unless -d $Conf{dirbad}  || $Conf{dirbad} eq "remove";
 
 # ------------------------------------------------
 #
 #
-
-if ($op =~ /^conf$/i) {
-  foreach my $k (sort keys %Conf) {
-    printf "* %-15s : %s\n", $k, $Conf{$k};
-  }
-  exit 0;
-}
-
 my %MSGS = ();
 
 my %FExt = ();
@@ -1229,7 +1299,9 @@ sub ReadConfigurationFile {
     $r = cc_conf_read();
   }
 
-  my @Cf = qw(mreplyto
+  # This ???
+  my @Cf = qw(
+    mreplyto
     mfrom
     mreport
     notify
@@ -1240,31 +1312,41 @@ sub ReadConfigurationFile {
     dirbad
     agemin
     agemax
+    scale
     maxfree
     minhold
     nohold
     clamdscan
-    smbin);
+    smbin
+    smopt
+    extensions);
 
+  # or this ???
   @Cf = keys %Conf;
 
-  my %ConfFromFile = ();
+  %ConfProfile = ();
   for my $p (@Cf) {
     my $n = cc_conf_get_count($p, "profile", "default");
     if ($n > 0) {
-      $ConfFromFile{$p} = cc_conf_get_ind($p, 0, "profile", "default");
+      $ConfProfile{$p}        = cc_conf_get_ind($p, 0, "profile", "default");
+      $ConfDefaultProfile{$p} = cc_conf_get_ind($p, 0, "profile", "default");
     }
   }
   if (defined $profile && $profile ne "" && $profile ne "default") {
     for my $p (@Cf) {
       my $n = cc_conf_get_count($p, "profile", $profile);
       if ($n > 0) {
-        $ConfFromFile{$p} = cc_conf_get_ind($p, 0, "profile", $profile);
+        $ConfProfile{$p} = cc_conf_get_ind($p, 0, "profile", $profile);
       }
     }
   }
-  foreach my $key (keys %ConfFromFile) {
-    $Conf{$key} = $ConfFromFile{$key};
+  foreach my $key (keys %ConfProfile) {
+    $Conf{$key} = $ConfProfile{$key};
+  }
+
+  {
+    my @p = cc_conf_get_names("profile");
+    %ProfilesOK = map {$_ => 1} @p;
   }
 
   if ($debug) {
@@ -1280,8 +1362,8 @@ sub ReadConfigurationFile {
 
     # obs : this doesn't work : this code is called before cli options call
     printf "* Options read from configuration file $ConfFile\n";
-    for my $k (sort keys %ConfFromFile) {
-      printf "* %-15s %s\n", $k, $ConfFromFile{$k};
+    for my $k (sort keys %ConfProfile) {
+      printf "* %-15s %s\n", $k, $ConfProfile{$k};
     }
     printf "* %s\n", "=" x 64;
     exit(0);
@@ -1403,7 +1485,7 @@ TOP       expediteurs inconnus.
 TOP    
 TOP    Cordialement,
 TOP    
-TOP    Le Centre de Calcul et Systemes d'Information
+TOP    
 
 
 

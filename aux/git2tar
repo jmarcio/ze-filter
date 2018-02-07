@@ -1,0 +1,12 @@
+#! /bin/bash
+
+
+DevRel=$(cat aux/release | sed s/develop/dev/)
+Version=$(cat aux/version)
+
+git archive --format=tgz --prefix=$DevRel/ \
+  -o ../$DevRel.tgz develop
+
+git archive --format=tgz --prefix=ze-filter-$Version/ \
+  -o ../ze-filter-$Version.tgz master
+

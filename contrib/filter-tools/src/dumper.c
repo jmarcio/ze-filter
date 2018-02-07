@@ -3,6 +3,7 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <malloc.h>
+#include <unistd.h>
 
 void
 dump_buf(ptr, l, ni)

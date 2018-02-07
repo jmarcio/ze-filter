@@ -1445,8 +1445,6 @@ AC_CONFIG_FILES(ze-logserver/Makefile)
 AC_CONFIG_FILES(config/etc/Makefile)
 AC_CONFIG_FILES(config/cdb/Makefile)
 AC_CONFIG_FILES(config/cdb/Makefile.org)
-AC_CONFIG_FILES(config/cdb/get-urlbl.org)
-AC_CONFIG_FILES(config/cdb/get-bayes.org)
 AC_CONFIG_FILES(config/cdb/update-db.sh.org)
 AC_CONFIG_FILES(config/startup/ze-filter.init)
 AC_CONFIG_FILES(config/startup/ze-greyd.init)
@@ -1460,8 +1458,6 @@ dnl AC_CONFIG_FILES([$MODMAKE])
 AC_CONFIG_COMMANDS([default],[[chmod 755 bin/ze-filter.init]
 			      [chmod 755 bin/ze-filter.init.rhel]
 			      [chmod 755 bin/ze-greyd.init]
-			      [chmod 755 config/cdb/get-urlbl.org]
-			      [chmod 755 config/cdb/get-bayes.org]
                               [echo ""]
                               [echo "*** Configuring PCRE"]],
                               [[]])

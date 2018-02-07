@@ -98,8 +98,7 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 DIST_COMMON = $(srcdir)/Makefile.am $(am__DIST_COMMON)
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/include/config.h
-CONFIG_CLEAN_FILES = Makefile.org get-urlbl.org get-bayes.org \
-	update-db.sh.org
+CONFIG_CLEAN_FILES = Makefile.org update-db.sh.org
 CONFIG_CLEAN_VPATH_FILES =
 AM_V_P = $(am__v_P_$(V))
 am__v_P_ = $(am__v_P_$(AM_DEFAULT_VERBOSITY))
@@ -122,7 +121,6 @@ am__can_run_installinfo = \
   esac
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.org.in \
-	$(srcdir)/get-bayes.org.in $(srcdir)/get-urlbl.org.in \
 	$(srcdir)/update-db.sh.org.in $(top_srcdir)/mkinstalldirs
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = ${SHELL} /data/FOSS/dev-ze-filter/ze-filter/missing aclocal-1.15
@@ -214,7 +212,7 @@ STRIP = strip
 TOPDIR = /data/FOSS/dev-ze-filter/ze-filter
 UNAME = Linux perere.paris.ensmp.fr 4.14.13-300.fc27.x86_64 #1 SMP Thu Jan 11 04:00:01 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
 USER = ze-filter
-VERSION = ze-filter-0.5.0-develop-180205
+VERSION = ze-filter-0.5.0-develop-180206
 WORKROOT = /var/ze-filter
 XFILES_DEF = ade adp app bas bat bin btm chm cmd com cpl csh dll drv exe fxp hlp hta inf ini ins isp js jse ksh lnk mdb mde mdt mdw msc msi msp mst ops pcd pif prg reg scr sct shb shs sys url vb vbe vbs vxd wsc wsf wsh xmf
 ZEGREYDDIR = /var/ze-filter/ze-greydb
@@ -331,10 +329,6 @@ $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
 Makefile.org: $(top_builddir)/config.status $(srcdir)/Makefile.org.in
-	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
-get-urlbl.org: $(top_builddir)/config.status $(srcdir)/get-urlbl.org.in
-	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
-get-bayes.org: $(top_builddir)/config.status $(srcdir)/get-bayes.org.in
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 update-db.sh.org: $(top_builddir)/config.status $(srcdir)/update-db.sh.org.in
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
