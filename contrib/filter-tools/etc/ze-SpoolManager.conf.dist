@@ -33,11 +33,11 @@ notifyto     filtermaster@domain.com
 #
 #
 # Quarantine directories
-dirspool     /var/spool/jchkmail
+dirspool     /var/spool/ze-filter
 # where to move good messages
-dirgood      /var/spool/jchkmail-good
+dirgood      /var/spool/ze-filter-good
 # where to move bad messages
-dirbad       /var/spool/jchkmail-bad
+dirbad       /var/spool/ze-filter-bad
 
 #
 # time scale
