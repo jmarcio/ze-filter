@@ -1,4 +1,4 @@
-#!/opt/perl/bin/perl -w
+#!/usr/bin/perl -w
 
 use strict;
 
@@ -10,33 +10,33 @@ my $RRD_DIR = "rrd";
 
 my $last_update = min_last_rrd();
 
-
 my @FIELDS = qw(CONN ABRT MSGS KBYTES RCPT
-                FILES XFILES THROTTLE OPENCONN
-                BADRCPT LOCALUSER RESFAIL RESFORG
-                MATCHING ORACLE URLBL SPAMTRAP GREYMSGS GREYRCPT);
+  FILES XFILES THROTTLE OPENCONN
+  BADRCPT LOCALUSER RESFAIL RESFORG
+  MATCHING ORACLE URLBL SPAMTRAP GREYMSGS GREYRCPT);
 
 my $NB_VALUES = $#FIELDS;
 
-
-my ($stamp, $conn, $abrt, $msgs, $kbytes, $rcpt, $files,
-    $xfiles, $throttle, $badrcpt, $localuser, $resfail,
-    $openconn, $resforg, $matching, $oracle, $urlbl, 
-    $spamtrap, $greymsgs, $greyrcpt);
+my (
+    $stamp,     $conn,    $abrt,     $msgs,     $kbytes,
+    $rcpt,      $files,   $xfiles,   $throttle, $badrcpt,
+    $localuser, $resfail, $openconn, $resforg,  $matching,
+    $oracle,    $urlbl,   $spamtrap, $greymsgs, $greyrcpt
+    );
 
 my ($cmd);
 
-my %M1 = ();
-my %M2 = ();
+my %M1   = ();
+my %M2   = ();
 my %DIFF = ();
 
 my ($hold, $hnew) = (\%M1, \%M2);
 
-printf "last update = %d \n", $last_update;
+#printf "last update = %d \n", $last_update;
 
-my $nb = 0;
+my $nb   = 0;
 my $nlog = 0;
-my $nl = 0;
+my $nl   = 0;
 
 foreach (<>) {
   chomp;
@@ -61,12 +61,12 @@ foreach (<>) {
     $hnew->{$p} = $v if (defined($p) && defined($v));
   }
 
-   my $v;
+  my $v;
 
   foreach $v (@FIELDS) {
     $DIFF{$v} = 0;
     if (exists($hnew->{$v})) {
-      $DIFF{$v} = $hnew->{$v} -  $hold->{$v} if exists($hold->{$v});
+      $DIFF{$v} = $hnew->{$v} - $hold->{$v} if exists($hold->{$v});
     }
   }
 
@@ -85,6 +85,7 @@ foreach (<>) {
         printf "-> %-20s %5d\n", $v, $DIFF{$v};
         $nlog++;
       }
+
       #printf "-> %-20s %5d\n", $v, $DIFF{$v};
       #$nlog++ if $v eq "KBYTES";
       last if $nlog == 20;
@@ -92,6 +93,7 @@ foreach (<>) {
   }
 
   if ($DIFF{"KBYTES"} > 0) {
+
     # printf "-> %d : KBYTES = %d\n", $stamp, $DIFF{"KBYTES"}
   }
 
@@ -99,36 +101,28 @@ foreach (<>) {
 
   #last if ($nb > 0);
 
-  $cmd = sprintf ("%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d",
-                  $stamp,
-                  $DIFF{"CONN"},
-                  $DIFF{"ABRT"},
-                  $DIFF{"MSGS"},
-                  $DIFF{"KBYTES"},
-                  $DIFF{"RCPT"},
-                  $DIFF{"FILES"},
-                  $DIFF{"XFILES"},
-                  $DIFF{"THROTTLE"},
-                  $DIFF{"OPENCONN"},
-                  $DIFF{"BADRCPT"},
-                  $DIFF{"LOCALUSER"},
-                  $DIFF{"RESFAIL"},
-                  $DIFF{"RESFORG"},
-                  $DIFF{"MATCHING"},
-                  $DIFF{"ORACLE"},
-                  $DIFF{"URLBL"},
-                  $DIFF{"SPAMTRAP"},
-		  $DIFF{"GREYMSGS"},
-		  $DIFF{"GREYRCPT"}
-		 );
+  $cmd = sprintf(
+                 "%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d",
+                 $stamp,            $DIFF{"CONN"},    $DIFF{"ABRT"},
+                 $DIFF{"MSGS"},     $DIFF{"KBYTES"},  $DIFF{"RCPT"},
+                 $DIFF{"FILES"},    $DIFF{"XFILES"},  $DIFF{"THROTTLE"},
+                 $DIFF{"OPENCONN"}, $DIFF{"BADRCPT"}, $DIFF{"LOCALUSER"},
+                 $DIFF{"RESFAIL"},  $DIFF{"RESFORG"}, $DIFF{"MATCHING"},
+                 $DIFF{"ORACLE"},   $DIFF{"URLBL"},   $DIFF{"SPAMTRAP"},
+                 $DIFF{"GREYMSGS"}, $DIFF{"GREYRCPT"}
+                 );
 
-  RRDs::update("$RRD_DIR/ze-filter.rrd",
-               "--template=" .
-               "CONN:ABRT:MSGS:KBYTES:RCPT:" .
-               "FILES:XFILES:THROTTLE:OPENCONN:BADRCPT:LOCALUSER:" .
-               "RESFAIL:RESFORG:MATCHING:ORACLE:URLBL:SPAMTRAP:GREYMSGS:GREYRCPT", $cmd);
+  RRDs::update(
+         "$RRD_DIR/ze-filter.rrd",
+         "--template="
+           . "CONN:ABRT:MSGS:KBYTES:RCPT:"
+           . "FILES:XFILES:THROTTLE:OPENCONN:BADRCPT:LOCALUSER:"
+           . "RESFAIL:RESFORG:MATCHING:ORACLE:URLBL:SPAMTRAP:GREYMSGS:GREYRCPT",
+         $cmd
+         );
 
   my $ERR = RRDs::error;
+
   # die "ERREUR pendant m.a.j. de $RRD_DIR/ze-filter.rrd : $ERR\n" if $ERR;
 }
 
@@ -139,17 +133,14 @@ exit 0;
 #   LAST  PID   Size Resident   Shared  Private  Process
 #
 
-
-
-
 #################################
 #
 #
 sub min_last_rrd {
   my $result = time();
 
-  if ( -f "$RRD_DIR/ze-filter.rrd") {
-    $result = RRDs::last ("$RRD_DIR/ze-filter.rrd");
+  if (-f "$RRD_DIR/ze-filter.rrd") {
+    $result = RRDs::last("$RRD_DIR/ze-filter.rrd");
   }
 
   printf "RESULT : %d\n", $result;
@@ -158,7 +149,7 @@ sub min_last_rrd {
   if ($ERR) {
     print "ERREUR pendant execution RRDs::last : $ERR\n";
   }
-  $result = 0 if ! defined($result);
+  $result = 0 if !defined($result);
   return $result;
 }
 
@@ -166,13 +157,11 @@ sub min_last_rrd {
 #
 #
 #
-sub get_param_value
-{
+sub get_param_value {
   my ($tag, undef) = @_;
 
-  return (undef,undef) unless $tag =~ /([^=]*)=\(([^)]*)\)/;
+  return (undef, undef) unless $tag =~ /([^=]*)=\(([^)]*)\)/;
 
   return ($1, $2);
 }
-
 

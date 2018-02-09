@@ -1,0 +1,450 @@
+#! /usr/bin/perl -w
+
+# this is for after install
+use lib qw( /opt/rrdtool/lib/perl ../lib/perl );
+
+$end = 0;
+
+if ($end < 0) {
+  $si = sprintf "%dh", $end - 6;
+  $sf = sprintf "%dh", $end;
+} else {
+  $si = "-6d";
+  $sf = "now";
+}
+
+if (1) {
+  $sf = "now";
+} else {
+  $sf = "now";
+}
+
+use RRDs;
+
+my $RRD_DIR = "rrd";
+my $IMG_DIR = "images";
+
+my @FIELDS = qw(
+  CONN ABRT MSGS KBYTES RCPT FILES XFILES THROTTLE
+  BADRCPT LOCALUSER RESFAIL RESFORG MATCHING ORACLE URLBL
+  SPAMTRAP GREYMSGS GREYRCPT
+  );
+
+#   filename
+#   title
+#   end
+#   vertical-label
+
+my %GRAPH = ();
+
+$GRAPH{0}{file}  = "day";
+$GRAPH{0}{title} = "(1 day)";
+$GRAPH{0}{start} = "-1d";
+$GRAPH{0}{label} = " heure";
+
+$GRAPH{1}{file}  = "biday";
+$GRAPH{1}{title} = "(2 day)";
+$GRAPH{1}{start} = "-2d";
+$GRAPH{1}{label} = " heure";
+
+$GRAPH{2}{file}  = "week";
+$GRAPH{2}{title} = "(1 week)";
+$GRAPH{2}{start} = "-1w";
+$GRAPH{2}{label} = " heure";
+
+$GRAPH{3}{file}  = "month";
+$GRAPH{3}{title} = "(1 month)";
+$GRAPH{3}{start} = "-1m";
+$GRAPH{3}{label} = " heure";
+
+$GRAPH{4}{file}  = "bimonth";
+$GRAPH{4}{title} = "(2 month)";
+$GRAPH{4}{start} = "-2m";
+$GRAPH{4}{label} = " heure";
+
+$GRAPH{5}{file}  = "year";
+$GRAPH{5}{title} = "(1 year)";
+$GRAPH{5}{start} = "-1y";
+$GRAPH{5}{label} = " heure";
+
+my $LINE = "LINE2";
+
+printf "Let's go... \n";
+
+my $i;
+foreach $i (sort keys %GRAPH) {
+  my $fname = $GRAPH{$i}{file};
+  my $title = $GRAPH{$i}{title};
+  my $start = $GRAPH{$i}{start};
+  my $label = $GRAPH{$i}{label};
+  my $ERR   = 0;
+
+  $label = "hour";
+
+  printf "Doing graph for scale : %s\n", $title;
+
+  RRDs::graph(
+              "$IMG_DIR/charge.$fname.png",
+              "--title",
+              "Load $title",
+              "--start",
+              $start,
+              "--end",
+              $sf,
+              "--lower-limit",
+              0,
+              "--imgformat",
+              "PNG",
+              "--vertical-label",
+              " units / $label",
+              "--width",
+              250,
+              "--height",
+              150,
+              "DEF:CONN=$RRD_DIR/ze-filter.rrd:CONN:AVERAGE",
+              "DEF:MSGS=$RRD_DIR/ze-filter.rrd:MSGS:AVERAGE",
+              "DEF:RCPT=$RRD_DIR/ze-filter.rrd:RCPT:AVERAGE",
+              "CDEF:a=CONN,12,*",
+              "CDEF:b=MSGS,12,*",
+              "CDEF:c=RCPT,12,*",
+              "$LINE:a#0000FF:Connections",
+              "$LINE:b#008800:Msgs",
+              "$LINE:c#FF0000:Rcpt"
+              );
+
+  $ERR = RRDs::error;
+  print "ERREUR pendant execution RRDs::graph : $ERR\n", $ERR if $ERR;
+
+  RRDs::graph(
+              "$IMG_DIR/greyres.$fname.png",
+              "--title",
+              "Greylisting $title",
+              "--start",
+              $start,
+              "--end",
+              $sf,
+              "--lower-limit",
+              0,
+              "--imgformat",
+              "PNG",
+              "--vertical-label",
+              " units / $label",
+              "--width",
+              250,
+              "--height",
+              150,
+              "DEF:CONN=$RRD_DIR/ze-filter.rrd:CONN:AVERAGE",
+              "DEF:MSGS=$RRD_DIR/ze-filter.rrd:MSGS:AVERAGE",
+              "DEF:GREYMSGS=$RRD_DIR/ze-filter.rrd:GREYMSGS:AVERAGE",
+              "DEF:GREYRCPT=$RRD_DIR/ze-filter.rrd:GREYRCPT:AVERAGE",
+              "CDEF:a=CONN,12,*",
+              "CDEF:b=MSGS,12,*",
+              "CDEF:c=GREYMSGS,12,*",
+              "CDEF:d=GREYRCPT,12,*",
+              "$LINE:a#0000FF:Connections",
+              "$LINE:b#008800:Messages",
+              "$LINE:c#FF0000:Grey msgs",
+              "$LINE:d#00FF00:Grey rcpt"
+              );
+
+  $ERR = RRDs::error;
+  print "ERREUR pendant execution RRDs::graph : $ERR\n", $ERR if $ERR;
+
+  RRDs::graph(
+              "$IMG_DIR/files.$fname.png",
+              "--title",
+              "Files $title",
+              "--start",
+              $start,
+              "--end",
+              $sf,
+              "--lower-limit",
+              0,
+              "--imgformat",
+              "PNG",
+              "--vertical-label",
+              " units / $label",
+              "--width",
+              250,
+              "--height",
+              150,
+              "DEF:FILES=$RRD_DIR/ze-filter.rrd:FILES:AVERAGE",
+              "DEF:XFILES=$RRD_DIR/ze-filter.rrd:XFILES:AVERAGE",
+              "CDEF:a=FILES,12,*",
+              "CDEF:b=XFILES,12,*",
+              "$LINE:a#0000FF:Files",
+              "$LINE:b#FF0000:X-Files"
+              );
+
+  $ERR = RRDs::error;
+  print "ERREUR pendant execution RRDs::graph : $ERR\n", $ERR if $ERR;
+
+  RRDs::graph(
+              "$IMG_DIR/xfiles.$fname.png",
+              "--title",          "X-Files $title",
+              "--start",          $start,
+              "--end",            $sf,
+              "--lower-limit",    0,
+              "--imgformat",      "PNG",
+              "--vertical-label", " units / $label",
+              "--width", 250, "--height", 150,
+              "DEF:XFILES=$RRD_DIR/ze-filter.rrd:XFILES:AVERAGE",
+              "CDEF:a=XFILES,12,*",
+              "$LINE:a#FF0000:X-Files"
+              );
+
+  $ERR = RRDs::error;
+  print "ERREUR pendant execution RRDs::graph : $ERR\n", $ERR if $ERR;
+
+  RRDs::graph(
+              "$IMG_DIR/volume.$fname.png",
+              "--title",          "Volume $title",
+              "--start",          $start,
+              "--end",            $sf,
+              "--lower-limit",    0,
+              "--imgformat",      "PNG",
+              "--vertical-label", " units / $label",
+              "--width", 250, "--height", 150,
+              "DEF:KBYTES=$RRD_DIR/ze-filter.rrd:KBYTES:AVERAGE",
+              "CDEF:a=KBYTES,12288,*",
+              "$LINE:a#0000FF:Bytes"
+              );
+
+  $ERR = RRDs::error;
+  print "ERREUR pendant execution RRDs::graph : $ERR\n", $ERR if $ERR;
+
+  RRDs::graph(
+              "$IMG_DIR/spam.$fname.png",
+              "--title",
+              "Spam - content $title",
+              "--start",
+              $start,
+              "--end",
+              $sf,
+              "--lower-limit",
+              0,
+              "--imgformat",
+              "PNG",
+              "--vertical-label",
+              " units / $label",
+              "--width",
+              250,
+              "--height",
+              150,
+              "DEF:MATCHING=$RRD_DIR/ze-filter.rrd:MATCHING:AVERAGE",
+              "DEF:ORACLE=$RRD_DIR/ze-filter.rrd:ORACLE:AVERAGE",
+              "DEF:URLBL=$RRD_DIR/ze-filter.rrd:URLBL:AVERAGE",
+              "CDEF:a=MATCHING,12,*",
+              "CDEF:b=ORACLE,12,*",
+              "CDEF:c=URLBL,12,*",
+              "$LINE:a#FF0000:Regex",
+              "$LINE:b#00FF00:Oracle",
+              "$LINE:c#0000FF:URLBL"
+              );
+
+  $ERR = RRDs::error;
+  print "ERREUR pendant execution RRDs::last : $ERR\n", $ERR if $ERR;
+
+  RRDs::graph(
+              "$IMG_DIR/behaviour-open.$fname.png",
+              "--title",
+              "Spam - behaviour connections $title",
+              "--start",
+              $start,
+              "--end",
+              $sf,
+              "--lower-limit",
+              0,
+              "--imgformat",
+              "PNG",
+              "--vertical-label",
+              " units / $label",
+              "--width",
+              250,
+              "--height",
+              150,
+              "DEF:OPENCONN=$RRD_DIR/ze-filter.rrd:OPENCONN:AVERAGE",
+              "CDEF:a=OPENCONN,12,*",
+              "$LINE:a#0000FF:ConnOpen"
+              );
+
+  $ERR = RRDs::error;
+  print "ERREUR pendant execution RRDs::last : $ERR\n", $ERR if $ERR;
+
+  RRDs::graph(
+              "$IMG_DIR/behaviour-conn.$fname.png",
+              "--title",
+              "Spam - behaviour connections $title",
+              "--start",
+              $start,
+              "--end",
+              $sf,
+              "--lower-limit",
+              0,
+              "--imgformat",
+              "PNG",
+              "--vertical-label",
+              " units / $label",
+              "--width",
+              250,
+              "--height",
+              150,
+              "DEF:THROTTLE=$RRD_DIR/ze-filter.rrd:THROTTLE:AVERAGE",
+              "DEF:RESFAIL=$RRD_DIR/ze-filter.rrd:RESFAIL:AVERAGE",
+              "DEF:RESFORG=$RRD_DIR/ze-filter.rrd:RESFORG:AVERAGE",
+              "CDEF:a=THROTTLE,12,*",
+              "CDEF:b=RESFAIL,12,*",
+              "CDEF:c=RESFORG,12,*",
+              "$LINE:a#0000FF:ConnRate",
+              "$LINE:b#008800:Resfail",
+              "$LINE:c#FF0000:Resforg"
+              );
+
+  $ERR = RRDs::error;
+  print "ERREUR pendant execution RRDs::last : $ERR\n", $ERR if $ERR;
+
+  RRDs::graph(
+              "$IMG_DIR/behaviour-conn-1.$fname.png",
+              "--title",
+              "Spam - behaviour connections $title",
+              "--start",
+              $start,
+              "--end",
+              $sf,
+              "--lower-limit",
+              0,
+              "--imgformat",
+              "PNG",
+              "--vertical-label",
+              " units / $label",
+              "--width",
+              250,
+              "--height",
+              150,
+              "DEF:THROTTLE=$RRD_DIR/ze-filter.rrd:THROTTLE:AVERAGE",
+              "CDEF:a=THROTTLE,12,*",
+              "$LINE:a#0000FF:ConnRate"
+              );
+
+  $ERR = RRDs::error;
+  print "ERREUR pendant execution RRDs::last : $ERR\n", $ERR if $ERR;
+
+  RRDs::graph(
+              "$IMG_DIR/behaviour-conn-2.$fname.png",
+              "--title",
+              "Spam - behaviour connections $title",
+              "--start",
+              $start,
+              "--end",
+              $sf,
+              "--lower-limit",
+              0,
+              "--imgformat",
+              "PNG",
+              "--vertical-label",
+              " units / $label",
+              "--width",
+              250,
+              "--height",
+              150,
+              "DEF:RESFAIL=$RRD_DIR/ze-filter.rrd:RESFAIL:AVERAGE",
+              "DEF:RESFORG=$RRD_DIR/ze-filter.rrd:RESFORG:AVERAGE",
+              "CDEF:a=RESFAIL,12,*",
+              "CDEF:b=RESFORG,12,*",
+              "$LINE:a#008800:Resfail",
+              "$LINE:b#FF0000:Resforg"
+              );
+
+  $ERR = RRDs::error;
+  print "ERREUR pendant execution RRDs::last : $ERR\n", $ERR if $ERR;
+
+  RRDs::graph(
+              "$IMG_DIR/behaviour-users.$fname.png",
+              "--title",
+              "Spam - behaviour users $title",
+              "--start",
+              $start,
+              "--end",
+              $sf,
+              "--lower-limit",
+              0,
+              "--imgformat",
+              "PNG",
+              "--vertical-label",
+              " units / $label",
+              "--width",
+              250,
+              "--height",
+              150,
+              "DEF:LOCALUSER=$RRD_DIR/ze-filter.rrd:LOCALUSER:AVERAGE",
+              "DEF:BADRCPT=$RRD_DIR/ze-filter.rrd:BADRCPT:AVERAGE",
+              "DEF:SPAMTRAP=$RRD_DIR/ze-filter.rrd:SPAMTRAP:AVERAGE",
+              "CDEF:a=LOCALUSER,12,*",
+              "CDEF:b=BADRCPT,12,*",
+              "CDEF:c=SPAMTRAP,12,*",
+              "$LINE:a#FF0000:LocalUser",
+              "$LINE:b#008800:BadRcpt",
+              "$LINE:c#0000FF:SpamTrap"
+              );
+
+  $ERR = RRDs::error;
+  print "ERREUR pendant execution RRDs::last : $ERR\n", $ERR if $ERR;
+
+  RRDs::graph(
+              "$IMG_DIR/behaviour-users-1.$fname.png",
+              "--title",
+              "Spam - behaviour users $title",
+              "--start",
+              $start,
+              "--end",
+              $sf,
+              "--lower-limit",
+              0,
+              "--imgformat",
+              "PNG",
+              "--vertical-label",
+              " units / $label",
+              "--width",
+              250,
+              "--height",
+              150,
+              "DEF:BADRCPT=$RRD_DIR/ze-filter.rrd:BADRCPT:AVERAGE",
+              "CDEF:a=BADRCPT,12,*",
+              "$LINE:a#008800:BadRcpt"
+              );
+
+  $ERR = RRDs::error;
+  print "ERREUR pendant execution RRDs::last : $ERR\n", $ERR if $ERR;
+
+  RRDs::graph(
+              "$IMG_DIR/behaviour-users-2.$fname.png",
+              "--title",
+              "Spam - behaviour users $title",
+              "--start",
+              $start,
+              "--end",
+              $sf,
+              "--lower-limit",
+              0,
+              "--imgformat",
+              "PNG",
+              "--vertical-label",
+              " units / $label",
+              "--width",
+              250,
+              "--height",
+              150,
+              "DEF:LOCALUSER=$RRD_DIR/ze-filter.rrd:LOCALUSER:AVERAGE",
+              "DEF:SPAMTRAP=$RRD_DIR/ze-filter.rrd:SPAMTRAP:AVERAGE",
+              "CDEF:a=LOCALUSER,12,*",
+              "CDEF:b=SPAMTRAP,12,*",
+              "$LINE:a#FF0000:LocalUser",
+              "$LINE:b#0000FF:SpamTrap"
+              );
+
+  $ERR = RRDs::error;
+  print "ERREUR pendant execution RRDs::last : $ERR\n", $ERR if $ERR;
+}
+
+exit 0;
+

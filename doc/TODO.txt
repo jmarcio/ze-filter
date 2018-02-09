@@ -6,6 +6,8 @@
   useradd -d /var/ze-filter -s /bin/bash -m ze-filter
 
 * Startup script (systemd)
+  * modify Makefile.am to use systemctl instead of old /etc/init.d/ze-filter
+   or better... /usr/sbin/service
 
 * Update postfix main.cf and sendmail.mc configuration files - Check if the 
   following is correct :
@@ -14,16 +16,19 @@
 
 * Adapt ze-easy-install to the new system
   VERSIONS file, URLs, git, ...
+  some buglets to solve
+  * check how to stop/start the filter
 
 * move j-lr to a new directory and include scripts to do logreg learning
 
 * include /opt/filter-tools in the distrib, as ze-tools
+  or filter-tools...
 
 * finish migration from old "libs" and "libjoe" to libSOMETHING.
 
-* update pcre and Berkeley DB source files
-
 * new syntax for configuration files : but which one ???
 
-* 
+* replace get-urlbl and get-bayes by update-db.sh.org
+  OK
+  modify ze-filter.service to take this into account
 

@@ -1,0 +1,256 @@
+#!/usr/bin/perl -w
+
+use strict;
+
+use lib qw( /opt/rrdtool/lib/perl ../lib/perl );
+
+use RRDs;
+
+my $RRD_DIR = "rrd";
+my $IMG_DIR = "images";
+
+my $workdir = "/var/ze-filter";
+my @grey    = qw(WAIT VALID WHITE BLACK);
+
+my %greydb = (
+              WAIT  => "ze-greypend",
+              VALID => "ze-greyvalid",
+              WHITE => "ze-greywhitelist",
+              BLACK => "ze-greyblacklist"
+              );
+my %greynb = ();
+
+foreach (@grey) {
+  my $file = "$workdir/wdb/$greydb{$_}.db";
+  unless (-f $file) {
+    printf STDERR "* Can't find file $file\n";
+    next;
+  }
+  open CMD, "ze-makemap -c -b $file | grep found |" || die "coucou";
+
+  while (my $line = <CMD>) {
+    chomp($line);
+    $greynb{$_} = $1 if $line =~ /(\d+)\s+records/;
+  }
+  close CMD;
+}
+
+foreach (@grey) {
+  $greynb{$_} = 0 unless exists($greynb{$_});
+  printf " * %-16s %5d\n", $_, $greynb{$_};
+}
+
+my $stamp = time();
+
+#my $s = sprintf "%d ", $stamp;
+#foreach  (@grey) {
+#  $s .= sprintf " %5d", $greynb{$_};
+#}
+#print $s, "\n";
+
+do_update($stamp, $greynb{WAIT}, $greynb{VALID}, $greynb{WHITE},
+          $greynb{BLACK});
+
+do_graph();
+
+exit 0;
+
+sub do_update {
+  my ($stamp, $wait, $valid, $white, $black, undef) = @_;
+
+  my $cmd = sprintf("%d:%d:%d:%d:%d", $stamp, $wait, $valid, $white, $black);
+
+  RRDs::update("$RRD_DIR/ze-grey.rrd",
+               "--template=" . "WAIT:VALID:WHITE:BLACK", $cmd);
+
+  my $ERR = RRDs::error;
+
+  print "ERREUR pendant m.a.j. de $RRD_DIR/ze-filter.rrd : $ERR\n" if $ERR;
+}
+
+sub do_graph {
+  my $end = 0;
+  my ($si, $sf);
+
+  if ($end < 0) {
+    $si = sprintf "%dh", $end - 6;
+    $sf = sprintf "%dh", $end;
+  } else {
+    $si = "-6d";
+    $sf = "now";
+  }
+
+  if (1) {
+    $sf = "now";
+  } else {
+    $sf = "now";
+  }
+
+  #   filename
+  #   title
+  #   end
+  #   vertical-label
+
+  my %GRAPH = ();
+
+  $GRAPH{0}{file}  = "day";
+  $GRAPH{0}{title} = "(1 day)";
+  $GRAPH{0}{start} = "-1d";
+  $GRAPH{0}{label} = "";
+
+  $GRAPH{1}{file}  = "biday";
+  $GRAPH{1}{title} = "(2 day)";
+  $GRAPH{1}{start} = "-2d";
+  $GRAPH{1}{label} = "";
+
+  $GRAPH{2}{file}  = "week";
+  $GRAPH{2}{title} = "(1 week)";
+  $GRAPH{2}{start} = "-1w";
+  $GRAPH{2}{label} = "";
+
+  $GRAPH{3}{file}  = "month";
+  $GRAPH{3}{title} = "(1 month)";
+  $GRAPH{3}{start} = "-1m";
+  $GRAPH{3}{label} = "";
+
+  $GRAPH{4}{file}  = "bimonth";
+  $GRAPH{4}{title} = "(2 month)";
+  $GRAPH{4}{start} = "-2m";
+  $GRAPH{4}{label} = "";
+
+  $GRAPH{5}{file}  = "year";
+  $GRAPH{5}{title} = "(1 year)";
+  $GRAPH{5}{start} = "-1y";
+  $GRAPH{5}{label} = "";
+
+  my $LINE = "LINE2";
+
+  my $i;
+  foreach $i (sort keys %GRAPH) {
+    my $fname = $GRAPH{$i}{file};
+    my $title = $GRAPH{$i}{title};
+    my $start = $GRAPH{$i}{start};
+    my $label = $GRAPH{$i}{label};
+    my $ERR   = 0;
+
+    my $coef = 1;
+
+    $label = "";
+
+    printf "Doing graph for scale : %s\n", $title;
+
+    RRDs::graph(
+                "$IMG_DIR/grey-all.$fname.png",
+                "--title",
+                "Greylisting database record count $title",
+                "--start",
+                $start,
+                "--end",
+                $sf,
+                "--lower-limit",
+                0,
+                "--imgformat",
+                "PNG",
+                "--vertical-label",
+                " records $label",
+                "--width",
+                250,
+                "--height",
+                150,
+                "DEF:WAIT=$RRD_DIR/ze-grey.rrd:WAIT:AVERAGE",
+                "DEF:VALID=$RRD_DIR/ze-grey.rrd:VALID:AVERAGE",
+                "DEF:WHITE=$RRD_DIR/ze-grey.rrd:WHITE:AVERAGE",
+                "CDEF:a=WAIT,$coef,*",
+                "CDEF:b=VALID,$coef,*",
+                "CDEF:c=WHITE,$coef,*",
+                "$LINE:a#0000FF:Waiting",
+                "$LINE:b#008800:Valid",
+                "$LINE:c#FF0000:Whitelisted"
+                );
+
+    $ERR = RRDs::error;
+    print "ERREUR pendant execution RRDs::graph : $ERR\n", $ERR if $ERR;
+
+    RRDs::graph(
+                "$IMG_DIR/grey-wait.$fname.png",
+                "--title",
+                "Greylisting database record count $title",
+                "--start",
+                $start,
+                "--end",
+                $sf,
+                "--lower-limit",
+                0,
+                "--imgformat",
+                "PNG",
+                "--vertical-label",
+                " records $label",
+                "--width",
+                250,
+                "--height",
+                150,
+                "DEF:WAIT=$RRD_DIR/ze-grey.rrd:WAIT:AVERAGE",
+                "CDEF:a=WAIT,$coef,*",
+                "$LINE:a#0000FF:Waiting entries"
+                );
+
+    $ERR = RRDs::error;
+    print "ERREUR pendant execution RRDs::graph : $ERR\n", $ERR if $ERR;
+
+    RRDs::graph(
+                "$IMG_DIR/grey-valid.$fname.png",
+                "--title",
+                "Greylisting database record count $title",
+                "--start",
+                $start,
+                "--end",
+                $sf,
+                "--lower-limit",
+                0,
+                "--imgformat",
+                "PNG",
+                "--vertical-label",
+                " records $label",
+                "--width",
+                250,
+                "--height",
+                150,
+                "DEF:VALID=$RRD_DIR/ze-grey.rrd:VALID:AVERAGE",
+                "CDEF:a=VALID,$coef,*",
+                "$LINE:a#008800:Valid entries"
+                );
+
+    $ERR = RRDs::error;
+    print "ERREUR pendant execution RRDs::graph : $ERR\n", $ERR if $ERR;
+
+    RRDs::graph(
+                "$IMG_DIR/grey-white.$fname.png",
+                "--title",
+                "Greylisting database record count $title",
+                "--start",
+                $start,
+                "--end",
+                $sf,
+                "--lower-limit",
+                0,
+                "--imgformat",
+                "PNG",
+                "--vertical-label",
+                " records $label",
+                "--width",
+                250,
+                "--height",
+                150,
+                "DEF:WHITE=$RRD_DIR/ze-grey.rrd:WHITE:AVERAGE",
+                "CDEF:a=WHITE,$coef,*",
+                "$LINE:a#FF0000:Whitelisted entries"
+                );
+
+    $ERR = RRDs::error;
+    print "ERREUR pendant execution RRDs::graph : $ERR\n", $ERR if $ERR;
+  }
+
+}
+
+__END__
+

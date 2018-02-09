@@ -4,35 +4,38 @@ use strict;
 use Getopt::Long;
 use Cwd;
 
-my %PARAM = ();
-my %VERSION = ();
+my $ZeVersion = "1.0.0";
 
+my %PARAM   = ();
+my %VERSION = ();
 my %OPTIONS = ();
 
 set_defaults();
-
 get_saved_options();
 
 my $WGET = get_option("wget");
 $WGET = useable_value("wget", $WGET);
 
-my $TAR  = get_option("tar");
+my $TAR = get_option("tar");
 $TAR = useable_value("tar", $TAR);
 
 my $BaseSrcDir = get_option("srcdir");
 $BaseSrcDir = useable_value("/var/src/ze-filter", $BaseSrcDir);
 
 my $VersionsURL = get_option("versionsurl");
-$VersionsURL = useable_value("http://foss.jose-marcio.org/VERSIONS", $VersionsURL);
+$VersionsURL =
+  useable_value("http://foss.jose-marcio.org/VERSIONS", $VersionsURL);
 
-my $help = 0;
-my $verbose = 0;
+my $help        = 0;
+my $verbose     = 0;
 my $interactive = 0;
-my $options = 0;
+my $options     = 0;
 
-my $ok = GetOptions ("h"         => \$help,
-		     "O"         => \$options,
-		     "v"         => \$verbose);
+my $ok = GetOptions(
+                    "h" => \$help,
+                    "O" => \$options,
+                    "v" => \$verbose
+                    );
 
 if ($help) {
   usage();
@@ -44,9 +47,8 @@ if ($options) {
   exit 0;
 }
 
-
 my @Actions = qw();
-my $Force = 0;
+my $Force   = 0;
 
 foreach (@ARGV) {
   if (/force/i) {
@@ -71,7 +73,6 @@ make_src_dirs();
 my %CurConf = ();
 get_current();
 
-
 if ($Actions[0] eq "clean") {
   my $act = shift @Actions;
   do_clean($act, @Actions);
@@ -91,21 +92,21 @@ if ($Actions[0] eq "autoupdate") {
 
 # test User and Group
 {
-  my $user = get_option("User");
+  my $user  = get_option("User");
   my $group = get_option("Group");
 
-  $user = "ze-filter" unless defined $user && $user ne "";
+  $user  = "ze-filter" unless defined $user  && $user ne "";
   $group = "ze-filter" unless defined $group && $group ne "";
 
-  my ($login,$pass,$uid,$ugid) = getpwnam($user);
-  my ($name,$passwd,$gid,$members) = getgrnam($group);
+  my ($login, $pass,   $uid, $ugid)    = getpwnam($user);
+  my ($name,  $passwd, $gid, $members) = getgrnam($group);
 
 }
 
 if ($Actions[0] =~ /upgrade|update|install|compile/) {
   my $act = shift @Actions;
   do_install($act, @Actions);
-  print  <<EOT;
+  print <<EOT;
 
 * You may want to clean-up working directories with :
 
@@ -145,19 +146,19 @@ sub get_param {
     if (/^\s*stable\s+/i) {
       my (undef, $a, $b) = split " ", $_;
       $VERSION{stable} = $a;
-      $PARAM{stable} = $b;
+      $PARAM{stable}   = $b;
     }
 
     if (/^\s*snapshot\s+/i) {
       my (undef, $a, $b) = split " ", $_;
       $VERSION{snapshot} = $a;
-      $PARAM{snapshot} = $b;
+      $PARAM{snapshot}   = $b;
     }
 
     if (/^\s*ze-easy-install\s+/i) {
       my (undef, $a, $b) = split " ", $_;
       $VERSION{"ze-easy-install"} = $a;
-      $PARAM{"ze-easy-install"} = $b;
+      $PARAM{"ze-easy-install"}   = $b;
     }
   }
   close FIN;
@@ -196,18 +197,18 @@ sub get_saved_options {
 
       my $op = "=";
       if ($b =~ /^(=|\+=)\s*(.*)$/) {
-	$op = $1;
-	$b = $2;
+        $op = $1;
+        $b  = $2;
       }
       $a =~ tr/A-Z/a-z/;
       if (!exists($OPTIONS{$a})) {
-	$OPTIONS{$a} = $b;
+        $OPTIONS{$a} = $b;
       } else {
-	if ($op eq "=") {
-	  $OPTIONS{$a} = $b;
-	} else {
-	  $OPTIONS{$a} .= " " . $b;
-	}
+        if ($op eq "=") {
+          $OPTIONS{$a} = $b;
+        } else {
+          $OPTIONS{$a} .= " " . $b;
+        }
       }
     }
     close FIN;
@@ -226,14 +227,14 @@ sub get_saved_options {
 #
 #
 sub print_pkg_conf {
-  my $prefix = get_option("prefix");
-  my $User = get_option("User");
-  my $Group = get_option("Group");
-  my $WorkDir = get_option("WorkDir");
-  my $GreyDir = get_option("GreyDir");
+  my $prefix   = get_option("prefix");
+  my $User     = get_option("User");
+  my $Group    = get_option("Group");
+  my $WorkDir  = get_option("WorkDir");
+  my $GreyDir  = get_option("GreyDir");
   my $SpoolDir = get_option("SpoolDir");
-  my $ConfDir = get_option("ConfDir");
-  my $RCDir = get_option("RCDir");
+  my $ConfDir  = get_option("ConfDir");
+  my $RCDir    = get_option("RCDir");
 
   print <<EOT;
 # ************************************************************
@@ -242,7 +243,7 @@ sub print_pkg_conf {
 #
 # ************************************************************
 #
-#tar           = /usr/local/gnu/bin/tar
+#tar           = /usr/bin/tar
 #
 #wget          = /usr/bin/wget
 #
@@ -285,24 +286,24 @@ EOT
 #
 #
 sub set_defaults {
-  %OPTIONS = ("tar"         => "tar",
-	      "wget"        => "wget",
-	      "srcdir"      => "/var/src/ze-filter",
-	      "versionsurl" => "http://foss.jose-marcio.org/VERSIONS",
-	      "rcpath"      => "/etc/init.d/ze-filter",
-
-	      "prefix"      => "",
-	      "user"        => "",
-	      "group"       => "",
-	      "workdir"     => "",
-	      "greydir"     => "",
-	      "spooldir"    => "",
-	      "confdir"     => "",
-	      "rcdir"       => "",
-	      "cfopt"       => "",
-	      "cfenv"       => "");
+  %OPTIONS = (
+              "tar"         => "tar",
+              "wget"        => "wget",
+              "srcdir"      => "/var/src/ze-filter",
+              "versionsurl" => "http://foss.jose-marcio.org/VERSIONS",
+              "rcpath"      => "/etc/init.d/ze-filter",
+              "prefix"      => "",
+              "user"        => "",
+              "group"       => "",
+              "workdir"     => "",
+              "greydir"     => "",
+              "spooldir"    => "",
+              "confdir"     => "",
+              "rcdir"       => "",
+              "cfopt"       => "",
+              "cfenv"       => ""
+              );
 }
-
 
 #
 #
@@ -331,23 +332,23 @@ sub get_option {
 #
 #
 sub get_current {
-  my @CPATH= qw(/usr/sbin /usr/local/sbin);
+  my @CPATH = qw(/usr/sbin /usr/local/sbin);
 
   my @CONF = qw();
   foreach my $path (@CPATH) {
     foreach my $opt ("-M running", "-m") {
       @CONF = `$path/ze-filter $opt 2>/dev/null`;
       if ($#CONF >= 0) {
-	$CurConf{DaemonPath} = $path;
-	last;
+        $CurConf{DaemonPath} = $path;
+        last;
       }
     }
     last if $#CONF >= 0;
   }
   if ($#CONF >= 0) {
     chomp @CONF;
-    @CONF = grep { !/^\s*$/ && !/^\s*#/;} @CONF;
-    %CurConf = map { split " ", $_, 2;} @CONF;
+    @CONF = grep {!/^\s*$/ && !/^\s*#/;} @CONF;
+    %CurConf = map {split " ", $_, 2;} @CONF;
   }
   return $#CONF;
 }
@@ -355,8 +356,7 @@ sub get_current {
 #
 #
 #
-sub do_install
-{
+sub do_install {
   my ($action, @ARGS) = @_;
 
   my $sarg = join " ", @ARGS;
@@ -409,6 +409,7 @@ EOT
   my $cmd = undef;
 
   $TAR = "tar" unless defined $TAR && $TAR ne "";
+
   # suppose this is a GNU tar
   $r = system("$TAR --help > /dev/null 2>&1");
   if ($r == 0) {
@@ -451,8 +452,8 @@ EOT
   die "$@" unless chdir $dir;
 
   $cmd = "cp -pr $BaseSrcDir/override/* .";
-  $r = system("$cmd > /dev/null");
-  if (! -f "Makefile" || $Force) {
+  $r   = system("$cmd > /dev/null");
+  if (!-f "Makefile" || $Force) {
     my $cf = "";
 
     my @C = qw();
@@ -480,7 +481,7 @@ EOT
     $cf = get_option("RCDir");
     push @C, "--with-rc-dir=$cf" if ($cf ne "");
 
-    $cf = $#C >= 0 ? join " ", @C: "";
+    $cf = $#C >= 0 ? join " ", @C : "";
     if (system("./configure $cf") != 0) {
       exit 1;
     }
@@ -522,12 +523,12 @@ EOT
     my @RCS = qw(/etc/init.d /etc/rc.d /usr/local/etc/rc.d);
     foreach my $dir (@RCS) {
       if (-f "$dir/ze-filter") {
-	$init = "$dir/ze-filter";
-	last;
+        $init = "$dir/ze-filter";
+        last;
       }
       if (-f "$dir/ze-filter.sh") {
-	$init = "$dir/ze-filter.sh";
-	last;
+        $init = "$dir/ze-filter.sh";
+        last;
       }
     }
   }
@@ -555,10 +556,10 @@ EOT
 
       my @TXT = qw(ze-bayes.txt ze-bayes-md5.txt ze-urlbl.txt);
       foreach my $f (@TXT) {
-	system("touch $f") unless -f $f;
+        system("touch $f") unless -f $f;
       }
       if (system("make") != 0) {
-	exit 1;
+        exit 1;
       }
     }
   }
@@ -607,7 +608,7 @@ EOT
 EOT
   }
 
- fin:
+fin:
   die "$@" unless chdir "../..";
 
   return 1;
@@ -616,8 +617,7 @@ EOT
 #
 #
 #
-sub do_clean
-{
+sub do_clean {
   my ($action, @ARGS) = @_;
 
   printf "* Cleaning files\n";
@@ -628,7 +628,7 @@ sub do_clean
     die "$@" unless chdir $BaseSrcDir;
     if ($w =~ /all|src/i) {
       die "$@" unless chdir "src";
-      my $cwd = getcwd();
+      my $cwd  = getcwd();
       my @list = <*>;
       my $list = join " ", @list;
       if (defined $list && $list ne "") {
@@ -641,10 +641,10 @@ sub do_clean
     die "$@" unless chdir $BaseSrcDir;
     if ($w =~ /all|build/i) {
       die "$@" unless chdir "build";
-      my $cwd = getcwd();
+      my $cwd  = getcwd();
       my @list = <*>;
       my $list = join " ", @list;
-      if (defined $list && $list ne "") { 
+      if (defined $list && $list ne "") {
         printf "  Cleaning up %s : removing %s\n", $cwd, $list;
         system("rm -rf *");
       } else {
@@ -659,8 +659,7 @@ sub do_clean
 #
 #
 #
-sub do_autoupdate
-{
+sub do_autoupdate {
   my ($action, @ARGS) = @_;
 
   printf "* Autoupdating myself\n";
@@ -693,13 +692,13 @@ sub make_src_dirs {
   my $base = `dirname $BaseSrcDir`;
   chomp $base;
 
-  if (! -d $base) {
+  if (!-d $base) {
     if (system("mkdir -p $BaseSrcDir") != 0) {
       printf STDERR "Error mkdir $base\n";
       exit 1;
     }
   }
-  if (! -d  $BaseSrcDir && system("mkdir -p $BaseSrcDir") != 0) {
+  if (!-d $BaseSrcDir && system("mkdir -p $BaseSrcDir") != 0) {
     printf STDERR "Error mkdir $BaseSrcDir\n";
     exit 1;
   }
@@ -707,23 +706,22 @@ sub make_src_dirs {
     printf STDERR "Error chdir $BaseSrcDir\n";
     exit 1;
   }
-  if (! -d "build" && !mkdir  "build") {
+  if (!-d "build" && !mkdir "build") {
     printf STDERR "Error mkdir build\n";
     exit 1;
   }
-  if (! -d "src" && !mkdir  "src") {
+  if (!-d "src" && !mkdir "src") {
     printf STDERR "Error mkdir src\n";
     exit 1;
   }
-  if (! -d "override" && !mkdir  "override") {
+  if (!-d "override" && !mkdir "override") {
     printf STDERR "Error mkdir override\n";
     exit 1;
   }
-  if (! -d "override/tmp") {
+  if (!-d "override/tmp") {
     mkdir "override/tmp";
   }
 }
-
 
 #
 #
@@ -745,8 +743,8 @@ sub versions_compare {
     $bd =~ s/-//g;
   }
   if (!defined $av || !defined $bv) {
-    return   1 if defined $av;
-    return  -1 if defined $bv;
+    return 1  if defined $av;
+    return -1 if defined $bv;
     return 0;
   }
 
@@ -774,7 +772,6 @@ sub versions_compare {
   return $ad cmp $bd;
 }
 
-
 #
 #
 #
@@ -797,7 +794,8 @@ sub usage {
 
       autoupdate
 
+      setup
+
 EOT
 }
-
 

@@ -141,13 +141,14 @@ dbupgrade :
 
 stop-filter :
 	@echo "  * Stopping the filters"
-	@if [ -x $(DESTDIR)@RCDIR@/@RCSCRIPT@ ] ;\
+	@if [ -x /usr/sbin/systemctl ] ;\
 	then \
-		$(DESTDIR)@RCDIR@/@RCSCRIPT@ stop ;\
-	fi
-	@if [ -x $(DESTDIR)@RCDIR@/@RCGREYD@ ] ;\
+		/usr/sbin/systemctl stop ze-filter ;\
+		/usr/sbin/systemctl stop ze-greyd  ;\
+	elif [ -x /usr/sbin/service ] ;\
 	then \
-		$(DESTDIR)@RCDIR@/@RCGREYD@ stop ;\
+		/usr/sbin/service ze-filter stop ;\
+		/usr/sbin/service ze-greyd  stop ;\
 	fi
 
 upgrade : all

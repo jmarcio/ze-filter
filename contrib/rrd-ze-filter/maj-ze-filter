@@ -1,9 +1,0 @@
-#! /bin/sh
-
-
-tail -200 /var/ze-filter/ze-stats | ./ze-mem2rrd  
-
-./ze-dograph
-
-./ze-grey-update
-
