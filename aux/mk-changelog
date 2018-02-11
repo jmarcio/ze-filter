@@ -1,0 +1,426 @@
+#! /usr/bin/perl -w
+#
+#  Description :
+#
+#  Author      : Jose-Marcio Martins da Cruz
+#                mailto:jose-marcio.martins@mines-paristech.fr
+#                Ecole des Mines de Paris
+#
+#  History     :
+#
+#  TODO        :
+#
+use strict;
+use Getopt::Long;
+use Pod::Usage;
+use POSIX;
+
+use FindBin qw($Bin);
+use lib "$Bin/../lib";
+
+# ------------------------------------------------
+#
+#
+my $appl = `basename $0`;
+chomp $appl;
+
+my %StaticData = ();
+GetStaticData(\%StaticData);
+
+# === begin options conf ===
+
+# Defining CL options and default values
+my $help    = 0;
+my $debug   = 0;
+my $verbose = 0;
+my $op      = "";
+
+my %Conf = ("dummy" => "What",);
+
+my %ConfCli = ();
+foreach my $k (keys %Conf) {
+  $ConfCli{$k} = undef;
+}
+
+# Reading CL options
+my $ok = GetOptions(
+  "h!"      => \$help,
+  "help!"   => \$help,
+  "d!"      => \$debug,
+  "debug!"  => \$debug,
+  "v!"      => \$verbose,
+  "op=s"    => \$op,
+  "dummy=s" => \$ConfCli{dummy},
+);
+
+ReadConfigurationFile();
+
+foreach my $k (keys %Conf) {
+  if (defined $ConfCli{$k}) {
+    $Conf{$k} = $ConfCli{$k};
+  }
+}
+
+# === end options conf ===
+
+if ($help || $op =~ /help/i) {
+  usage();
+  exit 0;
+}
+
+mkWiki("ChangeLog.txt", "changelog.txt");
+mkText("ChangeLog.txt", "ChangeLog");
+
+exit 0;
+
+# ------------------------------------------------
+#
+#
+sub PrintWikiItem {
+  my ($s, undef) = @_;
+  if ($s =~ /^\s+(.*)/) {
+    $s = $1;
+  }
+  while ($s =~ /\s{2,}/) {
+    $s =~ s/  / /g;
+  }
+
+  while ($s =~ / NL /) {
+    $s =~ s/ NL / \\\\ /;
+  }
+  printf "  %s\n", $s;
+}
+
+# ------------------------------------------------
+#
+#
+sub mkWiki {
+  my ($fin, $fout, undef) = @_;
+
+  open FIN, "<$fin" || exit 1;
+  my @LinesIn = <FIN>;
+  close FIN;
+  chomp @LinesIn;
+
+  open FOUT, "> $fout" || exit 1;
+  my $fh = select FOUT;
+  
+  my @LinesOut = qw();
+  my $in = 0;
+  my $lcur = "";
+  my $last = "";
+  foreach my $line (@LinesIn) {
+    if ($line =~ /===/) {
+      if ($in && $lcur ne "") {
+        PrintWikiItem($lcur);
+        ($in, $lcur) = (0, "");
+      }
+      printf "\n\n%s\n", $line;
+      $last = "";
+      next;
+    }
+
+    if ($line =~ /<p>/) {
+      if ($in && $lcur ne "") {
+        PrintWikiItem($lcur);
+      }
+      $last = "p";
+      ($in, $lcur) = (1, "");
+      next;
+    }
+    if ($line =~ /<\/p>/) {
+      if ($in && $lcur ne "") {
+        PrintWikiItem($lcur);
+      }
+      ($in, $lcur) = (0, "");
+      next;
+    }
+
+    if ($line =~ /^\s*$/) {
+      if ($in && $lcur ne "") {
+        PrintWikiItem($lcur);
+        ($in, $lcur) = (0, "");
+        next;
+      }
+      if ($last eq "NL") {
+        next;
+      }
+      printf "\n";
+    }
+
+    if ($in) {
+      if ($line =~ /^\s*$/) {
+        $lcur .= " NL ";
+      } else {
+        $lcur .= " " . $line;
+      }
+      next;
+    }
+    
+    if ($last eq "p" && $line =~ /^\s*$/) {
+      next;
+    }
+ 
+    printf "\n%s\n", $line;
+  }
+  if ($in && $lcur ne "") {
+    PrintWikiItem($lcur);
+  }
+  printf "\n";
+
+  select $fh;
+  close FOUT;
+
+  return 1;
+}
+
+# ------------------------------------------------
+#
+#
+sub PrintTextLine {
+  my ($x, undef) = @_;
+  if ($x =~ /^[*]/) {
+    printf "%s\n", $x;
+  } else {
+    printf "  %s\n", $x;
+  }
+}
+
+sub PrintTextItem {
+  my ($s, undef) = @_;
+  while ($s =~ /[*]{2}/) { $s =~ s/[*]{2}//; }
+  while ($s =~ /[']{2}/) { $s =~ s/[']{2}//; }
+  while ($s =~ /[\\]{2}/) { $s =~ s/[\\]{2}/ NL /};
+  while ($s =~ /[\[]{2}/) { $s =~ s/[\[]{2}//; }
+  while ($s =~ /[\]]{2}/) { $s =~ s/[\]]{2}//; }
+  while ($s =~ /\s{2,}/) { $s =~ s/  / /g; }
+  if ($s =~ /^\s+(.*)/) { $s = $1; }
+
+  my @X = split / /, $s;
+  my $x = "";
+  printf "\n";
+  TOP : while ($#X >= 0) {
+    $x = shift @X;
+    while ($#X >= 0 && length ($x . $X[0]) < 80) {
+      if ($X[0] eq "NL") {
+        PrintTextLine($x);
+        $x = '';
+        shift @X;
+        next TOP;
+      }
+      $x .= (" " . shift @X);
+    }
+    PrintTextLine($x);
+    $x = '';
+  }
+  if ($x ne '') {
+    PrintTextLine($x);
+  }
+}
+
+# ------------------------------------------------
+#
+#
+sub mkText {
+  my ($fin, $fout, undef) = @_;
+
+  open FIN, "<$fin" || exit 1;
+  my @LinesIn = <FIN>;
+  close FIN;
+  chomp @LinesIn;
+ 
+  open FOUT, "> $fout" || exit 1;
+  my $fh = select FOUT; 
+  my @LinesOut = qw();
+  my $in = 0;
+  my $lcur = "";
+  my $last = "";
+  foreach my $line (@LinesIn) {
+    if ($line =~ /===/) {
+      if ($lcur ne "" && $in) {
+        PrintTextItem($lcur);
+        ($in, $lcur) = (0, "");
+      }
+      printf "\n\n%s\n", $line;
+      next;
+    }
+
+    if ($line =~ /===/) {
+      if ($in && $lcur ne "") {
+        PrintTextItem($lcur);
+        ($in, $lcur) = (0, "");
+      }
+      printf "\n\n%s\n", $line;
+      $last = "";
+      next;
+    }
+
+    if ($line =~ /<p>/) {
+      if ($in && $lcur ne "") {
+        PrintTextItem($lcur);
+      }
+      $last = "p";
+      ($in, $lcur) = (1, "  ");
+      next;
+    }
+
+    if ($line =~ /^\s*$/) {
+      if ($last eq "NL") {
+        next;
+      }
+      if ($in && $lcur ne "") {
+        PrintTextItem($lcur);
+      }
+      $last = "NL";
+      ($in, $lcur) = (0, "");
+      next;
+    }
+
+    if ($in) {
+      $lcur .= " ". $line;
+      next;
+    }
+  
+    printf "\n%s\n", $line;
+  }
+  printf "\n\n";
+  select $fh;
+  close FOUT;
+
+  return 1;
+}
+
+
+# ------------------------------------------------
+#
+#
+sub ReadConfigurationFile {
+  my @ccEtc = ("$Bin/../etc", "/etc");
+  my $ConfFile = "$appl.conf";
+#  my ($r, undef) = cc_conf_init($ConfFile, @ccEtc);
+#  if ($r) {
+#    $r = cc_conf_read();
+#  }
+
+  # add your code here to handle configuration files
+}
+
+# ------------------------------------------------
+#
+#
+sub usage {
+  my @X = qw();
+  @X = StaticDataArray("help", "USAGE");
+  if ($#X >= 0) {
+    print "\n";
+    foreach (@X) {
+      s/^\+//;
+      s/__APPL__/$appl/;
+      print $_, "\n";
+    }
+  } else {
+    print "\n Usage : $appl [OPTIONS]\n";
+  }
+
+  @X = StaticDataArray("help", "HEAD");
+  foreach (@X) {
+    s/^\+//;
+    print $_, "\n";
+  }
+
+  @X = StaticDataArray("help", "BODY");
+  foreach (@X) {
+    s/^\+//;
+    print $_, "\n";
+  }
+
+  @X = StaticDataArray("help", "FOOT");
+  foreach (@X) {
+    s/^\+//;
+    print $_, "\n";
+  }
+}
+
+# ------------------------------------------------
+#
+#
+sub GetStaticData {
+  my ($h, undef) = @_;
+  my @DATA = <DATA>;
+  my @SOPT = qw();
+  chomp @DATA;
+  my $in  = 0;
+  my $key = "";
+  foreach my $s (@DATA) {
+    if ($key eq "") {
+      if ($s =~ /==\s+BEGIN\s+(\S+)\s+==/) {
+        $key = lc($1);
+      }
+      next;
+    }
+    if ($s =~ /==\s+END\s+(\S*\s+)?==/) {
+      $key = "";
+      next;
+    }
+    next if $s =~ /^\s*$/;
+    push @{$h->{$key}{_data_}}, $s;
+    my ($a, $b) = split " ", $s, 2;
+    next unless defined $a && $a ne "";
+    $b = "" unless defined $b;
+    if ($b =~ /[+]{2}(.*)/) {
+      if (exists $h->{$key}{$a}) {
+        $h->{$key}{$a} .= " $1";
+      } else {
+        $h->{$key}{$a} = $1;
+      }
+    } else {
+      $h->{$key}{$a} = $b;
+    }
+  }
+}
+
+# ------------------------------------------------
+#
+#
+sub StaticDataArray {
+  my ($key, $tag, undef) = @_;
+
+  my @LINES = grep {$_ =~ /^$tag\s+/i} @{$StaticData{$key}{_data_}};
+  foreach (@LINES) {
+    s/^$tag\s+//;
+  }
+  return @LINES;
+}
+
+# ------------------------------------------------
+#
+#
+
+
+__DATA__
+
+== BEGIN HELP ==
+
+# === begin usage conf ===
+BODY +
+BODY +  -h            This message
+BODY +                default : false
+BODY +  --help        This message
+BODY +                default : false
+BODY +  -d            Debug mode
+BODY +                default : false
+BODY +  --debug       Debug mode
+BODY +                default : false
+BODY +  -v            Verbose
+BODY +                default : false
+BODY +  --op          What to do ???
+BODY +                default : 
+BODY +  --dummy       Dummy option
+BODY +                default : What
+BODY +
+# === end usage conf ===
+
+== END ==
+
+__END__
+

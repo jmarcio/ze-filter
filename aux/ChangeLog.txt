@@ -1,0 +1,74 @@
+
+====== ze-filter Change Log ======
+
+==== Version 0.5.0 - dev ====
+
+<p>
+* Some references to /usr/bin/... at some commands inside config/startup/Makefile
+  and startup files. Noticed by Guy Carre
+<p> 
+* Some small bugs in ''systemd'' startup files - noticed by Dudi Goldenberg.
+<p>
+* A script update-db.sh replacing both /var/ze-filter/cdb/get-urlbl and 
+  /var/ze-filter/cdb/get-bayes : simpler and more reliable.
+<p>
+* ''**contrib/filter-tools**'' was more extensively tested and documented.
+
+<p>
+* ''**contrib/rrd-ze-filter**'' was more extensively tested, simplified and documented.
+
+<p>
+* ''**contrib/munin/ze-filter-counters_**'' munin-monitoring plugin added and documented.
+
+
+==== Version 0.4.0 - 04-Feb-2018 ====
+
+<p>
+* removal of some buglets regarding the name change.
+
+<p>
+* systemd scripts. Old SysV "init.d" are considered deprecated and aren't 
+  installed anymore by default. \\
+  Well, this may seems confusing but ''systemd'' 
+  is now the recommended way to start daemons and are available at recent 
+  releases of ''Debian'', ''RedHat'', ''CentOS'', ''Ubuntu'', ''Fedora'', ...\\ 
+  It's a simpler, uniform and more reliable way to manage daemons. \\ 
+  Old init.d scripts are still there but if you really need them, you can just 
+  copy them, by hand, to /etc/init.d directories. 
+
+<p>
+* Moving/renaming/reorganizing some directories and files - transparent to 
+  final users. //Work in progress//.
+
+==== Version 0.2.0 - 02-Feb-2018 ====
+
+First release of this filter after fork of j-chkmail
+
+<p>
+* many parts of the filter were rewritten. First of all because of the fork 
+  and also to clean-up some code which may be improved. This is a work in 
+  progress.
+
+<p>
+* Everything was renamed to replace every mention to ''j-chkmail'' to 
+  ''ze-filter'' : configuration files, directories, ...
+
+<p>
+* Embedded Berkeley DB and PCRE library were upgraded to 6.2.32 and 3.41, 
+  respectively.
+
+<p>
+* A first version of filter-tools (or ze-tools) were included in the  
+  contrib directory. These tools are intended to help people manage quarantine 
+  and ze-filter monitoring.
+
+<p>
+* A script : ''**migrate-j-chkmail-2-ze-filter**'' can help people to migrate 
+  from j-chkmail to ze-filter
+
+<p>
+* More info soon at the wiki. ''**ze-filter**'' source tarball is available 
+  at : [[http://foss.jose-marcio.org/download]] or at 
+  [[http://github.com/jmarcio/ze-filter]]
+
+

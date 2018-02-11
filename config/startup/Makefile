@@ -169,7 +169,7 @@ LD = /usr/bin/ld -m elf_x86_64
 LDFLAGS = 
 LDLIBPCRE = ../libpcre/.libs/libpcre.a
 LIBOBJS = 
-LIBS = -lmilter -ldl -lrt -lm -lresolv -lc -lresolv -lldap -lnsl -lpthread  
+LIBS = -lmilter -ldl -lrt -lm -lresolv -lc -lresolv -lnsl -lpthread  
 LIBTOOL = $(SHELL) $(top_builddir)/libtool
 LIPO = 
 LN_S = ln -s
@@ -215,7 +215,7 @@ STRIP = strip
 TOPDIR = /data/FOSS/dev-ze-filter/ze-filter
 UNAME = Linux perere.paris.ensmp.fr 4.14.13-300.fc27.x86_64 #1 SMP Thu Jan 11 04:00:01 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
 USER = ze-filter
-VERSION = ze-filter-0.5.0-develop-180206
+VERSION = ze-filter-0.5.0-develop-180211
 WORKROOT = /var/ze-filter
 XFILES_DEF = ade adp app bas bat bin btm chm cmd com cpl csh dll drv exe fxp hlp hta inf ini ins isp js jse ksh lnk mdb mde mdt mdw msc msi msp mst ops pcd pif prg reg scr sct shb shs sys url vb vbe vbs vxd wsc wsf wsh xmf
 ZEGREYDDIR = /var/ze-filter/ze-greydb
@@ -492,24 +492,20 @@ realclean: clean-hook clean-cache distclean
 install-exec-hook:
 	@if [ -d $(SYSTEMD_DIR) ]; \
 	then \
-		/bin/echo " * Installing systemd scripts at $(SYSTEMD_DIR)";\
+		echo " * Installing systemd scripts at $(SYSTEMD_DIR)";\
 		list='$(SYSTEMD_OBJ)'; \
 		for file in $$list; \
 		do \
 			$(INSTALL_SCRIPT) $$file $(SYSTEMD_DIR)/$$file ; \
 		done;\
 	fi
-#	@if [ !-d $(SYSTEMD_DIR) -a -d $(RC_DIR) ]; \
-#	then \
-#		/bin/echo " * Installing init.d scripts at $(RC_DIR)";\
-#	fi
 
 uninstall-hook:
 	@if [ -d $(SYSTEMD_DIR) ]; \
 	then \
-		/usr/bin/echo " * Uninstalling systemd startup scripts";\
-		/bin/rm -f /lib/systemd/system/ze-filter.service ;\
-		/bin/rm -f /lib/systemd/system/ze-greyd.service ;\
+		echo " * Uninstalling systemd startup scripts";\
+		rm -f /lib/systemd/system/ze-filter.service ;\
+		rm -f /lib/systemd/system/ze-greyd.service ;\
 	fi
 
 upgrade : 

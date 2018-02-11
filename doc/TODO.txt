@@ -1,5 +1,6 @@
 
 * Script to migrate files from j-chkmail to ze-filter
+  OK
 
 * Check if ze-filter user exists. If not, create it.
 
@@ -7,7 +8,7 @@
 
 * Startup script (systemd)
   * modify Makefile.am to use systemctl instead of old /etc/init.d/ze-filter
-   or better... /usr/sbin/service
+   or, still better... /usr/sbin/service
 
 * Update postfix main.cf and sendmail.mc configuration files - Check if the 
   following is correct :
@@ -31,4 +32,4 @@
 * replace get-urlbl and get-bayes by update-db.sh.org
   OK
   modify ze-filter.service to take this into account
-
+  OK

@@ -308,13 +308,20 @@ dnl
 dnl
 dnl Let's read configure arguments
 
-
+CREATE=no
+AC_MSG_CHECKING([if user/group shall be created...])
+AC_ARG_ENABLE(create-user-group,
+  AC_HELP_STRING([--enable-create-user],
+                 [create user and group (default no)]),
+  [CREATE="$withval"])
+AC_MSG_RESULT($CREATE)
 dnl
+echo "CREATE = $CREATE"
 dnl
 dnl USER=ze-filter
 AC_ARG_WITH(user,
   AC_HELP_STRING([--with-user=USER],
-	               [set ze-filter user name  (default ze-filter)]),
+	               [ze-filter user name  (default ze-filter)]),
   [USER="$withval"])
 AC_SUBST(USER)
 
@@ -323,16 +330,31 @@ dnl
 dnl GROUP=ze-filter
 AC_ARG_WITH(group,
   AC_HELP_STRING([--with-group=GROUP],
-	               [set ze-filter group name  (default ze-filter)]),
+	               [ze-filter group name  (default ze-filter)]),
   [GROUP="$withval"])
 AC_SUBST(GROUP)
+
+dnl
+dnl
+AC_MSG_CHECKING([if user $USER exists...])
+HAS_USER=no
+getent passwd $USER > /dev/null 2>&1
+if test "$?" = "0" ; then HAS_USER=yes; fi
+AC_MSG_RESULT($HAS_USER)
+
+dnl
+dnl
+AC_MSG_CHECKING([if group $GROUP exists...])
+HAS_GROUP=no
+getent group $GROUP > /dev/null 2>&1
+if test "$?" = "0" ; then HAS_GROUP=yes; fi
 
 dnl
 dnl
 dnl WORKROOT=/var/ze-filter
 AC_ARG_WITH(work-dir,
   AC_HELP_STRING([--with-work-dir=PATH],
-                 [set ze-filter work dir   (default /var/ze-filter)]),
+                 [ze-filter work dir   (default /var/ze-filter)]),
   [WORKROOT="$withval"])
 AC_SUBST(WORKROOT)
 
@@ -341,7 +363,7 @@ dnl
 dnl ZEGREYDDIR=/var/ze-filter/ze-greydb
 AC_ARG_WITH(ze-greyd-dir,
   AC_HELP_STRING([--with-ze-greyd-dir=PATH],
-                 [set ze-greyd work dir   (default /var/ze-filter/ze-greydb)]),
+                 [ze-greyd work dir   (default /var/ze-filter/ze-greydb)]),
   [ZEGREYDDIR="$withval"])
 AC_SUBST(ZEGREYDDIR)
 
@@ -350,7 +372,7 @@ dnl
 dnl SPOOLDIR=/var/spool/ze-filter
 AC_ARG_WITH(spool-dir,
   AC_HELP_STRING([--with-spool-dir=PATH],
-                 [set ze-filter spool dir (default /var/spool/ze-filter)]),
+                 [ze-filter spool dir (default /var/spool/ze-filter)]),
   [SPOOLDIR="$withval"])
 AC_SUBST(SPOOLDIR)
 
@@ -373,7 +395,7 @@ dnl
 dnl CONFDIR=$sysconfdir
 AC_ARG_WITH(conf-dir,
   AC_HELP_STRING([--with-conf-dir=PATH],
-                 [set ze-filter config dir (default /etc/ze-filter)]),
+                 [ze-filter config dir (default /etc/ze-filter)]),
   [CONFDIR="$withval"])
 AC_SUBST(CONFDIR)
 sysconfdir=$CONFDIR
@@ -592,7 +614,6 @@ esac
 
 AC_CHECK_LIB(nsl, main)
 AC_CHECK_LIB(socket, main)
-AC_CHECK_LIB(ldap, main)
 
 #dnl
 #dnl Decide if shall use bundled libbind
@@ -644,48 +665,6 @@ in
     AC_CHECK_LIB(kvm, main)
     ;;
 esac
-
-#
-# was --with-libxml2 specified?
-#
-AC_MSG_CHECKING(for libxml2 library)
-AC_ARG_WITH(libxml2,
-[  --with-libxml2[=PATH]   Build with libxml2 library [yes|no|path]],
-    use_libxml2="$withval", use_libxml2="auto")
-
-case "$use_libxml2" in
-        no)
-                DST_LIBXML2_INC=""
-                ;;
-        auto|yes)
-                case X`(xml2-config --version) 2>/dev/null` in
-                X2.[[67]].*)
-                        libxml2_libs=`xml2-config --libs`
-                        libxml2_cflags=`xml2-config --cflags`
-                        ;;
-                *)
-                        libxml2_libs=
-                        libxml2_cflags=
-                        ;;
-                esac
-                ;;
-        *)
-                if test -f "$use_libxml2/bin/xml2-config" ; then
-                        libxml2_libs=`$use_libxml2/bin/xml2-config --libs`
-                        libxml2_cflags=`$use_libxml2/bin/xml2-config --cflags`
-                fi
-                ;;
-esac
-
-if test "X$libxml2_libs" != "X"
-then
-        AC_MSG_RESULT(yes)
-        CFLAGS="$CFLAGS $libxml2_cflags"
-        LIBS="$LIBS $libxml2_libs"
-        AC_DEFINE(HAVE_LIBXML2, 1, [Define if libxml2 was found])
-else
-        AC_MSG_RESULT(no)
-fi
 
 
 
@@ -812,8 +791,6 @@ AC_CHECK_HEADERS([\
   sys/mman.h])
 
 AC_CHECK_HEADERS([dlfcn.h link.h])
-
-AC_CHECK_HEADERS([lber.h ldap.h])
 
 case $host_os 
 in
@@ -1173,11 +1150,6 @@ AC_CHECK_FUNCS([pthread_attr_init \
   pthread_rwlock_unlock \
   pthread_setconcurrency])
 
-AC_CHECK_FUNCS([ldap_init \
-  ldap_bind \
-  ldap_search \
-  ldap_error \
-  ldap_result])
 
 AC_CHECK_FUNCS([smfi_setbacklog \
   smfi_stop \
@@ -1455,10 +1427,7 @@ AC_CONFIG_FILES(config/startup/Makefile)
 
 dnl AC_CONFIG_FILES([$MODMAKE])
 
-AC_CONFIG_COMMANDS([default],[[chmod 755 bin/ze-filter.init]
-			      [chmod 755 bin/ze-filter.init.rhel]
-			      [chmod 755 bin/ze-greyd.init]
-                              [echo ""]
+AC_CONFIG_COMMANDS([default],[[echo ""]
                               [echo "*** Configuring PCRE"]],
                               [[]])
 

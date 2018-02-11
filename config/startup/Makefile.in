@@ -492,24 +492,20 @@ realclean: clean-hook clean-cache distclean
 install-exec-hook:
 	@if [ -d $(SYSTEMD_DIR) ]; \
 	then \
-		/bin/echo " * Installing systemd scripts at $(SYSTEMD_DIR)";\
+		echo " * Installing systemd scripts at $(SYSTEMD_DIR)";\
 		list='$(SYSTEMD_OBJ)'; \
 		for file in $$list; \
 		do \
 			$(INSTALL_SCRIPT) $$file $(SYSTEMD_DIR)/$$file ; \
 		done;\
 	fi
-#	@if [ !-d $(SYSTEMD_DIR) -a -d $(RC_DIR) ]; \
-#	then \
-#		/bin/echo " * Installing init.d scripts at $(RC_DIR)";\
-#	fi
 
 uninstall-hook:
 	@if [ -d $(SYSTEMD_DIR) ]; \
 	then \
-		/usr/bin/echo " * Uninstalling systemd startup scripts";\
-		/bin/rm -f /lib/systemd/system/ze-filter.service ;\
-		/bin/rm -f /lib/systemd/system/ze-greyd.service ;\
+		echo " * Uninstalling systemd startup scripts";\
+		rm -f /lib/systemd/system/ze-filter.service ;\
+		rm -f /lib/systemd/system/ze-greyd.service ;\
 	fi
 
 upgrade : 

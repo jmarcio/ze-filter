@@ -227,27 +227,6 @@
 /* Define to 1 if you have the <kvm.h> header file. */
 #undef HAVE_KVM_H
 
-/* Define to 1 if you have the <lber.h> header file. */
-#undef HAVE_LBER_H
-
-/* Define to 1 if you have the `ldap_bind' function. */
-#undef HAVE_LDAP_BIND
-
-/* Define to 1 if you have the `ldap_error' function. */
-#undef HAVE_LDAP_ERROR
-
-/* Define to 1 if you have the <ldap.h> header file. */
-#undef HAVE_LDAP_H
-
-/* Define to 1 if you have the `ldap_init' function. */
-#undef HAVE_LDAP_INIT
-
-/* Define to 1 if you have the `ldap_result' function. */
-#undef HAVE_LDAP_RESULT
-
-/* Define to 1 if you have the `ldap_search' function. */
-#undef HAVE_LDAP_SEARCH
-
 /* Define to 1 if you have the `c' library (-lc). */
 #undef HAVE_LIBC
 
@@ -271,9 +250,6 @@
 
 /* Define to 1 if you have the `kvm' library (-lkvm). */
 #undef HAVE_LIBKVM
-
-/* Define to 1 if you have the `ldap' library (-lldap). */
-#undef HAVE_LIBLDAP
 
 /* Define to 1 if you have the `m' library (-lm). */
 #undef HAVE_LIBM
@@ -304,9 +280,6 @@
 
 /* Define to 1 if you have the `socket' library (-lsocket). */
 #undef HAVE_LIBSOCKET
-
-/* Define if libxml2 was found */
-#undef HAVE_LIBXML2
 
 /* Define to 1 if you have the <limits.h> header file. */
 #undef HAVE_LIMITS_H

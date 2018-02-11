@@ -7,7 +7,7 @@ PIDFile=/var/run/ze-filter/ze-greyd.pid
 Environment=OPTS=
 EnvironmentFile=-/etc/sysconfig/ze-greyd
 ExecStart=/usr/sbin/ze-greyd $OPTIONS
-ExecStop=/usr/bin/kill $PIDFile 
+ExecStop=/bin/kill $PIDFile 
 
 [Install]
 WantedBy=multi-user.target

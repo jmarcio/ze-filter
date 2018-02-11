@@ -799,6 +799,7 @@ with_aix_soname
 with_gnu_ld
 with_sysroot
 enable_libtool_lock
+enable_create_user_group
 with_user
 with_group
 with_work_dir
@@ -806,7 +807,6 @@ with_ze_greyd_dir
 with_spool_dir
 with_conf_dir
 with_rc_dir
-with_libxml2
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1448,6 +1448,7 @@ Optional Features:
   --enable-fast-install[=PKGS]
                           optimize for fast installation [default=yes]
   --disable-libtool-lock  avoid locking (might break parallel builds)
+  --enable-create-user    create user and group (default no)
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -1460,18 +1461,15 @@ Optional Packages:
   --with-gnu-ld           assume the C compiler uses GNU ld [default=no]
   --with-sysroot[=DIR]    Search for dependent libraries within DIR (or the
                           compiler's sysroot if not specified).
-  --with-user=USER        set ze-filter user name (default ze-filter)
-  --with-group=GROUP      set ze-filter group name (default ze-filter)
-  --with-work-dir=PATH    set ze-filter work dir (default /var/ze-filter)
+  --with-user=USER        ze-filter user name (default ze-filter)
+  --with-group=GROUP      ze-filter group name (default ze-filter)
+  --with-work-dir=PATH    ze-filter work dir (default /var/ze-filter)
   --with-ze-greyd-dir=PATH
-                          set ze-greyd work dir (default
-                          /var/ze-filter/ze-greydb)
-  --with-spool-dir=PATH   set ze-filter spool dir (default
-                          /var/spool/ze-filter)
-  --with-conf-dir=PATH    set ze-filter config dir (default /etc/ze-filter)
+                          ze-greyd work dir (default /var/ze-filter/ze-greydb)
+  --with-spool-dir=PATH   ze-filter spool dir (default /var/spool/ze-filter)
+  --with-conf-dir=PATH    ze-filter config dir (default /etc/ze-filter)
   --with-rc-dir=PATH      set system start-up dir (default /etc/init.d or
                           /etc/rc.d)
-  --with-libxml2=PATH   Build with libxml2 library yes|no|path
 
 Some influential environment variables:
   CC          C compiler command
@@ -12901,7 +12899,17 @@ $as_echo "#define OS_HPUX 1" >>confdefs.h
 esac
 
 
+CREATE=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking if user/group shall be created..." >&5
+$as_echo_n "checking if user/group shall be created...... " >&6; }
+# Check whether --enable-create-user-group was given.
+if test "${enable_create_user_group+set}" = set; then :
+  enableval=$enable_create_user_group; CREATE="$withval"
+fi
 
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $CREATE" >&5
+$as_echo "$CREATE" >&6; }
+echo "CREATE = $CREATE"
 
 # Check whether --with-user was given.
 if test "${with_user+set}" = set; then :
@@ -12917,6 +12925,20 @@ if test "${with_group+set}" = set; then :
 fi
 
 
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking if user $USER exists..." >&5
+$as_echo_n "checking if user $USER exists...... " >&6; }
+HAS_USER=no
+getent passwd $USER > /dev/null 2>&1
+if test "$?" = "0" ; then HAS_USER=yes; fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $HAS_USER" >&5
+$as_echo "$HAS_USER" >&6; }
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking if group $GROUP exists..." >&5
+$as_echo_n "checking if group $GROUP exists...... " >&6; }
+HAS_GROUP=no
+getent group $GROUP > /dev/null 2>&1
+if test "$?" = "0" ; then HAS_GROUP=yes; fi
 
 
 # Check whether --with-work-dir was given.
@@ -13625,45 +13647,6 @@ _ACEOF
 
 fi
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lldap" >&5
-$as_echo_n "checking for main in -lldap... " >&6; }
-if ${ac_cv_lib_ldap_main+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lldap  $LIBS"
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-
-int
-main ()
-{
-return main ();
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-  ac_cv_lib_ldap_main=yes
-else
-  ac_cv_lib_ldap_main=no
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_ldap_main" >&5
-$as_echo "$ac_cv_lib_ldap_main" >&6; }
-if test "x$ac_cv_lib_ldap_main" = xyes; then :
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_LIBLDAP 1
-_ACEOF
-
-  LIBS="-lldap $LIBS"
-
-fi
-
 
 #dnl
 #dnl Decide if shall use bundled libbind
@@ -14158,58 +14141,6 @@ fi
 
     ;;
 esac
-
-#
-# was --with-libxml2 specified?
-#
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for libxml2 library" >&5
-$as_echo_n "checking for libxml2 library... " >&6; }
-
-# Check whether --with-libxml2 was given.
-if test "${with_libxml2+set}" = set; then :
-  withval=$with_libxml2; use_libxml2="$withval"
-else
-  use_libxml2="auto"
-fi
-
-
-case "$use_libxml2" in
-        no)
-                DST_LIBXML2_INC=""
-                ;;
-        auto|yes)
-                case X`(xml2-config --version) 2>/dev/null` in
-                X2.[67].*)
-                        libxml2_libs=`xml2-config --libs`
-                        libxml2_cflags=`xml2-config --cflags`
-                        ;;
-                *)
-                        libxml2_libs=
-                        libxml2_cflags=
-                        ;;
-                esac
-                ;;
-        *)
-                if test -f "$use_libxml2/bin/xml2-config" ; then
-                        libxml2_libs=`$use_libxml2/bin/xml2-config --libs`
-                        libxml2_cflags=`$use_libxml2/bin/xml2-config --cflags`
-                fi
-                ;;
-esac
-
-if test "X$libxml2_libs" != "X"
-then
-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-        CFLAGS="$CFLAGS $libxml2_cflags"
-        LIBS="$LIBS $libxml2_libs"
-
-$as_echo "#define HAVE_LIBXML2 1" >>confdefs.h
-
-else
-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
 
 
 
@@ -14843,20 +14774,6 @@ done
 
 
 for ac_header in dlfcn.h link.h
-do :
-  as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
-ac_fn_c_check_header_mongrel "$LINENO" "$ac_header" "$as_ac_Header" "$ac_includes_default"
-if eval test \"x\$"$as_ac_Header"\" = x"yes"; then :
-  cat >>confdefs.h <<_ACEOF
-#define `$as_echo "HAVE_$ac_header" | $as_tr_cpp` 1
-_ACEOF
-
-fi
-
-done
-
-
-for ac_header in lber.h ldap.h
 do :
   as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
 ac_fn_c_check_header_mongrel "$LINENO" "$ac_header" "$as_ac_Header" "$ac_includes_default"
@@ -16336,22 +16253,6 @@ _ACEOF
 fi
 done
 
-
-for ac_func in ldap_init \
-  ldap_bind \
-  ldap_search \
-  ldap_error \
-  ldap_result
-do :
-  as_ac_var=`$as_echo "ac_cv_func_$ac_func" | $as_tr_sh`
-ac_fn_c_check_func "$LINENO" "$ac_func" "$as_ac_var"
-if eval test \"x\$"$as_ac_var"\" = x"yes"; then :
-  cat >>confdefs.h <<_ACEOF
-#define `$as_echo "HAVE_$ac_func" | $as_tr_cpp` 1
-_ACEOF
-
-fi
-done
 
 
 for ac_func in smfi_setbacklog \
@@ -19230,10 +19131,7 @@ ltmain=$ac_aux_dir/ltmain.sh
   chmod +x "$ofile"
 
  ;;
-    "default":C) chmod 755 bin/ze-filter.init
-			      chmod 755 bin/ze-filter.init.rhel
-			      chmod 755 bin/ze-greyd.init
-                              echo ""
+    "default":C) echo ""
                               echo "*** Configuring PCRE" ;;
 
   esac

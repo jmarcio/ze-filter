@@ -985,7 +985,11 @@ dbupgrade :
 
 stop-filter :
 	@echo "  * Stopping the filters"
-	@if [ -x /usr/sbin/service ] ;\
+	@if [ -x /usr/sbin/systemctl ] ;\
+	then \
+		/usr/sbin/systemctl stop ze-filter ;\
+		/usr/sbin/systemctl stop ze-greyd  ;\
+	elif [ -x /usr/sbin/service ] ;\
 	then \
 		/usr/sbin/service ze-filter stop ;\
 		/usr/sbin/service ze-greyd  stop ;\

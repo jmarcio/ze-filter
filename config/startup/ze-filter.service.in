@@ -6,11 +6,11 @@ Type=forking
 PIDFile=/var/run/ze-filter/ze-filter.pid
 Environment=OPTS=
 EnvironmentFile=-/etc/sysconfig/ze-filter
-ExecStartPre=-/usr/bin/mkdir -p /var/run/ze-filter
-ExecStartPre=-/usr/bin/chown @USER@:@GROUP@ /var/run/ze-filter
+ExecStartPre=-/bin/mkdir -p /var/run/ze-filter
+ExecStartPre=-/bin/chown @USER@:@GROUP@ /var/run/ze-filter
 ExecStartPre=-/var/ze-filter/cdb/update-db.sh
 ExecStart=/usr/sbin/ze-filter $OPTIONS
-ExecStop=/usr/bin/kill $PIDFile
+ExecStop=/bin/kill $PIDFile
 
 [Install]
 WantedBy=multi-user.target
