@@ -3,7 +3,7 @@
 ====== ze-filter Change Log ======
 
 
-==== Version 0.5.0 - dev ====
+==== Version 0.5.0 ====
 
 * Some references to /usr/bin/... at some commands inside
   config/startup/Makefile and startup files. Noticed by Guy Carre
