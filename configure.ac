@@ -31,10 +31,10 @@ dnl ############################################################
 dnl
 dnl
 dnl
-AC_CHECK_PROG(ACLOCAL,   aclocal,aclocal,echo)
-AC_CHECK_PROG(AUTOMAKE,  automake,automake,echo)
-AC_CHECK_PROG(AUTOCONF,  autoconf,autoconf,echo)
-AC_CHECK_PROG(AUTOHEADER,autoheader,autoheader,echo)
+dnl AC_CHECK_PROG(ACLOCAL,   aclocal,aclocal,echo)
+dnl AC_CHECK_PROG(AUTOMAKE,  automake,automake,echo)
+dnl AC_CHECK_PROG(AUTOCONF,  autoconf,autoconf,echo)
+dnl AC_CHECK_PROG(AUTOHEADER,autoheader,autoheader,echo)
 
 AC_PATH_PROG(PERL,perl)
 
