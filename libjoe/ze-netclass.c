@@ -140,7 +140,7 @@ DecodeNetClass(class, label, sz)
 
   tclass = strdup(class);
   if (tclass == NULL) {
-    ZE_LogSysError("Can't strdup(class = %s) error");
+    ZE_LogSysError("Can't strdup(class = %s) error", class);
     return NET_UNKNOWN;
   }
 

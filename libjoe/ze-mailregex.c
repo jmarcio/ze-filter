@@ -484,7 +484,7 @@ check_rurlbl(id, ip, msg)
       ZE_MessageInfo(URLBL_LOG + 2, "Hmmm . %s DIR DOMAIN : %s", id, p);
 
       if ((buf = (char *) malloc(size)) == NULL) {
-        ZE_LogSysError("malloc(%d)", size);
+        ZE_LogSysError("malloc(%ld)", (long int ) size);
         goto url_domain_ok;
       }
 
@@ -759,7 +759,7 @@ check_rurlbl(id, ip, msg)
           } while ((q = (REGEX_REC *) zeTable_Get_Next_Ptr(&htbl)) != NULL);
         }
       } else {
-        ZE_LogSysError("malloc(%d)", size);
+        ZE_LogSysError("malloc(%ld)", (long int ) size);
         break;
       }
 

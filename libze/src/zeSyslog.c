@@ -100,7 +100,7 @@ zeSyslog(int priority, char *format, ...)
       syslog(priority, "%s %s", severity, line);
   } else {
     if (zeOut_syslog)
-      syslog(priority, line);
+      syslog(priority, "%s", line);
   }
 
   if (zeOut_stdout) {

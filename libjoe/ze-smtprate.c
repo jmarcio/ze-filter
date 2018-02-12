@@ -1012,9 +1012,9 @@ smtprate_print_table(fd, allhosts, verbose, hostnames, win, flags, nbrecs)
     /*
      * Connection cache processing 
      */
-    FD_PRINTF(fd, "*** %-18s : %6d/ 10 min (%d entries)\n",
-              rateDef[which].name, hdata.gres.nb[1][which],
-              hdata.hist[which].nb);
+    FD_PRINTF(fd, "*** %-18s : %6ld/ 10 min (%ld entries)\n",
+              rateDef[which].name, (long int ) hdata.gres.nb[1][which],
+              (long int ) hdata.hist[which].nb);
 
     tmin = tmax = 0;
     for (v = 0, i = 0; i < DIM_HIST; i++) {
@@ -1037,8 +1037,8 @@ smtprate_print_table(fd, allhosts, verbose, hostnames, win, flags, nbrecs)
     mm = ss / 60;
     ss -= mm * 60;
 
-    FD_PRINTF(fd, "    %-18s : %3ld:%02ld:%02ld (%d/%d entries)\n",
-              "HISTORY", hh, mm, ss, v, DIM_HIST);
+    FD_PRINTF(fd, "    %-18s : %3ld:%02ld:%02ld (%ld/%ld entries)\n",
+              "HISTORY", hh, mm, ss, (long int ) v, (long int ) DIM_HIST);
   }
 
   /*

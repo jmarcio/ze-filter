@@ -30,11 +30,10 @@ AC_PROG_MAKE_SET
 dnl ############################################################
 dnl
 dnl
-dnl
-dnl AC_CHECK_PROG(ACLOCAL,   aclocal,aclocal,echo)
-dnl AC_CHECK_PROG(AUTOMAKE,  automake,automake,echo)
-dnl AC_CHECK_PROG(AUTOCONF,  autoconf,autoconf,echo)
-dnl AC_CHECK_PROG(AUTOHEADER,autoheader,autoheader,echo)
+AC_CHECK_PROG(ACLOCAL,   aclocal,aclocal,echo)
+AC_CHECK_PROG(AUTOMAKE,  automake,automake,echo)
+AC_CHECK_PROG(AUTOCONF,  autoconf,autoconf,echo)
+AC_CHECK_PROG(AUTOHEADER,autoheader,autoheader,echo)
 
 AC_PATH_PROG(PERL,perl)
 
@@ -615,9 +614,6 @@ esac
 AC_CHECK_LIB(nsl, main)
 AC_CHECK_LIB(socket, main)
 
-#dnl
-#dnl Decide if shall use bundled libbind
-#dnl
 dnl
 dnl libresolv shall be checked only if not using libbind
 dnl 

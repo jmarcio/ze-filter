@@ -693,7 +693,7 @@ res_history_update(hst, ip, tf, dt, verbose)
 
   HISTORY_UNLOCK();
 
-  ZE_LogMsgInfo(12, "Search ended : %d noeuds", hst->nb);
+  ZE_LogMsgInfo(12, "Search ended : %ld noeuds", (long int ) hst->nb);
 
   return TRUE;
 }
@@ -828,7 +828,7 @@ print_global_summary(data, arg)
     *s = '\0';
   printf(" Last Connection   : %s \n", sout);
   printf(" Connections       : %7d\n", p->nb_conn);
-  printf(" Gateways          : %7d\n", hst->nb);
+  printf(" Gateways          : %7ld\n", (long int ) hst->nb);
   printf(" Throttle Max      : %7d / 10 min (for the server)\n",
          p->serv_rate_max);
   printf(" Throttle Max      : %7d / 10 min (for a single gateway)\n",
@@ -1255,7 +1255,7 @@ load_live_history(hst, tf, dt)
 
   HISTORY_UNLOCK();
 
-  ZE_LogMsgInfo(12, "Search ended : %d noeuds", hst->nb);
+  ZE_LogMsgInfo(12, "Search ended : %ld noeuds", (long int ) hst->nb);
 
   return TRUE;
 }

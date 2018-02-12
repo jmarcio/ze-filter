@@ -258,7 +258,7 @@ check_rcpt(email, ip, name, netclass)
    */
   size = strlen(kemail) + 16;
   if ((kbuf = malloc(size)) == NULL) {
-    ZE_LogSysError("malloc(%d) error :", size);
+    ZE_LogSysError("malloc(%ld) error :", (long int ) size);
     goto fin;
   }
 

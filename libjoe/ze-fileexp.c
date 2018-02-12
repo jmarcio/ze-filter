@@ -403,8 +403,8 @@ dump_xfiles_table()
   DATA_LOCK();
   if (zeTable_Get_First(&htbl, &p) == 0) {
     do {
-      printf("-> %s %-20s %7d/%7d : %s\n",
-             STRBOOL(p.mimecond, " ", "!"), p.mime, p.min, p.max, p.expr);
+      printf("-> %s %-20s %7ld/%7ld : %s\n",
+             STRBOOL(p.mimecond, " ", "!"), p.mime, (long int ) p.min, (long int ) p.max, p.expr);
     } while (zeTable_Get_Next(&htbl, &p) == 0);
   }
   DATA_UNLOCK();
