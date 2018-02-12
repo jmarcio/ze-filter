@@ -3,9 +3,17 @@
 ====== ze-filter Change Log ======
 
 
-==== Version 0.5.0 ====
+==== Version 0.7.0 - dev ====
 
-  ze-filter runs now as user:group ze-filter:ze-filter. This user:group shall
+
+==== Version 0.6.0 - 12-Feb-2018 ====
+
+* A lot of warnings under Ubuntu 16.04 were corrected.
+
+
+==== Version 0.5.0 - 11-Feb-2018 ====
+
+* ze-filter runs now as user:group ze-filter:ze-filter. This user:group shall
   exists before installation of the filter. Maybe :
 
     useradd -d /var/ze-filter -s /bin/bash -m -u 900 ze-filter
