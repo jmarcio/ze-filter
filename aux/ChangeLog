@@ -5,6 +5,11 @@
 
 ==== Version 0.5.0 ====
 
+  ze-filter runs now as user:group ze-filter:ze-filter. This user:group shall
+  exists before installation of the filter. Maybe :
+
+    useradd -d /var/ze-filter -s /bin/bash -m -u 900 ze-filter
+
 * Some references to /usr/bin/... at some commands inside
   config/startup/Makefile and startup files. Noticed by Guy Carre
 

@@ -261,7 +261,7 @@ extern bool         log_quarantine_reopen();
 extern bool         log_virus_reopen();
 extern bool         log_regex_reopen();
 extern bool         log_counters_reopen();
-
+extern bool         reopen_scores4stats_file();
 
 bool
 reopen_all_log_files()

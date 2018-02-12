@@ -2,7 +2,7 @@
 
 os=`uname -s`
 
-OPTIONS=""
+OPTIONS="--enable-silent-rules"
 
 DEFOPT="LOAD REGEXREALCLEAN OPENCONN USEDBENV"
 

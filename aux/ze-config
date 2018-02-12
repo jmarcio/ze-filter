@@ -1,0 +1,26 @@
+#! /bin/bash
+
+#M4=/usr/local/gnu/bin/m4
+#export M4
+
+PATH=/usr/bin:$PATH
+
+DATE=`date +%y%m%d`
+echo $DATE > aux/timestamp
+
+HERE=`pwd`
+VERSION=`basename $HERE`
+VERSION=`echo $VERSION | sed s/zefilter-// | sed s/ze-filter-//`
+echo $VERSION > aux/release
+
+aux/set-release
+
+set -x
+
+autoheader
+###aclocal -I m4
+###libtoolize -i -c --no-warnings -q --recursive --automake
+#libtoolize -c -f --automake
+automake --add-missing -c
+autoconf 
+
