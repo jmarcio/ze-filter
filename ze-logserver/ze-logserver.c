@@ -2,7 +2,7 @@
  *
  * ze-filter - Mail Server Filter for sendmail
  *
- * Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz
+ * Copyright (c) 2001-2018 - Jose-Marcio Martins da Cruz
  *
  *  Auteur     : Jose Marcio Martins da Cruz
  *               jose.marcio.mc@gmail.org
@@ -122,6 +122,6 @@ usage(name)
          "    -i       : IP address to bind (default is all addresses)\n"
          "    -p       : port to listen\n"
          "\n"
-         "  Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz - (C) 2001, ..., 2008\n"
+         "  " COPYRIGHT "\n"
          "  Compiled on %s %s\n\n", p, __DATE__, __TIME__);
 }

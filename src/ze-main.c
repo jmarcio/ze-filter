@@ -3,7 +3,7 @@
  *
  * ze-filter - Mail Server Filter for sendmail
  *
- * Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz
+ * Copyright (c) 2001-2018 - Jose-Marcio Martins da Cruz
  *
  *  Auteur     : Jose Marcio Martins da Cruz
  *               jose.marcio.mc@gmail.org
@@ -1009,8 +1009,7 @@ usage()
     }
     printf("\n");
   }
-  printf("\n     %s\n     %s\n\n",
-         PACKAGE, "Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz");
+  printf("\n     %s\n     %s\n\n", PACKAGE, COPYRIGHT);
 }
 
 /* ****************************************************************************
@@ -1040,6 +1039,5 @@ hardcoded_xfiles(void)
 
   for (p = xfilesdef; p->ext != NULL; p++)
     printf("  %-5s %-12s %s\n", p->ext, p->origin, p->label);
-  printf("\n     %s\n\n",
-         "Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz");
+  printf("\n     %s\n\n", COPYRIGHT);
 }

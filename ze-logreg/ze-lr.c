@@ -2,7 +2,7 @@
  *
  * ze-filter - Mail Server Filter for sendmail
  *
- * Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz
+ * Copyright (c) 2001-2018 - Jose-Marcio Martins da Cruz
  *
  *  Auteur     : Jose Marcio Martins da Cruz
  *               jose.marcio.mc@gmail.org
@@ -820,9 +820,8 @@ usage(arg)
          "        -a  : active learning\n"
          "        -t  : active learning threshold (0.5 - margin)\n"
          "        -r  : resample\n"
-         "        -m  : feedback miss probability ([0,1])\n"
+         "        -m  : feedback miss probability ([0.0, 1.0])\n"
          "        -R  : asymptotic learning rate\n"
          "        -x mode : where mode in learn, class, simulate\n", arg);
-  printf("\n     %s\n     %s\n\n",
-         PACKAGE, "Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz");
+  printf("\n     %s\n     %s\n\n", PACKAGE, COPYRIGHT);
 }
