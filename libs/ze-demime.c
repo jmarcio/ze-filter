@@ -192,7 +192,7 @@ decode_mime_buffer(id, buf, sz, level, flags, func, arg)
     char                str[64];
 
     zeStrSet(str, '*', 60);
-    ZE_LogMsgDebug(19, "s%",str);
+    ZE_LogMsgDebug(19, "%s",str);
     ZE_LogMsgDebug(19, "*** ENTERING...: level = %d", level);
   }
 
