@@ -131,16 +131,16 @@ callback_stats_dump(fd, line)
     }
     for (i = CALLBACK_FIRST; i <= CALLBACK_LAST; i++) {
       if (fd >= 0)
-        FD_PRINTF(fd, "*  %-15s : %8d %10.1f %10.1f %10.1f %10.1f  ms\n",
+        FD_PRINTF(fd, "*  %-15s : %8ld %10.1f %10.1f %10.1f %10.1f  ms\n",
                   CALLBACK_LABEL(i),
-                  zeKCount(&callback_st[i]),
+                  (long int ) zeKCount(&callback_st[i]),
                   zeKMin(&callback_st[i]),
                   zeKMax(&callback_st[i]),
                   zeKMean(&callback_st[i]), zeKStdDev(&callback_st[i]));
       else
-        ZE_MessageInfo(9, "*  %-15s : %8d %10.1f %10.1f %10.1f %10.1f  ms",
+        ZE_MessageInfo(9, "*  %-15s : %8ld %10.1f %10.1f %10.1f %10.1f  ms",
                        CALLBACK_LABEL(i),
-                       zeKCount(&callback_st[i]),
+                       (long int ) zeKCount(&callback_st[i]),
                        zeKMin(&callback_st[i]),
                        zeKMax(&callback_st[i]),
                        zeKMean(&callback_st[i]), zeKStdDev(&callback_st[i]));
@@ -149,9 +149,9 @@ callback_stats_dump(fd, line)
       FD_PRINTF(fd, "*  %-15s : %8s %10s %10s %10s %10s\n",
                 "********", "********", "*********", "*********",
                 "*********", "*********");
-      FD_PRINTF(fd, "*  %-15s : %8d %10.1f %10.1f %10.1f %10.1f  ms\n",
+      FD_PRINTF(fd, "*  %-15s : %8ld %10.1f %10.1f %10.1f %10.1f  ms\n",
                 "Global",
-                zeKCount(&callback_gst),
+                (long int ) zeKCount(&callback_gst),
                 zeKMin(&callback_gst),
                 zeKMax(&callback_gst),
                 zeKMean(&callback_gst), zeKStdDev(&callback_gst));
@@ -159,9 +159,9 @@ callback_stats_dump(fd, line)
       ZE_MessageInfo(9, "*  %-15s : %8s %10s %10s %10s %10s",
                      "********", "********", "*********", "*********",
                      "*********", "*********");
-      ZE_MessageInfo(9, "*  %-15s : %8d %10.1f %10.1f %10.1f %10.1f  ms",
+      ZE_MessageInfo(9, "*  %-15s : %8ld %10.1f %10.1f %10.1f %10.1f  ms",
                      "Global",
-                     zeKCount(&callback_gst),
+                     (long int ) zeKCount(&callback_gst),
                      zeKMin(&callback_gst),
                      zeKMax(&callback_gst),
                      zeKMean(&callback_gst), zeKStdDev(&callback_gst));

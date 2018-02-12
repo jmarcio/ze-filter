@@ -1028,10 +1028,10 @@ agregate_tokens(argc, argv, multinomial)
 
         printf("DATE:%-40s %ld date=(%s)\n", fname, now, buf);
 
-        printf("MSGS:%-40s %7ld %7ld\n", fname, nts, nth);
+        printf("MSGS:%-40s %7ld %7ld\n", fname, (long int ) nts, (long int ) nth);
         printf("CRYPT:%-40s %s\n", fname, crypt);
 
-        printf("INFO:%-40s %s count=(%d %d)\n", fname, info, nts, nth);
+        printf("INFO:%-40s %s count=(%ld %ld)\n", fname, info, (long int ) nts, (long int ) nth);
       }
 
       nt = zeBTree_Browse(&bt, dtok_browse, NULL);

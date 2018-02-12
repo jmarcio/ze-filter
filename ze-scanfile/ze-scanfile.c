@@ -225,8 +225,8 @@ scan_mbox(fname, msgNb, arg)
         i++;
 
       if (cf_opt.arg_v > 0 || p->xfile) {
-        printf("%s ATTACHED FILE (%7d) (%-5s) : %-10s %-30s %-15s\n",
-               id, fsize, svirus,
+        printf("%s ATTACHED FILE (%7ld) (%-5s) : %-10s %-30s %-15s\n",
+               id, (long int) fsize, svirus,
                STREMPTY(p->disposition, "..."),
                STREMPTY(p->mimetype, "..."), p->name);
       }

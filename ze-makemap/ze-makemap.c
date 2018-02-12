@@ -247,7 +247,7 @@ main(argc, argv)
 
       if (!zeDb_Stat(&zdbh, &st))
         exit(1);
-      printf(" ** %7ld records found\n", st->st.btree_st.bt_ndata);
+      printf(" ** %7ld records found\n", (long int ) st->st.btree_st.bt_ndata);
       FREE(st);
       zeDb_Close(&zdbh);
     }

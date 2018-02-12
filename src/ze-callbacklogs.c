@@ -630,7 +630,7 @@ log_msg_context(ctx, why)
       }
 
       if (priv->msg_size >= 0) {
-        snprintf(st, sizeof (st), ", Size=(%d)", priv->msg_size);
+        snprintf(st, sizeof (st), ", Size=(%ld)", priv->msg_size);
         strlcat(sbuf, st, sizeof (sbuf));
       }
 
