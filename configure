@@ -12732,16 +12732,9 @@ fi
 
 
 
-arch=`uname -m`
-case $arch
-in
-  sun4*)        arch=sun4;;
-esac
-SMOBJ="obj.`uname -s`.`uname -r`.$arch"
-
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether we're running Sun Solaris" >&5
 $as_echo_n "checking whether we're running Sun Solaris... " >&6; }
-os=`uname -s`
+os=$(uname -s)
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $os" >&5
 $as_echo "$os" >&6; }
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: Building for $build..." >&5

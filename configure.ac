@@ -189,22 +189,10 @@ dnl ############################################################
 dnl
 dnl
 dnl
-dnl
-dnl Define variables if we're looking for things
-dnl at sendmail source tree
-dnl
-arch=`uname -m`
-case $arch
-in
-  sun4*)        arch=sun4;;
-esac
-SMOBJ="obj.`uname -s`.`uname -r`.$arch"
-
-dnl
 dnl Check if we're running Solaris. Shall set some
 dnl variables
 AC_MSG_CHECKING(whether we're running Sun Solaris)
-os=`uname -s`
+os=$(uname -s)
 AC_MSG_RESULT($os)
 AC_MSG_RESULT(     Building for $build...)
 
