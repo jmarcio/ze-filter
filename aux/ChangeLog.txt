@@ -1,7 +1,9 @@
 
 ====== ze-filter Change Log ======
 
-==== Version 0.7.0 - dev ====
+==== Version 0.8.0 - dev ====
+
+==== Version 0.7.0 - 14-Feb-2018 ====
 
 <p>
 * External libraries : pcre and db moved into 3rdparty directory (suggested

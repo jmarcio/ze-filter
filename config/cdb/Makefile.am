@@ -35,6 +35,10 @@ ze-policy.txt.org : $(POLICY_SRC)
 	cat $(POLICY_SRC) > ze-policy.txt.org
 
 distclean::clean-hook
+	rm -f Makefile Makefile.org
+
+distclean-hook:
+	rm -f Makefile Makefile.org
 
 clean:: clean-hook
 

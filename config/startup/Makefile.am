@@ -8,6 +8,7 @@ RC_DIR = @RCDIR@
 all: $(SYSTEMD_OBJ)
 
 distclean::clean-hook
+	rm -f Makefile
 
 clean:: clean-hook
 

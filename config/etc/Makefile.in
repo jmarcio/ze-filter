@@ -535,6 +535,7 @@ uninstall-am: uninstall-sysconfDATA
 all: $(OBJECTS)
 
 distclean::clean-hook
+	@rm -f Makefile
 
 clean:: clean-hook
 

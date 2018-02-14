@@ -23,6 +23,7 @@ OBJECTS = ze-filter.cf.default ze-filter.cf.running ze-filter.cf.null
 all: $(OBJECTS)
 
 distclean::clean-hook
+	@rm -f Makefile
 
 clean:: clean-hook
 
