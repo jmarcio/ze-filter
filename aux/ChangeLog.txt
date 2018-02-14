@@ -1,29 +1,9 @@
 
 ====== ze-filter Change Log ======
 
-<<<<<<< HEAD
-==== Version 0.7.0 - dev ====
-
-==== Version 0.6.0 - 12-Feb-2018 ====
+==== Version 0.7.0 - 14-Feb-2018 ====
 
 <p>
-* A lot of warnings under Ubuntu 16.04 were corrected.
-
-==== Version 0.5.0 - 11-Feb-2018 ====
-||||||| merged common ancestors
-==== Version 0.5.0 ====
-=======
-==== Version 0.7.0 - dev ====
->>>>>>> develop
-
-<p>
-<<<<<<< HEAD
-*  ze-filter runs now as user:group ze-filter:ze-filter. This user:group shall
-  exists before installation of the filter. Maybe :
-||||||| merged common ancestors
-  ze-filter runs now as user:group ze-filter:ze-filter. This user:group shall
-  exists before installation of the filter. Maybe :
-=======
 * External libraries : pcre and db moved into 3rdparty directory (suggested
 by Jens Schleusener - fossies.org)
 
@@ -46,7 +26,6 @@ by Jens Schleusener - fossies.org)
 * ze-filter runs now as user:group ze-filter:ze-filter. This user:group shall
   exists before installation of the filter. Maybe : ''useradd -d
   /var/ze-filter -s /bin/bash -m -u 900 ze-filter''
->>>>>>> develop
 
 <p>
 * Some references to /usr/bin/... at some commands inside config/startup/Makefile

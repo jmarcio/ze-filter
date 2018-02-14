@@ -3,26 +3,10 @@
 ====== ze-filter Change Log ======
 
 
-==== Version 0.7.0 - dev ====
+==== Version 0.7.0 - 14-Feb-2018 ====
 
-<<<<<<< HEAD
-
-==== Version 0.6.0 - 12-Feb-2018 ====
-
-* A lot of warnings under Ubuntu 16.04 were corrected.
-
-
-==== Version 0.5.0 - 11-Feb-2018 ====
-
-* ze-filter runs now as user:group ze-filter:ze-filter. This user:group shall
-  exists before installation of the filter. Maybe :
-||||||| merged common ancestors
-  ze-filter runs now as user:group ze-filter:ze-filter. This user:group shall
-  exists before installation of the filter. Maybe :
-=======
 * External libraries : pcre and db moved into 3rdparty directory (suggested by
   Jens Schleusener - fossies.org)
->>>>>>> develop
 
 * Added option "--disable-create-user-group' to configure script. This option
   control if user/group defined at configuration time will be created if they
