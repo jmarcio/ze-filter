@@ -181,6 +181,7 @@ NM = @NM@
 NMEDIT = @NMEDIT@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
+OS = @OS@
 OTOOL = @OTOOL@
 OTOOL64 = @OTOOL64@
 PACKAGE = @PACKAGE@
@@ -209,6 +210,7 @@ SHELL = @SHELL@
 SPOOLDIR = @SPOOLDIR@
 STATEDIR = @STATEDIR@
 STRIP = @STRIP@
+TARGETS = @TARGETS@
 TOPDIR = @TOPDIR@
 UNAME = @UNAME@
 USER = @USER@
@@ -510,8 +512,6 @@ iana:
 install-data-hook: 
 	@mkdir -p $(DESTDIR)@WORKROOT@/cdb
 	@chmod 755 $(DESTDIR)@WORKROOT@/cdb
-	@chown @USER@ $(DESTDIR)@WORKROOT@/cdb
-	@chgrp @GROUP@ $(DESTDIR)@WORKROOT@/cdb
 	@list='$(cdb_remove)'; for file in $$list ;\
 	do \
 	  conf=`basename $$file .org` ;\

@@ -3,7 +3,7 @@
  *
  * ze-filter - Mail Server Filter for sendmail
  *
- * Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz
+ * Copyright (c) 2001-2018 - Jose-Marcio Martins da Cruz
  *
  *  Auteur     : Jose Marcio Martins da Cruz
  *               jose.marcio.mc@gmail.org
@@ -826,12 +826,12 @@ usage()
          " -h \n"
          " -c file\n"
          "    configuration file (default : %s)\n"
-         " -v \n"
-         " -r \n"
-         " -s \n"
-         " -S \n"
-         " -N \n"
-         " -b \n"
+         " -v verbose (increase level)\n"
+         " -r log to file matched regular expressions\n"
+         " -s score threshold for spam classification\n"
+         " -S spam \"ground truth\"\n"
+         " -N number of threads\n"
+         " -b bayes database path\n"
          " -m checks\n"
          "    where checks is a list of comma separated checks :\n"
          "       oracle, regex, urlbl, bayes or all\n"
@@ -846,8 +846,6 @@ usage()
          "                 each file contains a single message\n",
          ZE_CONF_FILE);
 
-  printf
-    ("\n  %s \n  Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz - (C) 2001-2007\n",
-     PACKAGE);
+  printf("\n  %s \n  %s\n", COPYRIGHT, PACKAGE);
   printf("  Compiled on %s %s\n\n", __DATE__, __TIME__);
 }

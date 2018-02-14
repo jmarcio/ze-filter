@@ -16,7 +16,6 @@
 
 
 
-
 VPATH = @srcdir@
 am__is_gnu_make = { \
   if test -z '$(MAKELEVEL)'; then \
@@ -497,7 +496,6 @@ am__can_run_installinfo = \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
-DATA = $(noinst_DATA)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) \
 	$(LISP)config.h.in
 # Read a list of newline-separated strings from the standard input,
@@ -882,8 +880,9 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I m4
-pcrecpp_html = doc/html/pcrecpp.html
-noinst_DATA = $(pcrecpp_html)
+
+###pcrecpp_html = doc/html/pcrecpp.html
+###noinst_DATA = $(pcrecpp_html)
 
 # The Libtool libraries to install.  We'll add to this later.
 lib_LTLIBRARIES = 
@@ -893,6 +892,96 @@ check_SCRIPTS =
 dist_noinst_SCRIPTS = $(am__append_37)
 
 # Additional files to delete on 'make clean' and 'make maintainer-clean'.
+
+###EXTRA_DIST += \
+###  testdata/grepbinary \
+###  testdata/grepfilelist \
+###  testdata/grepinput \
+###  testdata/grepinput3 \
+###  testdata/grepinput8 \
+###  testdata/grepinputv \
+###  testdata/grepinputx \
+###  testdata/greplist \
+###  testdata/grepoutput \
+###  testdata/grepoutput8 \
+###  testdata/grepoutputN \
+###  testdata/greppatN4 \
+###  testdata/saved16 \
+###  testdata/saved16BE-1 \
+###  testdata/saved16BE-2 \
+###  testdata/saved16LE-1 \
+###  testdata/saved16LE-2 \
+###  testdata/saved32 \
+###  testdata/saved32BE-1 \
+###  testdata/saved32BE-2 \
+###  testdata/saved32LE-1 \
+###  testdata/saved32LE-2 \
+###  testdata/saved8 \
+###  testdata/testinput1 \
+###  testdata/testinput2 \
+###  testdata/testinput3 \
+###  testdata/testinput4 \
+###  testdata/testinput5 \
+###  testdata/testinput6 \
+###  testdata/testinput7 \
+###  testdata/testinput8 \
+###  testdata/testinput9 \
+###  testdata/testinput10 \
+###  testdata/testinput11 \
+###  testdata/testinput12 \
+###  testdata/testinput13 \
+###  testdata/testinput14 \
+###  testdata/testinput15 \
+###  testdata/testinput16 \
+###  testdata/testinput17 \
+###  testdata/testinput18 \
+###  testdata/testinput19 \
+###  testdata/testinput20 \
+###  testdata/testinput21 \
+###  testdata/testinput22 \
+###  testdata/testinput23 \
+###  testdata/testinput24 \
+###  testdata/testinput25 \
+###  testdata/testinput26 \
+###  testdata/testinputEBC \
+###  testdata/testoutput1 \
+###  testdata/testoutput2 \
+###  testdata/testoutput3 \
+###  testdata/testoutput3A \
+###  testdata/testoutput3B \
+###  testdata/testoutput4 \
+###  testdata/testoutput5 \
+###  testdata/testoutput6 \
+###  testdata/testoutput7 \
+###  testdata/testoutput8 \
+###  testdata/testoutput9 \
+###  testdata/testoutput10 \
+###  testdata/testoutput11-8 \
+###  testdata/testoutput11-16 \
+###  testdata/testoutput11-32 \
+###  testdata/testoutput12 \
+###  testdata/testoutput13 \
+###  testdata/testoutput14 \
+###  testdata/testoutput15 \
+###  testdata/testoutput16 \
+###  testdata/testoutput17 \
+###  testdata/testoutput18-16 \
+###  testdata/testoutput18-32 \
+###  testdata/testoutput19 \
+###  testdata/testoutput20 \
+###  testdata/testoutput21-16 \
+###  testdata/testoutput21-32 \
+###  testdata/testoutput22-16 \
+###  testdata/testoutput22-32 \
+###  testdata/testoutput23 \
+###  testdata/testoutput24 \
+###  testdata/testoutput25 \
+###  testdata/testoutput26 \
+###  testdata/testoutputEBC \
+###  testdata/valgrind-jit.supp \
+###  testdata/wintestinput3 \
+###  testdata/wintestoutput3 \
+###  perltest.pl
 CLEANFILES = pcre_chartables.c testsavedregex teststderr testtemp* \
 	testtry testNinput testtrygrep teststderrgrep testNinputgrep
 MAINTAINERCLEANFILES = pcre.h.generic config.h.generic
@@ -902,68 +991,10 @@ MAINTAINERCLEANFILES = pcre.h.generic config.h.generic
 
 # These files contain additional m4 macros that are used by autoconf.
 
-# These files contain maintenance information
-
-# These files are used in the preparation of a release
-
-# These files are to do with building for Virtual Pascal
-
-# These files are usable versions of pcre.h and config.h that are distributed
-# for the benefit of people who are building PCRE manually, without the
-# Autotools support.
-
 # The pcre_chartables.c.dist file is the default version of pcre_chartables.c,
 # used unless --enable-rebuild-chartables is specified.
-
-# PCRE demonstration program. No longer built automatcally. The point is that
-# the users should build it themselves. So just distribute the source.
-# noinst_PROGRAMS += pcredemo
-# pcredemo_SOURCES = pcredemo.c
-# pcredemo_LDADD = libpcre.la
-EXTRA_DIST = m4/ax_pthread.m4 m4/pcre_visibility.m4 doc/perltest.txt \
-	NON-UNIX-USE NON-AUTOTOOLS-BUILD HACKING PrepareRelease \
-	CheckMan CleanTxt Detrail 132html doc/index.html.src \
-	makevp.bat makevp_c.txt makevp_l.txt pcregexp.pas \
-	pcre.h.generic config.h.generic pcre_chartables.c.dist \
-	RunTest.bat testdata/grepbinary testdata/grepfilelist \
-	testdata/grepinput testdata/grepinput3 testdata/grepinput8 \
-	testdata/grepinputv testdata/grepinputx testdata/greplist \
-	testdata/grepoutput testdata/grepoutput8 testdata/grepoutputN \
-	testdata/greppatN4 testdata/saved16 testdata/saved16BE-1 \
-	testdata/saved16BE-2 testdata/saved16LE-1 testdata/saved16LE-2 \
-	testdata/saved32 testdata/saved32BE-1 testdata/saved32BE-2 \
-	testdata/saved32LE-1 testdata/saved32LE-2 testdata/saved8 \
-	testdata/testinput1 testdata/testinput2 testdata/testinput3 \
-	testdata/testinput4 testdata/testinput5 testdata/testinput6 \
-	testdata/testinput7 testdata/testinput8 testdata/testinput9 \
-	testdata/testinput10 testdata/testinput11 testdata/testinput12 \
-	testdata/testinput13 testdata/testinput14 testdata/testinput15 \
-	testdata/testinput16 testdata/testinput17 testdata/testinput18 \
-	testdata/testinput19 testdata/testinput20 testdata/testinput21 \
-	testdata/testinput22 testdata/testinput23 testdata/testinput24 \
-	testdata/testinput25 testdata/testinput26 \
-	testdata/testinputEBC testdata/testoutput1 \
-	testdata/testoutput2 testdata/testoutput3 \
-	testdata/testoutput3A testdata/testoutput3B \
-	testdata/testoutput4 testdata/testoutput5 testdata/testoutput6 \
-	testdata/testoutput7 testdata/testoutput8 testdata/testoutput9 \
-	testdata/testoutput10 testdata/testoutput11-8 \
-	testdata/testoutput11-16 testdata/testoutput11-32 \
-	testdata/testoutput12 testdata/testoutput13 \
-	testdata/testoutput14 testdata/testoutput15 \
-	testdata/testoutput16 testdata/testoutput17 \
-	testdata/testoutput18-16 testdata/testoutput18-32 \
-	testdata/testoutput19 testdata/testoutput20 \
-	testdata/testoutput21-16 testdata/testoutput21-32 \
-	testdata/testoutput22-16 testdata/testoutput22-32 \
-	testdata/testoutput23 testdata/testoutput24 \
-	testdata/testoutput25 testdata/testoutput26 \
-	testdata/testoutputEBC testdata/valgrind-jit.supp \
-	testdata/wintestinput3 testdata/wintestoutput3 perltest.pl \
-	pcredemo.c $(pcrecpp_man) cmake/COPYING-CMAKE-SCRIPTS \
-	cmake/FindPackageHandleStandardArgs.cmake \
-	cmake/FindReadline.cmake cmake/FindEditline.cmake \
-	CMakeLists.txt config-cmake.h.in
+EXTRA_DIST = m4/ax_pthread.m4 m4/pcre_visibility.m4 \
+	pcre_chartables.c.dist
 
 # These are the header files we'll install. We do not distribute pcre.h because
 # it is generated from pcre.h.in.
@@ -1216,6 +1247,7 @@ noinst_man_MANS = \
   doc/pcreunicode.3
 
 pcrecpp_man = doc/pcrecpp.3
+###EXTRA_DIST += $(pcrecpp_man)
 @WITH_PCRE_CPP_TRUE@noinst_MANS = $(pcrecpp_man)
 
 # gcov/lcov code coverage reporting
@@ -2645,8 +2677,7 @@ check-am: all-am
 	$(MAKE) $(AM_MAKEFLAGS) check-TESTS
 check: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) check-am
-all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(SCRIPTS) $(DATA) \
-		config.h
+all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(SCRIPTS) config.h
 install-binPROGRAMS: install-libLTLIBRARIES
 
 installdirs:
@@ -2690,8 +2721,8 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 	-test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
-@WITH_GCOV_FALSE@clean-local:
 @WITH_GCOV_FALSE@distclean-local:
+@WITH_GCOV_FALSE@clean-local:
 clean: clean-am
 
 clean-am: clean-binPROGRAMS clean-generic clean-libLTLIBRARIES \
@@ -2795,6 +2826,36 @@ uninstall-am: uninstall-binPROGRAMS uninstall-libLTLIBRARIES
 .PRECIOUS: Makefile
 
 
+# These files contain maintenance information
+###EXTRA_DIST += \
+###  doc/perltest.txt \
+###  NON-UNIX-USE \
+###  NON-AUTOTOOLS-BUILD \
+#  HACKING
+
+# These files are used in the preparation of a release
+###EXTRA_DIST += \
+###  PrepareRelease \
+###  CheckMan \
+###  CleanTxt \
+###  Detrail \
+###  132html \
+###  doc/index.html.src
+
+# These files are to do with building for Virtual Pascal
+###EXTRA_DIST += \
+###  makevp.bat \
+###  makevp_c.txt \
+###  makevp_l.txt \
+###  pcregexp.pas
+
+# These files are usable versions of pcre.h and config.h that are distributed
+# for the benefit of people who are building PCRE manually, without the
+# Autotools support.
+###EXTRA_DIST += \
+###  pcre.h.generic \
+###  config.h.generic
+
 # The only difference between pcre.h.in and pcre.h is the setting of the PCRE
 # version number. Therefore, we can create the generic version just by copying.
 pcre.h.generic: pcre.h.in configure.ac
@@ -2837,6 +2898,14 @@ config.h.generic: configure.ac
 @WITH_REBUILD_CHARTABLES_FALSE@pcre_chartables.c: $(srcdir)/pcre_chartables.c.dist
 @WITH_REBUILD_CHARTABLES_FALSE@	rm -f $@
 @WITH_REBUILD_CHARTABLES_FALSE@	$(LN_S) $(srcdir)/pcre_chartables.c.dist $@
+
+# PCRE demonstration program. No longer built automatcally. The point is that
+# the users should build it themselves. So just distribute the source.
+# noinst_PROGRAMS += pcredemo
+# pcredemo_SOURCES = pcredemo.c
+# pcredemo_LDADD = libpcre.la
+
+###EXTRA_DIST += pcredemo.c
 
 # A compatibility line, the old build system worked with 'make test'
 test: check ;
@@ -2909,6 +2978,14 @@ install-data-hook:
 
 @WITH_GCOV_FALSE@coverage:
 @WITH_GCOV_FALSE@	@echo "Configuring with --enable-coverage required to generate code coverage report."
+
+###EXTRA_DIST += \
+###  cmake/COPYING-CMAKE-SCRIPTS \
+###  cmake/FindPackageHandleStandardArgs.cmake \
+###  cmake/FindReadline.cmake \
+###  cmake/FindEditline.cmake \
+###  CMakeLists.txt \
+###  config-cmake.h.in
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

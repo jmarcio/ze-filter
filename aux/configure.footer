@@ -1,15 +1,10 @@
 
-  Before upgrading from a previous version, it's absolutely necessary
-  to read both README and ChangeLog files and check whether changes
-  may affect your configuration file.
-
-  Mainly, installation scripts will install two files named 
-    ze-filter.cf.defaults  - default configuration
-  and
-    ze-filter.cf.running   - running configuration
-  at your configuration directory.
-
-  You may consider replacing your current configuration file by the
-  last one, AFTER checking if it fits the configuration you expect.
-
+*  Before upgrading from a previous version, it's absolutely necessary
+   to read both README and ChangeLog files and check whether changes
+   may affect your configuration file.
+*  Mainly, installation scripts will install two files named 
+      ze-filter.cf.defaults and ze-filter.cf.running 
+   at your configuration directory.
+*  You may consider replacing your current configuration file by the
+   last one, AFTER checking if it fits the configuration you expect.
 

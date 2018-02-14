@@ -27,24 +27,24 @@ distclean::clean-hook
 clean:: clean-hook
 
 clean-hook:
-	rm -f $(OBJECTS) ze-filter.cf.org
+	@rm -f $(OBJECTS) ze-filter.cf.org
 
 realclean: clean-hook clean-cache distclean
 
 ze-filter.cf.org: ze-filter.cf.running
-	cp -p ze-filter.cf.running ze-filter.cf.org
+	@cp -p ze-filter.cf.running ze-filter.cf.org
 
 ze-filter.cf.running: $(ZEFILTER) ze-filter.cf.default
-	cp -p ze-filter.cf.default ze-filter.cf.running
-	if [ -f $(DESTDIR)/$(CFDIR)/ze-filter.cf ] ; then \
+	@cp -p ze-filter.cf.default ze-filter.cf.running
+	@if [ -f $(DESTDIR)/$(CFDIR)/ze-filter.cf ] ; then \
 	  $(ZEFILTER) -M running | ./update_running_cf > ze-filter.cf.running ;\
 	fi
 
 ze-filter.cf.default: $(ZEFILTER)
-	$(ZEFILTER) -M default > ze-filter.cf.default
+	@$(ZEFILTER) -M default > ze-filter.cf.default
 
 ze-filter.cf.null: $(ZEFILTER)
-	$(ZEFILTER) -M null > ze-filter.cf.null
+	@$(ZEFILTER) -M null > ze-filter.cf.null
 
 install-data-hook: ze-filter.cf.running ze-filter.cf.default ze-filter.cf.null
 	@list='$(sysconf_DATA)'; for file in $$list ;\

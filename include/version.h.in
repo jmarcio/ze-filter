@@ -25,7 +25,7 @@
 #define VERSION    "v@VERSION@"
 
 #undef  PACKAGE
-#define PACKAGE    "Joe's @PACKAGE@ v@VERSION@"
+#define PACKAGE    "Joe's @PACKAGE@ v-@VERSION@"
 
 #undef  COPYRIGHT
 #define COPYRIGHT  "@COPYRIGHT@"

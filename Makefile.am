@@ -47,8 +47,28 @@ clean-data:
 	rm -f $(DESTDIR)@WORKROOT@/ze-history
 	rm -f $(DESTDIR)@WORKROOT@/ze-*data
 
-install-data-hook: install-workroot install-dbtools install-workdirs \
+install-data-hook: @TARGETS@ install-workroot install-dbtools install-workdirs \
   install-tools checkcf
+
+mkuser:
+	@echo "  * Creating user @USER@ if needed"
+	@case "@OS@" in \
+	  *linux*) \
+	    getent passwd @USER@ >/dev/null 2>&1 || useradd -d / -g @GROUP@ -s /sbin/nologin -r @USER@ ; \
+	    ;;\
+	  *) \
+	    ;;\
+	esac
+
+mkgroup:
+	@echo "  * Creating group @GROUP@ if needed"
+	@case "@OS@" in \
+	  *linux*) \
+	    getent group @GROUP@ >/dev/null 2>&1 || groupadd -r @GROUP@ ; \
+	    ;;\
+	  *) \
+	    ;;\
+	esac
 
 install-workroot:
 	@echo "  * Installing $(DESTDIR)@WORKROOT@"

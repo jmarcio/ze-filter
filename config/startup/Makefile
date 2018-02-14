@@ -140,7 +140,7 @@ BDBLIBS = -L../libdb -ldb
 CC = gcc
 CCDEPMODE = depmode=gcc3
 CFARGS = --enable-silent-rules
-CFLAGS = -pthread 
+CFLAGS = -pthread -g -O2
 CONFDIR = /etc/ze-filter
 COPYRIGHT = Copyright (c) 2001-2018 - Jose-Marcio Martins da Cruz
 CPP = gcc -E
@@ -184,6 +184,7 @@ NM = /usr/bin/nm -B
 NMEDIT = 
 OBJDUMP = objdump
 OBJEXT = o
+OS = linux-gnu
 OTOOL = 
 OTOOL64 = 
 PACKAGE = ze-filter
@@ -212,10 +213,17 @@ SHELL = /bin/sh
 SPOOLDIR = /var/spool/ze-filter
 STATEDIR = /var/run/ze-filter
 STRIP = strip
+TARGETS = 
 TOPDIR = /data/FOSS/dev-ze-filter/ze-filter
-UNAME = Linux perere.paris.ensmp.fr 4.14.13-300.fc27.x86_64 #1 SMP Thu Jan 11 04:00:01 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
+UNAME = Linux perere.jose-marcio.org 4.14.13-300.fc27.x86_64 #1 SMP Thu Jan 11 04:00:01 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
 USER = ze-filter
+<<<<<<< HEAD
 VERSION = ze-filter-0.6.0
+||||||| merged common ancestors
+VERSION = ze-filter-0.6.0-develop-180212
+=======
+VERSION = ze-filter-0.7.0-develop-180214
+>>>>>>> develop
 WORKROOT = /var/ze-filter
 XFILES_DEF = ade adp app bas bat bin btm chm cmd com cpl csh dll drv exe fxp hlp hta inf ini ins isp js jse ksh lnk mdb mde mdt mdw msc msi msp mst ops pcd pif prg reg scr sct shb shs sys url vb vbe vbs vxd wsc wsf wsh xmf
 ZEGREYDDIR = /var/ze-filter/ze-greydb

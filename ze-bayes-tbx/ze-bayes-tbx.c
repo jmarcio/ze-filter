@@ -2,7 +2,7 @@
  *
  * ze-filter - Mail Server Filter for sendmail
  *
- * Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz
+ * Copyright (c) 2001-2018 - Jose-Marcio Martins da Cruz
  *
  *  Auteur     : Jose Marcio Martins da Cruz
  *               jose.marcio.mc@gmail.org
@@ -1087,7 +1087,7 @@ usage(app)
          "\n"
          "\n"
          "  %s\n"
-         "  Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz - (C) 2001 ... 2006\n"
+         "  " COPYRIGHT "\n"
          "  Compiled on %s %s\n\n", appname, PACKAGE, __DATE__, __TIME__);
 
   FREE(acpy);

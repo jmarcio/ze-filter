@@ -6,7 +6,7 @@ echo "*** Configuring PCRE"
 PMUTEX=enable
 PTHREAD=enable
 
-PCRESRC=$(ls -d  ../pcre-?.?? | sort 2>/dev/null| sort | tail -1)
+PCRESRC=$(ls -d  ../3rdparty/pcre-?.?? | sort 2>/dev/null| sort | tail -1)
 
 if [ -z "$PCRESRC" ]
 then

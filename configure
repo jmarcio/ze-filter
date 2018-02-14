@@ -652,6 +652,7 @@ BDBDIR
 LDLIBPCRE
 PCREDIR
 subdirs
+OS
 PTHREAD_CFLAGS
 PTHREAD_LIBS
 PTHREAD_CC
@@ -665,6 +666,7 @@ STATEDIR
 SPOOLDIR
 ZEGREYDDIR
 WORKROOT
+TARGETS
 GROUP
 USER
 PSOPT
@@ -1448,7 +1450,8 @@ Optional Features:
   --enable-fast-install[=PKGS]
                           optimize for fast installation [default=yes]
   --disable-libtool-lock  avoid locking (might break parallel builds)
-  --enable-create-user    create user and group (default no)
+  --disable-create-user-group
+                          disable create user and group (default yes)
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -3155,11 +3158,11 @@ fi
 PACKAGE="ze-filter"
 
 DATE=$(date +%y%m%d)
- test -f aux/timestamp  &&  DATE=$(head -1 aux/timestamp)
+test -f aux/timestamp &&  DATE=$(head -1 aux/timestamp)
 export DATE
 
 VERSION="VOID-$DATE"
- test -f aux/release  && VERSION=$(head -1 aux/release)
+test -f aux/release && VERSION=$(head -1 aux/release)
 export VERSION
 
 COPYRIGHT="Copyright (c) 2001-2018 - Jose-Marcio Martins da Cruz"
@@ -3501,11 +3504,7 @@ CONF_CPPFLAGS=$(getCompileConf CPPFLAGS)
 CONF_RSYNC_SERVER=$(getCompileConf RSYNC_SERVER)
 
 RSYNC_SERVER="foss.jose-marcio.org:1873"
-if test  -n "$CONF_RSYNC_SERVER" ;
-then
-  RSYNC_SERVER="$CONF_RSYNC_SERVER"
-fi
-
+test -n "$CONF_RSYNC_SERVER" && RSYNC_SERVER="$CONF_RSYNC_SERVER"
 
 
 
@@ -3524,70 +3523,33 @@ then
   fi
 fi
 
-if test -n "$CONF_CFLAGS"
-then
-  CFLAGS="$CFLAGS $CONF_CFLAGS"
-  export CFLAGS
-fi
-if test -n "$CONF_CPPFLAGS"
-then
-  CPPFLAGS="$CPPFLAGS $CONF_CPPFLAGS"
-  export CPPFLAGS
-fi
-if test -n "$CONF_LDFLAGS"
-then
-  LDFLAGS="$LDFLAGS $CONF_LDFLAGS"
-fi
-
-sysconfdir="/etc/ze-filter"
-if test -n "$CONF_CONFDIR" ;
-then
-  sysconfdir=$CONF_CONFDIR
-fi
-
-if test -d /var/run
-then
-  localstatedir="/var/run"
-fi
-
-if test "$GCC" = yes; then
-  CFLAGS="$CFLAGS -Wall"
-  export CFLAGS
-else
-  CFLAGS="$CFLAGS"
-fi
+test "$GCC" = "yes"      && CFLAGS="$CFLAGS -Wall"
+test -n "$CONF_CFLAGS"   && CFLAGS="$CFLAGS $CONF_CFLAGS"
+test -n "$CONF_CPPFLAGS" && CPPFLAGS="$CPPFLAGS $CONF_CPPFLAGS"
+test -n "$CONF_LDFLAGS"  && LDFLAGS="$LDFLAGS $CONF_LDFLAGS"
+export CFLAGS
+export CPPFLAGS
+export LDFLAGS
 
 USER=ze-filter
-if test -n "$CONF_USER" ;
-then
-  USER=$CONF_USER
-fi
 GROUP=ze-filter
-if test -n "$CONF_GROUP" ;
-then
-  GROUP=$CONF_GROUP
-fi
-SPOOLDIR=/var/spool/ze-filter
-if test -n "$CONF_SPOOLDIR" ;
-then
-  SPOOLDIR=$CONF_SPOOLDIR
-fi
-CONFDIR=/etc/ze-filter
-if test -n "$CONF_CONFDIR" ;
-then
-  CONFDIR=$CONF_CONFDIR
-fi
-WORKROOT=/var/ze-filter
-if test -n "$CONF_WORKROOT" ;
-then
-  WORKROOT=$CONF_WORKROOT
-fi
-ZEGREYDDIR=$WORKROOT/ze-greydb
-if test -n "$CONF_ZEGREYDDIR" ;
-then
-  ZEGREYDDIR=$CONF_ZEGREYDDIR
-fi
 
+test -n "$CONF_USER"  && USER=$CONF_USER
+test -n "$CONF_GROUP" && GROUP=$CONF_GROUP
+
+sysconfdir="/etc/ze-filter"
+test -n "$CONF_CONFDIR" && sysconfdir=$CONF_CONFDIR
+test -d /var/run        && localstatedir="/var/run"
+
+SPOOLDIR=/var/spool/ze-filter
+CONFDIR=/etc/ze-filter
+WORKROOT=/var/ze-filter
+ZEGREYDDIR=$WORKROOT/ze-greydb
+
+test -n "$CONF_SPOOLDIR"   && SPOOLDIR=$CONF_SPOOLDIR
+test -n "$CONF_CONFDIR"    && CONFDIR=$CONF_CONFDIR
+test -n "$CONF_WORKROOT"   && WORKROOT=$CONF_WORKROOT
+test -n "$CONF_ZEGREYDDIR" && ZEGREYDDIR=$CONF_ZEGREYDDIR
 
 for ac_prog in gawk mawk nawk awk
 do
@@ -12732,16 +12694,9 @@ fi
 
 
 
-arch=`uname -m`
-case $arch
-in
-  sun4*)        arch=sun4;;
-esac
-SMOBJ="obj.`uname -s`.`uname -r`.$arch"
-
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether we're running Sun Solaris" >&5
 $as_echo_n "checking whether we're running Sun Solaris... " >&6; }
-os=`uname -s`
+os=$(uname -s)
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $os" >&5
 $as_echo "$os" >&6; }
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: Building for $build..." >&5
@@ -12796,7 +12751,7 @@ PSOPT=""
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether ps -edf works" >&5
 $as_echo_n "checking whether ps -edf works... " >&6; }
 ps -edf > /dev/null 2>&1
-if  test "$?" = "0"
+if test "$?" = "0"
 then
   res="yes"
   PSOPT="-edf"
@@ -12823,7 +12778,7 @@ fi
 
 
 
-if test "$TOTO" = "0" ;
+if test "$TOTO" = "0"
 then
 echo "** build          $build"
 echo "** host           $host"
@@ -12899,13 +12854,16 @@ $as_echo "#define OS_HPUX 1" >>confdefs.h
 esac
 
 
-CREATE=no
+CREATE=yes
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking if user/group shall be created..." >&5
 $as_echo_n "checking if user/group shall be created...... " >&6; }
 # Check whether --enable-create-user-group was given.
 if test "${enable_create_user_group+set}" = set; then :
-  enableval=$enable_create_user_group; CREATE="$withval"
+  enableval=$enable_create_user_group; CREATE="$enable_create_user_group"
+else
+  CREATE="yes"
 fi
+
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $CREATE" >&5
 $as_echo "$CREATE" >&6; }
@@ -12926,19 +12884,37 @@ fi
 
 
 
+TARGETS=""
+
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking if user $USER exists..." >&5
 $as_echo_n "checking if user $USER exists...... " >&6; }
 HAS_USER=no
 getent passwd $USER > /dev/null 2>&1
-if test "$?" = "0" ; then HAS_USER=yes; fi
+if test "$?" = "0"
+then
+  HAS_USER=yes
+else
+  if test "$CREATE" = "yes"
+  then
+    TARGETS="$TARGETS mkuser"
+  fi
+fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $HAS_USER" >&5
 $as_echo "$HAS_USER" >&6; }
-
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking if group $GROUP exists..." >&5
 $as_echo_n "checking if group $GROUP exists...... " >&6; }
 HAS_GROUP=no
 getent group $GROUP > /dev/null 2>&1
-if test "$?" = "0" ; then HAS_GROUP=yes; fi
+if test "$?" = "0"
+then
+  HAS_GROUP=yes
+else
+  if test "$CREATE" = "yes"
+  then
+    TARGETS="mkgroup $TARGETS"
+  fi
+fi
+
 
 
 # Check whether --with-work-dir was given.
@@ -13381,6 +13357,9 @@ CFLAGS="$PTHREAD_CFLAGS $CFLAGS"
 LIBS="$PTHREAD_LIBS $LIBS"
 
 
+OS=$host_os
+
+
 case $host_os
 in
   *linux*)
@@ -13562,7 +13541,6 @@ in
   *freebsd*)
     ;;
   *netbsd*)
-    #AC_CHECK_LIB(compat, lfind)
     ;;
   *osf*)
     ;;
@@ -19351,6 +19329,7 @@ echo "  Host OS                  : $host_os" >> config.results
 echo "  Host CPU                 : $host_cpu" >> config.results
 echo "  ze-filter user           : $USER" >> config.results
 echo "  ze-filter group          : $GROUP" >> config.results
+echo "  Create User/Group        : $CREATE" >> config.results
 echo "  prefix dir               : $prefix" >> config.results
 echo "  start-up script dir      : $RCDIR" >> config.results
 echo "  start-up scripts         : ze-filter$RCSUFFIX ze-greyd$RCSUFFIX" >> config.results
@@ -19372,6 +19351,15 @@ echo "  LIBS                     : $LIBS" >> config.results
 echo "  LDFLAGS                  : $LDFLAGS" >> config.results
 echo "  ZELIBS                   : $ZELIBS" >> config.results
 echo "  " >> config.results
+
+if test "$HAS_USER" = "no" -a "$CREATE" = "yes"
+then
+  echo "* User  $USER will be created" >> config.results
+fi
+if test "$HAS_GROUP" = "no" -a "$CREATE" = "yes"
+then
+  echo "* Group $GROUP will be created" >> config.results
+fi
 
 if test -f aux/configure.footer
 then

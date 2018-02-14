@@ -7,7 +7,7 @@ PMUTEX=enable
 PTHREAD=enable
 
 
-DBDIR=`ls -d ../db-?.?.* 2> /dev/null| sort | tail -1`
+DBDIR=`ls -d ../3rdparty/db-?.?.* 2> /dev/null| sort | tail -1`
 
 if [ -z "$DBDIR" ]
 then
