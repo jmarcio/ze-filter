@@ -6,11 +6,11 @@ AC_COPYRIGHT([Copyright (c) 2001-2018 - Jose-Marcio Martins da Cruz])
 PACKAGE="ze-filter"
 
 DATE=$(date +%y%m%d)
-[ test -f aux/timestamp ] &&  DATE=$(head -1 aux/timestamp)
+test -f aux/timestamp &&  DATE=$(head -1 aux/timestamp)
 export DATE
 
 VERSION="VOID-$DATE"
-[ test -f aux/release ] && VERSION=$(head -1 aux/release)
+test -f aux/release && VERSION=$(head -1 aux/release)
 export VERSION
 
 COPYRIGHT="Copyright (c) 2001-2018 - Jose-Marcio Martins da Cruz"
@@ -75,11 +75,7 @@ dnl
 dnl
 dnl
 RSYNC_SERVER="foss.jose-marcio.org:1873"
-if test [ -n "$CONF_RSYNC_SERVER" ];
-then
-  RSYNC_SERVER="$CONF_RSYNC_SERVER"
-fi
-
+test -n "$CONF_RSYNC_SERVER" && RSYNC_SERVER="$CONF_RSYNC_SERVER"
 AC_SUBST(RSYNC_SERVER)
 
 dnl ############################################################
@@ -103,70 +99,33 @@ then
   fi
 fi
 
-if test -n "$CONF_CFLAGS"
-then
-  CFLAGS="$CFLAGS $CONF_CFLAGS"
-  export CFLAGS
-fi
-if test -n "$CONF_CPPFLAGS"
-then
-  CPPFLAGS="$CPPFLAGS $CONF_CPPFLAGS"
-  export CPPFLAGS
-fi
-if test -n "$CONF_LDFLAGS"
-then
-  LDFLAGS="$LDFLAGS $CONF_LDFLAGS"
-fi
-
-sysconfdir="/etc/ze-filter"
-if test -n "$CONF_CONFDIR" ;
-then
-  sysconfdir=$CONF_CONFDIR
-fi
-
-if test -d /var/run
-then
-  localstatedir="/var/run"
-fi
-
-if test "$GCC" = yes; then
-  CFLAGS="$CFLAGS -Wall"
-  export CFLAGS
-else
-  CFLAGS="$CFLAGS"
-fi
+test "$GCC" = "yes"      && CFLAGS="$CFLAGS -Wall"
+test -n "$CONF_CFLAGS"   && CFLAGS="$CFLAGS $CONF_CFLAGS"
+test -n "$CONF_CPPFLAGS" && CPPFLAGS="$CPPFLAGS $CONF_CPPFLAGS"
+test -n "$CONF_LDFLAGS"  && LDFLAGS="$LDFLAGS $CONF_LDFLAGS"
+export CFLAGS
+export CPPFLAGS
+export LDFLAGS
 
 USER=ze-filter
-if test -n "$CONF_USER" ;
-then
-  USER=$CONF_USER
-fi
 GROUP=ze-filter
-if test -n "$CONF_GROUP" ;
-then
-  GROUP=$CONF_GROUP
-fi
-SPOOLDIR=/var/spool/ze-filter
-if test -n "$CONF_SPOOLDIR" ;
-then
-  SPOOLDIR=$CONF_SPOOLDIR
-fi
-CONFDIR=/etc/ze-filter
-if test -n "$CONF_CONFDIR" ;
-then
-  CONFDIR=$CONF_CONFDIR
-fi
-WORKROOT=/var/ze-filter
-if test -n "$CONF_WORKROOT" ;
-then
-  WORKROOT=$CONF_WORKROOT
-fi
-ZEGREYDDIR=$WORKROOT/ze-greydb
-if test -n "$CONF_ZEGREYDDIR" ;
-then
-  ZEGREYDDIR=$CONF_ZEGREYDDIR
-fi
 
+test -n "$CONF_USER"  && USER=$CONF_USER
+test -n "$CONF_GROUP" && GROUP=$CONF_GROUP
+
+sysconfdir="/etc/ze-filter"
+test -n "$CONF_CONFDIR" && sysconfdir=$CONF_CONFDIR
+test -d /var/run        && localstatedir="/var/run"
+
+SPOOLDIR=/var/spool/ze-filter
+CONFDIR=/etc/ze-filter
+WORKROOT=/var/ze-filter
+ZEGREYDDIR=$WORKROOT/ze-greydb
+
+test -n "$CONF_SPOOLDIR"   && SPOOLDIR=$CONF_SPOOLDIR
+test -n "$CONF_CONFDIR"    && CONFDIR=$CONF_CONFDIR
+test -n "$CONF_WORKROOT"   && WORKROOT=$CONF_WORKROOT
+test -n "$CONF_ZEGREYDDIR" && ZEGREYDDIR=$CONF_ZEGREYDDIR
 
 dnl ############################################################
 dnl
@@ -205,7 +164,7 @@ AC_SUBST(PSBIN)
 PSOPT=""
 AC_MSG_CHECKING(whether ps -edf works)
 ps -edf > /dev/null 2>&1
-if [ test "$?" = "0" ]
+if test "$?" = "0"
 then
   res="yes"
   PSOPT="-edf"
@@ -229,7 +188,7 @@ fi
 AC_SUBST(PSOPT)
 
 
-if test "$TOTO" = "0" ;
+if test "$TOTO" = "0"
 then
 dnl ############################################################
 dnl
@@ -295,12 +254,14 @@ dnl
 dnl
 dnl Let's read configure arguments
 
-CREATE=no
+CREATE=yes
 AC_MSG_CHECKING([if user/group shall be created...])
 AC_ARG_ENABLE(create-user-group,
-  AC_HELP_STRING([--enable-create-user],
-                 [create user and group (default no)]),
-  [CREATE="$withval"])
+  AC_HELP_STRING([--disable-create-user-group],
+                 [disable create user and group (default yes)]),
+                 [CREATE="$enable_create_user_group"],
+                 [CREATE="yes"])
+
 AC_MSG_RESULT($CREATE)
 dnl
 echo "CREATE = $CREATE"
@@ -309,7 +270,7 @@ dnl USER=ze-filter
 AC_ARG_WITH(user,
   AC_HELP_STRING([--with-user=USER],
 	               [ze-filter user name  (default ze-filter)]),
-  [USER="$withval"])
+                 [USER="$withval"])
 AC_SUBST(USER)
 
 dnl
@@ -318,24 +279,43 @@ dnl GROUP=ze-filter
 AC_ARG_WITH(group,
   AC_HELP_STRING([--with-group=GROUP],
 	               [ze-filter group name  (default ze-filter)]),
-  [GROUP="$withval"])
+                 [GROUP="$withval"])
 AC_SUBST(GROUP)
 
 dnl
+TARGETS=""
 dnl
+
 AC_MSG_CHECKING([if user $USER exists...])
 HAS_USER=no
 getent passwd $USER > /dev/null 2>&1
-if test "$?" = "0" ; then HAS_USER=yes; fi
+if test "$?" = "0"
+then
+  HAS_USER=yes
+else
+  if test "$CREATE" = "yes"
+  then
+    TARGETS="$TARGETS mkuser"
+  fi
+fi
 AC_MSG_RESULT($HAS_USER)
-
 dnl
 dnl
 AC_MSG_CHECKING([if group $GROUP exists...])
 HAS_GROUP=no
 getent group $GROUP > /dev/null 2>&1
-if test "$?" = "0" ; then HAS_GROUP=yes; fi
+if test "$?" = "0"
+then
+  HAS_GROUP=yes
+else
+  if test "$CREATE" = "yes"
+  then
+    TARGETS="mkgroup $TARGETS"
+  fi
+fi
+dnl
 
+AC_SUBST(TARGETS)
 dnl
 dnl
 dnl WORKROOT=/var/ze-filter
@@ -473,11 +453,11 @@ LIBS="$PTHREAD_LIBS $LIBS"
 
 dnl ############################################################
 dnl
-dnl
-dnl
-dnl
 dnl Let's check for libraries
 dnl
+OS=$host_os
+AC_SUBST(OS)
+
 case $host_os 
 in
   *linux*)
@@ -592,7 +572,6 @@ in
   *freebsd*)
     ;;
   *netbsd*)
-    #AC_CHECK_LIB(compat, lfind)
     ;;
   *osf*)
     ;;
@@ -1458,6 +1437,7 @@ echo "  Host OS                  : $host_os" >> config.results
 echo "  Host CPU                 : $host_cpu" >> config.results
 echo "  ze-filter user           : $USER" >> config.results
 echo "  ze-filter group          : $GROUP" >> config.results
+echo "  Create User/Group        : $CREATE" >> config.results
 echo "  prefix dir               : $prefix" >> config.results
 echo "  start-up script dir      : $RCDIR" >> config.results
 echo "  start-up scripts         : ze-filter$RCSUFFIX ze-greyd$RCSUFFIX" >> config.results
@@ -1479,6 +1459,15 @@ echo "  LIBS                     : $LIBS" >> config.results
 echo "  LDFLAGS                  : $LDFLAGS" >> config.results
 echo "  ZELIBS                   : $ZELIBS" >> config.results
 echo "  " >> config.results
+
+if test "$HAS_USER" = "no" -a "$CREATE" = "yes"
+then
+  echo "* User  $USER will be created" >> config.results
+fi
+if test "$HAS_GROUP" = "no" -a "$CREATE" = "yes"
+then
+  echo "* Group $GROUP will be created" >> config.results
+fi
 
 if test -f aux/configure.footer
 then

@@ -14,6 +14,8 @@
 
 
   * External libraries : pcre and db moved into 3rdparty directory (suggested by Jens Schleusener - fossies.org)
+  * Added option "--disable-create-user-group' to configure script. This option control if user/group defined at configuration time will be created if they don't exist. Default is to create.
+  * Some cleanup inside configure script. More to come...
 
 
 ==== Version 0.6.0 - 12-Feb-2018 ====
@@ -23,11 +25,11 @@
   * A lot of warnings under Ubuntu 16.04 were corrected.
 
 
-==== Version 0.5.0 ====
+==== Version 0.5.0 - 11-Feb-2018 ====
 
 
 
-  ze-filter runs now as user:group ze-filter:ze-filter. This user:group shall exists before installation of the filter. Maybe : ''useradd -d /var/ze-filter -s /bin/bash -m -u 900 ze-filter''
+  * ze-filter runs now as user:group ze-filter:ze-filter. This user:group shall exists before installation of the filter. Maybe : ''useradd -d /var/ze-filter -s /bin/bash -m -u 900 ze-filter''
   * Some references to /usr/bin/... at some commands inside config/startup/Makefile and startup files. Noticed by Guy Carre
   * Some small bugs in ''systemd'' startup files - noticed by Dudi Goldenberg.
   * A script update-db.sh replacing both /var/ze-filter/cdb/get-urlbl and /var/ze-filter/cdb/get-bayes : simpler and more reliable.

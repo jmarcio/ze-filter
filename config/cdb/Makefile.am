@@ -49,8 +49,6 @@ iana:
 install-data-hook: 
 	@mkdir -p $(DESTDIR)@WORKROOT@/cdb
 	@chmod 755 $(DESTDIR)@WORKROOT@/cdb
-	@chown @USER@ $(DESTDIR)@WORKROOT@/cdb
-	@chgrp @GROUP@ $(DESTDIR)@WORKROOT@/cdb
 	@list='$(cdb_remove)'; for file in $$list ;\
 	do \
 	  conf=`basename $$file .org` ;\

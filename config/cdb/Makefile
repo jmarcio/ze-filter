@@ -137,7 +137,7 @@ BDBLIBS = -L../libdb -ldb
 CC = gcc
 CCDEPMODE = depmode=gcc3
 CFARGS = --enable-silent-rules
-CFLAGS = -pthread 
+CFLAGS = -pthread -g -O2
 CONFDIR = /etc/ze-filter
 COPYRIGHT = Copyright (c) 2001-2018 - Jose-Marcio Martins da Cruz
 CPP = gcc -E
@@ -181,6 +181,7 @@ NM = /usr/bin/nm -B
 NMEDIT = 
 OBJDUMP = objdump
 OBJEXT = o
+OS = linux-gnu
 OTOOL = 
 OTOOL64 = 
 PACKAGE = ze-filter
@@ -209,6 +210,7 @@ SHELL = /bin/sh
 SPOOLDIR = /var/spool/ze-filter
 STATEDIR = /var/run/ze-filter
 STRIP = strip
+TARGETS = 
 TOPDIR = /data/FOSS/dev-ze-filter/ze-filter
 UNAME = Linux perere.jose-marcio.org 4.14.13-300.fc27.x86_64 #1 SMP Thu Jan 11 04:00:01 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
 USER = ze-filter
@@ -510,8 +512,6 @@ iana:
 install-data-hook: 
 	@mkdir -p $(DESTDIR)/var/ze-filter/cdb
 	@chmod 755 $(DESTDIR)/var/ze-filter/cdb
-	@chown ze-filter $(DESTDIR)/var/ze-filter/cdb
-	@chgrp ze-filter $(DESTDIR)/var/ze-filter/cdb
 	@list='$(cdb_remove)'; for file in $$list ;\
 	do \
 	  conf=`basename $$file .org` ;\
