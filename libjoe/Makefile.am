@@ -30,8 +30,8 @@ libjoe_a_SOURCES   =   	ze-oracle-scores.c \
 			ze-smtprate.c \
 			ze-stats.c \
 			ze-throttle.c \
-			mimelist.c \
-			scanmail.c \
+			ze-mimelist.c \
+			ze-scanmail.c \
 			ze-read-conf-data.c \
 			ze-cf.c \
 			ze-log.c \

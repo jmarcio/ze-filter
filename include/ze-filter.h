@@ -53,8 +53,8 @@ struct CONNID_T
 #include "ze-proc-witness.h"
 #include "ze-config.h"
 #include "ze-stats.h"
-#include "mimelist.h"
-#include "scanmail.h"
+#include "ze-mimelist.h"
+#include "ze-scanmail.h"
 #include "ze-signal.h"
 #include <ze-callback.h>
 #include "ze-ndc-help.h"
