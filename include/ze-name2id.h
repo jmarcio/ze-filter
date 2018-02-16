@@ -22,7 +22,7 @@
  */
 
 
-#ifndef __JNAME2ID_H__
+#ifndef __ZE_NAME2ID_H__
 
 #define ID_NOT_FOUND      -1
 #define NAME_NOT_FOUND    NULL
@@ -38,5 +38,5 @@ struct name2id_T
 int                 get_id_by_name(name2id_T *, char *);
 char               *get_name_by_id(name2id_T *, int);
 
-#define __JNAME2ID_H__
+#define __ZE_NAME2ID_H__
 #endif

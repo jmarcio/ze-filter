@@ -22,9 +22,9 @@
  */
 
 
-#ifndef __JQP_H__
+#ifndef __ZE_QP_H__
 
 int                 qp_decode (char *, char *, size_t);
 
-#define __JQP_H__
+#define __ZE_QP_H__
 #endif

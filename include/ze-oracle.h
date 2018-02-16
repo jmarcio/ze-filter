@@ -21,7 +21,7 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#ifndef __JORACLE_H_
+#ifndef __ZE_ORACLE_H_
 
 
 bool                load_oradata_table (char *, char *);
@@ -34,5 +34,5 @@ double              vector_compare(double *, double *, int);
 
 char               *realcleanup_text_buf(char *, size_t );
 
-#define __JORACLE_H_
+#define __ZE_ORACLE_H_
 #endif

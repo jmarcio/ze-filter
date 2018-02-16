@@ -21,7 +21,7 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#ifndef __JNETCLASS_H
+#ifndef __ZE_NETCLASS_H
 
 #define NET_UNKNOWN  0
 
@@ -79,5 +79,5 @@ int                 GetClientNetClass(char *ip, char *name, netclass_T *class,
 int                 DecodeNetClass(char *, char *, size_t);
 
 
-#define __JNETCLASS_H
+#define __ZE_NETCLASS_H
 #endif

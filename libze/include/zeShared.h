@@ -22,7 +22,7 @@
  */
 
 
-#ifndef __JSHMEM_H__
+#ifndef __ZE_SHMEM_H__
 
 typedef struct {
   uint32_t            signature;
@@ -45,5 +45,5 @@ void                SharedMemory_Close (SHMOBJ_T *);
 size_t              SharedMemory_Size (SHMOBJ_T *);
 size_t              SharedMemory_Resize (SHMOBJ_T *, size_t);
 
-#define __JSHMEM_H__
+#define __ZE_SHMEM_H__
 #endif

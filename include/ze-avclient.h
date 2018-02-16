@@ -21,7 +21,7 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#ifndef __JAVCLIENT_H__
+#ifndef __ZE_AVCLIENT_H__
 
 #define             AV_ZERO        0
 #define             AV_OK          600
@@ -32,5 +32,5 @@
 int                 av_client (char *, size_t, char *, size_t, char *);
 
 
-#define __JAVCLIENT_H__
+#define __ZE_AVCLIENT_H__
 #endif

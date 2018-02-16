@@ -21,7 +21,7 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#ifndef __JCONNOPEN_H__
+#ifndef __ZE_CONNOPEN_H__
 
 void                connopen_reset ();
 int                 connopen_check_host (char *, char *, int);
@@ -31,7 +31,7 @@ bool                connopen_clean_table ();
 void                connopen_print_table (int );
 
 
-#define __JCONNOPEN_H__
+#define __ZE_CONNOPEN_H__
 #endif
 
 

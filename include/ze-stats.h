@@ -21,7 +21,7 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#ifndef __JSTATS_H__
+#ifndef __ZE_STATS_H__
 
 #define           STAT_RESTART            0
 #define           STAT_BYTES              1
@@ -143,5 +143,5 @@ void                print_filter_stats_summary(void);
 void                msg_score_stats_update(msg_scores_T *scores);
 void                msg_score_stats_print(int, int);
 
-#define __JSTATS_H__
+#define __ZE_STATS_H__
 #endif

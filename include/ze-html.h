@@ -22,7 +22,7 @@
  */
 
 
-#ifndef __JHTML_H__
+#ifndef __ZE_HTML_H__
 
 void                html_clean_codes(char *, size_t );
 
@@ -33,5 +33,5 @@ int                 check_valid_html_tags(char *, char *);
 int                 get_html_entity(char *);
 
 
-#define __JHTML_H__
+#define __ZE_HTML_H__
 #endif

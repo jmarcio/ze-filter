@@ -21,9 +21,9 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#ifndef __JMAIN_H__
+#ifndef __ZE_MAIN_H__
 
-#define __JMAIN_H__
+#define __ZE_MAIN_H__
 
 #define  DT_SIGALRM 2
 

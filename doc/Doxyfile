@@ -873,7 +873,11 @@ RECURSIVE              = YES
 # Note that relative paths are relative to the directory from which doxygen is
 # run.
 
-EXCLUDE                = 3rdparty librepl
+EXCLUDE                = 3rdparty libdb libpcre
+EXCLUDE               += doc/old-doc
+EXCLUDE               += librepl
+EXCLUDE               += aux tmp scratch
+EXCLUDE               += modules
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or
 # directories that are symbolic links (a Unix file system feature) are excluded
@@ -889,8 +893,7 @@ EXCLUDE_SYMLINKS       = NO
 # Note that the wildcards are matched against the file with absolute path, so to
 # exclude all test directories for example use the pattern */test/*
 
-EXCLUDE_PATTERNS       = */3rdparty/* */libdb/* */libpcre/* 
-EXCLUDE_PATTERNS      += */aux/* */tmp/* */scratch/*  */modules/*
+EXCLUDE_PATTERNS       = 
 
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names
 # (namespaces, classes, functions, etc.) that should be excluded from the
@@ -1993,7 +1996,7 @@ GENERATE_AUTOGEN_DEF   = NO
 # Note that this feature is still experimental and incomplete at the moment.
 # The default value is: NO.
 
-GENERATE_PERLMOD       = NO
+GENERATE_PERLMOD       = YES
 
 # If the PERLMOD_LATEX tag is set to YES, doxygen will generate the necessary
 # Makefile rules, Perl scripts and LaTeX code to be able to generate PDF and DVI
@@ -2011,7 +2014,7 @@ PERLMOD_LATEX          = NO
 # The default value is: YES.
 # This tag requires that the tag GENERATE_PERLMOD is set to YES.
 
-PERLMOD_PRETTY         = YES
+PERLMOD_PRETTY         = NO
 
 # The names of the make variables in the generated doxyrules.make file are
 # prefixed with the string contained in PERLMOD_MAKEVAR_PREFIX. This is useful

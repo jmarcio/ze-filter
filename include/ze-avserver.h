@@ -21,7 +21,7 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#ifndef __JAVSERVER_H__
+#ifndef __ZE_AVSERVER_H__
 
 int                 j_avserver ();
 
@@ -30,5 +30,5 @@ extern int          av_port;
 
 extern char        *av_args[];
 
-#define __JAVSERVER_H__
+#define __ZE_AVSERVER_H__
 #endif

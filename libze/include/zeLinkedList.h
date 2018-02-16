@@ -22,7 +22,7 @@
  */
 
 
-#ifndef __JLINKEDLIST_H__
+#ifndef __ZE_LINKEDLIST_H__
 
 typedef struct LISTR_T LISTR_T;
 
@@ -48,5 +48,5 @@ int                 zeLinkedList_CountSet(LISTR_T *, char *, int);
 int                 zeLinkedList_CountGet(LISTR_T *, char *);
 int                 zeLinkedList_CountInc(LISTR_T *, char *);
 
-#define __JLINKEDLIST_H__
+#define __ZE_LINKEDLIST_H__
 #endif

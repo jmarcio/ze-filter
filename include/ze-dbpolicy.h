@@ -21,7 +21,7 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#ifndef __JDBPOLICY_H_
+#ifndef __ZE_DBPOLICY_H_
 
 bool                db_policy_open(bool);
 bool                db_policy_reopen();
@@ -43,5 +43,5 @@ bool                db_policy_check_spec(char *prefix, char *key, char *bufout,
 					 size_t szbuf, int32_t flags);
 
 
-#define __JDBPOLICY_H_
+#define __ZE_DBPOLICY_H_
 #endif

@@ -21,7 +21,7 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#ifndef __JDBBL_H_
+#ifndef __ZE_DBBL_H_
 
 #define  BL_ORACLE              1
 #define  BL_PATMATCH            2
@@ -54,5 +54,5 @@ bool                 db_map_open(char *bl);
 bool                 db_map_close(char *bl);
 bool                 db_map_close_all(void);
 
-#define __JDBBL_H_
+#define __ZE_DBBL_H_
 #endif

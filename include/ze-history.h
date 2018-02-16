@@ -21,7 +21,7 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#ifndef __JHISTORY_H__
+#ifndef __ZE_HISTORY_H__
 
 typedef struct History_T History_T;
 typedef struct HistRaw_T HistRaw_T;
@@ -59,5 +59,5 @@ void            res_history_summary (History_T *, char *, time_t, time_t, bool, 
 
 bool            load_live_history (History_T *, time_t, time_t);
 
-#define __JHISTORY_H__
+#define __ZE_HISTORY_H__
 #endif

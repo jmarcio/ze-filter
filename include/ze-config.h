@@ -22,7 +22,7 @@
  */
 
 
-#ifndef __JCONFIG_H__
+#ifndef __ZE_CONFIG_H__
 
 /*
  *
@@ -56,5 +56,5 @@ extern OPT_REC_T  cf_opt;
 
 
 
-#define __JCONFIG_H__
+#define __ZE_CONFIG_H__
 #endif

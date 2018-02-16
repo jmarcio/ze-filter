@@ -21,7 +21,7 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#ifndef __JTABLE_H_
+#ifndef __ZE_TABLE_H_
 
 typedef struct zeTbl_T zeTbl_T;
 
@@ -56,5 +56,5 @@ void               *zeTable_Get_Ind_ptr (zeTbl_T *, int);
 void               *zeTable_Get_First_Ptr (zeTbl_T *);
 void               *zeTable_Get_Next_Ptr (zeTbl_T *);
 
-#define __JTABLE_H_
+#define __ZE_TABLE_H_
 #endif

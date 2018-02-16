@@ -22,7 +22,7 @@
  */
 
 
-#ifndef __JSTRINGS_H__
+#ifndef __ZE_STRINGS_H__
 
 #define              STRLPCY_IS_SNPRINTF    1
 #undef               STRLCPY_IS_SNPRINTF
@@ -105,5 +105,5 @@ size_t              strlcpy(char *, const char *, size_t);
 #endif             /* HAVE_STRLCPY */
 
 
-#define __JSTRINGS_H__
+#define __ZE_STRINGS_H__
 #endif
