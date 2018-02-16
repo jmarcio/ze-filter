@@ -1342,6 +1342,8 @@ AC_CONFIG_FILES(config/startup/ze-filter.service)
 AC_CONFIG_FILES(config/startup/ze-greyd.service)
 AC_CONFIG_FILES(config/startup/Makefile)
 
+AC_CONFIG_FILES(doc/Doxyfile)
+
 dnl AC_CONFIG_FILES([$MODMAKE])
 
 AC_CONFIG_COMMANDS([default],[[echo ""]

@@ -16814,6 +16814,9 @@ ac_config_files="$ac_config_files config/startup/ze-greyd.service"
 ac_config_files="$ac_config_files config/startup/Makefile"
 
 
+ac_config_files="$ac_config_files doc/Doxyfile"
+
+
 
 ac_config_commands="$ac_config_commands default"
 
@@ -17856,6 +17859,7 @@ do
     "config/startup/ze-filter.service") CONFIG_FILES="$CONFIG_FILES config/startup/ze-filter.service" ;;
     "config/startup/ze-greyd.service") CONFIG_FILES="$CONFIG_FILES config/startup/ze-greyd.service" ;;
     "config/startup/Makefile") CONFIG_FILES="$CONFIG_FILES config/startup/Makefile" ;;
+    "doc/Doxyfile") CONFIG_FILES="$CONFIG_FILES doc/Doxyfile" ;;
     "default") CONFIG_COMMANDS="$CONFIG_COMMANDS default" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
