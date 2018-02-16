@@ -30,12 +30,14 @@ AC_PROG_MAKE_SET
 dnl ############################################################
 dnl
 dnl
-AC_CHECK_PROG(ACLOCAL,   aclocal,aclocal,echo)
-AC_CHECK_PROG(AUTOMAKE,  automake,automake,echo)
-AC_CHECK_PROG(AUTOCONF,  autoconf,autoconf,echo)
-AC_CHECK_PROG(AUTOHEADER,autoheader,autoheader,echo)
+AC_CHECK_PROG(ACLOCAL,   aclocal,    aclocal,   echo)
+AC_CHECK_PROG(AUTOMAKE,  automake,   automake,  echo)
+AC_CHECK_PROG(AUTOCONF,  autoconf,   autoconf,  echo)
+AC_CHECK_PROG(AUTOHEADER,autoheader, autoheader,echo)
 
 AC_PATH_PROG(PERL,perl)
+
+AC_CHECK_PROG(DOXYGEN,   doxygen,    doxygen,   echo)
 
 dnl ############################################################
 dnl
@@ -60,8 +62,6 @@ CONF_CONFDIR=$(getCompileConf CONFDIR)
 CONF_WORKROOT=$(getCompileConf WORKROOT)
 CONF_SPOOLDIR=$(getCompileConf SPOOLDIR)
 CONF_ZEGREYDDIR=$(getCompileConf ZEGREYDDIR)
-
-CONF_RCDIR=$(getCompileConf RCDIR)
 
 CONF_CC=$(getCompileConf CC)
 CONF_CFLAGS=$(getCompileConf CFLAGS)
@@ -375,54 +375,8 @@ HAS_SYSTEMD=no
 [ test -d /etc/systemd/system ] && HAS_SYSTEMD=yes
 AC_MSG_RESULT($HAS_SYSTEMD)
 
-AC_MSG_CHECKING([where default start-up scripts are installed])
-
-if test -n "$CONF_RCDIR" ;
-then
-  RCDIR=$CONF_RCDIR
-else
-  RCDIR=/etc/init.d
-  for dir in /etc/init.d /etc/rc.d /etc/rc.d/init.d /sbin/init.d /usr/local/etc/rc.d
-  do
-    if test -d $dir
-    then
-      RCDIR=$dir
-      break
-    fi
-  done
-  case $build
-  in
-    *freebsd*)
-      RCDIR="/usr/local/etc/rc.d"
-      ;;
-    *)
-      ;;
-  esac
-fi
-AC_MSG_RESULT($RCDIR)
- 
 dnl
 dnl
-AC_ARG_WITH(rc-dir,
-  AC_HELP_STRING([--with-rc-dir=PATH],
-                 [set system start-up dir (default /etc/init.d or /etc/rc.d)]),
-  [RCDIR="$withval"])
-AC_SUBST(RCDIR)
-
-case $build
-in
-  *freebsd*)
-    RCSCRIPT="ze-filter.sh"
-    RCGREYD="ze-greyd.sh"
-    ;;
-  *)
-    RCSCRIPT="ze-filter"
-    RCGREYD="ze-greyd"
-    ;;
-esac
-AC_SUBST(RCSCRIPT)
-AC_SUBST(RCGREYD)
-
 AC_MSG_CHECKING([file extensions defined at xfiles.def file])
 XFILES_DEF=""
 cp /dev/null > include/xfiles.inc > /dev/null 2>&1
@@ -1439,8 +1393,6 @@ echo "  ze-filter user           : $USER" >> config.results
 echo "  ze-filter group          : $GROUP" >> config.results
 echo "  Create User/Group        : $CREATE" >> config.results
 echo "  prefix dir               : $prefix" >> config.results
-echo "  start-up script dir      : $RCDIR" >> config.results
-echo "  start-up scripts         : ze-filter$RCSUFFIX ze-greyd$RCSUFFIX" >> config.results
 echo "  configuration files dir  : $CONFDIR" >> config.results
 echo "  work dir                 : $WORKROOT" >> config.results
 echo "  state dir                : $STATEDIR" >> config.results

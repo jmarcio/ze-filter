@@ -658,9 +658,6 @@ PTHREAD_LIBS
 PTHREAD_CC
 LANGSPEC
 XFILES_DEF
-RCGREYD
-RCSCRIPT
-RCDIR
 CONFDIR
 STATEDIR
 SPOOLDIR
@@ -808,7 +805,6 @@ with_work_dir
 with_ze_greyd_dir
 with_spool_dir
 with_conf_dir
-with_rc_dir
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1471,8 +1467,6 @@ Optional Packages:
                           ze-greyd work dir (default /var/ze-filter/ze-greydb)
   --with-spool-dir=PATH   ze-filter spool dir (default /var/spool/ze-filter)
   --with-conf-dir=PATH    ze-filter config dir (default /etc/ze-filter)
-  --with-rc-dir=PATH      set system start-up dir (default /etc/init.d or
-                          /etc/rc.d)
 
 Some influential environment variables:
   CC          C compiler command
@@ -3493,8 +3487,6 @@ CONF_CONFDIR=$(getCompileConf CONFDIR)
 CONF_WORKROOT=$(getCompileConf WORKROOT)
 CONF_SPOOLDIR=$(getCompileConf SPOOLDIR)
 CONF_ZEGREYDDIR=$(getCompileConf ZEGREYDDIR)
-
-CONF_RCDIR=$(getCompileConf RCDIR)
 
 CONF_CC=$(getCompileConf CC)
 CONF_CFLAGS=$(getCompileConf CFLAGS)
@@ -12968,56 +12960,6 @@ HAS_SYSTEMD=no
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $HAS_SYSTEMD" >&5
 $as_echo "$HAS_SYSTEMD" >&6; }
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking where default start-up scripts are installed" >&5
-$as_echo_n "checking where default start-up scripts are installed... " >&6; }
-
-if test -n "$CONF_RCDIR" ;
-then
-  RCDIR=$CONF_RCDIR
-else
-  RCDIR=/etc/init.d
-  for dir in /etc/init.d /etc/rc.d /etc/rc.d/init.d /sbin/init.d /usr/local/etc/rc.d
-  do
-    if test -d $dir
-    then
-      RCDIR=$dir
-      break
-    fi
-  done
-  case $build
-  in
-    *freebsd*)
-      RCDIR="/usr/local/etc/rc.d"
-      ;;
-    *)
-      ;;
-  esac
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $RCDIR" >&5
-$as_echo "$RCDIR" >&6; }
-
-
-# Check whether --with-rc-dir was given.
-if test "${with_rc_dir+set}" = set; then :
-  withval=$with_rc_dir; RCDIR="$withval"
-fi
-
-
-
-case $build
-in
-  *freebsd*)
-    RCSCRIPT="ze-filter.sh"
-    RCGREYD="ze-greyd.sh"
-    ;;
-  *)
-    RCSCRIPT="ze-filter"
-    RCGREYD="ze-greyd"
-    ;;
-esac
-
-
-
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking file extensions defined at xfiles.def file" >&5
 $as_echo_n "checking file extensions defined at xfiles.def file... " >&6; }
 XFILES_DEF=""
@@ -19331,8 +19273,6 @@ echo "  ze-filter user           : $USER" >> config.results
 echo "  ze-filter group          : $GROUP" >> config.results
 echo "  Create User/Group        : $CREATE" >> config.results
 echo "  prefix dir               : $prefix" >> config.results
-echo "  start-up script dir      : $RCDIR" >> config.results
-echo "  start-up scripts         : ze-filter$RCSUFFIX ze-greyd$RCSUFFIX" >> config.results
 echo "  configuration files dir  : $CONFDIR" >> config.results
 echo "  work dir                 : $WORKROOT" >> config.results
 echo "  state dir                : $STATEDIR" >> config.results
