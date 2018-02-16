@@ -21,7 +21,7 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#ifndef __ZE_POLICY_H__
+#ifndef __ZE_POLICY_H
 
 bool                lookup_policy(char *, char *, char *, size_t, bool);
 
@@ -67,5 +67,5 @@ bool                policy_reopen();
 int                 policy_decode(char *);
 
 
-#define __ZE_POLICY_H__
+#define __ZE_POLICY_H
 #endif

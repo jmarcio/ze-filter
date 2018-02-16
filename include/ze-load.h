@@ -22,7 +22,7 @@
  */
 
 
-#ifndef __ZE_CPULOAD_H__
+#ifndef __ZE_CPULOAD_H
 
 
 #define JCPU_IDLE          0
@@ -42,5 +42,5 @@ void                cpuload_stop(void);
 void                load_measure_stop(void);
 
 
-#define __ZE_CPULOAD_H__
+#define __ZE_CPULOAD_H
 #endif

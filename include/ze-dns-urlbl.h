@@ -22,7 +22,7 @@
  */
 
 
-#ifndef __ZE_DNS_URLBL_H__
+#ifndef __ZE_DNS_URLBL_H
 
 typedef struct
 {
@@ -51,5 +51,5 @@ uint32_t            check_urlbl_table(char *id, char *name, urlbl_T *bl);
 bool                check_dns_urlbl(char *name, char *bl, char *code,
                                     size_t size, bool recurse);
 
-#define __ZE_DNS_URLBL_H__
+#define __ZE_DNS_URLBL_H
 #endif

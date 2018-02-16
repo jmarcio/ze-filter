@@ -22,7 +22,7 @@
  */
 
 
-#ifndef __ZE_UUDECODE_H__
+#ifndef __ZE_UUDECODE_H
 
 typedef struct {
   uint32_t            signature;
@@ -38,5 +38,5 @@ bool                uudecode_file (char *, UU_BLOCK_T *);
 
 void                free_uu_block(UU_BLOCK_T *);
 
-#define __ZE_UUDECODE_H__
+#define __ZE_UUDECODE_H
 #endif

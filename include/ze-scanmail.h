@@ -22,7 +22,7 @@
  */
 
 
-#ifndef __ZE_SCAN_H__
+#ifndef __ZE_SCAN_H
 
 #define  CT_NONE            0
 #define  CT_TYPE            1
@@ -38,5 +38,5 @@ int                 scan_block (char *, char *, long, char *, long,
                                 int *, content_field_T *, content_field_T **);
 
 
-#define __ZE_SCAN_H__
+#define __ZE_SCAN_H
 #endif

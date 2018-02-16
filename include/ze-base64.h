@@ -22,7 +22,7 @@
  */
 
 
-#ifndef __ZE_BASE64_H__
+#ifndef __ZE_BASE64_H
 
 int                 base64_decode(char *, char *, size_t *, size_t *);
 
@@ -31,5 +31,5 @@ bool                base64_encode(char *sout,
 
 void               *alt_base64_decode(char *, size_t *);
 
-#define __ZE_BASE64_H__
+#define __ZE_BASE64_H
 #endif

@@ -21,7 +21,7 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#ifndef __ZE_RCPT_H__
+#ifndef __ZE_RCPT_H
 
 int                 check_rcpt(char *rcpt, char *ip, char *name, 
 			       int netclass);
@@ -45,5 +45,5 @@ char               *rcpt_code_string(int);
 #define RCPT_IGNORE               7
 
 
-#define __ZE_RCPT_H__
+#define __ZE_RCPT_H
 #endif

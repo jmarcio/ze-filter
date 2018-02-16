@@ -22,7 +22,7 @@
  */
 
 
-#ifndef __ZE_MIMELIST_H__
+#ifndef __ZE_MIMELIST_H
 
 
 
@@ -75,6 +75,6 @@ int                 extract_attachments (content_field_T *, attachment_T **);
 int                 get_file_disposition (content_field_T *, char *, char *, size_t);
 
 
-#define __ZE_MIMELIST_H__
+#define __ZE_MIMELIST_H
 
 #endif

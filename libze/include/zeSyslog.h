@@ -22,7 +22,7 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#ifndef __ZE_SYSLOG_H__
+#ifndef __ZE_SYSLOG_H
 
 #define         ZE_STDOUT   1
 #define         ZE_SYSLOG   0
@@ -280,5 +280,5 @@ do { \
   } while (0)
 #endif
 
-#define __ZE_SYSLOG_H__
+#define __ZE_SYSLOG_H
 #endif

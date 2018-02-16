@@ -21,9 +21,9 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#ifndef __ZE_NDC_SERVER_H__
+#ifndef __ZE_NDC_SERVER_H
 
 bool                setup_control_handler();
 
-#define __ZE_NDC_SERVER_H__
+#define __ZE_NDC_SERVER_H
 #endif

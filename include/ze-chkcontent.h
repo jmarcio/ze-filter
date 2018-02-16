@@ -22,7 +22,7 @@
  */
 
 
-#ifndef __ZE_CHKCONTENT_H__
+#ifndef __ZE_CHKCONTENT_H
 
 typedef struct
 {
@@ -120,5 +120,5 @@ int                 scan_body_contents(char *, char *, char *, size_t,
                                        spamchk_T *, msg_flags_T *,
                                        msg_scores_T *);
 
-#define __ZE_CHKCONTENT_H__
+#define __ZE_CHKCONTENT_H
 #endif

@@ -22,7 +22,7 @@
  */
 
 
-#ifndef __ZE_SPOOL_H__
+#ifndef __ZE_SPOOL_H
 
 #define      WHY_UNKNOWN         0
 #define      WHY_XFILE           1
@@ -63,5 +63,5 @@ struct MSG_SPOOL_T
 };
 
 
-#define __ZE_SPOOL_H__
+#define __ZE_SPOOL_H
 #endif

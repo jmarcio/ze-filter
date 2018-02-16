@@ -22,7 +22,7 @@
  */
 
 
-#ifndef __ZE_DECODE_H__
+#ifndef __ZE_DECODE_H
 
 bool                is_rfc1521_encoded (char *);
 int                 decode_rfc1521 (char *, char *, size_t);
@@ -41,5 +41,5 @@ int                 decode_rfc2231 (char *, char *, size_t);
 
 int                 strascii (char *, char *, char *);
 
-#define __ZE_DECODE_H__
+#define __ZE_DECODE_H
 #endif

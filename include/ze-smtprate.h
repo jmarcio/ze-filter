@@ -21,7 +21,7 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#ifndef __ZE_SMTPRATE_H__
+#ifndef __ZE_SMTPRATE_H
 
 #if 1
 #define USE_SMTPRATE  1
@@ -74,7 +74,7 @@ extern unsigned int smtprate_window;  /* 10 minutes */
 
 
 
-#define __ZE_SMTPRATE_H__
+#define __ZE_SMTPRATE_H
 #endif
 
 

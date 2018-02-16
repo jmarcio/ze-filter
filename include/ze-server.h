@@ -21,7 +21,7 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#ifndef __ZE_SERVER_H__
+#ifndef __ZE_SERVER_H
 
 #define SERVER_SPEC_LEN     512
 
@@ -39,5 +39,5 @@ typedef struct
 int                 server_listen(char *spec, server_T * server);
 
 
-#define __ZE_SERVER_H__
+#define __ZE_SERVER_H
 #endif

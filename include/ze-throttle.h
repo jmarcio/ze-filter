@@ -21,7 +21,7 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#ifndef __ZE_THROTTLE_H__
+#ifndef __ZE_THROTTLE_H
 
 
 bool                connrate_init (size_t, size_t);
@@ -54,7 +54,7 @@ bool                update_throttle_dos();
 bool                check_throttle_dos(void);
 void                log_throttle_stats(void);
 
-#define __ZE_THROTTLE_H__
+#define __ZE_THROTTLE_H
 #endif
 
 

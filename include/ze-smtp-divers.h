@@ -22,7 +22,7 @@
  */
 
 
-#ifndef __ZE_SMTP_DIVERS_H__
+#ifndef __ZE_SMTP_DIVERS_H
 
 time_t              header_date2secs(char *date);
 
@@ -42,5 +42,5 @@ int                 jc_string2reply(smtp_reply_T *, char *);
 bool                jc_fill_reply(smtp_reply_T *, char *, char *, char *, int);
 void                jc_reply_free(smtp_reply_T *);
 
-#define __ZE_SMTP_DIVERS_H__
+#define __ZE_SMTP_DIVERS_H
 #endif

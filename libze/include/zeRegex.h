@@ -22,7 +22,7 @@
  */
 
 
-#ifndef __ZE_REGEX_H__
+#ifndef __ZE_REGEX_H
 
 
 struct zeRegex_T
@@ -57,5 +57,5 @@ char               *zeRegexError(zeRegex_T *);
 
 
 
-#define __ZE_REGEX_H__
+#define __ZE_REGEX_H
 #endif

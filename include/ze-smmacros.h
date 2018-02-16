@@ -21,7 +21,7 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#ifndef __ZE_SMMACROS_H__
+#ifndef __ZE_SMMACROS_H
 
 typedef struct sm_mac_T sm_mac_T;
 
@@ -36,5 +36,5 @@ void                sm_macro_log_all(char *id, sm_mac_T *sm);
 
 char               *callback_name(int id);
 
-#define __ZE_SMMACROS_H__
+#define __ZE_SMMACROS_H
 #endif

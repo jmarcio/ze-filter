@@ -43,8 +43,8 @@
 
 /* $Id: sm_resolve.h,v 8.8 2001/09/01 00:06:02 gshapiro Exp $ */
 
-#ifndef __ROKEN_RESOLVE_H__
-# define __ROKEN_RESOLVE_H__
+#ifndef __ROKEN_RESOLVE_H
+# define __ROKEN_RESOLVE_H
 
 /* We use these, but they are not always present in <arpa/nameser.h> */
 
@@ -141,4 +141,4 @@ int                 dns_lookup(const char *domain,
 
 extern bool         dns_lock;
 
-#endif             /* ! __ROKEN_RESOLVE_H__ */
+#endif             /* ! __ROKEN_RESOLVE_H */

@@ -22,7 +22,7 @@
  */
 
 
-#ifndef __ZE_MACROS_H__
+#ifndef __ZE_MACROS_H
 
 #define ASSERT(a)		assert((a))
 
@@ -258,5 +258,5 @@
     }					       	\
   } while (FALSE)
 
-#define __ZE_MACROS_H__
+#define __ZE_MACROS_H
 #endif

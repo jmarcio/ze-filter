@@ -22,9 +22,9 @@
  */
 
 
-#ifndef __ZE_CLEANSPOOL_H__
+#ifndef __ZE_CLEANSPOOL_H
 
 void                cleanup_spool (char *, unsigned long );
 
-#define __ZE_CLEANSPOOL_H__
+#define __ZE_CLEANSPOOL_H
 #endif

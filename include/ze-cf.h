@@ -22,7 +22,7 @@
  */
 
 
-#ifndef __ZE_CF_H__
+#ifndef __ZE_CF_H
 
 /* **************************************************** */
 
@@ -120,5 +120,5 @@ extern char     domain[];
 
 extern int      priority;
 
-#define __ZE_CF_H__
+#define __ZE_CF_H
 #endif

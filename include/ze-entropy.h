@@ -22,7 +22,7 @@
  */
 
 
-#ifndef __ZE_ENTROPY_H__
+#ifndef __ZE_ENTROPY_H
 
 double              entropy_monogram(char *, size_t );
 double              entropy_token_class(char *, size_t );
@@ -35,5 +35,5 @@ bool                text_buffer_entropy(char *, size_t,
 																				double *, double *, double *);
 
 
-#define __ZE_ENTROPY_H__
+#define __ZE_ENTROPY_H
 #endif

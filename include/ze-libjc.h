@@ -22,7 +22,7 @@
  */
 
 
-#ifndef __ZE_LIBJC_H__
+#ifndef __ZE_LIBJC_H
 
 #include "version.h"
 #include "defs.h"
@@ -93,5 +93,5 @@
 
 
 
-#define __ZE_LIBJC_H__
+#define __ZE_LIBJC_H
 #endif
