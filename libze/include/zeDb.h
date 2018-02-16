@@ -21,7 +21,7 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#ifndef __ZEDB_H_
+#ifndef __ZE_DB_H__
 
 #if USE_BerkeleyDB
 #define DB_VERSION         ((DB_VERSION_MAJOR << 16) | \
@@ -189,5 +189,5 @@ bool                zeDb_Stat(ZEDB_T *, ZEDB_STAT_T **);
 
 #endif
 
-#define __ZEDB_H_
+#define __ZE_DB_H__
 #endif

@@ -21,7 +21,7 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#ifndef _ZE_FILEEXP_H_
+#ifndef __ZE_FILEEXP_H__
 
 int                 free_fext ();
 int                 add_fext (char *);
@@ -37,5 +37,5 @@ void                dump_xfiles_table ();
 bool                load_xfiles_table (char *, char *);
 bool                check_xfiles (char *, char *, size_t, char *, size_t );
 
-#define _ZE_FILEEXP_H_
+#define __ZE_FILEEXP_H__
 #endif

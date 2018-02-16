@@ -22,7 +22,7 @@
  */
 
 
-#ifndef __ZEFILTER_H__
+#ifndef __ZE_FILTER_H__
 
 #include "version.h"
 #include "defs.h"
@@ -215,5 +215,5 @@ _FFR_RFC2046_MSGS_ARE_XFILES
 
 #define _FFR_RFC2046_MSGS_ARE_XFILES           1
 
-#define __ZEFILTER_H__
+#define __ZE_FILTER_H__
 #endif

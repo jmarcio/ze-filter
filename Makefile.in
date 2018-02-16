@@ -877,6 +877,11 @@ uninstall-am:
 
 .INIT :
 
+all:
+
+doxydoc:
+	doxygen doc/Doxyfile
+
 clean-hook:
 	rm -f *~ */*~ */*/*~ */*/*/*~ */*/*/*/*~ #*# */#*# */*/#*# */*/*/#*#
 	rm -f config.results

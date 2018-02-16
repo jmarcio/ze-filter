@@ -21,7 +21,7 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#ifndef __ZE_MAILREGEX_H_
+#ifndef __ZE_MAILREGEX_H__
 
 #if 0
 #define             REGEX_OK          0
@@ -47,5 +47,5 @@ bool            db_reopen_rurbl_database();
 
 void            dump_regex_table ();
 
-#define __ZE_MAILREGEX_H_
+#define __ZE_MAILREGEX_H__
 #endif
