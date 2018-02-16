@@ -122,11 +122,11 @@ am_libjoe_a_OBJECTS = ze-oracle-scores.$(OBJEXT) \
 	ze-oracle.$(OBJEXT) ze-policy.$(OBJEXT) ze-rcpt.$(OBJEXT) \
 	ze-dns-iprbwl.$(OBJEXT) ze-dns-urlbl.$(OBJEXT) \
 	ze-resource.$(OBJEXT) ze-smtprate.$(OBJEXT) ze-stats.$(OBJEXT) \
-	ze-throttle.$(OBJEXT) mimelist.$(OBJEXT) scanmail.$(OBJEXT) \
-	ze-read-conf-data.$(OBJEXT) ze-cf.$(OBJEXT) ze-log.$(OBJEXT) \
-	ze-proc-witness.$(OBJEXT) ze-config.$(OBJEXT) \
-	ze-rcpt-list.$(OBJEXT) ze-msg-score.$(OBJEXT) \
-	ze-modules.$(OBJEXT)
+	ze-throttle.$(OBJEXT) ze-mimelist.$(OBJEXT) \
+	ze-scanmail.$(OBJEXT) ze-read-conf-data.$(OBJEXT) \
+	ze-cf.$(OBJEXT) ze-log.$(OBJEXT) ze-proc-witness.$(OBJEXT) \
+	ze-config.$(OBJEXT) ze-rcpt-list.$(OBJEXT) \
+	ze-msg-score.$(OBJEXT) ze-modules.$(OBJEXT)
 libjoe_a_OBJECTS = $(am_libjoe_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -375,8 +375,8 @@ libjoe_a_SOURCES = ze-oracle-scores.c \
 			ze-smtprate.c \
 			ze-stats.c \
 			ze-throttle.c \
-			mimelist.c \
-			scanmail.c \
+			ze-mimelist.c \
+			ze-scanmail.c \
 			ze-read-conf-data.c \
 			ze-cf.c \
 			ze-log.c \
@@ -436,8 +436,6 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mimelist.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/scanmail.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-cf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-chkcontent.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-config.Po@am__quote@
@@ -460,6 +458,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-log-regex.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-log.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-mailregex.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-mimelist.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-modules.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-msg-score.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-netclass.Po@am__quote@
@@ -472,6 +471,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-read-conf-data.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-resolve-cache.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-resource.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-scanmail.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-smtprate.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-stats.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ze-throttle.Po@am__quote@
