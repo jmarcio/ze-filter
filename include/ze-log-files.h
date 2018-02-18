@@ -22,11 +22,18 @@
  */
 
 
-#ifndef ZE_LOG_FILES_H
+#ifndef __ZE_LOG_FILES_H
+
+/** @addtogroup Logging
+*
+* @{
+*/
 
 bool                log_attached_files(char *, char *, attachment_T *);
 bool                log_attached_files_ropen();
 
-# define ZE_LOG_FILES_H    1
-#endif /* J_LOG_FILES_H */
+/** @} */
+
+# define __ZE_LOG_FILES_H    1
+#endif /* __ZE_LOG_FILES_H */
 

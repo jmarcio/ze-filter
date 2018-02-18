@@ -23,6 +23,11 @@
 
 #ifndef __ZE_NETCLASS_H
 
+/** @addtogroup DBConf
+*
+* @{
+*/
+
 #define NET_UNKNOWN  0
 
 #define NET_LOCAL    0x0001
@@ -78,6 +83,8 @@ int                 GetClientNetClass(char *ip, char *name, netclass_T *class,
 
 int                 DecodeNetClass(char *, char *, size_t);
 
+
+/** @} */
 
 #define __ZE_NETCLASS_H
 #endif

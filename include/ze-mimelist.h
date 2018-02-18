@@ -24,6 +24,11 @@
 
 #ifndef __ZE_MIMELIST_H
 
+/** @addtogroup MsgTools
+*
+* @{
+*/
+
 
 
 /*
@@ -74,6 +79,8 @@ attachment_T       *add_attachment (attachment_T * file, attachment_T **);
 int                 extract_attachments (content_field_T *, attachment_T **);
 int                 get_file_disposition (content_field_T *, char *, char *, size_t);
 
+
+/** @} */
 
 #define __ZE_MIMELIST_H
 

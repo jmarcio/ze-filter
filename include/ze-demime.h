@@ -24,6 +24,11 @@
 
 #ifndef __ZE_DEMIME_H
 
+/** @addtogroup MsgTools
+*
+* @{
+*/
+
 #define    MIME_ERROR_UNUSED_BOUNDARY        0
 
 #define    MIME_TYPE_TEXT              (1 << 8)
@@ -89,6 +94,8 @@ int                 which_mime_type(char *s);
 char               *mime_type_name(int);
 
 void                set_mime_debug(bool);
+
+/** @} */
 
 #define __ZE_DEMIME_H
 #endif

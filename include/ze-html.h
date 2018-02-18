@@ -24,6 +24,11 @@
 
 #ifndef __ZE_HTML_H
 
+/** @addtogroup MsgTools
+*
+* @{
+*/
+
 void                html_clean_codes(char *, size_t );
 
 char               *cleanup_html_buffer(char *, size_t );
@@ -32,6 +37,8 @@ int                 check_valid_html_tags(char *, char *);
 
 int                 get_html_entity(char *);
 
+
+/** @} */
 
 #define __ZE_HTML_H
 #endif

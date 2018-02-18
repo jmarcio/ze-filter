@@ -164,25 +164,12 @@ zeStrnDup(sin, n)
   if (sin == NULL || n == 0)
     return NULL;
 
-  if ((p = zm_malloc(n + 1)) != NULL)
+  if ((p = zeMalloc(n + 1)) != NULL)
     zeSafeStrnCpy((char *) p, n + 1, (char *) sin, n);
   else
     ZE_LogSysError("malloc error");
 
   return p;
-}
-
-/* ****************************************************************************
- *                                                                            *
- *                                                                            *
- **************************************************************************** */
-char               *
-zm_malloc(size)
-     size_t              size;
-{
-  size += (8 - size % 8);
-
-  return malloc(size);
 }
 
 /* ****************************************************************************

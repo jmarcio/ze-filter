@@ -24,6 +24,11 @@
 
 #ifndef __ZE_UUDECODE_H
 
+/** @addtogroup MsgTools
+ *
+ * @{
+ */
+ 
 typedef struct {
   uint32_t            signature;
   size_t              size;
@@ -37,6 +42,8 @@ bool               uudecode_buffer (char *, UU_BLOCK_T *);
 bool                uudecode_file (char *, UU_BLOCK_T *);
 
 void                free_uu_block(UU_BLOCK_T *);
+
+/** @} */
 
 #define __ZE_UUDECODE_H
 #endif

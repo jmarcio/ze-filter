@@ -19,8 +19,12 @@
  */
 
 
-#ifndef ZMPOLICY_H
+#ifndef __ZE_POLICY_H
 
+/** @addtogroup DBConf
+ *
+ * @{
+ */
 
 bool                PolicyLookupFrom(char *prefix, char *from,
                                      char *class, char *buf, size_t size,
@@ -50,7 +54,7 @@ bool                PolicyLookupTuple(char *prefix, char *ip, char *name,
                                       char *netclass,
                                       char *from, char *to, bool result);
 
+/** @} */
 
-
-# define ZMPOLICY_H    1
-#endif             /* ZMPOLICY_H */
+# define __ZE_POLICY_H    1
+#endif             /* __ZE_POLICY_H */

@@ -35,6 +35,8 @@ all:
 doxydoc:
 	doxygen doc/Doxyfile
 
+srcdoc: doxydoc
+
 clean-hook:
 	rm -f *~ */*~ */*/*~ */*/*/*~ */*/*/*/*~ #*# */#*# */*/#*# */*/*/#*#
 	rm -f config.results

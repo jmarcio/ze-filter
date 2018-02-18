@@ -22,7 +22,12 @@
  */
 
 
-#ifndef ZE_RFC2822_H
+#ifndef __ZE_RFC2822_H
+
+/** @addtogroup MsgTools
+*
+* @{
+*/
 
 typedef struct rfc2822_hdr_T rfc2822_hdr_T, *rfc2822_hdr_P;
 
@@ -52,6 +57,8 @@ char            *rfc2822_get_attr(rfc2822_hdr_T *header, char *attr);
       (head) = x;				\
     }
 
-# define ZE_RFC2822_H    1
-#endif /* J_RFC2822_H */
+/** @} */
+
+# define __ZE_RFC2822_H    1
+#endif /* __ZE_RFC2822_H */
 

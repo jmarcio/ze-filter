@@ -24,6 +24,11 @@
 
 #ifndef __ZE_DNS_URLBL_H
 
+/** @addtogroup RBL
+*
+* @{
+*/
+
 typedef struct
 {
   char                line[256];
@@ -50,6 +55,8 @@ uint32_t            check_urlbl_table(char *id, char *name, urlbl_T *bl);
 
 bool                check_dns_urlbl(char *name, char *bl, char *code,
                                     size_t size, bool recurse);
+
+/** @} */
 
 #define __ZE_DNS_URLBL_H
 #endif

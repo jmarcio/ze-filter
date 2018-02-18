@@ -38,7 +38,7 @@ typedef struct
 } DATA_T;
 
 
-bool
+static bool
 save_mime_part(buf, size, id, level, type, arg, mime_part)
      char               *buf;
      size_t              size;

@@ -19,7 +19,7 @@
  */
 
 
-#ifndef ZEFILESYSTEM_H
+#ifndef __ZE_FILETOOLS
 
 char               *zeBasename(char *);
 char               *zeMyBasename(char *, char *, size_t);
@@ -34,6 +34,6 @@ bool                zeRemoveDir(char *);
 bool                zeShowDirInfo(char *);
 int                 zeFdPrintf(int , char *, ...);
 
-# define ZEFILESYSTEM_H    1
-#endif /* ZEFILESYSTEM_H */
+# define __ZE_FILETOOLS    1
+#endif /* __ZE_FILETOOLS */
 

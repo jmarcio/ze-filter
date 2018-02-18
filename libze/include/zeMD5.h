@@ -39,8 +39,8 @@
  * Still in the public domain.
  */
 
-#ifndef JMC_MD5_H
-#define JMC_MD5_H 1
+#ifndef __ZE_MD5_H
+#define __ZE_MD5_H 1
 
 #define ZE_MD5_DIGESTLENGTH 16
 
@@ -60,4 +60,4 @@ void                zeMD5_Update(ZEMD5_T *ctx, const unsigned char *buf,
 
 void                zeMD5_Final(ZEMD5_T * ctx, unsigned char *digest);
 
-#endif             /* JMC_MD5_H */
+#endif             /* __ZE_MD5_H */

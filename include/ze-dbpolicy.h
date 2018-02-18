@@ -23,6 +23,11 @@
 
 #ifndef __ZE_DBPOLICY_H
 
+/** @addtogroup DBConf
+*
+* @{
+*/
+
 bool                db_policy_open(bool);
 bool                db_policy_reopen();
 bool                db_policy_close();
@@ -42,6 +47,8 @@ bool                db_policy_lookup(char *prefix, char *key, char *bufout,
 bool                db_policy_check_spec(char *prefix, char *key, char *bufout,
 					 size_t szbuf, int32_t flags);
 
+
+/** @} */
 
 #define __ZE_DBPOLICY_H
 #endif

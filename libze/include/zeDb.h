@@ -23,6 +23,11 @@
 
 #ifndef __ZE_DB_H
 
+/** @addtogroup APIs
+*
+* @{
+*/
+
 #if USE_BerkeleyDB
 #define DB_VERSION         ((DB_VERSION_MAJOR << 16) | \
                             (DB_VERSION_MINOR << 8) | DB_VERSION_PATCH)
@@ -188,6 +193,8 @@ bool                zeDb_Stat(ZEDB_T *, ZEDB_STAT_T **);
 #define DB_BTREE_SEQ_END()
 
 #endif
+
+/** @} */
 
 #define __ZE_DB_H
 #endif

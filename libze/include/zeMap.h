@@ -22,7 +22,7 @@
  */
 
 
-#ifndef ZE_ZEMAP_H
+#ifndef __ZE_ZEMAP_H
 
 typedef struct ZEMAP_T
 {
@@ -63,5 +63,5 @@ bool           zeMap_Unlock(ZEMAP_T * map);
 
 bool           zeMap_Flush(ZEMAP_T * map);
 
-# define ZE_ZEMAP_H    1
-#endif             /* ZE_ZEMAP_H */
+# define __ZE_ZEMAP_H    1
+#endif             /* __ZE_ZEMAP_H */

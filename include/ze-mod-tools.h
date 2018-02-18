@@ -22,7 +22,7 @@
  */
 
 
-#ifndef ZE_MOD_TOOLS_H
+#ifndef __ZE_MOD_TOOLS_H
 
 void                ctx2mod_args(mod_ctx_T * mod, SMFICTX * ctx);
 
@@ -30,5 +30,5 @@ int                 mod2ctx_result(int r);
 
 bool                do_module_callback(SMFICTX *ctx, int step, int *result);
 
-# define ZE_MOD_TOOLS_H    1
-#endif             /* J_MOD_TOOLS_H */
+# define __ZE_MOD_TOOLS_H    1
+#endif             /* __ZE_MOD_TOOLS_H */

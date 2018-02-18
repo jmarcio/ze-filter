@@ -24,7 +24,14 @@
 
 #ifndef __ZE_QP_H
 
+/** @addtogroup MsgTools
+ *
+ * @{
+ */
+ 
 int                 qp_decode (char *, char *, size_t);
+
+/** @} */
 
 #define __ZE_QP_H
 #endif

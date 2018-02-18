@@ -70,7 +70,7 @@ jmc_str2sha1(sout, sin, szout)
   zeSHA1_Update(&ctx, sin, strlen((char *) sin));
   zeSHA1_Final(&ctx, dig);
 
-  base64_encode(sout, szout, dig, JMC_SHA1_DIGESTLENGTH);
+  base64_encode(sout, szout, dig, ZE_SHA1_DIGESTLENGTH);
 
   return TRUE;
 }
@@ -122,7 +122,7 @@ str2hash2hex(code, sout, sin, szout)
         zeSHA1_Init(&ctx);
         zeSHA1_Update(&ctx, (unsigned char *) sin, strlen((char *) sin));
         zeSHA1_Final(&ctx, dig);
-        hexa_encode(sout, szout, dig, JMC_SHA1_DIGESTLENGTH);
+        hexa_encode(sout, szout, dig, ZE_SHA1_DIGESTLENGTH);
       }
       break;
     case HASH_MD5:
@@ -163,7 +163,7 @@ str2hash2b64(code, sout, sin, szout)
         zeSHA1_Init(&ctx);
         zeSHA1_Update(&ctx, (unsigned char *) sin, strlen((char *) sin));
         zeSHA1_Final(&ctx, dig);
-        base64_encode(sout, szout, dig, JMC_SHA1_DIGESTLENGTH);
+        base64_encode(sout, szout, dig, ZE_SHA1_DIGESTLENGTH);
       }
       break;
     case HASH_MD5:

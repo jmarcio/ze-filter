@@ -24,6 +24,7 @@
 #include <ze-sys.h>
 #include <libze.h>
 
+#include <zeRegex.h>
 /* ****************************************************************************
  *                                                                            *
  *                                                                            *
@@ -37,10 +38,6 @@
 
 #define JREGCOMP_FLAGS         (REG_ICASE | REG_EXTENDED)
 #define JREGEXEC_FLAGS          0
-
-#include "libze.h"
-
-#include <ze-regex.h>
 
 #if USE_PCRE
 static bool         use_pcre = TRUE;

@@ -23,6 +23,11 @@
 
 #ifndef __ZE_AVCLIENT_H
 
+/** @addtogroup AntiVirus
+*
+* @{
+*/
+
 #define             AV_ZERO        0
 #define             AV_OK          600
 #define             AV_ERROR       610
@@ -31,6 +36,7 @@
 
 int                 av_client (char *, size_t, char *, size_t, char *);
 
+/** @} */
 
 #define __ZE_AVCLIENT_H
 #endif

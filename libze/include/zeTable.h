@@ -23,6 +23,11 @@
 
 #ifndef __ZE_TABLE_H
 
+/** @addtogroup DataStruct
+*
+* @{
+*/
+
 typedef struct zeTbl_T zeTbl_T;
 
 struct zeTbl_T {
@@ -49,12 +54,13 @@ int                 zeTable_Get_Ind (zeTbl_T *, void *, int);
 int                 zeTable_Get_First (zeTbl_T *, void *);
 int                 zeTable_Get_Next (zeTbl_T *, void *);
 int                 zeTable_Sort (zeTbl_T *);
-int                 j_table_find (zeTbl_T *, void *);
 
 void               *zeTable_Fetch_ptr (zeTbl_T *, void *);
 void               *zeTable_Get_Ind_ptr (zeTbl_T *, int);
 void               *zeTable_Get_First_Ptr (zeTbl_T *);
 void               *zeTable_Get_Next_Ptr (zeTbl_T *);
+
+/** @} */
 
 #define __ZE_TABLE_H
 #endif

@@ -24,6 +24,11 @@
 
 #ifndef __ZE_BTREE_H
 
+/** @addtogroup DataStruct
+*
+* @{
+*/
+
 typedef struct ZEBT_T ZEBT_T;
 typedef struct ZEBTREC_T ZEBTREC_T;
 
@@ -82,6 +87,8 @@ struct ZEBT_T {
         SIGNATURE, 0, 0, NULL, NULL,                    \
         FALSE, MAX_BTNODES, 0, PTHREAD_MUTEX_INITIALIZER \
       }
+
+/** @} */
 
 #define __ZE_BTREE_H
 #endif

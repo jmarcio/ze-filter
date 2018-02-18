@@ -24,6 +24,11 @@
 
 #ifndef __ZE_CF_H
 
+/** @addtogroup TxtConf
+*
+* @{
+*/
+
 /* **************************************************** */
 
 #include "cfh-defs.h"
@@ -119,6 +124,8 @@ extern unsigned int statistics_interval;
 extern char     domain[];
 
 extern int      priority;
+
+/** @} */
 
 #define __ZE_CF_H
 #endif

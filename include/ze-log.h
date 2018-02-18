@@ -22,10 +22,17 @@
  */
 
 
-#ifndef ZE_LOG_H
+#ifndef __ZE_LOG_H
+
+/** @addtogroup Logging
+*
+* @{
+*/
 
 
 
-# define ZE_LOG_H    1
-#endif /* J_LOG_H */
+/** @} */
+
+# define __ZE_LOG_H    1
+#endif /* __ZE_LOG_H */
 

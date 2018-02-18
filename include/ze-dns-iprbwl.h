@@ -24,6 +24,11 @@
 
 #ifndef __ZE_DNS_IPRBWL_H
 
+/** @addtogroup RBL
+*
+* @{
+*/
+
 typedef struct
 {
   char                line[256];
@@ -51,6 +56,8 @@ uint32_t            check_iprbwl_table(char *id, char *ip, char *name,
 
 bool                check_dns_iprbwl(char *ip, char *name, char *rbwl, char *code,
                                      size_t size);
+
+/** @} */
 
 #define __ZE_DNS_IPRBWL_H
 #endif

@@ -24,6 +24,11 @@
 
 #ifndef __ZE_REGEX_H
 
+/** @addtogroup APIs
+*
+* @{
+*/
+
 
 struct zeRegex_T
 {
@@ -56,6 +61,8 @@ bool                zeRegexLookup(char *, char *, long *, long *);
 char               *zeRegexError(zeRegex_T *);
 
 
+
+/** @} */
 
 #define __ZE_REGEX_H
 #endif

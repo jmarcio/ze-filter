@@ -22,7 +22,12 @@
  */
 
 
-#ifndef ZE_CHECK_CONNECTION_H
+#ifndef __ZE_CHECK_CONNECTION_H
+
+/** @addtogroup Behaviour
+*
+* @{
+*/
 
 
 sfsistat            check_dns_resolve(SMFICTX *);
@@ -44,5 +49,7 @@ sfsistat            check_single_message(SMFICTX *);
 
 sfsistat            validate_connection(SMFICTX *);
 
-# define ZE_CHECK_CONNECTION_H    1
-#endif             /* J_CHECK_CONNECTION_H */
+/** @} */
+
+# define __ZE_CHECK_CONNECTION_H    1
+#endif             /* __ZE_CHECK_CONNECTION_H */

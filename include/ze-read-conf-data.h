@@ -22,7 +22,12 @@
  */
 
 
-#ifndef ZE_READ_CONF_DATA_H
+#ifndef __ZE_READ_CONF_DATA_H
+
+/** @addtogroup TxtConf
+*
+* @{
+*/
 
 typedef bool  (*read_conf_data_file_F)(char *, char *);
 
@@ -32,6 +37,8 @@ read_conf_data_file(char *cfdir,
 		    char *dfile,
 		    read_conf_data_file_F func);
 
-# define ZE_READ_CONF_DATA_H    1
-#endif /* J_READ_CONF_DATA_H */
+/** @} */
+
+# define __ZE_READ_CONF_DATA_H    1
+#endif /* __ZE_READ_CONF_DATA_H */
 

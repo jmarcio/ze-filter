@@ -829,7 +829,7 @@ do_control(sd, argc, argv)
       bool                ok = FALSE;
 
       FD_PRINTF(sd, "200 OK for %s %s !\r\n", cmd, arg);
-      ok = db_reopen_rurbl_database();
+      ok = db_reopen_rurlbl_database();
       FD_PRINTF(sd, "200 URLBL  : %s\n", STRBOOL(ok, "OK", "ERROR"));
       ok = policy_reopen();
       FD_PRINTF(sd, "200 POLICY : %s\n", STRBOOL(ok, "OK", "ERROR"));

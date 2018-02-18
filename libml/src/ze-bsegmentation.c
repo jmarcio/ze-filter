@@ -26,6 +26,11 @@
 #include <ze-filter.h>
 #include <ze-bfilter.h>
 
+
+/** @addtogroup Bayes
+ * @{
+ */
+
 /* ****************************************************************************
  *                                                                            *
  *                                                                            *
@@ -1376,3 +1381,5 @@ bfilter_handle_message(id, fname, func, arg)
 
   return res;
 }
+
+/** @} */

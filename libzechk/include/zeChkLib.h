@@ -19,11 +19,16 @@
  */
 
 
-#ifndef ZMCHKLIB_H
+#ifndef __ZE_CHKLIB_H
+
+/** @addtogroup DBConf
+ *
+ * @{
+ */
 
 #include <zePolicy.h>
 #include <zeAccess.h>
 
 
-# define ZMCHKLIB_H    1
-#endif             /* ZMCHKLIB_H */
+# define __ZE_CHKLIB_H    1
+#endif             /* __ZE_CHKLIB_H */

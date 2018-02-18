@@ -24,6 +24,11 @@
 
 #ifndef __ZE_RESOURCE_H
 
+/** @addtogroup Systools
+*
+* @{
+*/
+
 #define FD_LEVEL_OK     0
 #define FD_LEVEL_SHORT  1
 #define FD_LEVEL_HI     2
@@ -37,6 +42,8 @@ int                 setup_file_descriptors();
 bool                enable_coredump(bool);
 
 bool                check_rusage();
+
+/** @} */
 
 #define __ZE_RESOURCE_H
 #endif

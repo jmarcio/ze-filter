@@ -19,7 +19,7 @@
  */
 
 
-#ifndef ZESTRING_H
+#ifndef __ZE_STRING_H
 
 size_t zeStrlCat(char *, const char *, size_t);
 size_t zeStrlCpy(char *, const char *, size_t);
@@ -32,6 +32,6 @@ size_t zeStrlCpy(char *, const char *, size_t);
 # define     strlcpy   zeStrlCpy
 #endif
 
-# define ZESTRING_H    1
-#endif /* ZESTRING_H */
+# define __ZE_STRING_H    1
+#endif /* __ZE_STRING_H */
 

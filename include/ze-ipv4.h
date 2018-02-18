@@ -22,10 +22,15 @@
  */
 
 
-#ifndef ZE_IPV4_H
+#ifndef __ZE_IPV4_H
 
+/** @addtogroup Network
+ *
+ * @{
+ */
 
+/** @} */
 
-# define ZE_IPV4_H    1
-#endif /* J_IPV4_H */
+# define __ZE_IPV4_H    1
+#endif /* __ZE_IPV4_H */
 

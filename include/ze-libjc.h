@@ -34,7 +34,6 @@
 #include "zeKStats.h"
 #include "ze-logit.h"
 #include "ze-name2id.h"
-#include "ze-regex.h"
 #include "ze-decode.h"
 #include "ze-base64.h"
 #include "ze-qp.h"

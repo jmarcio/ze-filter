@@ -23,6 +23,11 @@
 
 #ifndef __ZE_ORACLE_H
 
+/** @addtogroup Heuristics
+*
+* @{
+*/
+
 
 bool                load_oradata_table (char *, char *);
 
@@ -33,6 +38,8 @@ void                dump_oradata_table ();
 double              vector_compare(double *, double *, int);
 
 char               *realcleanup_text_buf(char *, size_t );
+
+/** @} */
 
 #define __ZE_ORACLE_H
 #endif

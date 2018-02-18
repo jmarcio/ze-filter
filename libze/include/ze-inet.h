@@ -24,6 +24,11 @@
 
 #ifndef __ZE_INET_H
 
+/** @addtogroup Network
+*
+* @{
+*/
+
 
 char           *jinet_ntop (int, void *, char *, size_t);
 int             jinet_pton (int, char *, void *);
@@ -60,6 +65,8 @@ int             jfd_ready (int, bool, long);
 
 bool            sd_printf(int sd, char *format, ...);
 int             sd_readln(int fd, char *buf, size_t size);
+
+/** @} */
 
 #define __ZE_INET_H
 #endif

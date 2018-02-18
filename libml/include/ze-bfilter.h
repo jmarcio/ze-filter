@@ -22,7 +22,12 @@
  */
 
 
-#ifndef ZE_BFILTER_H
+#ifndef __ZE_BFILTER_H
+
+
+/** @addtogroup Bayes
+ * @{
+ */
 
 #define BFLAG_TRFTOK     2
 
@@ -184,6 +189,7 @@ bool                bfilter_handle_message(char *id, char *fname,
 
 #define UT_PROB    0.5
 
+/** @} */
 
-# define ZE_BFILTER_H    1
-#endif             /* J_BFILTER_H */
+# define __ZE_BFILTER_H    1
+#endif             /* __ZE_BFILTER_H */

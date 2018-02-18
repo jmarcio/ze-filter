@@ -22,7 +22,13 @@
  */
 
 
-#ifndef ZE_CALLBACKLOGS_H
+#ifndef __ZE_CALLBACKLOGS_H
+
+/**
+ * @addtogroup Logging
+ *
+ * @{
+ */
 
 #define             WARN_MSG_SIZE      0x4000
 
@@ -63,6 +69,7 @@ bool                open_scores4stats_file();
 bool                reopen_scores4stats_file();
 bool                dump_msg_scores4stats(SMFICTX *ctx);
 
+/** @} */
 
-# define ZE_CALLBACKLOGS_H    1
-#endif             /* J_CALLBACKLOGS_H */
+# define __ZE_CALLBACKLOGS_H    1
+#endif             /* __ZE_CALLBACKLOGS_H */

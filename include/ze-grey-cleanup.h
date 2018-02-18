@@ -22,12 +22,19 @@
  */
 
 
-#ifndef ZE_GREY_CLEANUP_H
+#ifndef __ZE_GREY_CLEANUP_H
+
+/** @addtogroup Greylisting 
+ *
+ * @{
+ */
 
 void       set_grey_dewhitelist_threshold(double val);
 
 bool       grey_check_bad_smtp_client(char *ip, uint32_t flags);
 
-# define ZE_GREY_CLEANUP_H    1
-#endif /* J_GREY_CLEANUP_H */
+/** @} */
+
+# define __ZE_GREY_CLEANUP_H    1
+#endif /* __ZE_GREY_CLEANUP_H */
 

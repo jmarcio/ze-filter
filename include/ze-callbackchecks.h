@@ -22,7 +22,7 @@
  */
 
 
-#ifndef ZE_CALLBACKCHECKS_H
+#ifndef __ZE_CALLBACKCHECKS_H
 
 #ifndef MAX_MSG_SCORE
 # define MAX_MSG_SCORE 15
@@ -51,6 +51,6 @@ bool         check_intranet_user(char *, char *, char *);
 bool         shall_notify_user(char *, bool);
 
 
-# define ZE_CALLBACKCHECKS_H    1
-#endif /* J_CALLBACKCHECKS_H */
+# define __ZE_CALLBACKCHECKS_H    1
+#endif /* __ZE_CALLBACKCHECKS_H */
 

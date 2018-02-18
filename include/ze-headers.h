@@ -24,6 +24,11 @@
 
 #ifndef __ZE_HEADERS_H
 
+/** @addtogroup MsgTools
+*
+* @{
+*/
+
 typedef struct header_T header_T;
 struct header_T
 {
@@ -47,6 +52,8 @@ header_T           *get_msgheader_index_2(header_T *, char *, int);
 header_T           *get_msgheader_next(header_T *, char *);
 
 bool                get_msgheader_attribute(header_T *, char *, char *, size_t);
+
+/** @} */
 
 #define __ZE_HEADERS_H
 #endif

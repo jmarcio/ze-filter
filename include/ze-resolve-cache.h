@@ -22,7 +22,7 @@
  */
 
 
-#ifndef ZE_RESOLVE_CACHE_H
+#ifndef __ZE_RESOLVE_CACHE_H
 
 #define        RESOLVE_CACHE_RW           0
 #define        RESOLVE_CACHE_WR           0
@@ -38,5 +38,5 @@ bool           resolve_cache_times(time_t dt_sync, time_t dt_check, time_t dt_ex
 
 void           resolve_cache_log_enable(bool enable);
 
-# define ZE_RESOLVE_CACHE_H    1
-#endif             /* J_RESOLVE_CACHE_H */
+# define __ZE_RESOLVE_CACHE_H    1
+#endif             /* __ZE_RESOLVE_CACHE_H */

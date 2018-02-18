@@ -15,8 +15,8 @@
  * PERFORMANCE OF THIS SOFTWARE.
  */
 
-#ifndef JMC_SHA1_H
-#define JMC_SHA1_H 1
+#ifndef __ZE_SHA1_H
+#define __ZE_SHA1_H 1
 
 /* $Id: sha1.h,v 1.8.206.1 2004/03/06 08:14:48 marka Exp $ */
 
@@ -28,7 +28,7 @@
  * 100% Public Domain
  */
 
-#define JMC_SHA1_DIGESTLENGTH 20
+#define ZE_SHA1_DIGESTLENGTH 20
 
 typedef struct
 {
@@ -47,4 +47,4 @@ void                zeSHA1_Update(ZESHA1_T *ctx, const unsigned char *data,
 void                zeSHA1_Final(ZESHA1_T *ctx, unsigned char *digest);
 
 
-#endif             /* JMC_SHA1_H */
+#endif             /* __ZE_SHA1_H */

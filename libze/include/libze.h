@@ -19,7 +19,7 @@
  */
 
 
-#ifndef ZMLIBS_H
+#ifndef __ZE_LIBS_H
 
 #define SIGNATURE        0x70071234
 
@@ -44,11 +44,10 @@
 #include <ze-buffer.h>
 #include <ze-inet.h>
 #include <zeShared.h>
-#include <ze-strconvert.h>
 #include <zeTable.h>
 #include <zeTime.h>
 #include <zeCycTasks.h>
 
-# define ZMLIBS_H    1
-#endif /* ZMLIBS_H */
+# define __ZE_LIBS_H    1
+#endif /* __ZE_LIBS_H */
 

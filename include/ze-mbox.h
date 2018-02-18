@@ -22,7 +22,12 @@
  */
 
 
-#ifndef ZE_MBOX_H
+#ifndef __ZE_MBOX_H
+
+/** @addtogroup MsgTools
+*
+* @{
+*/
 
 typedef             bool(*mbox_F) (char *fname, int id, void *arg);
 
@@ -30,5 +35,7 @@ int                 mbox_handle(char *fname, mbox_F func, void *arg);
 
 int                 maildir_handle(char *dirname, mbox_F func, void *arg);
 
-# define ZE_MBOX_H    1
-#endif             /* J_MBOX_H */
+/** @} */
+
+# define __ZE_MBOX_H    1
+#endif             /* __ZE_MBOX_H */

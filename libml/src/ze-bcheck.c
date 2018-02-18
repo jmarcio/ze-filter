@@ -26,7 +26,12 @@
 #include <ze-filter.h>
 #include <libml.h>
 
-
+/** @addgroup Bayes Bayesian filter
+ *
+ * Statistical bayesian filter
+ * @{
+ */
+ 
 /* ****************************************************************************
 ** ######  #    #    ##    #       #    #    ##     #####  ######
 ** #       #    #   #  #   #       #    #   #  #      #    #
@@ -343,3 +348,5 @@ sfilter_histogram()
 {
 
 }
+
+/** @} */

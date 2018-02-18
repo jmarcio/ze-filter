@@ -24,6 +24,11 @@
 
 #ifndef __ZE_LINKEDLIST_H
 
+/** @addtogroup DataStruct
+*
+* @{
+*/
+
 typedef struct LISTR_T LISTR_T;
 
 struct LISTR_T
@@ -47,6 +52,8 @@ bool                zeLinkedList_Clear(LISTR_T *, LISTCLEAR_F);
 int                 zeLinkedList_CountSet(LISTR_T *, char *, int);
 int                 zeLinkedList_CountGet(LISTR_T *, char *);
 int                 zeLinkedList_CountInc(LISTR_T *, char *);
+
+/** @} */
 
 #define __ZE_LINKEDLIST_H
 #endif

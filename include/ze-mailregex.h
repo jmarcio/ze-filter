@@ -23,6 +23,11 @@
 
 #ifndef __ZE_MAILREGEX_H
 
+/** @addtogroup Regex
+*
+* @{
+*/
+
 #if 0
 #define             REGEX_OK          0
 #define             REGEX_REJECT      1
@@ -42,10 +47,19 @@ bool            load_regex_table (char *, char *);
 
 int             check_regex (char *, char *, char *, int);
 
-int             check_rurlbl (char *, char *, char *);
-bool            db_reopen_rurbl_database();
-
 void            dump_regex_table ();
+
+/** @} */
+
+/** @addtogroup RBL
+*
+* @{
+*/
+int             check_rurlbl (char *, char *, char *);
+bool            db_open_rurlbl_database();
+bool            db_reopen_rurlbl_database();
+
+/** @} */
 
 #define __ZE_MAILREGEX_H
 #endif

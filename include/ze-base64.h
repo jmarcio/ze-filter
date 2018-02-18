@@ -24,12 +24,19 @@
 
 #ifndef __ZE_BASE64_H
 
+/** @addtogroup MsgTools
+ *
+ * @{
+ */
+ 
 int                 base64_decode(char *, char *, size_t *, size_t *);
 
 bool                base64_encode(char *sout,
                                   size_t szout, unsigned char *sin, size_t szin);
 
 void               *alt_base64_decode(char *, size_t *);
+
+/** @} */
 
 #define __ZE_BASE64_H
 #endif

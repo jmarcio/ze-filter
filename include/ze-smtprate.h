@@ -23,6 +23,12 @@
 
 #ifndef __ZE_SMTPRATE_H
 
+/** @addtogroup RateLimit
+ *
+ * Control and limit various rates during SMTP session
+ * @{
+ */
+ 
 #if 1
 #define USE_SMTPRATE  1
 #endif
@@ -72,7 +78,7 @@ int                 smtprate_check (int, char *, time_t);
 extern unsigned int smtprate_interval;  /* 1 minute */
 extern unsigned int smtprate_window;  /* 10 minutes */
 
-
+/** @} */
 
 #define __ZE_SMTPRATE_H
 #endif
