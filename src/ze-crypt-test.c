@@ -73,7 +73,7 @@ main(argc, argv)
 #endif
   }
   tf = zeTime_ms();
-  printf(" * SHA1 = %4d ms elapsed\n", tf - ti);
+  printf(" * SHA1 = %4ld ms elapsed\n", (long ) (tf - ti));
 
   if (0) {
     char                sout[256];

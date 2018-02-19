@@ -163,7 +163,7 @@ main(argc, argv)
       if (!client_recv(&client, buf, sizeof (buf)))
         break;
       printf("%s", buf);
-      write(fd, buf, strlen(buf));
+      (void ) zeFdWrite(fd, buf, strlen(buf));
     }
     close(fd);
 
@@ -180,13 +180,13 @@ main(argc, argv)
       if (!client_readln(&client, buf, sizeof (buf)))
         break;
       printf("%s\n", buf);
-      write(fd, buf, strlen(buf));
-      write(fd, "\n", 1);
+      (void ) zeFdWrite(fd, buf, strlen(buf));
+      (void ) zeFdWrite(fd, "\n", 1);
 #else
       if (!client_recv(&client, buf, sizeof (buf)))
         break;
       printf("%s", buf);
-      write(fd, buf, strlen(buf));
+      (void ) zeFdWrite(fd, buf, strlen(buf));
 #endif
     }
     close(fd);
@@ -203,7 +203,7 @@ main(argc, argv)
       if (!client_recv(&client, buf, sizeof (buf)))
         break;
       printf("%s", buf);
-      write(fd, buf, strlen(buf));
+      (void ) zeFdWrite(fd, buf, strlen(buf));
     }
     close(fd);
 

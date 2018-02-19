@@ -24,7 +24,7 @@
 #ifndef __ZE_DB_H
 
 /** @addtogroup APIs
-*
+* 
 * @{
 */
 
@@ -133,33 +133,43 @@ bool                zeDb_CheckVersion();
 ZEDB_ENV_T          *zeDb_EnvOpen(char *home, bool rdonly, int dt_chkpoint);
 bool                zeDb_EnvClose(ZEDB_ENV_T * dbenv);
 
-bool                zeDb_Open(ZEDB_T *, ZEDB_ENV_T *, char *, int, bool, bool,
+bool                zeDb_Open(ZEDB_T *h, ZEDB_ENV_T *, char *, int, bool, bool,
                              size_t);
-bool                zeDb_OK(ZEDB_T *);
-bool                zeDb_Close(ZEDB_T *);
-bool                zeDb_Reopen(ZEDB_T *);
+bool                zeDb_OK(ZEDB_T *h);
+bool                zeDb_Close(ZEDB_T *h);
+bool                zeDb_Reopen(ZEDB_T *h);
 
-bool                zeDb_Empty(ZEDB_T *);
-bool                zeDb_Flush(ZEDB_T *);
+bool                zeDb_Empty(ZEDB_T *h);
+bool                zeDb_Flush(ZEDB_T *h);
 
-bool                zeDb_AddRec(ZEDB_T *, char *, void *, size_t);
-bool                zeDb_GetRec(ZEDB_T *, char *, void *, size_t);
-bool                zeDb_DelRec(ZEDB_T *, char *);
+bool                zeDb_AddRec(ZEDB_T *h, char *, void *, size_t);
+bool                zeDb_GetRec(ZEDB_T *h, char *, void *, size_t);
+bool                zeDb_DelRec(ZEDB_T *h, char *);
 
-bool                zeDb_CursorOpen(ZEDB_T *, bool);
-bool                zeDb_CursorGetFirst(ZEDB_T *, char *, size_t, void *,
+bool                zeDb_CursorOpen(ZEDB_T *h, bool);
+bool                zeDb_CursorGetFirst(ZEDB_T *h, char *, size_t, void *,
                                          size_t);
-bool                zeDb_CursorGetNext(ZEDB_T *, char *, size_t, void *,
+bool                zeDb_CursorGetNext(ZEDB_T *h, char *, size_t, void *,
                                         size_t);
-bool                zeDb_CursorDel(ZEDB_T *);
-bool                zeDb_CursorClose(ZEDB_T *);
+bool                zeDb_CursorDel(ZEDB_T *h);
+bool                zeDb_CursorClose(ZEDB_T *h);
 
-bool                zeDb_Lock(ZEDB_T *);
-bool                zeDb_Unlock(ZEDB_T *);
+/**
+ * @brief Database lock
+ * @param h Pointer to the database handle
+ * @return TRUE if success
+ */
+bool                zeDb_Lock(ZEDB_T *h);
+/**
+ * @brief Database unlock
+ * @param h Pointer to the database handle
+ * @return TRUE if success
+ */
+bool                zeDb_Unlock(ZEDB_T *h);
 
-int                 zeDb_errno(ZEDB_T *);
+int                 zeDb_errno(ZEDB_T *h);
 
-bool                zeDb_Stat(ZEDB_T *, ZEDB_STAT_T **);
+bool                zeDb_Stat(ZEDB_T *h, ZEDB_STAT_T **);
 
 #if 1
 

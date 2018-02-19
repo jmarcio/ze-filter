@@ -21,7 +21,7 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#ifndef __ZE_KSTATS__
+#ifndef __ZE_KSTATS_H
 
 typedef struct kstats_T {
   int           n;
@@ -58,7 +58,7 @@ double erfci(double x);
 double confidence_interval(double p, double stddev, int n);
 #endif
 
-#define __ZE_KSTATS__
+#define __ZE_KSTATS_H
 
 #endif
 

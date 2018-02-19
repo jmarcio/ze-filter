@@ -172,7 +172,7 @@ zeGetFdSize(fd)
  *                                                                            *
  *                                                                            *
  ******************************************************************************/
-int
+size_t
 zeReadLn(fd, buf, size)
      int                 fd;
      char               *buf;
@@ -299,18 +299,32 @@ zeShowDirInfo(dir)
  *                                                                            * 
  *                                                                            *
  ******************************************************************************/
-int
+size_t
 zeFdPrintf(int fd, char *format, ...)
 {
   va_list             arg;
   char                s[4096];
-  int                 ret = 0;
+  size_t              ret = 0;
 
   va_start(arg, format);
   vsnprintf(s, sizeof (s), format, arg);
   va_end(arg);
 
   if ((ret = write(fd, s, strlen(s))) != strlen(s))
-    ZE_LogSysError("error on FD_PRINTF");
+    ZE_LogSysError("error on zeFdPrintf");
+  return ret;
+}
+
+/* ****************************************************************************
+ *                                                                            * 
+ *                                                                            *
+ ******************************************************************************/
+size_t
+zeFdWrite(int fd, void *buf, size_t count)
+{
+  size_t              ret = 0;
+
+  if ((ret = write(fd, buf, count)) != count)
+    ZE_LogSysError("error on zeFdWrite");
   return ret;
 }

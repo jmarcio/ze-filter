@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -42,8 +43,7 @@ mbox_handle(fname, func, arg)
   ASSERT(fname != NULL);
   ASSERT(func != NULL);
 
-  if ((fin = fopen(fname, "r")) != NULL)
-  {
+  if ((fin = fopen(fname, "r")) != NULL) {
     int                 nl = -1;
     char                line[2048];
     FILE               *fout;
@@ -53,45 +53,40 @@ mbox_handle(fname, func, arg)
 
     memset(line, 0, sizeof (line));
 
-    for (;;)
-    {
+    for (;;) {
       char               *q = NULL;
 
-      if (fd < 0)
-      {
+      if (fd < 0) {
 #if 0
-	char *dir = "/tmp";
-	char *env = getenv("MBOXSPOOL");
+        char               *dir = "/tmp";
+        char               *env = getenv("MBOXSPOOL");
 
-	if (env != NULL) {
-	  if (access(env, R_OK | W_OK |  X_OK) == 0)
-	    {
-	      dir = env;
-	    }
-	}
-        snprintf(ofname, sizeof(ofname), "%s/mbox-tmp.XXXXXX", dir);
+        if (env != NULL) {
+          if (access(env, R_OK | W_OK | X_OK) == 0) {
+            dir = env;
+          }
+        }
+        snprintf(ofname, sizeof (ofname), "%s/mbox-tmp.XXXXXX", dir);
 #else
         strlcpy(ofname, "/tmp/mbox-tmp.XXXXXX", sizeof (ofname));
 #endif
 
-	ZE_MessageInfo(20, "Creating %s", ofname);
-        if ((fd = mkstemp(ofname)) < 0)
-        {
+        ZE_MessageInfo(20, "Creating %s", ofname);
+        if ((fd = mkstemp(ofname)) < 0) {
           ZE_LogSysError("Can't create temporary file");
           continue;
         }
       }
 
       if (strlen(line) > 0)
-        (void) write(fd, line, strlen(line));
+        (void) zeFdWrite(fd, line, strlen(line));
 
-      while ((q = fgets(line, sizeof (line), fin)) != NULL)
-      {
+      while ((q = fgets(line, sizeof (line), fin)) != NULL) {
         nl++;
         if (nl > 1 && strncmp(line, "From ", strlen("From ")) == 0)
           break;
 
-        (void) write(fd, line, strlen(line));
+        (void) zeFdWrite(fd, line, strlen(line));
       }
       close(fd);
       fd = -1;
@@ -135,18 +130,14 @@ maildir_handle(dirname, func, arg)
   ASSERT(dirname != NULL);
   ASSERT(func != NULL);
 
-  if ((dir = opendir(dirname)) != NULL)
-  {
-    while ((p = readdir(dir)) != NULL)
-    {
+  if ((dir = opendir(dirname)) != NULL) {
+    while ((p = readdir(dir)) != NULL) {
       char                fname[256];
 
       snprintf(fname, sizeof (fname), "%s/%s", dirname, p->d_name);
 
-      if (LSTAT(fname, &st) == 0)
-      {
-        if (S_ISREG(st.st_mode))
-        {
+      if (LSTAT(fname, &st) == 0) {
+        if (S_ISREG(st.st_mode)) {
           msgID++;
           if (func(fname, msgID, arg))
             nb++;

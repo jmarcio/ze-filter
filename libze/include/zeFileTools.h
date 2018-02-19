@@ -29,10 +29,12 @@ bool                zmFileUnlock(int);
 
 size_t              zeGetFileSize(char *);
 size_t              zeGetFdSize(int );
-int                 zeReadLn(int, char *, size_t);
+size_t              zeReadLn(int, char *, size_t);
 bool                zeRemoveDir(char *);
 bool                zeShowDirInfo(char *);
-int                 zeFdPrintf(int , char *, ...);
+size_t              zeFdPrintf(int , char *, ...);
+
+size_t              zeFdWrite(int fd, void *buf, size_t count); 
 
 # define __ZE_FILETOOLS    1
 #endif /* __ZE_FILETOOLS */
