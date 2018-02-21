@@ -24,6 +24,11 @@
 
 #ifndef __ZE_REPLY_H
 
+/** @addtogroup Actions
+*
+* @{
+*/
+
 #include <ze-reply-local.h>
 
 bool                get_reply_msg(SMFICTX *, char *, char *, size_t, char *, char *);
@@ -260,6 +265,8 @@ bool                get_reply_msg(SMFICTX *, char *, char *, size_t, char *, cha
 #endif
 
 #endif             /* LANG_EN */
+
+/** @} */
 
 #define __ZE_REPLY_H
 #endif

@@ -3,16 +3,16 @@
   OK
 
 * Check if ze-filter user exists. If not, create it.
-
   useradd -d /var/ze-filter -s /bin/bash -m ze-filter
+  * OK
 
 * Startup script (systemd)
   * modify Makefile.am to use systemctl instead of old /etc/init.d/ze-filter
    or, still better... /usr/sbin/service
+  * OK
 
 * Update postfix main.cf and sendmail.mc configuration files - Check if the 
   following is correct :
-
   postfix reference is : http://www.postfix.org/MILTER_README.html
 
 * Adapt ze-easy-install to the new system
@@ -21,9 +21,11 @@
   * check how to stop/start the filter
 
 * move j-lr to a new directory and include scripts to do logreg learning
+  * j-lr* moved to ze-logreg
 
 * include /opt/filter-tools in the distrib, as ze-tools
   or filter-tools...
+  * OK
 
 * finish migration from old "libs" and "libjoe" to libSOMETHING.
 

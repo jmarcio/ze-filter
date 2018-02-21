@@ -24,6 +24,11 @@
 
 #ifndef __ZE_MSG_HASH_H
 
+/** @addtogroup Strings
+*
+* @{
+*/
+
 #define    HASH_PLAIN     0
 #define    HASH_MD5       1
 #define    HASH_SHA1      2
@@ -40,6 +45,8 @@ bool                str2hash2b64(int code, char *sout, char *sin, size_t szout);
 
 int                 hash_label2code(char *label);
 char               *hash_code2label(int code);
+
+/** @} */
 
 # define __ZE_MSG_HASH_H    1
 #endif             /* __ZE_MSG_HASH_H */

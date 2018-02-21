@@ -23,6 +23,11 @@
 
 #ifndef __ZE_LIVEHISTORY_H
 
+/** @addtogroup Behaviour
+*
+* @{
+*/
+
 #define             LH_WORKTIME      0
 #define             LH_BADRCPT       1
 #define             LH_SPAMTRAP      2
@@ -43,6 +48,8 @@ int                 livehistory_add_entry(char *, time_t, int, int);
 
 void                livehistory_log_table(int, bool);
 
+
+/** @} */
 
 #define __ZE_LIVEHISTORY_H
 #endif

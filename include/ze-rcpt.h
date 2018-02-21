@@ -23,6 +23,11 @@
 
 #ifndef __ZE_RCPT_H
 
+/** @addtogroup DBConf
+*
+* @{
+*/
+
 int                 check_rcpt(char *rcpt, char *ip, char *name, 
 			       int netclass);
 
@@ -44,6 +49,8 @@ char               *rcpt_code_string(int);
 #define RCPT_SPAMTRAP             6
 #define RCPT_IGNORE               7
 
+
+/** @} */
 
 #define __ZE_RCPT_H
 #endif

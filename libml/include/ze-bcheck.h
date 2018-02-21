@@ -53,7 +53,6 @@ typedef struct sfilter_vsm_T {
  * Statistical filter CLI parameters
  */
 typedef struct sfilter_cli_T {
-
   size_t              maxSize;     /**< max message size */
   bool                check;       /**< general - option */
   bool                verbose;     /**< general - option */
@@ -71,6 +70,7 @@ typedef struct sfilter_cli_T {
 
 bool                sfilter_cli_handle_message(char *fname, int msgNb,
                                                void *arg);
+
 double              sfilter_check_message(char *id, char *fname,
                                           sfilter_vsm_T * bcheck);
 

@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -43,8 +44,7 @@
 
 #define DHIST   100000
 
-typedef struct
-{
+typedef struct {
   int                 cmd;
   time_t              date;
   long                serial;
@@ -62,8 +62,7 @@ lr_evt_fill(evt, cmd, date, class, fname)
      int                 class;
      char               *fname;
 {
-  if (evt != NULL)
-  {
+  if (evt != NULL) {
     memset(evt, 0, sizeof (*evt));
     evt->date = date;
     evt->class = class;
@@ -88,8 +87,7 @@ lr_evt_fill(evt, cmd, date, class, fname)
 
 #define DPILE     20000
 
-typedef struct
-{
+typedef struct {
   int                 n;
   learn_evt_T         p[DPILE];
   long                serial;
@@ -122,23 +120,38 @@ static bool         pile_sort(pile_T * pile);
 #define CLI_LEARN      2
 #define CLI_ONLINE     3
 
-typedef struct
-{
-  /* resampling to equilibrate classes */
+typedef struct {
+  /*
+   * resampling to equilibrate classes 
+   */
   bool                resample;
-  /* (a) active learning */
+  /*
+   * (a) active learning 
+   */
   bool                al_enable;
-  /* (A) active learning margin */
+  /*
+   * (A) active learning margin 
+   */
   double              al_margin;
-  /* (t) active learning threshold */
+  /*
+   * (t) active learning threshold 
+   */
   double              al_threshold;
-  /* (D) active learning parameters */
+  /*
+   * (D) active learning parameters 
+   */
   char               *al_defs;
-  /* (M/m) probability of active learning feedback miss */
+  /*
+   * (M/m) probability of active learning feedback miss 
+   */
   double              pmiss;
-  /* (N) feedback error rate */
+  /*
+   * (N) feedback error rate 
+   */
   double              noise;
-  /* (e) ask for error feedback */
+  /*
+   * (e) ask for error feedback 
+   */
   bool                error_feedback;
 } cli_opt_T;
 
@@ -178,10 +191,8 @@ main(argc, argv)
     int                 c;
     int                 io;
 
-    while ((c = getopt(argc, argv, args)) != -1)
-    {
-      switch (c)
-      {
+    while ((c = getopt(argc, argv, args)) != -1) {
+      switch (c) {
         case 'h':
           usage(argv[0]);
           exit(0);
@@ -219,8 +230,7 @@ main(argc, argv)
           break;
 
         case 'o':
-          if (!decode_lr_options(&lrOpts, optarg))
-            ;
+          if (!decode_lr_options(&lrOpts, optarg));
           break;
 
         default:
@@ -233,9 +243,10 @@ main(argc, argv)
     while (io < argc && *argv[io] == '-')
       io++;
 
-    if (io < argc)
-    {
-      /* fname = argv[io++]; */
+    if (io < argc) {
+      /*
+       * fname = argv[io++]; 
+       */
     }
   }
 
@@ -246,28 +257,24 @@ main(argc, argv)
     configure("ze-lr", conf_file, FALSE);
   set_mime_debug(FALSE);
 
-  if (xmode != NULL)
-  {
+  if (xmode != NULL) {
     char               *tag = NULL;
 
     tag = "learn";
-    if (STRNCASEEQUAL(xmode, tag, strlen(tag)))
-    {
+    if (STRNCASEEQUAL(xmode, tag, strlen(tag))) {
       return cli_lr_learn(fileIn, fileData, &cliopt);
       goto fin;
     }
 
     tag = "class";
-    if (STRNCASEEQUAL(xmode, tag, strlen(tag)))
-    {
+    if (STRNCASEEQUAL(xmode, tag, strlen(tag))) {
       return cli_lr_classify(fileIn, fileData);
       goto fin;
     }
 
   }
 
-  if (learn)
-  {
+  if (learn) {
     return cli_lr_learn(fileIn, fileData, &cliopt);
   } else
     return cli_lr_classify(fileIn, fileData);
@@ -296,11 +303,9 @@ cli_lr_classify(fileIn, dataFile)
   /*
    ** Handle messages
    */
-  if (fileIn != NULL)
-  {
+  if (fileIn != NULL) {
     fin = fopen(fileIn, "r");
-    if (fin == NULL)
-    {
+    if (fin == NULL) {
       ZE_LogSysError("Error opening %s", fileIn);;
       goto fin;
     }
@@ -308,8 +313,7 @@ cli_lr_classify(fileIn, dataFile)
 
   lr_data_open(dataFile);
 
-  if (fin != NULL)
-  {
+  if (fin != NULL) {
     char                stime[32];
     char                sclass[32];
     char                sfile[512];
@@ -329,8 +333,7 @@ cli_lr_classify(fileIn, dataFile)
     memset(sclass, 0, sizeof (sclass));
     memset(sfile, 0, sizeof (sfile));
 
-    while (fin != NULL && fscanf(fin, "%s %s %s", stime, sclass, sfile) == 3)
-    {
+    while (fin != NULL && fscanf(fin, "%s %s %s", stime, sclass, sfile) == 3) {
       spam = STRCASEEQUAL(sclass, "spam");
       fname = sfile;
       ZE_MessageInfo(13, "%-4s : %s", sclass, sfile);
@@ -340,10 +343,10 @@ cli_lr_classify(fileIn, dataFile)
       lr_classify(id, fname, &cargs, &margs, &mscore);
 
       ZE_MessageInfo(10, "%s judge=%-4s class=%-4s score=%.4f prob=%.4f",
-                   fname,
-                   spam ? "spam" : "ham",
-                   mscore.odds > 0.0 ? "spam" : "ham",
-                   mscore.odds, mscore.value);
+                     fname,
+                     spam ? "spam" : "ham",
+                     mscore.odds > 0.0 ? "spam" : "ham",
+                     mscore.odds, mscore.value);
     }
   }
 
@@ -385,11 +388,9 @@ cli_lr_learn(fileIn, dataFile, cliopt)
   /*
    ** Handle messages
    */
-  if (fileIn != NULL)
-  {
+  if (fileIn != NULL) {
     fin = fopen(fileIn, "r");
-    if (fin == NULL)
-    {
+    if (fin == NULL) {
       ZE_LogSysError("Error opening %s", fileIn);
       goto fin;
     }
@@ -397,13 +398,11 @@ cli_lr_learn(fileIn, dataFile, cliopt)
 
   lr_data_open(dataFile);
 
-  if (!lr_set_learn_callback(learn_callback))
-  {
+  if (!lr_set_learn_callback(learn_callback)) {
 
   }
 
-  if (fin != NULL)
-  {
+  if (fin != NULL) {
     char                stime[32];
     char                sclass[32];
     char                sfile[512];
@@ -427,8 +426,7 @@ cli_lr_learn(fileIn, dataFile, cliopt)
     {
       char               *env = NULL;
 
-      if ((env = getenv("LRRESAMPLEWIN")) != NULL)
-      {
+      if ((env = getenv("LRRESAMPLEWIN")) != NULL) {
         int                 n;
 
         n = atof(env);
@@ -445,8 +443,7 @@ cli_lr_learn(fileIn, dataFile, cliopt)
     memset(sclass, 0, sizeof (sclass));
     memset(sfile, 0, sizeof (sfile));
 
-    while (TRUE)
-    {
+    while (TRUE) {
       int                 i;
       bool                ok;
       time_t              date;
@@ -473,15 +470,15 @@ cli_lr_learn(fileIn, dataFile, cliopt)
       ok = TRUE;
 
       ZE_MessageInfo(10,
-                   "%s classification : %8.4f %.8f judge=%-4s class=%-4s"
-                   " learn=%s query=%s features=%d"
-                   " score=%g prob=%.6f",
-                   sfile,
-                   mscore.odds, mscore.value, STRBOOL(spam, "spam", "ham"),
-                   STRBOOL(mscore.odds > 0.0, "spam", "ham"),
-                   STRBOOL(margs.learnt, "true", "false"),
-                   STRBOOL(margs.query, "true", "false"),
-                   cargs.nFeatures, mscore.odds, mscore.value);
+                     "%s classification : %8.4f %.8f judge=%-4s class=%-4s"
+                     " learn=%s query=%s features=%d"
+                     " score=%g prob=%.6f",
+                     sfile,
+                     mscore.odds, mscore.value, STRBOOL(spam, "spam", "ham"),
+                     STRBOOL(mscore.odds > 0.0, "spam", "ham"),
+                     STRBOOL(margs.learnt, "true", "false"),
+                     STRBOOL(margs.query, "true", "false"),
+                     cargs.nFeatures, mscore.odds, mscore.value);
 
       if (!ok)
         continue;
@@ -494,12 +491,10 @@ cli_lr_learn(fileIn, dataFile, cliopt)
 
       pspam = nspam % nbMax;
       pham = nham % nbMax;
-      if (spam)
-      {
+      if (spam) {
         eSpam[pspam] = evt;
         nspam++;
-      } else
-      {
+      } else {
         eHam[pham] = evt;
         nham++;
       }
@@ -511,15 +506,13 @@ cli_lr_learn(fileIn, dataFile, cliopt)
         continue;
 
       spam = !spam;
-      if (spam)
-      {
+      if (spam) {
         if (nspam > nbMax)
           i = random() % nbMax;
         else
           i = random() % nspam;
         fname = eSpam[i].fname;
-      } else
-      {
+      } else {
         if (nham > nbMax)
           i = random() % nbMax;
         else
@@ -566,12 +559,10 @@ learn_callback(i, cargs, margs)
   static int          srate = 2;
   static double       ri = 0.5, rf = 0.004, teta = -0.005;
 
-  if (!ok)
-  {
+  if (!ok) {
     char               *s = NULL;
 
-    if ((s = getenv("LRATEDEFS")) != NULL)
-    {
+    if ((s = getenv("LRATEDEFS")) != NULL) {
       char                ebuf[256];
       char               *argv[8];
       int                 argc;
@@ -583,8 +574,7 @@ learn_callback(i, cargs, margs)
         srate = atof(argv[0]);
       if (argv[1] != NULL)
         ri = atoi(argv[1]);
-      if (argv[2] != NULL)
-      {
+      if (argv[2] != NULL) {
         rf = atof(argv[2]);
         lrate = rf;
       }
@@ -594,8 +584,7 @@ learn_callback(i, cargs, margs)
     ok = TRUE;
   }
 
-  switch (srate)
-  {
+  switch (srate) {
     case 0:
       r = lrate;
       break;
@@ -760,43 +749,35 @@ decode_lr_options(lrOpts, optarg)
   if (argc < 2)
     return FALSE;
 
-  if (STRCASEEQUAL(argv[0], "LR_LRATE"))
-  {
+  if (STRCASEEQUAL(argv[0], "LR_LRATE")) {
 
     return TRUE;
   }
-  if (STRCASEEQUAL(argv[0], "LR_USE_RAW_MSG"))
-  {
+  if (STRCASEEQUAL(argv[0], "LR_USE_RAW_MSG")) {
 
     return TRUE;
   }
-  if (STRCASEEQUAL(argv[0], "LR_RAW_LENGTH"))
-  {
+  if (STRCASEEQUAL(argv[0], "LR_RAW_LENGTH")) {
 
     return TRUE;
   }
-  if (STRCASEEQUAL(argv[0], "LR_BODY_LENGTH"))
-  {
+  if (STRCASEEQUAL(argv[0], "LR_BODY_LENGTH")) {
 
     return TRUE;
   }
-  if (STRCASEEQUAL(argv[0], "LR_USE_BODY"))
-  {
+  if (STRCASEEQUAL(argv[0], "LR_USE_BODY")) {
 
     return TRUE;
   }
-  if (STRCASEEQUAL(argv[0], "LR_USE_HEADERS"))
-  {
+  if (STRCASEEQUAL(argv[0], "LR_USE_HEADERS")) {
 
     return TRUE;
   }
-  if (STRCASEEQUAL(argv[0], "LR_CLEAN_UP_HEADERS"))
-  {
+  if (STRCASEEQUAL(argv[0], "LR_CLEAN_UP_HEADERS")) {
 
     return TRUE;
   }
-  if (STRCASEEQUAL(argv[0], "LR_CLEANUP_DATES"))
-  {
+  if (STRCASEEQUAL(argv[0], "LR_CLEANUP_DATES")) {
 
     return TRUE;
   }

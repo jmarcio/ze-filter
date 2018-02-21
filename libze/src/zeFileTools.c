@@ -173,7 +173,7 @@ zeGetFdSize(fd)
  *                                                                            *
  ******************************************************************************/
 size_t
-zeReadLn(fd, buf, size)
+zeFdReadLn(fd, buf, size)
      int                 fd;
      char               *buf;
      size_t              size;
@@ -328,3 +328,33 @@ zeFdWrite(int fd, void *buf, size_t count)
     ZE_LogSysError("error on zeFdWrite");
   return ret;
 }
+
+/* ****************************************************************************
+ *                                                                            *
+ *                                                                            *
+ ******************************************************************************/
+size_t
+zeFdRead(fd, buf, size)
+     int                 fd;
+     void               *buf;
+     size_t              size;
+{
+  int                 n = 0;
+
+  if (fd < 0)
+    return -1;
+
+  n = read(fd, buf, size);
+  do {
+    if (n == 0)
+      break;
+    if (n < 0) {
+      if (errno == EINTR)
+       continue;
+      ZE_LogSysError("read error");
+      break;
+    }
+  } while (n <= 0);
+  return n;
+}
+

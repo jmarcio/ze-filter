@@ -24,6 +24,11 @@
 
 #ifndef __ZE_SYSLOG_H
 
+/** @addtogroup Logging
+*
+* @{
+*/
+
 #define         ZE_STDOUT   1
 #define         ZE_SYSLOG   0
 #define         ZE_OUT_ALL  2
@@ -279,6 +284,8 @@ do { \
     exit(EX_SOFTWARE);							\
   } while (0)
 #endif
+
+/** @} */
 
 #define __ZE_SYSLOG_H
 #endif

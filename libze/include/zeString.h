@@ -21,6 +21,11 @@
 
 #ifndef __ZE_STRING_H
 
+/** @addtogroup Strings
+*
+* @{
+*/
+
 size_t zeStrlCat(char *, const char *, size_t);
 size_t zeStrlCpy(char *, const char *, size_t);
 
@@ -31,6 +36,8 @@ size_t zeStrlCpy(char *, const char *, size_t);
 #ifndef HAVE_STRLCPY
 # define     strlcpy   zeStrlCpy
 #endif
+
+/** @} */
 
 # define __ZE_STRING_H    1
 #endif /* __ZE_STRING_H */

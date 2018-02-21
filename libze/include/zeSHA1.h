@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")
  * Copyright (C) 2000, 2001  Internet Software Consortium.
@@ -16,7 +17,11 @@
  */
 
 #ifndef __ZE_SHA1_H
-#define __ZE_SHA1_H 1
+
+/** @addtogroup Strings
+*
+* @{
+*/
 
 /* $Id: sha1.h,v 1.8.206.1 2004/03/06 08:14:48 marka Exp $ */
 
@@ -30,21 +35,22 @@
 
 #define ZE_SHA1_DIGESTLENGTH 20
 
-typedef struct
-{
+typedef struct {
   uint32_t            state[5];
   uint32_t            count[2];
   unsigned char       buffer[64];
 } ZESHA1_T;
 
-void                zeSHA1_Init(ZESHA1_T *ctx);
+void                zeSHA1_Init(ZESHA1_T * ctx);
 
-void                zeSHA1_Invalidate(ZESHA1_T *ctx);
+void                zeSHA1_Invalidate(ZESHA1_T * ctx);
 
-void                zeSHA1_Update(ZESHA1_T *ctx, const unsigned char *data,
-				    unsigned int len);
+void                zeSHA1_Update(ZESHA1_T * ctx, const unsigned char *data,
+                                  unsigned int len);
 
-void                zeSHA1_Final(ZESHA1_T *ctx, unsigned char *digest);
+void                zeSHA1_Final(ZESHA1_T * ctx, unsigned char *digest);
 
+/** @} */
 
+#define __ZE_SHA1_H 1
 #endif             /* __ZE_SHA1_H */

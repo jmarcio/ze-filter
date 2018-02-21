@@ -21,6 +21,11 @@
 
 #ifndef __ZE_STRINGS_H
 
+/** @addtogroup Strings
+*
+* @{
+*/
+
 
 char               *zeStrRev(char *);
 char               *zeStrDupRev(char *);
@@ -64,6 +69,8 @@ time_t              zeStrTime2Secs(char *);
 #define STREMPTY(x,r)            ((x) != NULL && strlen(x) > 0 ? (x) : (r))
 #define STRBOOL(x,t,f)           ((x) ? t : f)
 
+
+/** @} */
 
 # define __ZE_STRINGS_H    1
 #endif             /* __ZE_STRINGS_H */

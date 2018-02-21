@@ -23,6 +23,11 @@
 
 #ifndef __ZE_DBBL_H
 
+/** @addtogroup RBL
+*
+* @{
+*/
+
 #define  BL_ORACLE              1
 #define  BL_PATMATCH            2
 #define  BL_BADRCPT             3
@@ -55,6 +60,8 @@ bool                db_map_add(char *, char *, char *, char *);
 bool                db_map_open(char *bl);
 bool                db_map_close(char *bl);
 bool                db_map_close_all(void);
+
+/** @} */
 
 #define __ZE_DBBL_H
 #endif
