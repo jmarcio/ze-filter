@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -28,7 +29,7 @@
 #include <ze-txtlog.h>
 
 #ifndef LOGLINELEN
-# define LOGLINELEN 1024
+#define LOGLINELEN 1024
 #endif             /* LOGLINELEN */
 
 static bool         locked_log_open(LOG_T *);
@@ -130,10 +131,11 @@ bool
 log_ready(log)
      LOG_T              *log;
 {
-  if (log->open && log->logtype == JC_LOG_FILE)
-  {
+  if (log->open && log->logtype == JC_LOG_FILE) {
 
-    /* log->log.file.fd = -1; */
+    /*
+     * log->log.file.fd = -1; 
+     */
   }
   return log->open;
 }
@@ -155,17 +157,17 @@ log_open(log, spec)
 
   MUTEX_LOCK(&log->mutex);
 
-  if (!log->init)
-  {
+  if (!log->init) {
     log->argc = 0;
     memset(log->argv, 0, sizeof (log->argv));
     memset(&log->log, 0, sizeof (log->log));
     log->init = TRUE;
   }
 
-  if (log->open)
-  {
-    /* XXX */
+  if (log->open) {
+    /*
+     * XXX 
+     */
     goto fin;
   }
 
@@ -173,15 +175,13 @@ log_open(log, spec)
   if (spec == NULL || strlen(spec) == 0)
     spec = "nolog";
 
-  if ((log->spec = strdup(spec)) == NULL)
-  {
+  if ((log->spec = strdup(spec)) == NULL) {
     ZE_LogSysError("strdup(%s) error", spec);
     log->error = errno;
 
     goto fin;
   }
-  if ((log->args = strdup(spec)) == NULL)
-  {
+  if ((log->args = strdup(spec)) == NULL) {
     ZE_LogSysError("strdup(%s) error", spec);
     log->error = errno;
 
@@ -193,10 +193,13 @@ log_open(log, spec)
 
   log->argc = zeStr2Tokens(log->args, 4, log->argv, ":");
 
-  if (log->argc == 1 || zeStrRegex(spec, PATH_REGEX, NULL, NULL, TRUE))
-  {
-    /* XXX compatibility with older versions */
-    /* shift right values in argv and add "file" to argv[0] */
+  if (log->argc == 1 || zeStrRegex(spec, PATH_REGEX, NULL, NULL, TRUE)) {
+    /*
+     * XXX compatibility with older versions 
+     */
+    /*
+     * shift right values in argv and add "file" to argv[0] 
+     */
     int                 i;
 
     ZE_MessageNotice(11, "Correcting old configuration option : %s", spec);
@@ -207,11 +210,12 @@ log_open(log, spec)
       log->argc++;
   }
 
-  if (strcasecmp(LOG_SPEC_WHICH(log), "syslog") == 0)
-  {
+  if (strcasecmp(LOG_SPEC_WHICH(log), "syslog") == 0) {
     log->logtype = JC_LOG_SYSLOG;
 
-    /* log->log.syslog.priority = syslog_priority_value(LOG_SPEC_PRIORITY(log)); */
+    /*
+     * log->log.syslog.priority = syslog_priority_value(LOG_SPEC_PRIORITY(log)); 
+     */
     log->log.syslog.priority = zeLog_PriorityValue(LOG_SPEC_PRIORITY(log));
     if (log->log.syslog.priority < 0)
       log->log.syslog.priority = LOG_INFO;
@@ -221,21 +225,20 @@ log_open(log, spec)
     goto fin;
   }
 
-  if (strcasecmp(LOG_SPEC_WHICH(log), "file") == 0)
-  {
+  if (strcasecmp(LOG_SPEC_WHICH(log), "file") == 0) {
     log->logtype = JC_LOG_FILE;
 
     log->log.file.fd = -1;
     if (log->debug)
-      ZE_MessageInfo(10, "Opening file %s", STRNULL(LOG_SPEC_FNAME(log), "NULL"));
+      ZE_MessageInfo(10, "Opening file %s",
+                     STRNULL(LOG_SPEC_FNAME(log), "NULL"));
 
     log->open = locked_log_open(log);
 
     goto fin;
   }
 
-  if (strcasecmp(LOG_SPEC_WHICH(log), "udp") == 0)
-  {
+  if (strcasecmp(LOG_SPEC_WHICH(log), "udp") == 0) {
     log->logtype = JC_LOG_UDP;
     log->log.udp.fd = -1;
     log->log.udp.connect = FALSE;
@@ -246,16 +249,14 @@ log_open(log, spec)
   }
 
   if (strcasecmp(LOG_SPEC_WHICH(log), "nolog") == 0 ||
-      strcasecmp(LOG_SPEC_WHICH(log), "none") == 0)
-  {
+      strcasecmp(LOG_SPEC_WHICH(log), "none") == 0) {
     log->open = TRUE;
 
     goto fin;
   }
 
 fin:
-  if (!log->open)
-  {
+  if (!log->open) {
     FREE(log->spec);
     FREE(log->args);
     log_init(log);
@@ -404,16 +405,16 @@ locked_log_open(log)
   ASSERT(log != NULL);
   ASSERT(log->signature == SIGNATURE);
 
-  switch (log->logtype)
-  {
+  switch (log->logtype) {
     case JC_LOG_NONE:
       break;
 
     case JC_LOG_SYSLOG:
-      /* XXX Need surely to be changed 
-       ** Each log structure can't have it's own syslog facility
-       ** in the same processus
-       ** For the moment, I'm considering syslog is already open
+      /*
+       * XXX Need surely to be changed 
+       * ** Each log structure can't have it's own syslog facility
+       * ** in the same processus
+       * ** For the moment, I'm considering syslog is already open
        */
       log->open = TRUE;
       break;
@@ -422,10 +423,9 @@ locked_log_open(log)
       ASSERT(LOG_SPEC_FNAME(log) != NULL);
       ASSERT(strlen(LOG_SPEC_FNAME(log)) != 0);
 
-      if (log->log.file.fd >= 0)
-      {
+      if (log->log.file.fd >= 0) {
         ZE_LogMsgWarning(0, " It seems that log->fname (%s) is already open",
-                        LOG_SPEC_FNAME(log));
+                         LOG_SPEC_FNAME(log));
         close(log->log.file.fd);
         log->log.file.fd = -1;
         break;
@@ -455,36 +455,30 @@ locked_log_open(log)
         addr = strchr(inet, '@');
 
         ZE_MessageInfo(10, "Opening UDP to %s port %d",
-                     addr != NULL ? addr + 1 : "NULL", port);
-        if (addr != NULL)
-        {
+                       addr != NULL ? addr + 1 : "NULL", port);
+        if (addr != NULL) {
           addr++;
 
           memset(&log->log.udp.sock, 0, sizeof (log->log.udp.sock));
           log->log.udp.sock.sin_family = AF_INET;
           log->log.udp.sock.sin_port = htons(port);
           r = jinet_pton(AF_INET, addr, &log->log.udp.sock.sin_addr);
-          if (r >= 0)
-          {
+          if (r >= 0) {
             log->log.udp.fd = socket(AF_INET, SOCK_DGRAM, 0);
             log->open = TRUE;
             log->log.udp.connect = FALSE;
             r = connect(log->log.udp.fd, (struct sockaddr *) &log->log.udp.sock,
                         sizeof (log->log.udp.sock));
-            if (r >= 0)
-            {
+            if (r >= 0) {
               log->nberror = 0;
               log->log.udp.connect = TRUE;
-            } else
-            {
+            } else {
               log->nberror++;
             }
-          } else
-          {
+          } else {
             log->nberror++;
           }
-        } else
-        {
+        } else {
           log->nberror++;
         }
       }
@@ -511,8 +505,7 @@ locked_log_close(log)
   ASSERT(log != NULL);
   ASSERT(log->signature == SIGNATURE);
 
-  switch (log->logtype)
-  {
+  switch (log->logtype) {
     case JC_LOG_NONE:
       break;
 
@@ -526,8 +519,7 @@ locked_log_close(log)
       break;
 
     case JC_LOG_UDP:
-      if (log->log.udp.fd > 0)
-      {
+      if (log->log.udp.fd > 0) {
         shutdown(log->log.udp.fd, SHUT_RDWR);
         close(log->log.udp.fd);
         log->log.udp.fd = -1;
@@ -555,8 +547,7 @@ locked_log_write(log, str)
   char               *prefix = NULL;
   char               *x = NULL;
 
-  switch (log->logtype)
-  {
+  switch (log->logtype) {
     case JC_LOG_NONE:
       break;
 
@@ -574,8 +565,7 @@ locked_log_write(log, str)
       ASSERT(log->log.file.fd >= 0);
       if (log->debug)
         ZE_MessageInfo(10, "func=%s : JC_LOG_FILE : %s", ZE_FUNCTION, str);
-      if (write(log->log.file.fd, str, strlen(str)) < 0)
-      {
+      if (write(log->log.file.fd, str, strlen(str)) < 0) {
         ZE_LogSysError("Error writing to file %s", LOG_SPEC_FNAME(log));
         log->error = errno;
         log->nberror++;
@@ -583,10 +573,8 @@ locked_log_write(log, str)
       } else
         log->nberror = 0;
 
-      if (strchr(str, '\n') == NULL)
-      {
-        if (write(log->log.file.fd, "\n", 1) < 0)
-        {
+      if (strchr(str, '\n') == NULL) {
+        if (write(log->log.file.fd, "\n", 1) < 0) {
           ZE_LogSysError("Error writing to file %s", LOG_SPEC_FNAME(log));
           log->error = errno;
           log->nberror++;
@@ -602,31 +590,26 @@ locked_log_write(log, str)
       if (log->debug)
         ZE_MessageInfo(10, "func=%s : JC_LOG_UDP : %s", ZE_FUNCTION, str);
 
-      if (!log->log.udp.connect)
-      {
+      if (!log->log.udp.connect) {
         time_t              now;
 
         now = time(NULL);
 
-        if (log->nberror < LOG_MAX_ERRORS || log->lasterror + 60 < now)
-        {
+        if (log->nberror < LOG_MAX_ERRORS || log->lasterror + 60 < now) {
           int                 r;
 
           r = connect(log->log.udp.fd, (struct sockaddr *) &log->log.udp.sock,
                       sizeof (log->log.udp.sock));
-          if (r >= 0)
-          {
+          if (r >= 0) {
             log->nberror = 0;
             log->log.udp.connect = TRUE;
-          } else
-          {
+          } else {
             log->nberror++;
             log->lasterror = time(NULL);
           }
         }
       }
-      if (sendto(log->log.udp.fd, str, strlen(str), 0, NULL, 0) < 0)
-      {
+      if (sendto(log->log.udp.fd, str, strlen(str), 0, NULL, 0) < 0) {
         ZE_LogSysError("Error writing to  %s", "udp");
         log->error = errno;
       } else

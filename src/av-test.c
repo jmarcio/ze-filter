@@ -210,8 +210,8 @@ main(argc, argv)
 
     if (db_blackliste_check("URLBL", question, &bl)) {
       printf("Found       %s\n", question);
-      printf(" WEIGHT     %ld\n", (long ) bl.weight);
-      printf(" DATE       %ld\n", (long ) bl.date);
+      printf(" WEIGHT     %ld\n", (long) bl.weight);
+      printf(" DATE       %ld\n", (long) bl.date);
       printf(" IP         %s\n", bl.ipres);
       printf(" MSG        %s\n", bl.msg);
     }

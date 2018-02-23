@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -39,12 +40,12 @@
  **************************************************************************** */
 bool
 morpho_bin_erosion(p, size)
-     uint8_t *p;
-     size_t   size;
+     uint8_t            *p;
+     size_t              size;
 {
-  uint8_t   *q;
-  uint8_t   *r, *s;
-  size_t     n;
+  uint8_t            *q;
+  uint8_t            *r, *s;
+  size_t              n;
 
   if ((p == NULL) || (size == 0))
     return FALSE;
@@ -59,7 +60,8 @@ morpho_bin_erosion(p, size)
   r = p;
   s = q;
   *s = MIN3(*r, *r, *(r + 1));
-  r++; s++;
+  r++;
+  s++;
   for (n = 1; n < size - 2; n++, r++, s++) {
     *s = MIN3(*(r - 1), *r, *(r + 1));
   }
@@ -78,12 +80,12 @@ morpho_bin_erosion(p, size)
  **************************************************************************** */
 bool
 morpho_bin_dilation(p, size)
-     uint8_t *p;
-     size_t   size;
+     uint8_t            *p;
+     size_t              size;
 {
-  uint8_t   *q;
-  uint8_t   *r, *s;
-  size_t     n;
+  uint8_t            *q;
+  uint8_t            *r, *s;
+  size_t              n;
 
   if ((p == NULL) || (size == 0))
     return FALSE;
@@ -98,7 +100,8 @@ morpho_bin_dilation(p, size)
   r = p;
   s = q;
   *s = MAX3(*r, *r, *(r + 1));
-  r++; s++;
+  r++;
+  s++;
   for (n = 1; n < size - 2; n++, r++, s++) {
     *s = MAX3(*(r - 1), *r, *(r + 1));
   }
@@ -116,11 +119,11 @@ morpho_bin_dilation(p, size)
  **************************************************************************** */
 bool
 morpho_bin_openning(p, size)
-     uint8_t *p;
-     size_t   size;
+     uint8_t            *p;
+     size_t              size;
 {
-  (void ) morpho_bin_erosion(p, size);
-  (void ) morpho_bin_dilation(p, size);
+  (void) morpho_bin_erosion(p, size);
+  (void) morpho_bin_dilation(p, size);
 
   return TRUE;
 }
@@ -131,11 +134,11 @@ morpho_bin_openning(p, size)
  **************************************************************************** */
 bool
 morpho_bin_closing(p, size)
-     uint8_t *p;
-     size_t   size;
+     uint8_t            *p;
+     size_t              size;
 {
-  (void ) morpho_bin_dilation(p, size);
-  (void ) morpho_bin_erosion(p, size);
+  (void) morpho_bin_dilation(p, size);
+  (void) morpho_bin_erosion(p, size);
 
   return TRUE;
 }

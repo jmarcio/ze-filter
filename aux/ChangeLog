@@ -5,6 +5,8 @@
 
 ==== Version 0.8.0 - dev ====
 
+* Some cleaning code cleaning up with indent (unix tool)
+
 * Documenting source code with doxygen. Work in progress. See
   http://foss.jose-marcio.org/srcdoc
 

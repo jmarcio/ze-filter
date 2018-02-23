@@ -49,7 +49,7 @@ static struct {
 
   pthread_mutex_t     mutex;
 
-  ZEBT_T               db_open;
+  ZEBT_T              db_open;
 } hdata = {
 FALSE, (time_t) 0, 0, PTHREAD_MUTEX_INITIALIZER, JBT_INITIALIZER};
 
@@ -281,7 +281,8 @@ fin:
     if ((++ns % 1000) == 0) {
       ZE_MessageInfo(10,
                      "MX CHECK delay : nb=%d min=%5.3f mean=%5.3f max=%5.3f stddev=%5.3f ",
-                     ns, zeKMin(&st), zeKMean(&st), zeKMax(&st), zeKStdDev(&st));
+                     ns, zeKMin(&st), zeKMean(&st), zeKMax(&st),
+                     zeKStdDev(&st));
       zeKStatsReset(&st);
       ns = 0;
     }

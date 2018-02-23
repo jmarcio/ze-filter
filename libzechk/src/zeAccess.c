@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -55,7 +56,7 @@ AccessLookup(addr, from, to)
   char                rBuf[256];
   bool                match = FALSE;
 
-  memset(rBuf, 0, sizeof(rBuf));
+  memset(rBuf, 0, sizeof (rBuf));
   if (to == NULL)
     goto fin;
 
@@ -75,7 +76,7 @@ chkfrom:
         argcC = zeStr2Tokens(argvB[0], 32, argvC, ",");
         for (k = 0; k < argcC && !match; k++) {
           if (EmailMatch(to, argvC[k])) {
-            strlcpy(rBuf, argvB[1], sizeof(rBuf));
+            strlcpy(rBuf, argvB[1], sizeof (rBuf));
             match = TRUE;
           }
         }
@@ -101,7 +102,7 @@ chkaddr:
         argcC = zeStr2Tokens(argvB[0], 32, argvC, ",");
         for (k = 0; k < argcC && !match; k++) {
           if (EmailMatch(to, argvC[k])) {
-            strlcpy(rBuf, argvB[1], sizeof(rBuf));
+            strlcpy(rBuf, argvB[1], sizeof (rBuf));
             match = TRUE;
           }
         }
@@ -120,7 +121,7 @@ fin:
     else if (STRCASEEQUAL(rBuf, "TMPFAIL"))
       access = ACCESS_TMPFAIL;
   }
-    
+
   return access;
 }
 

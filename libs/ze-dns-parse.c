@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -49,15 +50,13 @@ static int          dns_init_ok = FALSE;
 static void
 dns_init()
 {
-  if (!dns_init_ok)
-  {
+  if (!dns_init_ok) {
     char               *env = NULL;
 
     dns_retry = _res.retry;
     dns_retrans = _res.retrans;
 
-    if ((env = getenv("DNS_RETRY")) != NULL)
-    {
+    if ((env = getenv("DNS_RETRY")) != NULL) {
       int                 t;
 
       errno = 0;
@@ -66,8 +65,7 @@ dns_init()
         dns_retry = t;
     }
 
-    if ((env = getenv("DNS_RETRANS")) != NULL)
-    {
+    if ((env = getenv("DNS_RETRANS")) != NULL) {
       int                 t;
 
       errno = 0;
@@ -94,8 +92,7 @@ dns_free_hostarr(r)
   if (r == NULL)
     return;
 
-  for (i = 0; i < r->count; i++)
-  {
+  for (i = 0; i < r->count; i++) {
     FREE(r->host[i].ip);
     FREE(r->host[i].name);
     FREE(r->host[i].txt);
@@ -119,8 +116,7 @@ parse_a_answer(r, a)
   if (r == NULL || a == NULL)
     return 0;
 
-  for (rr = r->dns_r_head; rr != NULL; rr = rr->rr_next)
-  {
+  for (rr = r->dns_r_head; rr != NULL; rr = rr->rr_next) {
     char                buf[64];
 
     if (a->count >= MAX_HOST)
@@ -165,8 +161,7 @@ dns_get_a(domain, a)
   memset(&rt, 0, sizeof (rt));
 
   dns_init();
-  if ((res = dns_lookup(domain, "A", dns_retrans, dns_retry, &rt)) >= 0)
-  {
+  if ((res = dns_lookup(domain, "A", dns_retrans, dns_retry, &rt)) >= 0) {
     parse_a_answer(&rt, a);
     if (a->count > 0)
       qsort(a->host, a->count, sizeof (DNS_HOST_T), compar_dns_host);
@@ -192,8 +187,7 @@ parse_aaaa_answer(r, a)
   if (r == NULL || a == NULL)
     return 0;
 
-  for (rr = r->dns_r_head; rr != NULL; rr = rr->rr_next)
-  {
+  for (rr = r->dns_r_head; rr != NULL; rr = rr->rr_next) {
     char                buf[64];
 
     if (a->count >= MAX_HOST)
@@ -238,8 +232,7 @@ dns_get_aaaa(domain, a)
   memset(&rt, 0, sizeof (rt));
 
   dns_init();
-  if ((res = dns_lookup(domain, "AAAA", dns_retrans, dns_retry, &rt)) >= 0)
-  {
+  if ((res = dns_lookup(domain, "AAAA", dns_retrans, dns_retry, &rt)) >= 0) {
     parse_aaaa_answer(&rt, a);
     if (a->count > 0)
       qsort(a->host, a->count, sizeof (DNS_HOST_T), compar_dns_host);
@@ -265,8 +258,7 @@ parse_mx_answer(r, mx)
   if (r == NULL || mx == NULL)
     return 0;
 
-  for (rr = r->dns_r_head; rr != NULL; rr = rr->rr_next)
-  {
+  for (rr = r->dns_r_head; rr != NULL; rr = rr->rr_next) {
     RR_RECORD_T        *ra;
 
     if (mx->count >= MAX_HOST)
@@ -279,28 +271,26 @@ parse_mx_answer(r, mx)
       continue;
 
     mx->host[mx->count].name = strdup(rr->rr_u.rr_mx->mx_r_domain);
-    if (mx->host[mx->count].name == NULL)
-    {
+    if (mx->host[mx->count].name == NULL) {
       ZE_LogSysError("malloc error");
       continue;
     }
     mx->host[mx->count].pref = rr->rr_u.rr_mx->mx_r_preference;
 
-    /* First look at additional section */
-    for (ra = r->dns_r_head; ra != NULL; ra = ra->rr_next)
-    {
+    /*
+     * First look at additional section 
+     */
+    for (ra = r->dns_r_head; ra != NULL; ra = ra->rr_next) {
       if (ra->rr_type != T_A)
         continue;
 
       if (ra->rr_domain == NULL)
         continue;
 
-      if (strcasecmp(rr->rr_u.rr_mx->mx_r_domain, ra->rr_domain) == 0)
-      {
+      if (strcasecmp(rr->rr_u.rr_mx->mx_r_domain, ra->rr_domain) == 0) {
         char                buf[32];
 
-        if (mx->host[mx->count].ip != NULL)
-        {
+        if (mx->host[mx->count].ip != NULL) {
           if (mx->count >= MAX_HOST - 1)
             break;
 
@@ -317,19 +307,17 @@ parse_mx_answer(r, mx)
       }
     }
 
-    /* Not found - so query it */
-    if (mx->host[mx->count].ip == NULL && mx->host[mx->count].name != NULL)
-    {
+    /*
+     * Not found - so query it 
+     */
+    if (mx->host[mx->count].ip == NULL && mx->host[mx->count].name != NULL) {
       int                 i;
       DNS_HOSTARR_T       a;
 
       memset(&a, 0, sizeof (a));
-      if (dns_get_a(rr->rr_u.rr_mx->mx_r_domain, &a) > 0)
-      {
-        for (i = 0; i < a.count; i++)
-        {
-          if (mx->host[mx->count].ip != NULL)
-          {
+      if (dns_get_a(rr->rr_u.rr_mx->mx_r_domain, &a) > 0) {
+        for (i = 0; i < a.count; i++) {
+          if (mx->host[mx->count].ip != NULL) {
             if (mx->count >= MAX_HOST - 1)
               break;
 
@@ -370,8 +358,7 @@ dns_get_mx(domain, mx)
   mx->domain = strdup(domain);
 
   dns_init();
-  if ((res = dns_lookup(domain, "MX", dns_retrans, dns_retry, &rt)) >= 0)
-  {
+  if ((res = dns_lookup(domain, "MX", dns_retrans, dns_retry, &rt)) >= 0) {
     result = parse_mx_answer(&rt, mx);
     if (mx->count > 1)
       qsort(mx->host, mx->count, sizeof (DNS_HOST_T), compar_dns_host);
@@ -394,20 +381,17 @@ print_dns_reply(r, level)
      DNS_REPLY_T        *r;
      int                 level;
 {
-  if (r != NULL)
-  {
+  if (r != NULL) {
     char                prefix[16];
     RR_RECORD_T        *rr;
 
     zeStrSet(prefix, ' ', level * 2);
-    for (rr = r->dns_r_head; rr != NULL; rr = rr->rr_next)
-    {
+    for (rr = r->dns_r_head; rr != NULL; rr = rr->rr_next) {
       char               *stype = (char *) dns_type_to_string(rr->rr_type);
 
       stype = STRNULL(stype, "???");
 
-      switch (rr->rr_type)
-      {
+      switch (rr->rr_type) {
         case T_MX:
           printf("%s* %-3s %2d %s\n",
                  prefix,
@@ -418,8 +402,7 @@ print_dns_reply(r, level)
             int                 res;
 
             if ((res = dns_lookup(rr->rr_u.rr_mx->mx_r_domain, "A",
-                                  dns_retrans, dns_retry, &rt)) >= 0)
-            {
+                                  dns_retrans, dns_retry, &rt)) >= 0) {
               print_dns_reply(&rt, level + 1);
               dns_free_data(&rt);
             }

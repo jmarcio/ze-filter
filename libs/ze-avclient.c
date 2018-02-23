@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -67,13 +68,10 @@ av_decode_args(arg)
   socktype = -1;
   inetport = -1;
 
-  if (strncasecmp(p, s, strlen(s)) == 0)
-  {
+  if (strncasecmp(p, s, strlen(s)) == 0) {
     p += strlen(s);
-    if (strlen(p) > 0)
-    {
-      if ((sockname = strdup(p)) == NULL)
-      {
+    if (strlen(p) > 0) {
+      if ((sockname = strdup(p)) == NULL) {
         ZE_LogSysError("strdup(sockname) error");
         return FALSE;
       }
@@ -83,13 +81,10 @@ av_decode_args(arg)
   }
 
   s = "local:";
-  if (strncasecmp(p, s, strlen(s)) == 0)
-  {
+  if (strncasecmp(p, s, strlen(s)) == 0) {
     p += strlen(s);
-    if (strlen(p) > 0)
-    {
-      if ((sockname = strdup(p)) == NULL)
-      {
+    if (strlen(p) > 0) {
+      if ((sockname = strdup(p)) == NULL) {
         ZE_LogSysError("strdup(sockname) error");
         return FALSE;
       }
@@ -99,15 +94,13 @@ av_decode_args(arg)
   }
 
   s = "inet:";
-  if (strncasecmp(p, s, strlen(s)) == 0)
-  {
+  if (strncasecmp(p, s, strlen(s)) == 0) {
     char                tmp[16];
     int                 n;
 
     p += strlen(s);
     n = strspn(p, "0123456789");
-    if ((n > 0) && (n < sizeof (tmp)))
-    {
+    if ((n > 0) && (n < sizeof (tmp))) {
       strncpy(tmp, p, n);
       tmp[n] = '\0';
 
@@ -124,8 +117,7 @@ av_decode_args(arg)
         ZE_LogSysError("strdup(inethost) error");
     }
 
-    if ((inethost == NULL) || (inetport < 0))
-    {
+    if ((inethost == NULL) || (inetport < 0)) {
       FREE(inethost);
       inetport = -1;
       return FALSE;
@@ -148,23 +140,22 @@ av_client_init()
   static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
   MUTEX_LOCK(&mutex);
-  if (!args_ok)
-  {
+  if (!args_ok) {
     char               *scan_arg = NULL;
 
     if ((scan_arg = cf_get_str(CF_SCANNER_SOCK)) != NULL)
       args_ok = av_decode_args(scan_arg);
 
     ZE_MessageInfo(DEBUG_LEVEL, "SOCK            : %s",
-                 STRNULL(scan_arg, "NULL"));
+                   STRNULL(scan_arg, "NULL"));
     ZE_MessageInfo(DEBUG_LEVEL, "SOCKTYPE        : %d", socktype);
     ZE_MessageInfo(DEBUG_LEVEL, "SOCKNAME        : %s",
-                 STRNULL(sockname, "NULL"));
+                   STRNULL(sockname, "NULL"));
     ZE_MessageInfo(DEBUG_LEVEL, "INETHOST        : %s",
-                 STRNULL(inethost, "NULL"));
+                   STRNULL(inethost, "NULL"));
     ZE_MessageInfo(DEBUG_LEVEL, "INETPORT        : %d", inetport);
     ZE_MessageInfo(DEBUG_LEVEL, "INIT OK         : %d %s", args_ok,
-                 STRBOOL(args_ok, "TRUE", "FALSE"));
+                   STRBOOL(args_ok, "TRUE", "FALSE"));
   }
   MUTEX_UNLOCK(&mutex);
 
@@ -180,8 +171,7 @@ static int
 disconnect2server(sd)
      int                 sd;
 {
-  if (sd >= 0)
-  {
+  if (sd >= 0) {
     shutdown(sd, 2);
     close(sd);
   }
@@ -197,20 +187,19 @@ connect2server()
 {
   int                 sd = -1;
 
-  if (socktype == AF_INET)
-  {
+  if (socktype == AF_INET) {
     struct sockaddr_in  his_sock;
     struct hostent     *hp;
 
-    if ((sd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
-    {
+    if ((sd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
       ZE_LogSysError("AF_INET : socket");
       return -1;
     }
 
-    /* adresse destinataire XXX */
-    if ((hp = gethostbyname(inethost)) == NULL)
-    {
+    /*
+     * adresse destinataire XXX 
+     */
+    if ((hp = gethostbyname(inethost)) == NULL) {
       ZE_LogSysError("gethostbyname(%s)", STRNULL(inethost, "NULL"));
       return -1;
     }
@@ -224,28 +213,27 @@ connect2server()
       log_sock_addr(&his_sock);
 #endif
 
-    /* emission sur sd vers his_sock d'un message de taille size */
-    if (connect_timed(sd, (struct sockaddr *) &his_sock, sizeof (his_sock), 10) != 0)
-    {
+    /*
+     * emission sur sd vers his_sock d'un message de taille size 
+     */
+    if (connect_timed(sd, (struct sockaddr *) &his_sock, sizeof (his_sock), 10)
+        != 0) {
       ZE_LogSysError("connect error (%s:%d)", STRNULL(inethost, "NULL"),
-                    inetport);
+                     inetport);
       sd = disconnect2server(sd);
     }
     return sd;
   }
 
-  if (socktype == AF_UNIX)
-  {
+  if (socktype == AF_UNIX) {
     struct sockaddr_un  his_sock;
 
-    if ((sockname != NULL) && (strlen(sockname) == 0))
-    {
+    if ((sockname != NULL) && (strlen(sockname) == 0)) {
       ZE_LogSysError("AF_UNIX : No sockname given...");
       return -1;
     }
 
-    if ((sd = socket(AF_UNIX, SOCK_STREAM, 0)) < 0)
-    {
+    if ((sd = socket(AF_UNIX, SOCK_STREAM, 0)) < 0) {
       ZE_LogSysError("AF_UNIX : socket");
       return -1;
     }
@@ -255,9 +243,10 @@ connect2server()
 
     strncpy(his_sock.sun_path, sockname, strlen(sockname) + 1);
 
-    /* emission sur sd vers his_sock d'un message de taille size */
-    if (connect(sd, (struct sockaddr *) &his_sock, sizeof (his_sock)) != 0)
-    {
+    /*
+     * emission sur sd vers his_sock d'un message de taille size 
+     */
+    if (connect(sd, (struct sockaddr *) &his_sock, sizeof (his_sock)) != 0) {
       ZE_LogSysError("connect error (%s)", STRNULL(sockname, "NULL"));
       sd = disconnect2server(sd);
     }
@@ -290,8 +279,7 @@ read_scanner_answer(sd, buf, sz, to)
   ptr = buf;
 
   nb = 0;
-  switch (jfd_ready(sd, ZE_SOCK_READ, to))
-  {
+  switch (jfd_ready(sd, ZE_SOCK_READ, to)) {
     case ZE_SOCK_READY:
       nb = recv(sd, ptr, nbr, 0);
       ptr += nb;
@@ -333,23 +321,23 @@ av_client(answer, sz_answer, msg, sz_msg, question)
 
   ZE_LogMsgInfo(DEBUG_LEVEL, "Entering...");
 
-  if ((answer == NULL) || (question == NULL) || (strlen(question) == 0))
-  {
+  if ((answer == NULL) || (question == NULL) || (strlen(question) == 0)) {
     ZE_LogMsgError(0, "question=(%s) answer=(%s)",
-                  STRNULL(question, "NULL"), STRNULL(answer, "NULL"));
+                   STRNULL(question, "NULL"), STRNULL(answer, "NULL"));
     return AV_ZERO;
   }
 
   memset(buf, 0, sizeof (buf));
-  /* on cree le socket d'emission ... */
+  /*
+   * on cree le socket d'emission ... 
+   */
 
   if (!args_ok && !av_client_init())
     return AV_ZERO;
 
   sd = connect2server();
 
-  if (sd < 0)
-  {
+  if (sd < 0) {
     ZE_LogMsgWarning(0, "Can't connect to antivirus scanner server");
     res = AV_ERROR;
 
@@ -360,8 +348,7 @@ av_client(answer, sz_answer, msg, sz_msg, question)
     int                 r = 0;
 
     memset(buf, 0, sizeof (buf));
-    switch (protocol)
-    {
+    switch (protocol) {
       case OPT_INTERNAL:
         (void) read_scanner_answer(sd, buf, sizeof (buf), 5);
         snprintf(buf, sizeof (buf), "SCANFILE %s\n", question);
@@ -375,15 +362,13 @@ av_client(answer, sz_answer, msg, sz_msg, question)
     }
 
     ZE_LogMsgDebug(DEBUG_LEVEL, "Let's check if ready...");
-    if ((r = jfd_ready(sd, ZE_SOCK_WRITE, 10000)) == ZE_SOCK_READY)
-    {
+    if ((r = jfd_ready(sd, ZE_SOCK_WRITE, 10000)) == ZE_SOCK_READY) {
       ZE_LogMsgDebug(DEBUG_LEVEL, "READY...! Let's go !");
-      if ((nb = sendto(sd, buf, strlen(buf), 0, NULL, 0)) < 0)
-      {
+      if ((nb = sendto(sd, buf, strlen(buf), 0, NULL, 0)) < 0) {
         ZE_LogSysError("ze-avclient : sendto error");
-	res = AV_ERROR;
+        res = AV_ERROR;
 
-	goto fin;
+        goto fin;
       }
       ZE_LogMsgDebug(DEBUG_LEVEL, "         Sent... %s", buf);
     } else
@@ -392,8 +377,7 @@ av_client(answer, sz_answer, msg, sz_msg, question)
     ZE_LogMsgDebug(DEBUG_LEVEL, "ze-avclient - SEND : %s", buf);
   }
 
-  if (sd >= 0)
-  {
+  if (sd >= 0) {
     time_t              av_to = av_timeout * 1000;
     int                 nerr = 0;
     time_t              now;
@@ -410,14 +394,11 @@ av_client(answer, sz_answer, msg, sz_msg, question)
 
     ptr = buf;
     nbr = sizeof (buf);
-    do
-    {
-      switch (jfd_ready(sd, ZE_SOCK_READ, av_to))
-      {
+    do {
+      switch (jfd_ready(sd, ZE_SOCK_READ, av_to)) {
         case ZE_SOCK_READY:
           nerr = 0;
-          if ((nb = recv(sd, ptr, nbr, 0)) >= 0)
-          {
+          if ((nb = recv(sd, ptr, nbr, 0)) >= 0) {
             ptr[nb] = '\0';
             zeStrChomp(ptr);
 
@@ -426,41 +407,39 @@ av_client(answer, sz_answer, msg, sz_msg, question)
 #if 1
             done = TRUE;
 #endif
-          } else
-          {
+          } else {
             nerr++;
             ZE_LogSysWarning("Error reading antivirus answer : %ld bytes read",
-                            (long) nb);
+                             (long) nb);
           }
           break;
         case ZE_SOCK_TIMEOUT:
           ZE_LogMsgWarning(0, "Timeout waiting for antivirus answer...");
-	  res = AV_ERROR;
-	  goto fin;
+          res = AV_ERROR;
+          goto fin;
           break;
         default:
           nerr++;
           ZE_LogMsgWarning(0, "Error waiting for antivirus answer...");
-	  res = AV_ERROR;
+          res = AV_ERROR;
           done = TRUE;
-	  goto fin;
+          goto fin;
           break;
       }
       if (now < time(NULL))
         break;
-      if (nerr >= MAX_ERR)
-      {
-        ZE_LogMsgError(0, "ERROR : Too many while errors waiting for antivirus answer...");
-	res = AV_ERROR;
-	goto fin;
+      if (nerr >= MAX_ERR) {
+        ZE_LogMsgError(0,
+                       "ERROR : Too many while errors waiting for antivirus answer...");
+        res = AV_ERROR;
+        goto fin;
       }
     } while (!done && (nbr > 0));
 
     zeStrChomp(buf);
     strlcpy(answer, buf, sz_answer);
     ZE_LogMsgDebug(DEBUG_LEVEL, "RECV (%s)", buf);
-    switch (protocol)
-    {
+    switch (protocol) {
       case OPT_INTERNAL:
         res = decode_answer(answer, sz_answer, msg, sz_msg, buf);
         break;
@@ -475,8 +454,10 @@ av_client(answer, sz_answer, msg, sz_msg, question)
     done = TRUE;
   }
 
- fin:
-  /* fermeture du socket d'emission */
+fin:
+  /*
+   * fermeture du socket d'emission 
+   */
   sd = disconnect2server(sd);
 
   return res;
@@ -499,27 +480,24 @@ decode_answer(answer, sz_answer, msg, sz_msg, buf)
   int                 res = 0;
   char               *tokbuf = NULL;
 
-  if ((tokbuf = strdup(buf)) != NULL)
-  {
+  if ((tokbuf = strdup(buf)) != NULL) {
     char               *ptr, *s;
 
     for (s = strtok_r(tokbuf, "\r\n", &ptr);
-         s != NULL; s = strtok_r(NULL, "\r\n", &ptr))
-    {
+         s != NULL; s = strtok_r(NULL, "\r\n", &ptr)) {
       char               *expr = "^6[0-9]{2} .*";
 
       ZE_MessageInfo(18, "Checking %s against %s", s, expr);
 
-      if (zeStrRegex(s, expr, NULL, NULL, TRUE))
-      {
+      if (zeStrRegex(s, expr, NULL, NULL, TRUE)) {
         char                code[8];
 
         memset(code, 0, sizeof (code));
         strncpy(code, s, strspn(s, "0123456789"));
         res = atoi(code);
         s += strspn(s, "0123456789 ");
-	strlcpy(answer, s, sz_answer);
-	strlcpy(msg, s, sz_msg);
+        strlcpy(answer, s, sz_answer);
+        strlcpy(msg, s, sz_msg);
         if (res != 600)
           break;
       }
@@ -552,8 +530,7 @@ decode_answer_clamav(answer, sz_answer, msg, sz_msg, buf)
   res = AV_ERROR;
   if (strstr(p, "FOUND") != NULL)
     res = AV_VIRUS;
-  else
-  {
+  else {
     if (strstr(p, "OK") != NULL)
       res = AV_OK;
   }
@@ -572,6 +549,6 @@ decode_answer_clamav(answer, sz_answer, msg, sz_msg, buf)
   strncpy(msg, p, i);
 #endif
 
- fin:
+fin:
   return res;
 }

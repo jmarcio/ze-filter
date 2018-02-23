@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -54,46 +55,47 @@
   }
 
 static rfc2822_hdr_T *line2header(char *line);
-static char   *append2line(char *line, char *str);
+static char        *append2line(char *line, char *str);
 
 /* ****************************************************************************
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
-rfc2822_hdr_T *
+rfc2822_hdr_T      *
 rfc2822_get_headers(buf, size, nptr)
-     char          *buf;
-     size_t         size;
-     char         **nptr;
+     char               *buf;
+     size_t              size;
+     char              **nptr;
 {
-  char          *p = NULL;
-  char           line[LINESZ];
-  rfc2822_hdr_T *hdr = NULL, *head = NULL;
+  char               *p = NULL;
+  char                line[LINESZ];
+  rfc2822_hdr_T      *hdr = NULL, *head = NULL;
 
-  char          *cline = NULL;
+  char               *cline = NULL;
 
   ASSERT(buf != NULL);
 
   p = buf;
 
-  while (*p != '\0')
-  {
-    char          *ps;
+  while (*p != '\0') {
+    char               *ps;
 
     ps = p;
     p = buf_get_next_line(line, p, LINESZ);
 
     (void) str_clear_right_spaces(line);
 
-    /* end of headers */
+    /*
+     * end of headers 
+     */
     if (strlen(line) == 0)
       break;
 
-    if (strspn(line, " \t") == 0)
-    {
-      /* New header */
-      if (cline != NULL)
-      {
+    if (strspn(line, " \t") == 0) {
+      /*
+       * New header 
+       */
+      if (cline != NULL) {
         ZE_MessageInfo(15, "LINE       : %s", cline);
 
         hdr = line2header(cline);
@@ -102,27 +104,27 @@ rfc2822_get_headers(buf, size, nptr)
         cline = NULL;
       }
 
-      if (strchr(line, ':') == NULL)
-      {
+      if (strchr(line, ':') == NULL) {
         p = ps;
         break;
       }
 
       cline = append2line(cline, line);
 
-    } else
-    {
-      /* continuation line */
-      if (cline == NULL)
-      {
-        /* error : continuation line without previous line */
+    } else {
+      /*
+       * continuation line 
+       */
+      if (cline == NULL) {
+        /*
+         * error : continuation line without previous line 
+         */
       }
       cline = append2line(cline, line);
     }
   }
 
-  if (cline != NULL)
-  {
+  if (cline != NULL) {
     ZE_MessageInfo(15, "LINE       : %s", cline);
     hdr = line2header(cline);
     APPEND_HEADER(head, hdr);
@@ -141,13 +143,12 @@ fin:
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
-rfc2822_hdr_T *
+rfc2822_hdr_T      *
 rfc2822_lookup_header(head, key)
-     rfc2822_hdr_T *head;
-     char          *key;
+     rfc2822_hdr_T      *head;
+     char               *key;
 {
-  while (head != NULL)
-  {
+  while (head != NULL) {
     if (strcasecmp(head->key, key) == 0)
       return head;
     head = head->next;
@@ -160,9 +161,9 @@ rfc2822_lookup_header(head, key)
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
-char *
+char               *
 rfc2822_get_value(header)
-     rfc2822_hdr_T *header;
+     rfc2822_hdr_T      *header;
 {
   if (header == NULL)
     return NULL;
@@ -174,12 +175,12 @@ rfc2822_get_value(header)
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
-char *
+char               *
 rfc2822_get_main_attr(header)
-     rfc2822_hdr_T *header;
+     rfc2822_hdr_T      *header;
 {
-  char *p = NULL;
-  size_t n;
+  char               *p = NULL;
+  size_t              n;
 
   if (header == NULL || header->value == NULL)
     return NULL;
@@ -187,7 +188,7 @@ rfc2822_get_main_attr(header)
   n = strcspn(header->value, "; \t");
   if ((p = malloc(n + 1)) != NULL)
     zeSafeStrnCpy(p, n + 1, header->value, n);
-  else 
+  else
     ZE_LogSysError("malloc error");
 
   return p;
@@ -197,27 +198,25 @@ rfc2822_get_main_attr(header)
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
-char *
+char               *
 rfc2822_get_attr(head, attr)
-     rfc2822_hdr_T *head;
-     char          *attr;
+     rfc2822_hdr_T      *head;
+     char               *attr;
 {
-  long           pi, pf;
-  char          *str;
-  char          *value = NULL;
+  long                pi, pf;
+  char               *str;
+  char               *value = NULL;
 
   if (head == NULL || head->value == NULL || attr == NULL)
     return NULL;
 
   str = head->value;
-  if (zeStrRegex(str, attr, &pi, &pf, TRUE))
-  {
-    char          *s = str + pf;
-    bool           quoted = FALSE;
-    int            n;
+  if (zeStrRegex(str, attr, &pi, &pf, TRUE)) {
+    char               *s = str + pf;
+    bool                quoted = FALSE;
+    int                 n;
 
-    if (*s == '"' || *s == '\'')
-    {
+    if (*s == '"' || *s == '\'') {
       s++;
       quoted = TRUE;
     }
@@ -239,10 +238,10 @@ rfc2822_get_attr(head, attr)
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
-static char   *
+static char        *
 get_attr_from_header(hdr, key)
-     rfc2822_hdr_T *hdr;
-     char          *key;
+     rfc2822_hdr_T      *hdr;
+     char               *key;
 {
 
   return NULL;
@@ -253,16 +252,15 @@ get_attr_from_header(hdr, key)
  *                                                                            *
  **************************************************************************** */
 
-static char   *
+static char        *
 append2line(line, str)
-     char          *line;
-     char          *str;
+     char               *line;
+     char               *str;
 {
-  char          *p = NULL;
-  size_t         sz = 0;
+  char               *p = NULL;
+  size_t              sz = 0;
 
-  if (line == NULL)
-  {
+  if (line == NULL) {
     if ((p = strdup(str)) == NULL)
       ZE_LogSysError("strdup(%s) error", str);
     return p;
@@ -270,10 +268,10 @@ append2line(line, str)
 
   sz = strlen(line) + strlen(str) + 1;
   p = realloc(line, sz);
-  if (p != NULL)
-  {
-    /* shall check value returned by strlcat ??? 
-     ** Does it matter ???
+  if (p != NULL) {
+    /*
+     * shall check value returned by strlcat ??? 
+     * ** Does it matter ???
      */
     line = p;
     (void) strlcat(line, str, sz);
@@ -287,10 +285,10 @@ append2line(line, str)
  **************************************************************************** */
 static rfc2822_hdr_T *
 line2header(line)
-     char          *line;
+     char               *line;
 {
-  rfc2822_hdr_T *p = NULL;
-  char          *c = NULL;
+  rfc2822_hdr_T      *p = NULL;
+  char               *c = NULL;
 
   p = malloc(sizeof (rfc2822_hdr_T));
   if (p == NULL)

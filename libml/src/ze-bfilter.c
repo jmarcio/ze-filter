@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -31,6 +32,7 @@
 /** @addtogroup Bayes
  * @{
  */
+
 /* ****************************************************************************
  *                                                                            *
  *                                                                            *
@@ -87,16 +89,14 @@ bfilter_db2bf(bf)
 
   snprintf(k, sizeof (k), "%s:%s", "count", "msgs");
   ZE_MessageInfo(19, "Looking for %s", k);
-  if (zeDb_GetRec(&bf->bdb, k, v, sizeof (v)))
-  {
+  if (zeDb_GetRec(&bf->bdb, k, v, sizeof (v))) {
     int                 ns, nh;
     int                 n;
 
     ZE_MessageInfo(19, "   Found %s", v);
     ns = nh = 0;
     n = sscanf(v, "%d %d", &ns, &nh);
-    if (n < 2)
-    {
+    if (n < 2) {
       ZE_LogMsgWarning(0, "Error : %s %s", k, v);
 
       goto fin;
@@ -105,8 +105,7 @@ bfilter_db2bf(bf)
     bf->nbMsgsSpam = ns;
 
     bf->kms = bf->kmh = 1.;
-    if (ns != nh)
-    {
+    if (ns != nh) {
       if (nh == 0 || nh > ns)
         bf->kms = (double) nh / (double) ns;
       if (ns == 0 || nh < ns)
@@ -116,16 +115,14 @@ bfilter_db2bf(bf)
 
   snprintf(k, sizeof (k), "%s:%s", "count", "tokens");
   ZE_MessageInfo(19, "Looking for %s", k);
-  if (zeDb_GetRec(&bf->bdb, k, v, sizeof (v)))
-  {
+  if (zeDb_GetRec(&bf->bdb, k, v, sizeof (v))) {
     int                 ns, nh;
     int                 n;
 
     ZE_MessageInfo(19, "   Found %s", v);
     ns = nh = 0;
     n = sscanf(v, "%d %d", &ns, &nh);
-    if (n < 2)
-    {
+    if (n < 2) {
       ZE_LogMsgWarning(0, "Error : %s %s", k, v);
 
       goto fin;
@@ -133,8 +130,7 @@ bfilter_db2bf(bf)
     bf->nbTokensHam = nh;
     bf->nbTokensSpam = ns;
     bf->kts = bf->kth = 1.;
-    if (ns != nh)
-    {
+    if (ns != nh) {
       if (nh == 0 || nh > ns)
         bf->kts = (double) nh / (double) ns;
       if (ns == 0 || nh < ns)
@@ -144,16 +140,14 @@ bfilter_db2bf(bf)
 
   snprintf(k, sizeof (k), "%s:%s", "count", "features");
   ZE_MessageInfo(19, "Looking for %s", k);
-  if (zeDb_GetRec(&bf->bdb, k, v, sizeof (v)))
-  {
+  if (zeDb_GetRec(&bf->bdb, k, v, sizeof (v))) {
     int                 ns, nh;
     int                 n;
 
     ZE_MessageInfo(19, "   Found %s", v);
     ns = nh = 0;
     n = sscanf(v, "%d %d", &ns, &nh);
-    if (n < 2)
-    {
+    if (n < 2) {
       ZE_LogMsgWarning(0, "Error : %s %s", k, v);
 
       goto fin;
@@ -161,8 +155,7 @@ bfilter_db2bf(bf)
     bf->nbFeaturesHam = nh;
     bf->nbFeaturesSpam = ns;
     bf->kfs = bf->kfh = 1.;
-    if (ns != nh)
-    {
+    if (ns != nh) {
       if (nh == 0 || nh > ns)
         bf->kfs = (double) nh / (double) ns;
       if (ns == 0 || nh < ns)
@@ -174,8 +167,7 @@ bfilter_db2bf(bf)
   memset(v, 0, sizeof (v));
   snprintf(k, sizeof (k), "%s:%s", "crypt", "tokens");
   ZE_MessageInfo(19, "Looking for %s", k);
-  if (zeDb_GetRec(&bf->bdb, k, v, sizeof (v)))
-  {
+  if (zeDb_GetRec(&bf->bdb, k, v, sizeof (v))) {
     int                 code;
 
     ZE_MessageInfo(19, "   Found %s", v);
@@ -183,7 +175,7 @@ bfilter_db2bf(bf)
     (void) set_bfilter_db_crypt(code);
 
     ZE_MessageInfo(9, "Setting bayes filter encode mode to %s",
-                 hash_code2label(get_bfilter_db_crypt()));
+                   hash_code2label(get_bfilter_db_crypt()));
   }
 
   res = TRUE;
@@ -210,10 +202,8 @@ bfilter_init(dbname)
     return TRUE;
 
   memset(bf->histo, 0, sizeof (bf->histo));
-  if (dbname != NULL)
-  {
-    if ((bf->dbname = strdup(dbname)) == NULL)
-    {
+  if (dbname != NULL) {
+    if ((bf->dbname = strdup(dbname)) == NULL) {
       res = FALSE;
       ZE_LogSysError("strdup(%s) error", dbname);
       goto fin;
@@ -229,8 +219,7 @@ bfilter_init(dbname)
   }
 
   env = getenv("CLASSIFIER");
-  if (env != NULL)
-  {
+  if (env != NULL) {
     int                 argc;
     char               *argv[32];
     int                 i;
@@ -241,40 +230,32 @@ bfilter_init(dbname)
       goto err1;
 
     argc = zeStr2Tokens(tenv, 32, argv, "; ");
-    for (i = 0; i < argc; i++)
-    {
+    for (i = 0; i < argc; i++) {
       int                 vargc;
       char               *vargv[3];
 
       vargc = zeStr2Tokens(argv[i], 32, vargv, "= ");
-      if (vargc > 1)
-      {
-        if (STRCASEEQUAL(vargv[0], "TYPE"))
-        {
+      if (vargc > 1) {
+        if (STRCASEEQUAL(vargv[0], "TYPE")) {
 #if 0
-          if (zeStrRegex(varg[1], "^yes|true", NULL, NULL, TRUE))
-          {
+          if (zeStrRegex(varg[1], "^yes|true", NULL, NULL, TRUE)) {
             bf->segDouble = TRUE;
             continue;
           }
-          if (zeStrRegex(vargv[1], "^no|false", NULL, NULL, TRUE))
-          {
+          if (zeStrRegex(vargv[1], "^no|false", NULL, NULL, TRUE)) {
             bf->segDouble = FALSE;
             continue;
           }
 #endif
           continue;
         }
-        if (STRCASEEQUAL(vargv[0], "FSEL"))
-        {
+        if (STRCASEEQUAL(vargv[0], "FSEL")) {
 #if 0
-          if (zeStrRegex(vargv[1], "^yes|true", NULL, NULL, TRUE))
-          {
+          if (zeStrRegex(vargv[1], "^yes|true", NULL, NULL, TRUE)) {
             bf->segRecurse = TRUE;
             continue;
           }
-          if (zeStrRegex(varg[1], "^no|false", NULL, NULL, TRUE))
-          {
+          if (zeStrRegex(varg[1], "^no|false", NULL, NULL, TRUE)) {
             bf->segRecurse = FALSE;
             continue;
           }
@@ -288,8 +269,7 @@ bfilter_init(dbname)
   }
 
   env = getenv("SEGMENTER");
-  if (env != NULL)
-  {
+  if (env != NULL) {
     int                 argc;
     char               *argv[32];
     int                 i;
@@ -300,37 +280,29 @@ bfilter_init(dbname)
       goto err2;
 
     argc = zeStr2Tokens(tenv, 32, argv, "; ");
-    for (i = 0; i < argc; i++)
-    {
+    for (i = 0; i < argc; i++) {
       int                 vargc;
       char               *vargv[3];
 
       vargc = zeStr2Tokens(argv[i], 32, vargv, "=: ");
-      if (vargc > 1)
-      {
-        if (STRCASEEQUAL(vargv[0], "DOUBLE"))
-        {
-          if (zeStrRegex(vargv[1], "^yes|true", NULL, NULL, TRUE))
-          {
+      if (vargc > 1) {
+        if (STRCASEEQUAL(vargv[0], "DOUBLE")) {
+          if (zeStrRegex(vargv[1], "^yes|true", NULL, NULL, TRUE)) {
             bf->segDouble = TRUE;
             continue;
           }
-          if (zeStrRegex(vargv[1], "^no|false", NULL, NULL, TRUE))
-          {
+          if (zeStrRegex(vargv[1], "^no|false", NULL, NULL, TRUE)) {
             bf->segDouble = FALSE;
             continue;
           }
           continue;
         }
-        if (STRCASEEQUAL(vargv[0], "RECURSE"))
-        {
-          if (zeStrRegex(vargv[1], "^yes|true", NULL, NULL, TRUE))
-          {
+        if (STRCASEEQUAL(vargv[0], "RECURSE")) {
+          if (zeStrRegex(vargv[1], "^yes|true", NULL, NULL, TRUE)) {
             bf->segRecurse = TRUE;
             continue;
           }
-          if (zeStrRegex(vargv[1], "^no|false", NULL, NULL, TRUE))
-          {
+          if (zeStrRegex(vargv[1], "^no|false", NULL, NULL, TRUE)) {
             bf->segRecurse = FALSE;
             continue;
           }
@@ -344,8 +316,7 @@ bfilter_init(dbname)
   }
 
   env = getenv("TOKENIZER");
-  if (env != NULL)
-  {
+  if (env != NULL) {
     int                 argc;
     char               *argv[32];
     int                 i, j;
@@ -356,16 +327,13 @@ bfilter_init(dbname)
       goto err3;
 
     argc = zeStr2Tokens(tenv, 32, argv, "; ");
-    for (i = 0; i < argc; i++)
-    {
+    for (i = 0; i < argc; i++) {
       int                 vargc;
       char               *vargv[3];
 
       vargc = zeStr2Tokens(argv[i], 32, vargv, "=:");
-      if (vargc > 1)
-      {
-        if (STRCASEEQUAL(vargv[0], "ENABLE"))
-        {
+      if (vargc > 1) {
+        if (STRCASEEQUAL(vargv[0], "ENABLE")) {
           int                 xargc;
           char               *xargv[32];
 
@@ -373,8 +341,7 @@ bfilter_init(dbname)
           for (j = 0; j < xargc; j++)
             set_tokconf_active(xargv[j], TRUE);
         }
-        if (STRCASEEQUAL(vargv[0], "DISABLE"))
-        {
+        if (STRCASEEQUAL(vargv[0], "DISABLE")) {
           int                 xargc;
           char               *xargv[32];
 
@@ -620,14 +587,12 @@ bfilter_db_reopen()
 
   BFILTER_LOCK();
 #if 0
-  if (bf->ok)
-  {
+  if (bf->ok) {
     res = TRUE;
     goto fin;
   }
 #endif
-  if (bf->dbname != NULL)
-  {
+  if (bf->dbname != NULL) {
     zeDb_Close(&bf->bdb);
 
     res = zeDb_Open(&bf->bdb, NULL, bf->dbname, 0444, TRUE, TRUE, 0);
@@ -655,8 +620,7 @@ bfilter_close()
 
   ASSERT(bf->signature == SIGNATURE);
 
-  if (bf->ok)
-  {
+  if (bf->ok) {
     if (zeDb_OK(&bf->bdb))
       res = zeDb_Close(&bf->bdb);
 
@@ -739,8 +703,7 @@ smodel_db_check_token(key, token)
 #endif
 
   BFILTER_LOCK();
-  if (!zeDb_OK(&(bf->bdb)))
-  {
+  if (!zeDb_OK(&(bf->bdb))) {
     ZE_LogMsgError(0, "Bayes database not opened");
     goto fin;
   }
@@ -748,8 +711,7 @@ smodel_db_check_token(key, token)
   memset(k, 0, sizeof (k));
   memset(v, 0, sizeof (v));
 
-  switch (bf->crypt)
-  {
+  switch (bf->crypt) {
     case HASH_MD5:
     case HASH_SHA1:
       {
@@ -767,8 +729,7 @@ smodel_db_check_token(key, token)
 
   zeStr2Lower(k);
   ZE_MessageInfo(19, "Looking for %s", k);
-  if (zeDb_GetRec(&bf->bdb, k, v, sizeof (v)))
-  {
+  if (zeDb_GetRec(&bf->bdb, k, v, sizeof (v))) {
     int                 ns, nh;
     double              dns, dnh;
     double              ks, kh = 0.;
@@ -776,8 +737,7 @@ smodel_db_check_token(key, token)
 
     ZE_MessageInfo(19, "  Found %s %s", k, v);
     ns = nh = 0;
-    if (sscanf(v, "%d %d", &ns, &nh) < 2)
-    {
+    if (sscanf(v, "%d %d", &ns, &nh) < 2) {
       ZE_LogMsgWarning(0, "Error : %s %s", k, v);
       goto fin;
     }
@@ -790,11 +750,11 @@ smodel_db_check_token(key, token)
     kh = bf->kmh;
 
 #if 1
-# if 1
+#if 1
     prob = (ks * dns + 0.5) / (kh * dnh + ks * dns + 1.);
-# else
+#else
     prob = (ks * dns + 0.5) / (kh * dnh * bf->rhs + ks * dns + 1.);
-# endif
+#endif
 #else
     {
       double              p, q;
@@ -810,8 +770,7 @@ smodel_db_check_token(key, token)
     }
 #endif
 
-    if (token != NULL)
-    {
+    if (token != NULL) {
 #if 0
       double              ig = 0.;
 
@@ -852,14 +811,12 @@ smodel_db_info(prefix, func, arg)
 
   ASSERT(bf->signature == SIGNATURE);
 
-  if (!zeDb_OK(&(bf->bdb)))
-  {
+  if (!zeDb_OK(&(bf->bdb))) {
     ZE_LogMsgError(0, "Bayes database not opened");
     return;
   }
 
-  if (zeDb_CursorOpen(&(bf->bdb), TRUE))
-  {
+  if (zeDb_CursorOpen(&(bf->bdb), TRUE)) {
     char                k[256], d[256];
 
     char               *skey = STRNULL(prefix, "");
@@ -869,11 +826,9 @@ smodel_db_info(prefix, func, arg)
 
     snprintf(k, sizeof (k), "%s", skey);
 
-    if (zeDb_CursorGetFirst(&(bf->bdb), k, sizeof (k), d, sizeof (d)))
-    {
+    if (zeDb_CursorGetFirst(&(bf->bdb), k, sizeof (k), d, sizeof (d))) {
       DB_BTREE_SEQ_START();
-      do
-      {
+      do {
         DB_BTREE_SEQ_CHECK(skey, NULL);
         if (strncasecmp(k, skey, strlen(skey)) != 0)
           break;

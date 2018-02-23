@@ -259,6 +259,5 @@ usage()
          "        -h : help\n"
          "        -c : configuration file\n"
          "        -v : verbose\n"
-         "\n  %s \n  " COPYRIGHT "\n\n",
-         PACKAGE, __DATE__, __TIME__, PACKAGE);
+         "\n  %s \n  " COPYRIGHT "\n\n", PACKAGE, __DATE__, __TIME__, PACKAGE);
 }

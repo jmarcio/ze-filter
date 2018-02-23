@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -79,8 +80,7 @@ ipv6_expand(sout, sin, size)
   ipv6_str2rec(&ipv6, sin);
 
   memset(sout, 0, size);
-  for (i = 0; i < 16; i++)
-  {
+  for (i = 0; i < 16; i++) {
     if (strlen(sout) > 0)
       strlcat(sout, ":", size);
     snprintf(buf, sizeof (buf), "%x", ipv6.addr[i]);
@@ -109,12 +109,10 @@ ipv6_str2rec(addr, sin)
   strlcpy(addr->str, sin, sizeof (addr->str));
 
   p = strstr(sin, "::");
-  if (p != NULL)
-  {
+  if (p != NULL) {
     p++;
     p = strstr(p, "::");
-    if (p != NULL)
-    {
+    if (p != NULL) {
       ZE_MessageWarning(10, "   Invalid IPV6 address : %s", sin);
       goto fin;
     }
@@ -122,22 +120,19 @@ ipv6_str2rec(addr, sin)
 
   n = 0;
   p = sin;
-  while (n < 16)
-  {
+  while (n < 16) {
     unsigned long       u;
     unsigned int        h, l;
     char               *ptr = NULL;
 
     errno = 0;
     u = strtoul(p, &ptr, 16);
-    if (errno != 0)
-    {
+    if (errno != 0) {
       ZE_MessageWarning(10, "   Invalid IPV6 address : %s", sin);
       goto fin;
     }
 
-    if (u >= 0x10000)
-    {
+    if (u >= 0x10000) {
       ZE_MessageWarning(10, "   Invalid IPV6 address : %s", sin);
       goto fin;
     }
@@ -153,13 +148,11 @@ ipv6_str2rec(addr, sin)
     i = strspn(p, ":");
     if (i == 0)
       break;
-    if (i == 1)
-    {
+    if (i == 1) {
       p++;
       continue;
     }
-    if (i == 2)
-    {
+    if (i == 2) {
       p += 2;
       i = charcount(p, ':');
       n = 16 - 2 * (i + 1);
@@ -169,24 +162,20 @@ ipv6_str2rec(addr, sin)
   }
 
   addr->prefix = 64;
-  if (*p == '/')
-  {
+  if (*p == '/') {
     p++;
-    if (*p != '\0')
-    {
+    if (*p != '\0') {
       unsigned int        u = 0;
 
       errno = 0;
       u = strtoul(p, NULL, 10);
-      if (errno == 0)
-      {
+      if (errno == 0) {
         addr->prefix = u;
       }
     }
   }
 
-  for (i = 0; i < addr->prefix; i++)
-  {
+  for (i = 0; i < addr->prefix; i++) {
     int                 io, ip;
 
     io = i / 8;
@@ -219,8 +208,7 @@ ipv6_rec2str(sout, addr, sz)
   ASSERT(addr != NULL);
 
   memset(sout, 0, sz);
-  for (i = 0; i < 8; i++)
-  {
+  for (i = 0; i < 8; i++) {
     int                 m = 0;
 
     if (strlen(sout) > 0)
@@ -250,8 +238,7 @@ ipv6_set_prefix(addr, prefix)
   addr->prefix = prefix;
 
   memset(addr->mask, 0, sizeof (addr->mask));
-  for (i = 0; i < prefix; i++)
-  {
+  for (i = 0; i < prefix; i++) {
     int                 io, ip;
 
     io = i / 8;

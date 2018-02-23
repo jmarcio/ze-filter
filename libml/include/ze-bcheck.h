@@ -25,7 +25,7 @@
 
 #ifndef __ZE_BCHECK_H
 
-/** @addtogroup Bayes Filter : Bayesian filter
+/** @addtogroup Bayes 
  *
  * Statistical bayesian filter
  * @{

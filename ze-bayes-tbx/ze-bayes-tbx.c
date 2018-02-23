@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -42,8 +43,7 @@ static void         print_histogram(int *histo, int dim, double step);
 
 static int          print_db_info(void *k, void *v, void *arg);
 
-typedef struct
-{
+typedef struct {
   int                 ns;
   int                 nh;
   int                 nfs;
@@ -62,6 +62,7 @@ static void         agregate_tokens(int argc, char **argv, bool multinomial);
  *                                                                            * 
  *                                                                            *
  **************************************************************************** */
+
 /*
 ** General options
 ** 
@@ -171,40 +172,49 @@ main(argc, argv)
 
     opts = "lchsvn:xpM:t:u:b:igdae:m:";
 
-    while ((c = getopt(argc, argv, opts)) != -1)
-    {
+    while ((c = getopt(argc, argv, opts)) != -1) {
 
 #if 0
-      /* First choice - what to do */
-      if (opt_state == OPT_INIT)
-      {
-        switch (c)
-        {
-            /* help */
+      /*
+       * First choice - what to do 
+       */
+      if (opt_state == OPT_INIT) {
+        switch (c) {
+            /*
+             * help 
+             */
           case 'h':
             SET_STATE(OPT_HELP);
             usage(argv[0]);
             exit(0);
             break;
-            /* get info */
+            /*
+             * get info 
+             */
           case 'i':
             SET_STATE(OPT_INFO);
             info = TRUE;
             break;
 
-            /* Check options */
+            /*
+             * Check options 
+             */
           case 'c':
             SET_STATE(OPT_CHECK);
             data.check = TRUE;
             break;
 
-            /* learn options */
+            /*
+             * learn options 
+             */
           case 'l':
             SET_STATE(OPT_LEARN);
             data.check = FALSE;
             break;
 
-            /* default */
+            /*
+             * default 
+             */
           default:
             opt_state = OPT_INIT;
             usage(argv[0]);
@@ -215,46 +225,55 @@ main(argc, argv)
         continue;
       }
 
-      /* Learning sub-options */
-      if (opt_state == OPT_LEARN)
-      {
+      /*
+       * Learning sub-options 
+       */
+      if (opt_state == OPT_LEARN) {
 
         continue;
       }
 
-      /* Message checking sub-options */
-      if (opt_state == OPT_CHECK)
-      {
+      /*
+       * Message checking sub-options 
+       */
+      if (opt_state == OPT_CHECK) {
 
       }
 
-      /* Message checking sub-options */
-      if (opt_state == OPT_INFO)
-      {
+      /*
+       * Message checking sub-options 
+       */
+      if (opt_state == OPT_INFO) {
 
       }
 
-      /* Message checking sub-options */
-      if (opt_state == OPT_GROUP)
-      {
+      /*
+       * Message checking sub-options 
+       */
+      if (opt_state == OPT_GROUP) {
 
       }
 #else
 
-      switch (c)
-      {
-          /* help */
+      switch (c) {
+          /*
+           * help 
+           */
         case 'h':
           usage(argv[0]);
           exit(0);
           break;
 
-          /* get info */
+          /*
+           * get info 
+           */
         case 'i':
           info = TRUE;
           break;
 
-          /* Check options */
+          /*
+           * Check options 
+           */
         case 'c':
           data.check = TRUE;
           break;
@@ -271,7 +290,9 @@ main(argc, argv)
           data.uprob = atof(optarg);
           break;
 
-          /* learn options */
+          /*
+           * learn options 
+           */
         case 'e':
           crypt = optarg;
           break;
@@ -284,7 +305,9 @@ main(argc, argv)
           data.spam = TRUE;
           break;
 
-          /* general options */
+          /*
+           * general options 
+           */
         case 'v':
           data.verbose = TRUE;
           ze_logLevel++;
@@ -307,7 +330,9 @@ main(argc, argv)
           agregate = TRUE;
           break;
 
-          /* default */
+          /*
+           * default 
+           */
         default:
           usage(argv[0]);
           printf("Error ... \n");
@@ -327,19 +352,16 @@ main(argc, argv)
     if ((info || data.check) && !agregate && !group)
       dbname = data.dbname;
 
-    if (!bfilter_init(dbname))
-    {
+    if (!bfilter_init(dbname)) {
       fprintf(stderr, "Error while opening %s database\n",
               STRNULL(dbname, "null"));
       return 1;
     }
   }
 
-  if (!data.check)
-  {
+  if (!data.check) {
     set_bfilter_db_crypt(HASH_PLAIN);
-    if (crypt != NULL)
-    {
+    if (crypt != NULL) {
       zeStr2Upper(crypt);
       if (STRCASEEQUAL(crypt, "PLAIN"))
         set_bfilter_db_crypt(HASH_PLAIN);
@@ -353,8 +375,7 @@ main(argc, argv)
   while (argi < argc && *argv[argi] == '-')
     argi++;
 
-  if (info)
-  {
+  if (info) {
     db_info_T           db_info = { 0, 0, 0 };
 
     memset(&db_info, 0, sizeof (db_info));
@@ -373,8 +394,7 @@ main(argc, argv)
     exit(0);
   }
 
-  if (group)
-  {
+  if (group) {
     argc -= argi;
     argv += argi;
 
@@ -385,8 +405,7 @@ main(argc, argv)
     exit(0);
   }
 
-  if (agregate)
-  {
+  if (agregate) {
     argc -= argi;
     argv += argi;
 
@@ -395,20 +414,19 @@ main(argc, argv)
     exit(0);
   }
 
-  /* learning or checking */
-  if (argi < argc)
-  {
+  /*
+   * learning or checking 
+   */
+  if (argi < argc) {
     char               *fname = NULL;
 
-    while (argi < argc)
-    {
+    while (argi < argc) {
       fname = argv[argi++];
 
       printf("# Checking mailbox %s\n", fname);
 
       memset(data.histo, 0, sizeof (data.histo));
-      if (!data.check)
-      {
+      if (!data.check) {
         char                hostname[256];
         char                date[256];
         time_t              now;
@@ -434,8 +452,7 @@ main(argc, argv)
 
       nb += mbox_handle(fname, sfilter_cli_handle_message, &data);
 
-      if (!data.check)
-      {
+      if (!data.check) {
         printf("MSGS  %ld %-10s %c %6d\n", time(NULL), "NOID",
                (data.spam ? 'S' : 'H'), nb);
         printf("__END__\n");
@@ -443,8 +460,7 @@ main(argc, argv)
       if (data.check && data.histogram)
         print_histogram(data.histo, 20, 0.05);
     }
-  } else
-  {
+  } else {
     usage(argv[0]);
     exit(1);
   }
@@ -482,9 +498,10 @@ print_db_info(k, v, arg)
   ASSERT(k != NULL);
   ASSERT(v != NULL);
 
-  /* printf(" ** %-32s : %s\n", k, v); */
-  if (STRNCASEEQUAL(k, "info:", strlen("info:")))
-  {
+  /*
+   * printf(" ** %-32s : %s\n", k, v); 
+   */
+  if (STRNCASEEQUAL(k, "info:", strlen("info:"))) {
     char               *p = NULL;
     char              **tag;
 
@@ -492,14 +509,12 @@ print_db_info(k, v, arg)
       *p++ = '\0';
     printf("** FILE : %s\n", p);
 
-    for (tag = vtags; *tag != NULL; tag++)
-    {
+    for (tag = vtags; *tag != NULL; tag++) {
       long                pf, pi;
       char                buf[256];
 
       snprintf(buf, sizeof (buf), "%s=\\([^\\)]*\\)", *tag);
-      if (zeStrRegex(v, buf, &pi, &pf, TRUE))
-      {
+      if (zeStrRegex(v, buf, &pi, &pf, TRUE)) {
         char               *s, *t;
 
         zeSafeStrnCpy(buf, sizeof (buf), (char *) v + pi, pf - pi);
@@ -511,20 +526,17 @@ print_db_info(k, v, arg)
         if (*t == '(')
           t++;
 
-        if (STRCASEEQUAL(*tag, "count"))
-        {
+        if (STRCASEEQUAL(*tag, "count")) {
           int                 s, h;
 
-          if (sscanf(t, "%d %d", &s, &h) == 2)
-          {
+          if (sscanf(t, "%d %d", &s, &h) == 2) {
             printf("   %-12s Spams/Hams = %5d/%5d\n", buf, s, h);
             info->ns += s;
             info->nh += h;
           }
           continue;
         }
-        if (STRCASEEQUAL(*tag, "type"))
-        {
+        if (STRCASEEQUAL(*tag, "type")) {
           if (STRCASEEQUAL(t, "spam"))
             info->nfs++;
           else
@@ -552,8 +564,7 @@ print_histogram(histo, nmax, step)
   int                 i, nm;
 
   nm = 0;
-  for (i = 0; i <= nmax; i++)
-  {
+  for (i = 0; i <= nmax; i++) {
     int                 nb;
 
     nb = histo[i];
@@ -582,8 +593,7 @@ sfilter_token_cmp(void *a, void *b)
   return strcmp(ta->token, tb->token);
 }
 
-typedef struct
-{
+typedef struct {
   int                 nbmin;
 
   int                 nts;
@@ -603,8 +613,7 @@ btok_browse(void *data, void *arg)
   btok_arg_T         *btok_arg = (btok_arg_T *) arg;
   int                 nbmin = btok_arg->nbmin;
 
-  if (tok->nbs >= nbmin || tok->nbh >= nbmin)
-  {
+  if (tok->nbs >= nbmin || tok->nbh >= nbmin) {
     btok_arg->nts += tok->nbs;
     btok_arg->nth += tok->nbh;
 
@@ -631,7 +640,7 @@ group_token_files(argc, argv, msgMin, scli_crypt)
      int                 msgMin;
      char               *scli_crypt;
 {
-  ZEBT_T               bt = JBT_INITIALIZER;
+  ZEBT_T              bt = JBT_INITIALIZER;
   LISTR_T            *list = NULL, *plist;
   char               *fname = NULL;
   int                 i, nl = 0, nt = 0;
@@ -644,20 +653,17 @@ group_token_files(argc, argv, msgMin, scli_crypt)
   icli_crypt = hash_label2code(scli_crypt);
   scli_crypt = hash_code2label(icli_crypt);
 
-  for (i = 0; i < argc; i++)
-  {
+  for (i = 0; i < argc; i++) {
     FILE               *fin = NULL;
 
     fname = argv[i];
 
     printf("# Grouping %s\n", fname);
 
-    if ((fin = fopen(fname, "r")) != NULL)
-    {
+    if ((fin = fopen(fname, "r")) != NULL) {
       char                buf[1024];
 
-      while (fgets(buf, sizeof (buf), fin) != NULL)
-      {
+      while (fgets(buf, sizeof (buf), fin) != NULL) {
         char               *p;
         int                 tok_crypt = HASH_PLAIN;
 
@@ -665,14 +671,12 @@ group_token_files(argc, argv, msgMin, scli_crypt)
         if ((p = strchr(buf, '\n')) != NULL)
           *p = '\0';
 
-        if (STRNCASEEQUAL(buf, "msgs:", strlen("msgs:")))
-        {
+        if (STRNCASEEQUAL(buf, "msgs:", strlen("msgs:"))) {
           if (zeStrRegex(buf, "^msgs:[^ ]*[.]dtok[ ]+", NULL, NULL, TRUE))
             list = zeLinkedList_Add(list, buf, 1, NULL, 0);
         }
 
-        if (STRNCASEEQUAL(buf, "crypt:", strlen("crypt:")))
-        {
+        if (STRNCASEEQUAL(buf, "crypt:", strlen("crypt:"))) {
           char               *p;
 
           list = zeLinkedList_Add(list, buf, 1, NULL, 0);
@@ -683,34 +687,29 @@ group_token_files(argc, argv, msgMin, scli_crypt)
 
           file_crypt = hash_label2code(p);
 
-          if (i == 0)
-          {
-            if (icli_crypt == HASH_PLAIN && file_crypt != HASH_PLAIN)
-            {
+          if (i == 0) {
+            if (icli_crypt == HASH_PLAIN && file_crypt != HASH_PLAIN) {
               ZE_MessageInfo(8, "# Changing global crypt option %s -> %s %d\n",
-                           scli_crypt, hash_code2label(file_crypt));
+                             scli_crypt, hash_code2label(file_crypt));
               icli_crypt = file_crypt;
               scli_crypt = hash_code2label(icli_crypt);
             }
           }
 
           if (icli_crypt != HASH_PLAIN &&
-              file_crypt != HASH_PLAIN && icli_crypt != file_crypt)
-          {
+              file_crypt != HASH_PLAIN && icli_crypt != file_crypt) {
             ZE_MessageWarning(9,
-                            "Warning : skipping file %s : encoding incompatibility",
-                            fname);
+                              "Warning : skipping file %s : encoding incompatibility",
+                              fname);
             break;
           }
         }
 
-        if (STRNCASEEQUAL(buf, "info:", strlen("info:")))
-        {
+        if (STRNCASEEQUAL(buf, "info:", strlen("info:"))) {
           list = zeLinkedList_Add(list, buf, 1, NULL, 0);
         }
 
-        if (STRNCASEEQUAL(buf, "token:", strlen("token:")))
-        {
+        if (STRNCASEEQUAL(buf, "token:", strlen("token:"))) {
           sfilter_token_T     tok, *t;
           char               *k, *v, *p;
           int                 ns, nh;
@@ -719,35 +718,30 @@ group_token_files(argc, argv, msgMin, scli_crypt)
           v = NULL;
           ns = nh = 0;
 
-          if ((p = strchr(buf, ' ')) != NULL)
-          {
+          if ((p = strchr(buf, ' ')) != NULL) {
             v = p + strspn(p, " \t");
             *p = '\0';
           }
 
-          if (v == NULL)
-          {
+          if (v == NULL) {
             continue;
           }
 
-          if (sscanf(v, "%d %d", &ns, &nh) < 2)
-          {
+          if (sscanf(v, "%d %d", &ns, &nh) < 2) {
             ZE_LogMsgWarning(0, "Error : %s %s", k, v);
 
             continue;
           }
 
           memset(&tok, 0, sizeof (tok));
-          if (icli_crypt != HASH_PLAIN && file_crypt == HASH_PLAIN)
-          {
+          if (icli_crypt != HASH_PLAIN && file_crypt == HASH_PLAIN) {
             char                dig[64];
 
             p = strchr(buf, ':');
             if (p != NULL && *p != '\0')
               p++;
 
-            switch (icli_crypt)
-            {
+            switch (icli_crypt) {
               case HASH_MD5:
               case HASH_SHA1:
                 str2hash2hex(icli_crypt, dig, p, sizeof (dig));
@@ -760,15 +754,12 @@ group_token_files(argc, argv, msgMin, scli_crypt)
             strlcpy(tok.token, buf, sizeof (tok.token));
           tok.nbs = ns;
           tok.nbh = nh;
-          if ((t = zeBTree_Get(&bt, &tok)) == NULL)
-          {
-            if (!zeBTree_Add(&bt, &tok))
-            {
+          if ((t = zeBTree_Get(&bt, &tok)) == NULL) {
+            if (!zeBTree_Add(&bt, &tok)) {
               ZE_LogMsgError(0, "ERROR inserting new token");
               continue;
             }
-          } else
-          {
+          } else {
             t->nbs += ns;
             t->nbh += nh;
           }
@@ -789,21 +780,18 @@ group_token_files(argc, argv, msgMin, scli_crypt)
 
     nts = nth = 0;
 
-    for (plist = list; plist != NULL; plist = plist->next)
-    {
+    for (plist = list; plist != NULL; plist = plist->next) {
       char               *v;
       int                 ns, nh;
 
       printf("%s\n", plist->key);
 
-      if (STRNCASEEQUAL(plist->key, "msgs:", strlen("msgs:")))
-      {
+      if (STRNCASEEQUAL(plist->key, "msgs:", strlen("msgs:"))) {
         v = plist->key;
         v += strcspn(v, " \t");
         v += strspn(v, " \t");
 
-        if (sscanf(v, "%d %d", &ns, &nh) < 2)
-        {
+        if (sscanf(v, "%d %d", &ns, &nh) < 2) {
           ZE_LogMsgWarning(0, "Error : %s", v);
 
           continue;
@@ -860,16 +848,17 @@ agregate_tokens(argc, argv, multinomial)
      char              **argv;
      bool                multinomial;
 {
-  ZEBT_T               bt = JBT_INITIALIZER;
+  ZEBT_T              bt = JBT_INITIALIZER;
 
   LISTR_T            *list = NULL, *plist;
   char               *fname = NULL;
   int                 i, nl = 0, nt = 0;
 
-  /*char               *crypt = NULL; */
+  /*
+   * char               *crypt = NULL; 
+   */
 
-  for (i = 0; i < argc; i++)
-  {
+  for (i = 0; i < argc; i++) {
     FILE               *fin = NULL;
     int                 nts, nth;
 
@@ -880,8 +869,7 @@ agregate_tokens(argc, argv, multinomial)
 
     printf("# Aggregating tokens from file : %s\n", fname);
 
-    if ((fin = fopen(fname, "r")) != NULL)
-    {
+    if ((fin = fopen(fname, "r")) != NULL) {
       char                buf[1024];
       bool                spam = FALSE;
       int                 msgs = 0;
@@ -892,21 +880,18 @@ agregate_tokens(argc, argv, multinomial)
       memset(crypt, 0, sizeof (crypt));
       memset(info, 0, sizeof (info));
       memset(id, 0, sizeof (id));
-      while (fgets(buf, sizeof (buf), fin) != NULL)
-      {
+      while (fgets(buf, sizeof (buf), fin) != NULL) {
         char               *p;
 
         nl++;
         if ((p = strchr(buf, '\n')) != NULL)
           *p = '\0';
 
-        if (STRNCASEEQUAL(buf, "file ", strlen("file ")))
-        {
+        if (STRNCASEEQUAL(buf, "file ", strlen("file "))) {
           list = zeLinkedList_Add(list, buf, 1, NULL, 0);
         }
 
-        if (STRNCASEEQUAL(buf, "crypt ", strlen("crypt ")))
-        {
+        if (STRNCASEEQUAL(buf, "crypt ", strlen("crypt "))) {
           char               *p;
 
           p = buf;
@@ -919,8 +904,7 @@ agregate_tokens(argc, argv, multinomial)
           list = zeLinkedList_Add(list, buf, 1, NULL, 0);
         }
 
-        if (STRNCASEEQUAL(buf, "info ", strlen("info ")))
-        {
+        if (STRNCASEEQUAL(buf, "info ", strlen("info "))) {
           char               *p;
 
           p = buf;
@@ -933,15 +917,13 @@ agregate_tokens(argc, argv, multinomial)
           if (strlen(p) > 0)
             p += strspn(p, " \t");
 
-          if (strlen(p) > 0)
-          {
+          if (strlen(p) > 0) {
             strlcpy(info, p, sizeof (info));
             list = zeLinkedList_Add(list, p, 1, NULL, 0);
           }
         }
 
-        if (STRNCASEEQUAL(buf, "msgs ", strlen("msgs ")))
-        {
+        if (STRNCASEEQUAL(buf, "msgs ", strlen("msgs "))) {
           int                 bargc = 0;
           char               *bargv[8];
           int                 n = 0;
@@ -961,8 +943,7 @@ agregate_tokens(argc, argv, multinomial)
           list = zeLinkedList_Add(list, buf, 1, NULL, 0);
         }
 
-        if (STRNCASEEQUAL(buf, "token ", strlen("token ")))
-        {
+        if (STRNCASEEQUAL(buf, "token ", strlen("token "))) {
           sfilter_token_T     tok, *t;
           char               *k, *v, *p;
           int                 ns, nh;
@@ -978,7 +959,9 @@ agregate_tokens(argc, argv, multinomial)
           spam = STRCASEEQUAL(bargv[3], "s");
           memset(&tok, 0, sizeof (tok));
 
-          /* XXX encode : PLAIN / MD5 / SHA1 */
+          /*
+           * XXX encode : PLAIN / MD5 / SHA1 
+           */
           strlcpy(tok.token, bargv[5], sizeof (tok.token));
 
           if (multinomial)
@@ -988,15 +971,12 @@ agregate_tokens(argc, argv, multinomial)
             tok.nbs = nb;
           else
             tok.nbh = nb;
-          if ((t = zeBTree_Get(&bt, &tok)) == NULL)
-          {
-            if (!zeBTree_Add(&bt, &tok))
-            {
+          if ((t = zeBTree_Get(&bt, &tok)) == NULL) {
+            if (!zeBTree_Add(&bt, &tok)) {
               ZE_LogMsgError(0, "ERROR inserting new token");
               continue;
             }
-          } else
-          {
+          } else {
             if (spam)
               t->nbs += nb;
             else
@@ -1028,10 +1008,11 @@ agregate_tokens(argc, argv, multinomial)
 
         printf("DATE:%-40s %ld date=(%s)\n", fname, now, buf);
 
-        printf("MSGS:%-40s %7ld %7ld\n", fname, (long int ) nts, (long int ) nth);
+        printf("MSGS:%-40s %7ld %7ld\n", fname, (long int) nts, (long int) nth);
         printf("CRYPT:%-40s %s\n", fname, crypt);
 
-        printf("INFO:%-40s %s count=(%ld %ld)\n", fname, info, (long int ) nts, (long int ) nth);
+        printf("INFO:%-40s %s count=(%ld %ld)\n", fname, info, (long int) nts,
+               (long int) nth);
       }
 
       nt = zeBTree_Browse(&bt, dtok_browse, NULL);

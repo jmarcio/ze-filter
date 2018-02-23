@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -73,8 +74,7 @@ static char        *cpustatenames[] =
   { "idle", "user", "nice", "kernel", "wait", NULL };
 #endif
 
-struct cpustats_t
-{
+struct cpustats_t {
   bool                ok;
   time_t              date;
   loadtype_T          load[JCPU_STATES];
@@ -192,26 +192,21 @@ gather_cpu_load_info()
   static time_t       last = 0;
   time_t              now = time(NULL);
 
-  if (kc == NULL)
-  {
-    if ((kc = kstat_open()) == NULL)
-    {
+  if (kc == NULL) {
+    if ((kc = kstat_open()) == NULL) {
       ZE_LogSysError("kstat_open() error");
       return FALSE;
     }
-  } else
-  {
+  } else {
     kid_t               kid;
 
-    if ((kid = kstat_chain_update(kc)) < 0)
-    {
+    if ((kid = kstat_chain_update(kc)) < 0) {
       ZE_LogSysError("kstat_open() error");
       return FALSE;
     }
   }
 
-  if (kc == NULL)
-  {
+  if (kc == NULL) {
     ZE_LogMsgError(0, "ks NULL");
     return FALSE;
   }
@@ -227,15 +222,12 @@ gather_cpu_load_info()
   memset(&cpu_new, 0, sizeof (cpu_new));
   cpu_new.date = time(NULL);
 
-  for (ksp = kc->kc_chain; ksp != NULL; ksp = ksp->ks_next)
-  {
-    if (strncasecmp(ksp->ks_module, "cpu_stat", 8) == 0)
-    {
+  for (ksp = kc->kc_chain; ksp != NULL; ksp = ksp->ks_next) {
+    if (strncasecmp(ksp->ks_module, "cpu_stat", 8) == 0) {
       static cpu_stat_t   cpu_buf;
       static cpu_sysinfo_t *cpuinfo = &cpu_buf.cpu_sysinfo;
 
-      if (kstat_read(kc, ksp, &cpu_buf) < 0)
-      {
+      if (kstat_read(kc, ksp, &cpu_buf) < 0) {
         ZE_LogSysError("kstat_read() error");
         CPU_LOAD_UNLOCK();
         return FALSE;
@@ -285,8 +277,7 @@ gather_cpu_load_info()
     return TRUE;
   last = now;
 
-  if ((fd = open(PROC_STAT_FILE, O_RDONLY)) < 0)
-  {
+  if ((fd = open(PROC_STAT_FILE, O_RDONLY)) < 0) {
     ZE_LogSysError("Error opening %s", PROC_STAT_FILE);
     return FALSE;
   }
@@ -298,15 +289,13 @@ gather_cpu_load_info()
   cpu_new.date = time(NULL);
 
   *buf = '\0';
-  if (read(fd, buf, sizeof (buf)) > 0)
-  {
+  if (read(fd, buf, sizeof (buf)) > 0) {
     char               *largv[32];
     int                 largc;
     int                 iarg;
 
     largc = zeStr2Tokens(buf, 32, largv, "\r\n");
-    for (iarg = 0; iarg < largc; iarg++)
-    {
+    for (iarg = 0; iarg < largc; iarg++) {
       loadtype_T          u, n, s, i, x, y, z;
       char               *argv[16], **p;
       int                 argc;
@@ -322,44 +311,37 @@ gather_cpu_load_info()
       if (*p == NULL)
         continue;
 
-      if (*++p != NULL)
-      {
+      if (*++p != NULL) {
         u = zeStr2ulonglong(*p, NULL, 0);
         if (errno == ERANGE)
           continue;
       }
-      if (*++p != NULL)
-      {
+      if (*++p != NULL) {
         n = zeStr2ulonglong(*p, NULL, 0);
         if (errno == ERANGE)
           continue;
       }
-      if (*++p != NULL)
-      {
+      if (*++p != NULL) {
         s = zeStr2ulonglong(*p, NULL, 0);
         if (errno == ERANGE)
           continue;
       }
-      if (*++p != NULL)
-      {
+      if (*++p != NULL) {
         i = zeStr2ulonglong(*p, NULL, 0);
         if (errno == ERANGE)
           continue;
       }
-      if (*++p != NULL)
-      {
+      if (*++p != NULL) {
         x = zeStr2ulonglong(*p, NULL, 0);
         if (errno == ERANGE)
           continue;
       }
-      if (*++p != NULL)
-      {
+      if (*++p != NULL) {
         y = zeStr2ulonglong(*p, NULL, 0);
         if (errno == ERANGE)
           continue;
       }
-      if (*++p != NULL)
-      {
+      if (*++p != NULL) {
         z = zeStr2ulonglong(*p, NULL, 0);
         if (errno == ERANGE)
           continue;
@@ -375,8 +357,7 @@ gather_cpu_load_info()
       break;
     }
   }
-  if (nbl > 1)
-  {
+  if (nbl > 1) {
     cpu_new.load[JCPU_USER] /= nbl;
     cpu_new.load[JCPU_NICE] /= nbl;
     cpu_new.load[JCPU_KERNEL] /= nbl;
@@ -481,8 +462,7 @@ gather_cpu_load_info()
     long                cp_time[CPUSTATES];
     size_t              len = sizeof (cp_time);
 
-    if (sysctlbyname("kern.cp_time", &cp_time, &len, NULL, 0) == 0)
-    {
+    if (sysctlbyname("kern.cp_time", &cp_time, &len, NULL, 0) == 0) {
       cpu_new.load[JCPU_USER] = cp_time[CP_USER];
       cpu_new.load[JCPU_NICE] = cp_time[CP_NICE];
       cpu_new.load[JCPU_KERNEL] = cp_time[CP_SYS] + cp_time[CP_INTR];
@@ -503,18 +483,15 @@ gather_cpu_load_info()
     static struct nlist namelist[] = { {"_cp_time"}, {""} };
     static unsigned long nameaddr = 0;
 
-    if (kd == NULL)
-    {
+    if (kd == NULL) {
       char                errbuf[_POSIX2_LINE_MAX];
 
-      if ((kd = kvm_openfiles(NULL, NULL, NULL, O_RDONLY, errbuf)) == NULL)
-      {
+      if ((kd = kvm_openfiles(NULL, NULL, NULL, O_RDONLY, errbuf)) == NULL) {
         nerr++;
         ZE_LogMsgError(0, "kvm_openfiles : %s", errbuf);
         return FALSE;
       }
-      if (kvm_nlist(kd, namelist) != 0)
-      {
+      if (kvm_nlist(kd, namelist) != 0) {
         nerr++;
         kvm_close(kd);
         kd = NULL;
@@ -534,8 +511,7 @@ gather_cpu_load_info()
     {
       loadtype_T          cp_time[CPUSTATES];
 
-      if (kvm_read(kd, nameaddr, cp_time, sizeof (cp_time)) == sizeof (cp_time))
-      {
+      if (kvm_read(kd, nameaddr, cp_time, sizeof (cp_time)) == sizeof (cp_time)) {
         cpu_new.load[JCPU_USER] = cp_time[CP_USER];
         cpu_new.load[JCPU_NICE] = cp_time[CP_NICE];
         cpu_new.load[JCPU_KERNEL] = cp_time[CP_SYS] + cp_time[CP_INTR];
@@ -551,10 +527,8 @@ gather_cpu_load_info()
 
     CPU_LOAD_UNLOCK();
 
-    if (kd != NULL)
-    {
-      if (kvm_close(kd) != 0)
-      {
+    if (kd != NULL) {
+      if (kvm_close(kd) != 0) {
 
       }
     }
@@ -597,7 +571,9 @@ gather_cpu_load_info()
   cpu_new.date = time(NULL);
 
 #if 0
-  /* WRITE HERE HOW TO GET LOAD UNDER THIS OS */
+  /*
+   * WRITE HERE HOW TO GET LOAD UNDER THIS OS 
+   */
 #endif
   cpu_new.load[JCPU_USER] = 0;
   cpu_new.load[JCPU_NICE] = 0;
@@ -642,7 +618,9 @@ gather_cpu_load_info()
   cpu_new.date = time(NULL);
 
 #if 0
-  /* WRITE HERE HOW TO GET LOAD UNDER THIS OS */
+  /*
+   * WRITE HERE HOW TO GET LOAD UNDER THIS OS 
+   */
 #endif
   cpu_new.load[JCPU_USER] = 0;
   cpu_new.load[JCPU_NICE] = 0;
@@ -673,8 +651,7 @@ print_cpu_load_info()
   n = cpu_new.load[JCPU_NICE] - cpu_old.load[JCPU_NICE];
   s = cpu_new.load[JCPU_KERNEL] - cpu_old.load[JCPU_KERNEL];
   i = cpu_new.load[JCPU_IDLE] - cpu_old.load[JCPU_IDLE];
-  if (u + n + s + i > 0)
-  {
+  if (u + n + s + i > 0) {
     printf("*** %ld", (long) cpu_new.date);
     printf(" - user   : %5.2f", ((double) u) / (u + n + s + i));
     printf(" - nice   : %5.2f", ((double) n) / (u + n + s + i));
@@ -700,30 +677,33 @@ log_cpu_load_info()
     "SYSTEM LOAD - idle : %5.1f - user : %5.1f - kernel : %5.1f - wait %5.1f - %3d";
 
   ZE_MessageInfo(9, fmt,
-               get_cpu_load_info(JCPU_IDLE),
-               get_cpu_load_info(JCPU_USER),
-               get_cpu_load_info(JCPU_KERNEL),
-               get_cpu_load_info(JCPU_WAIT), (int) get_cpu_load_info(JCPU_SLOPE));
+                 get_cpu_load_info(JCPU_IDLE),
+                 get_cpu_load_info(JCPU_USER),
+                 get_cpu_load_info(JCPU_KERNEL),
+                 get_cpu_load_info(JCPU_WAIT),
+                 (int) get_cpu_load_info(JCPU_SLOPE));
 #endif             /* OS_SOLARIS */
 
 #if OS_LINUX
   fmt = "SYSTEM LOAD - idle/kernel/user/nice = %5.1f %5.1f %5.1f %5.1f %3d";
 
   ZE_MessageInfo(9, fmt,
-               get_cpu_load_info(JCPU_IDLE),
-               get_cpu_load_info(JCPU_KERNEL),
-               get_cpu_load_info(JCPU_USER),
-               get_cpu_load_info(JCPU_NICE), (int) get_cpu_load_info(JCPU_SLOPE));
+                 get_cpu_load_info(JCPU_IDLE),
+                 get_cpu_load_info(JCPU_KERNEL),
+                 get_cpu_load_info(JCPU_USER),
+                 get_cpu_load_info(JCPU_NICE),
+                 (int) get_cpu_load_info(JCPU_SLOPE));
 #endif             /* OS_LINUX */
 
 #if OS_FREEBSD
   fmt = "SYSTEM LOAD - idle/kernel/user/nice = %5.1f %5.1f %5.1f %5.1f %3d";
 
   ZE_MessageInfo(9, fmt,
-               get_cpu_load_info(JCPU_IDLE),
-               get_cpu_load_info(JCPU_KERNEL),
-               get_cpu_load_info(JCPU_USER),
-               get_cpu_load_info(JCPU_NICE), (int) get_cpu_load_info(JCPU_SLOPE));
+                 get_cpu_load_info(JCPU_IDLE),
+                 get_cpu_load_info(JCPU_KERNEL),
+                 get_cpu_load_info(JCPU_USER),
+                 get_cpu_load_info(JCPU_NICE),
+                 (int) get_cpu_load_info(JCPU_SLOPE));
 #endif             /* OS_FREEBSD */
 
 #if OS_HPUX
@@ -797,23 +777,19 @@ cpuload_thread(data)
 
   cpu_load_init();
 
-  while (cpuloadgo)
-  {
+  while (cpuloadgo) {
     sleep(dt_stat);
 
     now = time(NULL);
-    if (gather_cpu_load_info())
-    {
+    if (gather_cpu_load_info()) {
       if ((int) get_cpu_load_info(JCPU_SLOPE) > 2)
         ZE_MessageInfo(9,
-                     "System Load increasing for more than %ld sec - Last Idle = %5.1f",
-                     (int) get_cpu_load_info(JCPU_SLOPE) * dt_stat,
-                     get_cpu_load_info(JCPU_IDLE));
+                       "System Load increasing for more than %ld sec - Last Idle = %5.1f",
+                       (int) get_cpu_load_info(JCPU_SLOPE) * dt_stat,
+                       get_cpu_load_info(JCPU_IDLE));
 
-      if (cf_get_int(CF_LOG_LOAD) == OPT_YES)
-      {
-        if (now - old >= 60)
-        {
+      if (cf_get_int(CF_LOG_LOAD) == OPT_YES) {
+        if (now - old >= 60) {
           log_cpu_load_info();
           old = now;
         }
@@ -851,40 +827,35 @@ cpuload_start()
   ZE_MessageInfo(10, "*** Starting %s ...", ZE_FUNCTION);
 
 #if OS_LINUX
-  if ((r = pthread_create(&tid, NULL, cpuload_thread, (void *) NULL)) != 0)
-  {
+  if ((r = pthread_create(&tid, NULL, cpuload_thread, (void *) NULL)) != 0) {
     ZE_LogSysError("Couldn't launch cpuload_thread");
     return FALSE;
   }
 #endif
 
 #if OS_SOLARIS
-  if ((r = pthread_create(&tid, NULL, cpuload_thread, (void *) NULL)) != 0)
-  {
+  if ((r = pthread_create(&tid, NULL, cpuload_thread, (void *) NULL)) != 0) {
     ZE_LogSysError("Couldn't launch cpuload_thread");
     return FALSE;
   }
 #endif
 
 #if OS_FREEBSD
-  if ((r = pthread_create(&tid, NULL, cpuload_thread, (void *) NULL)) != 0)
-  {
+  if ((r = pthread_create(&tid, NULL, cpuload_thread, (void *) NULL)) != 0) {
     ZE_LogSysError("Couldn't launch cpuload_thread");
     return FALSE;
   }
 #endif
 
 #if OS_TRU64
-  if ((r = pthread_create(&tid, NULL, cpuload_thread, (void *) NULL)) != 0)
-  {
+  if ((r = pthread_create(&tid, NULL, cpuload_thread, (void *) NULL)) != 0) {
     ZE_LogSysError("Couldn't launch cpuload_thread");
     return FALSE;
   }
 #endif
 
 #if OS_OTHER
-  if ((r = pthread_create(&tid, NULL, cpuload_thread, (void *) NULL)) != 0)
-  {
+  if ((r = pthread_create(&tid, NULL, cpuload_thread, (void *) NULL)) != 0) {
     ZE_LogSysError("Couldn't launch cpuload_thread");
     return FALSE;
   }

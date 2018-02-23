@@ -1806,4 +1806,3 @@ count_uint32bits(val)
       r++;
   return r;
 }
-

@@ -138,7 +138,7 @@ typedef struct SmtpRate_T {
   bool                ok;
   pthread_mutex_t     mutex;
 
-  ZEBT_T               db_rate;  /* tree with results per host */
+  ZEBT_T              db_rate;  /* tree with results per host */
   time_t              last_update;  /* results data update */
   time_t              last;
 
@@ -1013,8 +1013,8 @@ smtprate_print_table(fd, allhosts, verbose, hostnames, win, flags, nbrecs)
      * Connection cache processing 
      */
     FD_PRINTF(fd, "*** %-18s : %6ld/ 10 min (%ld entries)\n",
-              rateDef[which].name, (long int ) hdata.gres.nb[1][which],
-              (long int ) hdata.hist[which].nb);
+              rateDef[which].name, (long int) hdata.gres.nb[1][which],
+              (long int) hdata.hist[which].nb);
 
     tmin = tmax = 0;
     for (v = 0, i = 0; i < DIM_HIST; i++) {
@@ -1038,14 +1038,14 @@ smtprate_print_table(fd, allhosts, verbose, hostnames, win, flags, nbrecs)
     ss -= mm * 60;
 
     FD_PRINTF(fd, "    %-18s : %3ld:%02ld:%02ld (%ld/%ld entries)\n",
-              "HISTORY", hh, mm, ss, (long int ) v, (long int ) DIM_HIST);
+              "HISTORY", hh, mm, ss, (long int) v, (long int) DIM_HIST);
   }
 
   /*
    * Let's print data.. 
    */
   if (allhosts) {
-    ZEBT_T               db_tmp = JBT_INITIALIZER;
+    ZEBT_T              db_tmp = JBT_INITIALIZER;
 
     MUTEX_LOCK(&fdmutex);
     outfd = fd;

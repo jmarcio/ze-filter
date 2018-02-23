@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -64,19 +65,18 @@ static int          nthread = 0;
 
 static pthread_mutex_t smutex = PTHREAD_MUTEX_INITIALIZER;
 
-# define GREY_LOCK() \
+#define GREY_LOCK() \
   if (pthread_mutex_lock(&smutex) != 0) { \
     ZE_LogSysError("pthread_mutex_lock"); \
   }
 
-# define GREY_UNLOCK() \
+#define GREY_UNLOCK() \
   if (pthread_mutex_unlock(&smutex) != 0) { \
     ZE_LogSysError("pthread_mutex_unlock"); \
   }
 
 
-struct confargs_T
-{
+struct confargs_T {
   char               *user;
   char               *group;
   int                 facility;
@@ -127,11 +127,11 @@ main(argc, argv)
     const char         *args = "ht:T:i:dvu:g:w:s:n:l:a:";
     int                 c;
 
-    while ((c = getopt(argc, argv, args)) != -1)
-    {
-      switch (c)
-      {
-          /* help */
+    while ((c = getopt(argc, argv, args)) != -1) {
+      switch (c) {
+          /*
+           * help 
+           */
         case 'h':
           usage(argv[0]);
           exit(0);
@@ -141,55 +141,71 @@ main(argc, argv)
           access_str = optarg;
           break;
 
-          /* time constants */
+          /*
+           * time constants 
+           */
         case 't':
           tconst = optarg;
           break;
 
-          /* database reload interval */
+          /*
+           * database reload interval 
+           */
         case 'i':
           break;
 
-          /* debug */
+          /*
+           * debug 
+           */
         case 'd':
           foreground = TRUE;
           break;
 
-          /* verbose */
+          /*
+           * verbose 
+           */
         case 'v':
           ze_logLevel++;
           break;
 
-          /* user */
+          /*
+           * user 
+           */
         case 'u':
           user = optarg;
           break;
 
-          /* group */
+          /*
+           * group 
+           */
         case 'g':
           group = optarg;
           break;
 
-          /* group */
+          /*
+           * group 
+           */
         case 'l':
           ze_logLevel = atoi(optarg);
           break;
 
-          /* Work directory */
+          /*
+           * Work directory 
+           */
         case 'w':
           workdir = optarg;
           break;
 
-          /* socket */
+          /*
+           * socket 
+           */
         case 's':
           FREE(cargs.socket);
-          if (zeStrRegex(optarg, "^inet:[0-9]+@[-a-z0-9.]+$", NULL, NULL, TRUE) ||
-              zeStrRegex(optarg, "^(local|unix):([-/a-z0-9.]+)+$", NULL, NULL,
-                      TRUE))
-          {
+          if (zeStrRegex(optarg, "^inet:[0-9]+@[-a-z0-9.]+$", NULL, NULL, TRUE)
+              || zeStrRegex(optarg, "^(local|unix):([-/a-z0-9.]+)+$", NULL,
+                            NULL, TRUE)) {
             cargs.socket = strdup(optarg);
-            if (cargs.socket == NULL)
-              ;
+            if (cargs.socket == NULL);
           } else
             ZE_MessageWarning(0, "Error : invalid parameter %s", optarg);
           break;
@@ -211,10 +227,8 @@ main(argc, argv)
   /*
    ** 2. Launch daemon
    */
-  if (!foreground)
-  {
-    switch (fork())
-    {
+  if (!foreground) {
+    switch (fork()) {
       case 0:
         printf(" ze-greyd daemonized !\n");
         break;
@@ -229,8 +243,7 @@ main(argc, argv)
     if (setpgid(0, 0) < 0)
       ZE_LogSysError("Can't set process group leader");
     signal(SIGHUP, SIG_IGN);
-    switch (fork())
-    {
+    switch (fork()) {
       case 0:
         break;
       case -1:
@@ -280,26 +293,22 @@ main(argc, argv)
 
   (void) policy_init();
 
-  if (!open_work_db_env(workdir, workdir, FALSE))
-  {
+  if (!open_work_db_env(workdir, workdir, FALSE)) {
     return 1;
   }
 
-  if (!grey_init(workdir, FALSE, GREY_SERVER))
-  {
+  if (!grey_init(workdir, FALSE, GREY_SERVER)) {
     return 1;
   }
 
   ntuple = STRNULL(ntuple, "NET,HOST,FULL");
-  if (ntuple != NULL)
-  {
+  if (ntuple != NULL) {
 #define NTP   3
     int                 argc;
     char               *argv[NTP];
     char               *s = NULL;
 
-    if ((s = strdup(ntuple)) != NULL)
-    {
+    if ((s = strdup(ntuple)) != NULL) {
       memset(argv, 0, sizeof (argv));
       argc = zeStr2Tokens(s, NTP, argv, ",");
       for (i = 0; i < NTP; i++)
@@ -309,21 +318,18 @@ main(argc, argv)
   }
 
   tconst = STRNULL(tconst, "0,0,0,0");
-  if (tconst != NULL)
-  {
+  if (tconst != NULL) {
 #define NTC   4
     int                 argc;
     char               *argv[NTC];
     time_t              tc[NTC];
     char               *s = NULL;
 
-    if ((s = strdup(tconst)) != NULL)
-    {
+    if ((s = strdup(tconst)) != NULL) {
       memset(argv, 0, sizeof (argv));
       memset(tc, 0, sizeof (tc));
       argc = zeStr2Tokens(s, NTC, argv, ",");
-      for (i = 0; i < NTC; i++)
-      {
+      for (i = 0; i < NTC; i++) {
         argv[i] = STRNULL(argv[i], "0");
         tc[i] = zeStr2time(argv[i], NULL, 0);
       }
@@ -333,13 +339,11 @@ main(argc, argv)
 
 
   access_str = STRNULL(access_str, "127.0.0.1");
-  if (access_str != NULL)
-  {
+  if (access_str != NULL) {
     int                 argc;
     char               *s = NULL;
 
-    if ((s = strdup(access_str)) != NULL)
-    {
+    if ((s = strdup(access_str)) != NULL) {
       memset(access_arr, 0, sizeof (access_arr));
       argc = zeStr2Tokens(s, MAX_ACCESS, access_arr, ",");
       for (i = 0; i < MAX_ACCESS; i++)
@@ -352,8 +356,7 @@ main(argc, argv)
   return 0;
 }
 
-typedef struct
-{
+typedef struct {
   char                addr[64];
   char                name[256];
   int                 sd;
@@ -402,11 +405,11 @@ greyd_father(arg)
   atexit(remove_pid_file);
   atexit(remove_socket_file);
 
-# if USE_SIGACTION
+#if USE_SIGACTION
 
   SET_SIG_HANDLER(greyd_signal_handler);
 
-# else
+#else
 
   signal(SIGPIPE, SIG_IGN);
   signal(SIGTERM, greyd_signal_handler);
@@ -423,8 +426,7 @@ greyd_father(arg)
 
   cargs.socket = STRNULL(cargs.socket, strdup("inet:2012@localhost"));
 
-  if (cargs.socket == NULL)
-  {
+  if (cargs.socket == NULL) {
 
   }
   p = cargs.socket;
@@ -438,14 +440,12 @@ greyd_father(arg)
 
   errs = 0;
 
-  if ((cliaddr = (struct sockaddr *) malloc(addrlen)) == NULL)
-  {
+  if ((cliaddr = (struct sockaddr *) malloc(addrlen)) == NULL) {
     ZE_LogSysError("malloc(addrlen) error");
     return NULL;
   }
 
-  for (;;)
-  {
+  for (;;) {
     int                 nerr = 0;
     char                client_addr[64], client_name[256];
 
@@ -458,8 +458,7 @@ greyd_father(arg)
     memset(client_addr, 0, sizeof (client_addr));
     memset(client_name, 0, sizeof (client_name));
 
-    if (sockdomain == AF_INET || sockdomain == AF_INET6)
-    {
+    if (sockdomain == AF_INET || sockdomain == AF_INET6) {
       char               *addr, *name, *user;
       bool                ok = FALSE;
       int                 i;
@@ -467,37 +466,32 @@ greyd_father(arg)
       addr = name = user = NULL;
 
       if (get_hostbysock(cliaddr, len, client_addr, sizeof (client_addr),
-                         client_name, sizeof (client_name)))
-      {
+                         client_name, sizeof (client_name))) {
         addr = client_addr;
         name = client_name;
       }
 
       ZE_MessageInfo(9, "Connect from %s (%s)", STRNULL(addr, ""),
-                   STRNULL(name, ""));
+                     STRNULL(name, ""));
 
       ok = greyd_check_access(client_addr, client_name);
-      if (!ok)
-      {
-        for (i = 0; i < MAX_ACCESS; i++)
-        {
+      if (!ok) {
+        for (i = 0; i < MAX_ACCESS; i++) {
           if (addr == NULL || access_arr[i] == NULL)
             continue;
 
           ZE_MessageInfo(11, "Checking %s against %s",
-                       STRNULL(addr, "--"), STRNULL(access_arr[i], "--"));
+                         STRNULL(addr, "--"), STRNULL(access_arr[i], "--"));
 
-          if (strncasecmp(addr, access_arr[i], strlen(access_arr[i])) == 0)
-          {
+          if (strncasecmp(addr, access_arr[i], strlen(access_arr[i])) == 0) {
             ok = TRUE;
             break;
           }
         }
       }
-      if (!ok)
-      {
+      if (!ok) {
         ZE_MessageInfo(9, "Access denied to %s (%s) on control channel",
-                     STRNULL(addr, ""), STRNULL(name, ""));
+                       STRNULL(addr, ""), STRNULL(name, ""));
         (void) sd_printf(connfd, "500 Access denied\n");
         shutdown(connfd, SHUT_RDWR);
         close(connfd);
@@ -505,15 +499,15 @@ greyd_father(arg)
       }
     }
 
-    /* launch greyd_server worker thread */
-    if (connfd >= 0)
-    {
+    /*
+     * launch greyd_server worker thread 
+     */
+    if (connfd >= 0) {
       pthread_t           tid;
       int                 r;
       gclient_T          *arg = NULL;
 
-      if ((arg = malloc(sizeof (gclient_T))) == NULL)
-      {
+      if ((arg = malloc(sizeof (gclient_T))) == NULL) {
         ZE_LogSysError("Error creating server data structure");
         (void) sd_printf(connfd, "421 System Error - come back later\n");
         shutdown(connfd, SHUT_RDWR);
@@ -526,8 +520,7 @@ greyd_father(arg)
       strlcpy(arg->addr, client_addr, sizeof (arg->addr));
       strlcpy(arg->name, client_name, sizeof (arg->name));
 
-      if ((r = pthread_create(&tid, NULL, greyd_server, arg)) != 0)
-      {
+      if ((r = pthread_create(&tid, NULL, greyd_server, arg)) != 0) {
         ZE_LogSysError("pthread_create error");
         (void) sd_printf(connfd, "421 System Error - come back later\n");
         shutdown(connfd, SHUT_RDWR);
@@ -579,8 +572,7 @@ greyd_server(arg)
   tid = pthread_self();
   pthread_detach(tid);
 
-  if ((nthread < 0) || (nthread >= MAX_THREAD))
-  {
+  if ((nthread < 0) || (nthread >= MAX_THREAD)) {
     ZE_MessageWarning(9, "Too many threads ! ");
     (void) sd_printf(fd, "421 I'm too busy. Come back later\r\n");
     goto fin;
@@ -591,18 +583,15 @@ greyd_server(arg)
 
   tiloop = time(NULL);
   nloop = 0;
-  for (;;)
-  {
-    if (nloop++ > 1000)
-    {
+  for (;;) {
+    if (nloop++ > 1000) {
       time_t              now;
 
       now = time(NULL);
-      if (tiloop + 2 > now)
-      {
+      if (tiloop + 2 > now) {
         ZE_MessageWarning(9,
-                        "PEER=(%s) Error : connection broken (looping) ! Closing connection !",
-                        addr);
+                          "PEER=(%s) Error : connection broken (looping) ! Closing connection !",
+                          addr);
         goto fin;
       }
       tiloop = now;
@@ -611,16 +600,14 @@ greyd_server(arg)
 
     r = jfd_ready(fd, ZE_SOCK_READ, CTRL_TO);
 
-    if (r == ZE_SOCK_ERROR)
-    {
+    if (r == ZE_SOCK_ERROR) {
       ZE_MessageWarning(9,
-                      "PEER=(%s) Error : connection broken ! Closing connection !",
-                      addr);
+                        "PEER=(%s) Error : connection broken ! Closing connection !",
+                        addr);
       goto fin;
     }
 
-    if (r == ZE_SOCK_TIMEOUT)
-    {
+    if (r == ZE_SOCK_TIMEOUT) {
       long                dt_max = 0, dt = 0;
 
       dt_max = cf_get_int(CF_GREYD_CLIENT_IDLE_MAX) * 1000;
@@ -632,11 +619,10 @@ greyd_server(arg)
 
       dt = ntout * CTRL_TO;
 
-      if (dt >= dt_max)
-      {
+      if (dt >= dt_max) {
         ZE_MessageInfo(9,
-                     "PEER=(%s) Connection inactive for more than %ld secs. Closing !",
-                     addr, dt / 1000);
+                       "PEER=(%s) Connection inactive for more than %ld secs. Closing !",
+                       addr, dt / 1000);
         goto fin;
       }
       continue;
@@ -644,37 +630,32 @@ greyd_server(arg)
 
     ntout = 0;
 
-    if (r == ZE_SOCK_READY)
-    {
+    if (r == ZE_SOCK_READY) {
       char                buf[1024];
       size_t              sz;
 
       memset(buf, 0, sizeof (buf));
-      if ((sz = recvfrom(fd, buf, sizeof (buf) - 1, 0, NULL, NULL)) > 0)
-      {
+      if ((sz = recvfrom(fd, buf, sizeof (buf) - 1, 0, NULL, NULL)) > 0) {
         int                 r = GREY_SRV_OK;
 
-        if (sz == 0)
-        {
+        if (sz == 0) {
           ZE_MessageInfo(9, "PEER=(%s) Connection closed by peer", addr);
-	  ZE_MessageWarning(9, "PEER=(%s) Empty received buffer", addr, buf);
+          ZE_MessageWarning(9, "PEER=(%s) Empty received buffer", addr, buf);
           continue;
         }
 
-        if (sz < 0)
-        {
-          if (errno == EINTR)
-          {
-            if (++neintr > 10)
-            {
+        if (sz < 0) {
+          if (errno == EINTR) {
+            if (++neintr > 10) {
               ZE_MessageInfo(9, "PEER=(%s) Too many signals (EINTR)",
-                           gclient->addr);
+                             gclient->addr);
               goto fin;
             }
             continue;
           }
 
-          ZE_MessageInfo(9, "PEER=(%s) Connection closed by peer", gclient->addr);
+          ZE_MessageInfo(9, "PEER=(%s) Connection closed by peer",
+                         gclient->addr);
           goto fin;
         }
 
@@ -685,9 +666,9 @@ greyd_server(arg)
 
         ZE_MessageInfo(9, "PEER=(%s) CMD=(%s)", addr, buf);
         if (strlen(buf) == 0) {
-	  ZE_MessageWarning(9, "PEER=(%s) Empty command", addr, buf);
+          ZE_MessageWarning(9, "PEER=(%s) Empty command", addr, buf);
           continue;
-	}
+        }
 
         /*
          **
@@ -699,13 +680,11 @@ greyd_server(arg)
           argc = zeStr2Tokens(buf, MAX_ARGS, argv, " ,");
 
           r = handle_command(fd, addr, argc, argv);
-          if (r == GREY_SRV_OK)
-          {
+          if (r == GREY_SRV_OK) {
             nerrors = 0;
             continue;
           }
-          if (r == GREY_SRV_ERROR)
-          {
+          if (r == GREY_SRV_ERROR) {
             if (++nerrors > MAX_GREY_ERRORS)
               goto fin;
             continue;
@@ -751,8 +730,7 @@ handle_command(sd, addr, argc, argv)
   if (argv == NULL || argc == 0)
     return GREY_SRV_ERROR;
 
-  if (STRCASEEQUAL(argv[0], "quit") || STRCASEEQUAL(argv[0], "exit"))
-  {
+  if (STRCASEEQUAL(argv[0], "quit") || STRCASEEQUAL(argv[0], "exit")) {
     if (argc > 1)
       quit = TRUE;
   }
@@ -760,10 +738,8 @@ handle_command(sd, addr, argc, argv)
   /*
    ** 
    */
-  if (STRCASEEQUAL(argv[0], "GREYCHECK"))
-  {
-    if (argc > 1)
-    {
+  if (STRCASEEQUAL(argv[0], "GREYCHECK")) {
+    if (argc > 1) {
       int                 r = GREY_OK;
       char               *s = "OK";
       bool                new = FALSE;
@@ -778,11 +754,9 @@ handle_command(sd, addr, argc, argv)
       hostname = STRBOOL(argc > 4, argv[4], "-");
       netclass = STRBOOL(argc > 5, argv[5], NULL);
 
-      if (check_policy_tuple("GreyCheck", ip, hostname, NULL, from, to, FALSE))
-      {
+      if (check_policy_tuple("GreyCheck", ip, hostname, NULL, from, to, FALSE)) {
         r = grey_check(ip, from, to, hostname, &new, can_validate);
-        switch (r)
-        {
+        switch (r) {
           case GREY_OK:
             s = "OK";
             break;
@@ -797,11 +771,11 @@ handle_command(sd, addr, argc, argv)
             break;
         }
         ZE_MessageInfo(9,
-                     "PEER=(%s) ANSWER=(%d GREYCHECK - Grey server says... %s)",
-                     addr, r, s);
+                       "PEER=(%s) ANSWER=(%d GREYCHECK - Grey server says... %s)",
+                       addr, r, s);
       } else
         ZE_MessageInfo(9, "PEER=(%s) ANSWER=(%d GREYCHECK - policy says : %s)",
-                     addr, r, s);
+                       addr, r, s);
 
       if (!sd_printf
           (sd, "%d GREYCHECK ANSWER Grey server said... %s \r\n", r, s))
@@ -819,8 +793,7 @@ handle_command(sd, addr, argc, argv)
   /*
    ** 
    */
-  if (STRCASEEQUAL(argv[0], "GREYVALID"))
-  {
+  if (STRCASEEQUAL(argv[0], "GREYVALID")) {
     char               *ip = "", *from = "", *to = "", *hostname = "";
 
     ip = STRBOOL(argc > 1, argv[1], "-");
@@ -828,14 +801,12 @@ handle_command(sd, addr, argc, argv)
     to = STRBOOL(argc > 3, argv[3], "-");
     hostname = STRBOOL(argc > 4, argv[4], "-");
 
-    if (argc > 1)
-    {
+    if (argc > 1) {
       int                 r = GREY_OK;
       char               *s = NULL;
 
       r = grey_validate(ip, from, to, hostname);
-      switch (r)
-      {
+      switch (r) {
         case GREY_OK:
           s = "OK";
           break;
@@ -843,8 +814,9 @@ handle_command(sd, addr, argc, argv)
           s = "ERROR";
           break;
       }
-      ZE_MessageInfo(9, "PEER=(%s) ANSWER=(%d GREYVALID Grey server said... %s)",
-                   addr, r, s);
+      ZE_MessageInfo(9,
+                     "PEER=(%s) ANSWER=(%d GREYVALID Grey server said... %s)",
+                     addr, r, s);
       if (!sd_printf
           (sd, "%d GREYVALID ANSWER Grey server said... %s \r\n", r, s))
         goto ioerror;
@@ -861,10 +833,8 @@ handle_command(sd, addr, argc, argv)
    **
    **
    */
-  if (STRCASEEQUAL(argv[0], "UPDATE"))
-  {
-    if (STRCASEEQUAL(argv[1], "PENDING"))
-    {
+  if (STRCASEEQUAL(argv[0], "UPDATE")) {
+    if (STRCASEEQUAL(argv[1], "PENDING")) {
       if (!sd_printf(sd, "200-OK for %s %s!\r\n", argv[0], argv[1]))
         goto ioerror;
 
@@ -874,8 +844,7 @@ handle_command(sd, addr, argc, argv)
       goto ok;
     }
 
-    if (STRCASEEQUAL(argv[1], "VALID"))
-    {
+    if (STRCASEEQUAL(argv[1], "VALID")) {
       if (!sd_printf(sd, "200-OK for %s %s!\r\n", argv[0], argv[1]))
         goto ioerror;
 
@@ -892,12 +861,10 @@ handle_command(sd, addr, argc, argv)
    **
    **
    */
-  if (STRCASEEQUAL(argv[0], "UPLOAD"))
-  {
+  if (STRCASEEQUAL(argv[0], "UPLOAD")) {
     int                 nb = 0;
 
-    if (STRCASEEQUAL(argv[1], "PENDING"))
-    {
+    if (STRCASEEQUAL(argv[1], "PENDING")) {
       if (!sd_printf(sd, "200-OK for %s %s!\r\n", argv[0], argv[1]))
         goto ioerror;
       nb = grey_dump(sd, argv[1], 21600);
@@ -907,8 +874,7 @@ handle_command(sd, addr, argc, argv)
       goto ok;
     }
 
-    if (STRCASEEQUAL(argv[1], "VALID"))
-    {
+    if (STRCASEEQUAL(argv[1], "VALID")) {
       if (!sd_printf(sd, "200-OK for %s %s!\r\n", argv[0], argv[1]))
         goto ioerror;
       nb = grey_dump(sd, argv[1], 21600);
@@ -925,8 +891,7 @@ handle_command(sd, addr, argc, argv)
    **
    **
    */
-  if (STRCASEEQUAL(argv[0], "DOWNLOAD"))
-  {
+  if (STRCASEEQUAL(argv[0], "DOWNLOAD")) {
     int                 nb = 0;
     time_t              dt = 0;
 
@@ -936,8 +901,7 @@ handle_command(sd, addr, argc, argv)
     if (argc > 2)
       dt = zeStr2ulong(argv[2], NULL, 0);
 
-    if (STRCASEEQUAL(argv[1], "PENDING"))
-    {
+    if (STRCASEEQUAL(argv[1], "PENDING")) {
       if (!sd_printf(sd, "200-OK for %s %s!\r\n", argv[0], argv[1]))
         goto ioerror;
       nb = grey_dump(sd, argv[1], dt);
@@ -947,8 +911,7 @@ handle_command(sd, addr, argc, argv)
       goto ok;
     }
 
-    if (STRCASEEQUAL(argv[1], "VALID"))
-    {
+    if (STRCASEEQUAL(argv[1], "VALID")) {
       if (!sd_printf(sd, "200-OK for %s %s!\r\n", argv[0], argv[1]))
         goto ioerror;
       nb = grey_dump(sd, argv[1], dt);
@@ -958,8 +921,7 @@ handle_command(sd, addr, argc, argv)
       goto ok;
     }
 
-    if (STRCASEEQUAL(argv[1], "WHITE"))
-    {
+    if (STRCASEEQUAL(argv[1], "WHITE")) {
       if (!sd_printf(sd, "200-OK for %s %s!\r\n", argv[0], argv[1]))
         goto ioerror;
       nb = grey_dump(sd, argv[1], dt);
@@ -976,8 +938,7 @@ handle_command(sd, addr, argc, argv)
    **
    **
    */
-  if (STRCASEEQUAL(argv[0], "RECONFIGURE"))
-  {
+  if (STRCASEEQUAL(argv[0], "RECONFIGURE")) {
     if (!sd_printf(sd, "200-OK for %s !\r\n", argv[0]))
       goto ioerror;
     configure("ze-greyd", conf_file, TRUE);
@@ -991,8 +952,7 @@ handle_command(sd, addr, argc, argv)
    **
    **
    */
-  if (STRCASEEQUAL(argv[0], "REOPENDB"))
-  {
+  if (STRCASEEQUAL(argv[0], "REOPENDB")) {
     bool                rok;
 
     if (!sd_printf(sd, "200-OK for %s !\r\n", argv[0]))
@@ -1009,8 +969,7 @@ handle_command(sd, addr, argc, argv)
    **
    **
    */
-  if (STRCASEEQUAL(argv[0], "RESTART"))
-  {
+  if (STRCASEEQUAL(argv[0], "RESTART")) {
     if (!sd_printf(sd, "200-OK for %s !\r\n", argv[0]))
       goto ioerror;
     kill(0, SIGHUP);
@@ -1024,8 +983,7 @@ handle_command(sd, addr, argc, argv)
    **
    **
    */
-  if (STRCASEEQUAL(argv[0], "HELP"))
-  {
+  if (STRCASEEQUAL(argv[0], "HELP")) {
     if (!sd_printf(sd, "200-OK for %s !\r\n", argv[0]))
       goto ioerror;
 
@@ -1078,8 +1036,7 @@ handle_command(sd, addr, argc, argv)
    **
    **
    */
-  if (STRCASEEQUAL(argv[0], "EXIT") || STRCASEEQUAL(argv[0], "QUIT"))
-  {
+  if (STRCASEEQUAL(argv[0], "EXIT") || STRCASEEQUAL(argv[0], "QUIT")) {
 #if 1
     (void) sd_printf(sd, "200 OK for %s (EXIT)!\r\n", argv[0]);
 #endif
@@ -1090,8 +1047,7 @@ handle_command(sd, addr, argc, argv)
    **
    **
    */
-  if (STRCASEEQUAL(argv[0], "SHUTDOWN"))
-  {
+  if (STRCASEEQUAL(argv[0], "SHUTDOWN")) {
     if (!sd_printf(sd, "200-OK for %s !\r\n", argv[0]))
       goto ioerror;
     kill(0, SIGTERM);
@@ -1106,18 +1062,23 @@ handle_command(sd, addr, argc, argv)
 
   goto fin;
 
-  /* I/O Error */
+  /*
+   * I/O Error 
+   */
 ioerror:
   return GREY_IO_ERROR;
 
-  /* Fin */
+  /*
+   * Fin 
+   */
 fin:
   return GREY_SRV_ERROR;
 
-  /* OK */
+  /*
+   * OK 
+   */
 ok:
-  if (quit)
-  {
+  if (quit) {
     (void) sd_printf(sd, "200 OK for %s (EXIT)!\r\n", argv[0]);
     return GREY_SRV_CLOSE;
   }
@@ -1139,17 +1100,14 @@ greyd_check_access(addr, name)
   addr = STRNULL(addr, "");
   name = STRNULL(name, "");
   ZE_MessageInfo(10, "Checking access for %s %s", addr, name);
-  if (STREQUAL(addr, "127.0.0.1"))
-  {
+  if (STREQUAL(addr, "127.0.0.1")) {
     res = TRUE;
     goto fin;
   }
   memset(buf, 0, sizeof (buf));
-  if (check_policy("GreydAccess", addr, buf, sizeof (buf), FALSE))
-  {
+  if (check_policy("GreydAccess", addr, buf, sizeof (buf), FALSE)) {
     ZE_MessageInfo(10, "  ADDR %s found : %s", addr, buf);
-    switch (policy_decode(buf))
-    {
+    switch (policy_decode(buf)) {
       case JC_OK:
         res = TRUE;
         break;
@@ -1159,11 +1117,9 @@ greyd_check_access(addr, name)
     }
     goto fin;
   }
-  if (check_policy("GreydAccess", name, buf, sizeof (buf), TRUE))
-  {
+  if (check_policy("GreydAccess", name, buf, sizeof (buf), TRUE)) {
     ZE_MessageInfo(10, "  NAME %s found : %s", name, buf);
-    switch (policy_decode(buf))
-    {
+    switch (policy_decode(buf)) {
       case JC_OK:
         res = TRUE;
         break;
@@ -1175,11 +1131,10 @@ greyd_check_access(addr, name)
   }
 
 fin:
-  if (!res)
-  {
+  if (!res) {
     ZE_MessageWarning(8,
-                    "Control access denied for %s (%s) by access rules",
-                    STRNULL(addr, "UNKNOWN"), STRNULL(name, "UNKNOWN"));
+                      "Control access denied for %s (%s) by access rules",
+                      STRNULL(addr, "UNKNOWN"), STRNULL(name, "UNKNOWN"));
   }
   return res;
 }
@@ -1234,8 +1189,7 @@ usage(arg)
 static void
 remove_socket_file(void)
 {
-  if (zeStrRegex(cargs.socket, "^(local|unix):", NULL, NULL, TRUE))
-  {
+  if (zeStrRegex(cargs.socket, "^(local|unix):", NULL, NULL, TRUE)) {
     char               *p = strchr(cargs.socket, ':');
     struct stat         buf;
 
@@ -1245,8 +1199,7 @@ remove_socket_file(void)
     if (*p == '\0')
       return;
     ZE_MessageInfo(0, "Removing socket %s", p);
-    if (lstat(p, &buf) == 0)
-    {
+    if (lstat(p, &buf) == 0) {
       ZE_MessageWarning(9, "Removing SOCK_FILE : %s", p);
       if (remove(p) != 0)
         ZE_LogSysError("Error removing socket");
@@ -1267,8 +1220,7 @@ greyd_signal_handler(sig)
   signal(sig, greyd_signal_handler);
 #endif
 
-  switch (sig)
-  {
+  switch (sig) {
     case SIGINT:
     case SIGTERM:
     case SIGQUIT:
@@ -1285,8 +1237,7 @@ greyd_signal_handler(sig)
       {
         pid_t               pid;
 
-        while ((pid = WAIT_NOHANG(-1, NULL)) > 0)
-        {
+        while ((pid = WAIT_NOHANG(-1, NULL)) > 0) {
           int                 i;
 
           ZE_MessageInfo(10, "*** Child %ld terminated ...", (long) pid);
@@ -1314,26 +1265,20 @@ set_uid_gid(user, group)
   uid_t               uid = getuid();
   gid_t               gid = getgid();
 
-  if ((gr = getgrnam(group)) != NULL)
-  {
+  if ((gr = getgrnam(group)) != NULL) {
     ZE_LogMsgDebug(20, "GID DE %s : %ld", group, (long) gr->gr_gid);
-    if (gid != gr->gr_gid)
-    {
-      if ((uid != 0) || (setregid(gr->gr_gid, gr->gr_gid) < 0))
-      {
+    if (gid != gr->gr_gid) {
+      if ((uid != 0) || (setregid(gr->gr_gid, gr->gr_gid) < 0)) {
         ZE_LogSysError("Can't set process gid = %ld", (long) gr->gr_gid);
         return FALSE;
       }
     }
   }
 
-  if ((pw = getpwnam(user)) != NULL)
-  {
+  if ((pw = getpwnam(user)) != NULL) {
     ZE_LogMsgDebug(20, "UID DE %s : %ld", user, (long) pw->pw_uid);
-    if (uid != pw->pw_uid)
-    {
-      if ((uid != 0) || (setreuid(pw->pw_uid, pw->pw_uid) < 0))
-      {
+    if (uid != pw->pw_uid) {
+      if ((uid != 0) || (setreuid(pw->pw_uid, pw->pw_uid) < 0)) {
         ZE_LogSysError("Can't set process uid = %ld", (long) pw->pw_uid);
         return FALSE;
       }

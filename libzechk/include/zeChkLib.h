@@ -29,6 +29,7 @@
 #include <zePolicy.h>
 #include <zeAccess.h>
 
+/** @} */
 
 # define __ZE_CHKLIB_H    1
 #endif             /* __ZE_CHKLIB_H */

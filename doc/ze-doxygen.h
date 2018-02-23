@@ -34,9 +34,6 @@
  * year 2001. Most of its development happened during years 2001-2010. So,
  * most of its code were built upon its base, trying to remain coherent.
  *
- * A little bit of history : the filter beginning was around the end of 
- * year 2001. Most of its development happened during years 2001-2010.
- *
  * The first feature of the filter was filtering based on the file extension 
  * of attached files (.exe, .com, ...). This was immediately followed by 
  * evaluating connection rate of SMTP clients, after a DoS attack against 
@@ -60,26 +57,53 @@
  */
 
 /** 
- * @defgroup RateLimit    Filter : SMTP Rate Limit
- * @defgroup Behaviour    Filter : Behaviour checking
- * @defgroup Greylisting  Filter : Greylisting
- * @defgroup XFiles       Filter : XFiles 
- * @defgroup Bayes        Filter : Bayesian filter
- * @defgroup Logreg       Filter : Neural Linear Discriminator
- * @defgroup Regex        Filter : Regular expressions
- * @defgroup AntiVirus    Filter : Antivirus
- * @defgroup RBL          Filter : DNS - (IP / URL) Blacklists
- * @defgroup Heuristics   Filter : Oracle and other heuristics
- * @defgroup Actions      Filter : Actions after filtering
- * @defgroup Systools     Tools : System related tools
- * @defgroup Network      Tools : Network functions
- * @defgroup MsgTools     Tools : Message Tools
- * @defgroup Strings      Tools : Strings and Text
- * @defgroup Logging      Tools : ze-filter logging
- * @defgroup APIs         Base : Interface with to other APIs (PCRE, BerkeleyDB)
- * @defgroup DataStruct   Base : Basic Data Structures Handling
- * @defgroup DBConf       Configuration : Static Databases Handling
- * @defgroup TxtConf      Configuration : Text files
+ * @defgroup Filter        Filter
+ *   @defgroup RateLimit    SMTP Rate Limit
+ *     @ingroup  Filter
+ *   @defgroup Behaviour    Behaviour checking
+ *     @ingroup  Filter
+ *   @defgroup Greylisting  Greylisting
+ *     @ingroup  Filter
+ *   @defgroup XFiles       XFiles 
+ *     @ingroup  Filter
+ *   @defgroup Bayes        Bayesian filter
+ *     @ingroup  Filter
+ *   @defgroup Logreg       Neural Linear Discriminator
+ *     @ingroup  Filter
+ *   @defgroup Regex        Regular expressions
+ *     @ingroup  Filter
+ *   @defgroup AntiVirus    Antivirus
+ *     @ingroup  Filter
+ *   @defgroup RBL          DNS - (IP / URL) Blacklists
+ *     @ingroup  Filter
+ *   @defgroup Heuristics   Oracle and other heuristics
+ *     @ingroup  Filter
+ *   @defgroup Actions      Actions after filtering
+ *     @ingroup  Filter
+ *
+ * @defgroup Tools          Tools
+ *   @defgroup Systools     System related tools
+ *     @ingroup Tools
+ *   @defgroup Network      Network functions
+ *     @ingroup Tools
+ *   @defgroup MsgTools     Message Tools
+ *     @ingroup Tools
+ *   @defgroup Strings      Strings and Text
+ *     @ingroup Tools
+ *   @defgroup Logging      ze-filter logging
+ *     @ingroup Tools
+ *
+ * @defgroup Base           Base
+ *   @defgroup APIs         Interface with to other APIs (PCRE, BerkeleyDB)
+ *     @ingroup Base
+ *   @defgroup DataStruct   Basic Data Structures Handling
+ *     @ingroup Base
+ *
+ * @defgroup Configuration  Configuration
+ *   @defgroup DBConf       Static Databases Handling
+ *     @ingroup Configuration
+ *   @defgroup TxtConf      Text files
+ *     @ingroup Configuration
  */
 
 /** @} */

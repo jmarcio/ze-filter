@@ -41,7 +41,7 @@ typedef struct {
   double              nOdds;
 } oradata_T;
 
-static zeTbl_T    htbl;
+static zeTbl_T      htbl;
 
 static pthread_mutex_t st_mutex = PTHREAD_MUTEX_INITIALIZER;
 

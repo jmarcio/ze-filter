@@ -350,11 +350,10 @@ zeFdRead(fd, buf, size)
       break;
     if (n < 0) {
       if (errno == EINTR)
-       continue;
+        continue;
       ZE_LogSysError("read error");
       break;
     }
   } while (n <= 0);
   return n;
 }
-

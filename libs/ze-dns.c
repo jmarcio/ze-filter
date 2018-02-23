@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -20,6 +21,7 @@
  * More details about ze-filter license can be found at ze-filter
  * web site : http://foss.jose-marcio.org
  */
+
 /*
  * Copyright (c) 2000-2003 Sendmail, Inc. and its suppliers.
  *	All rights reserved.
@@ -71,47 +73,37 @@
 #include "ze-dns.h"
 
 #ifndef MAXHOSTNAMELEN
-# define MAXHOSTNAMELEN 256
+#define MAXHOSTNAMELEN 256
 #endif
 
 
-static struct stot
-{
+static struct stot {
   const char         *st_name;
   int                 st_type;
-}
-stot[] =
-{
+} stot[] = {
   {
   "A", T_A}
   ,
-#  if NETINET6
+#if NETINET6
   {
   "AAAA", T_AAAA}
   ,
-#  endif           /* NETINET6 */
+#endif             /* NETINET6 */
   {
   "NS", T_NS}
-  ,
-  {
+  , {
   "CNAME", T_CNAME}
-  ,
-  {
+  , {
   "PTR", T_PTR}
-  ,
-  {
+  , {
   "MX", T_MX}
-  ,
-  {
+  , {
   "TXT", T_TXT}
-  ,
-  {
+  , {
   "AFSDB", T_AFSDB}
-  ,
-  {
+  , {
   "SRV", T_SRV}
-  ,
-  {
+  , {
   NULL, 0}
 };
 
@@ -122,6 +114,7 @@ static int          dns_lookup_int(const char *, int, int, time_t, int,
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
+
 /*
 **  DNS_STRING_TO_TYPE -- convert resource record name into type
 **
@@ -149,6 +142,7 @@ dns_string_to_type(name)
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
+
 /*
 **  DNS_TYPE_TO_STRING -- convert resource record type into name
 **
@@ -176,6 +170,7 @@ dns_type_to_string(type)
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
+
 /*
 **  DNS_FREE_DATA -- free all components of a DNS_REPLY_T
 **
@@ -201,8 +196,7 @@ dns_free_data(r)
   if (r->dns_r_q.dns_q_domain != NULL)
     free(r->dns_r_q.dns_q_domain);
   r->dns_r_q.dns_q_domain = NULL;
-  for (rr = r->dns_r_head; rr != NULL;)
-  {
+  for (rr = r->dns_r_head; rr != NULL;) {
     RR_RECORD_T        *tmp = rr;
 
     if (rr->rr_domain != NULL)
@@ -253,18 +247,18 @@ parse_dns_reply(reply, data, len)
 
   p = data;
 
-  /* doesn't work on Crays? */
+  /*
+   * doesn't work on Crays? 
+   */
   memcpy(&reply->dns_r_h, p, sizeof (reply->dns_r_h));
   p += sizeof (reply->dns_r_h);
   status = dn_expand(data, data + len, p, host, sizeof host);
-  if (status < 0)
-  {
+  if (status < 0) {
     dns_free_data(reply);
     return DNS_LOC_ERR;
   }
   reply->dns_r_q.dns_q_domain = strdup(host);
-  if (reply->dns_r_q.dns_q_domain == NULL)
-  {
+  if (reply->dns_r_q.dns_q_domain == NULL) {
     dns_free_data(reply);
     return DNS_LOC_ERR;
   }
@@ -272,13 +266,11 @@ parse_dns_reply(reply, data, len)
   GETSHORT(reply->dns_r_q.dns_q_type, p);
   GETSHORT(reply->dns_r_q.dns_q_class, p);
   rr = &reply->dns_r_head;
-  while (p < data + len)
-  {
+  while (p < data + len) {
     int                 type, class, ttl, size, txtlen;
 
     status = dn_expand(data, data + len, p, host, sizeof host);
-    if (status < 0)
-    {
+    if (status < 0) {
       dns_free_data(reply);
       return DNS_LOC_ERR;
     }
@@ -287,8 +279,7 @@ parse_dns_reply(reply, data, len)
     GETSHORT(class, p);
     GETLONG(ttl, p);
     GETSHORT(size, p);
-    if (p + size > data + len)
-    {
+    if (p + size > data + len) {
       /*
        **  announced size of data exceeds length of
        **  data paket: someone is cheating.
@@ -300,15 +291,13 @@ parse_dns_reply(reply, data, len)
       return DNS_LOC_ERR;
     }
     *rr = (RR_RECORD_T *) malloc(sizeof (**rr));
-    if (*rr == NULL)
-    {
+    if (*rr == NULL) {
       dns_free_data(reply);
       return DNS_LOC_ERR;
     }
     memset(*rr, 0, sizeof (**rr));
     (*rr)->rr_domain = strdup(host);
-    if ((*rr)->rr_domain == NULL)
-    {
+    if ((*rr)->rr_domain == NULL) {
       dns_free_data(reply);
       return DNS_LOC_ERR;
     }
@@ -316,20 +305,17 @@ parse_dns_reply(reply, data, len)
     (*rr)->rr_class = class;
     (*rr)->rr_ttl = ttl;
     (*rr)->rr_size = size;
-    switch (type)
-    {
+    switch (type) {
       case T_NS:
       case T_CNAME:
       case T_PTR:
         status = dn_expand(data, data + len, p, host, sizeof host);
-        if (status < 0)
-        {
+        if (status < 0) {
           dns_free_data(reply);
           return DNS_LOC_ERR;
         }
         (*rr)->rr_u.rr_txt = strdup(host);
-        if ((*rr)->rr_u.rr_txt == NULL)
-        {
+        if ((*rr)->rr_u.rr_txt == NULL) {
           dns_free_data(reply);
           return DNS_LOC_ERR;
         }
@@ -338,16 +324,14 @@ parse_dns_reply(reply, data, len)
       case T_MX:
       case T_AFSDB:
         status = dn_expand(data, data + len, p + 2, host, sizeof host);
-        if (status < 0)
-        {
+        if (status < 0) {
           dns_free_data(reply);
           return DNS_LOC_ERR;
         }
         l = strlen(host) + 1;
         (*rr)->rr_u.rr_mx =
           (MX_RECORD_T *) malloc(sizeof (*((*rr)->rr_u.rr_mx)) + l);
-        if ((*rr)->rr_u.rr_mx == NULL)
-        {
+        if ((*rr)->rr_u.rr_mx == NULL) {
           dns_free_data(reply);
           return DNS_LOC_ERR;
         }
@@ -357,16 +341,14 @@ parse_dns_reply(reply, data, len)
 
       case T_SRV:
         status = dn_expand(data, data + len, p + 6, host, sizeof host);
-        if (status < 0)
-        {
+        if (status < 0) {
           dns_free_data(reply);
           return DNS_LOC_ERR;
         }
         l = strlen(host) + 1;
         (*rr)->rr_u.rr_srv = (SRV_RECORDT_T *)
           malloc(sizeof (*((*rr)->rr_u.rr_srv)) + l);
-        if ((*rr)->rr_u.rr_srv == NULL)
-        {
+        if ((*rr)->rr_u.rr_srv == NULL) {
           dns_free_data(reply);
           return DNS_LOC_ERR;
         }
@@ -389,16 +371,14 @@ parse_dns_reply(reply, data, len)
          */
 
         txtlen = *p;
-        if (txtlen >= size)
-        {
+        if (txtlen >= size) {
           syslog(LOG_WARNING,
                  "ERROR: DNS TXT record size=%d <= text len=%d", size, txtlen);
           dns_free_data(reply);
           return DNS_LOC_ERR;
         }
         (*rr)->rr_u.rr_txt = (char *) malloc(txtlen + 1);
-        if ((*rr)->rr_u.rr_txt == NULL)
-        {
+        if ((*rr)->rr_u.rr_txt == NULL) {
           dns_free_data(reply);
           return DNS_LOC_ERR;
         }
@@ -407,8 +387,7 @@ parse_dns_reply(reply, data, len)
 
       default:
         (*rr)->rr_u.rr_data = (unsigned char *) malloc(size);
-        if ((*rr)->rr_u.rr_data == NULL)
-        {
+        if ((*rr)->rr_u.rr_data == NULL) {
           dns_free_data(reply);
           return DNS_LOC_ERR;
         }
@@ -440,7 +419,7 @@ parse_dns_reply(reply, data, len)
 
 #undef MT_RES
 #if HAVE_RES_NQUERY || HAVE___RES_NQUERY
-# define MT_RES 1
+#define MT_RES 1
 #endif
 
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -448,26 +427,26 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 #if MT_RES
 
 
-# define DNS_INIT_LOCK()      MUTEX_LOCK(&mutex)
-# define DNS_INIT_UNLOCK()    MUTEX_UNLOCK(&mutex)
+#define DNS_INIT_LOCK()      MUTEX_LOCK(&mutex)
+#define DNS_INIT_UNLOCK()    MUTEX_UNLOCK(&mutex)
 
-# define DNS_LOCK()
-# define DNS_UNLOCK()
+#define DNS_LOCK()
+#define DNS_UNLOCK()
 
-#else               /* MT_RES */
+#else              /* MT_RES */
 
-# define DNS_INIT_LOCK()
-# define DNS_INIT_UNLOCK()
+#define DNS_INIT_LOCK()
+#define DNS_INIT_UNLOCK()
 
 #if !BSD_RES_THREAD_SAFE
 
-# define DNS_LOCK()      MUTEX_LOCK(&mutex)
-# define DNS_UNLOCK()    MUTEX_UNLOCK(&mutex)
+#define DNS_LOCK()      MUTEX_LOCK(&mutex)
+#define DNS_UNLOCK()    MUTEX_UNLOCK(&mutex)
 
-#else /* BSD_RES_THREAD_SAFE */
-# define DNS_LOCK()
-# define DNS_UNLOCK()
-#endif  /* BSD_RES_THREAD_SAFE */
+#else              /* BSD_RES_THREAD_SAFE */
+#define DNS_LOCK()
+#define DNS_UNLOCK()
+#endif             /* BSD_RES_THREAD_SAFE */
 
 #endif             /* MT_RES */
 
@@ -475,37 +454,37 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 #undef  DNS_DEBUG
 
 #if MT_RES
-# define STATPM        (*statp)
-# define MAC_H_ERRNO   (statp->res_h_errno)
+#define STATPM        (*statp)
+#define MAC_H_ERRNO   (statp->res_h_errno)
 #else
-# define STATPM        _res
-# define MAC_H_ERRNO   h_errno
+#define STATPM        _res
+#define MAC_H_ERRNO   h_errno
 #endif
 
 #define SM_SET_H_ERRNO(i) {MAC_H_ERRNO = (i);}
 
 #if HAVE_RES_NQUERY
-# define jc_res_query(st,a,b,c,d,e)   res_nquery(st, a, b, c, d, e)
+#define jc_res_query(st,a,b,c,d,e)   res_nquery(st, a, b, c, d, e)
 #elif HAVE___RES_NQUERY
-# define jc_res_query(st,a,b,c,d,e)   __res_nquery(st, a, b, c, d, e)
+#define jc_res_query(st,a,b,c,d,e)   __res_nquery(st, a, b, c, d, e)
 #else
-# define jc_res_query(st,a,b,c,d,e)   res_query(a, b, c, d, e)
+#define jc_res_query(st,a,b,c,d,e)   res_query(a, b, c, d, e)
 #endif
 
 #if HAVE_RES_NINIT
-# define jc_res_init(st)               res_ninit(st)
+#define jc_res_init(st)               res_ninit(st)
 #elif HAVE___RES_NINIT
-# define jc_res_init(st)               __res_ninit(st)
+#define jc_res_init(st)               __res_ninit(st)
 #else
-# define jc_res_init(st)
+#define jc_res_init(st)
 #endif
 
 #if HAVE_RES_NCLOSE
-# define jc_res_close()            res_nclose(st)
+#define jc_res_close()            res_nclose(st)
 #elif HAVE___RES_NQUERY
-# define jc_res_close()            __res_nclose(st)
+#define jc_res_close()            __res_nclose(st)
 #else
-# define jc_res_close()
+#define jc_res_close()
 #endif
 
 
@@ -537,17 +516,14 @@ dns_lookup_int(domain, rr_class, rr_type, retrans, retry, r)
   int                *statp = &statr;
 #endif             /* MT_RES */
 
-  if (r == NULL)
-  {
+  if (r == NULL) {
     ZE_LogMsgError(0, "reply argument shall not be NULL");
     return DNS_LOC_ERR;
   }
 #if MT_RES
-  if (!statok)
-  {
+  if (!statok) {
     DNS_INIT_LOCK();
-    if (!statok)
-    {
+    if (!statok) {
       memset(&statrs, 0, sizeof (statrs));
       (void) jc_res_init(&statrs);
       statok = TRUE;
@@ -562,18 +538,16 @@ dns_lookup_int(domain, rr_class, rr_type, retrans, retry, r)
 #if DNS_DEBUG
   {
     ZE_MessageInfo(11, "dns_lookup(%s, %d, %s)\n", domain, rr_class,
-                 dns_type_to_string(rr_type));
+                   dns_type_to_string(rr_type));
   }
 #endif
 
-  if (retrans > 0)
-  {
+  if (retrans > 0) {
     save_retrans = STATPM.retrans;
     STATPM.retrans = retrans;
   }
 
-  if (retry > 0)
-  {
+  if (retry > 0) {
     save_retry = STATPM.retry;
     STATPM.retry = retry;
   }
@@ -586,7 +560,7 @@ dns_lookup_int(domain, rr_class, rr_type, retrans, retry, r)
 #if DNS_DEBUG
   {
     ZE_MessageInfo(11, "dns_lookup(%s, %d, %s) --> %d\n",
-                 domain, rr_class, dns_type_to_string(rr_type), len);
+                   domain, rr_class, dns_type_to_string(rr_type), len);
   }
 #endif
 
@@ -596,16 +570,18 @@ dns_lookup_int(domain, rr_class, rr_type, retrans, retry, r)
   if (retry > 0)
     STATPM.retry = save_retry;
 
-  if (len < 0)
-  {
-    switch (MAC_H_ERRNO)
-    {
+  if (len < 0) {
+    switch (MAC_H_ERRNO) {
       case NO_DATA:
-        /* FALLTHROUGH */
+        /*
+         * FALLTHROUGH 
+         */
         result = DNS_ERR_NOTFOUND;
         break;
       case NO_RECOVERY:
-        /* no MX data on this host */
+        /*
+         * no MX data on this host 
+         */
         result = DNS_ERR_NOTFOUND;
         break;
       case HOST_NOT_FOUND:
@@ -613,8 +589,12 @@ dns_lookup_int(domain, rr_class, rr_type, retrans, retry, r)
         break;
       case TRY_AGAIN:
       case -1:
-        /* couldn't connect to the name server */
-        /* it might come up later; better queue it up */
+        /*
+         * couldn't connect to the name server 
+         */
+        /*
+         * it might come up later; better queue it up 
+         */
         result = DNS_ERR_TMPFAIL;
         break;
       default:
@@ -647,8 +627,7 @@ dns_lookup(domain, type_name, retrans, retry, r)
   int                 type;
   int                 result = DNS_NO_ERR;
 
-  if (r == NULL)
-  {
+  if (r == NULL) {
     ZE_LogMsgError(0, "reply argument shall not be NULL");
     return DNS_LOC_ERR;
   }
@@ -658,8 +637,7 @@ dns_lookup(domain, type_name, retrans, retry, r)
   r->dns_signature = SIGNATURE;
 
   type = dns_string_to_type(type_name);
-  if (type == -1)
-  {
+  if (type == -1) {
     ZE_LogMsgError(0, "dns_lookup: unknown resource type: %s", type_name);
     return DNS_LOC_ERR;
   }

@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -83,7 +84,7 @@ typedef struct {
   int                 count;
 } RegexRec_T;
 
-static zeTbl_T    htbl = JTABLE_INITIALIZER;
+static zeTbl_T      htbl = JTABLE_INITIALIZER;
 
 static pthread_mutex_t st_mutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -102,7 +103,7 @@ static char        *ChompDomainName(char *);
 void
 dump_regex_table()
 {
-  RegexRec_T           p;
+  RegexRec_T          p;
 
   printf("*** Regular Expressions lookup table : \n");
   if (zeTable_Get_First(&htbl, &p) == 0) {
@@ -124,7 +125,7 @@ add_regex_rec(vk, vv)
 {
   char               *k = (char *) vk;
   char               *v = (char *) vv;
-  RegexRec_T           r;
+  RegexRec_T          r;
   int                 i, j;
 
   memset(&r, 0, sizeof (r));
@@ -219,7 +220,7 @@ add_regex_rec(vk, vv)
 static void
 clear_compiled_regex()
 {
-  RegexRec_T          *q;
+  RegexRec_T         *q;
 
   if ((q = (RegexRec_T *) zeTable_Get_First_Ptr(&htbl)) != NULL) {
     do {
@@ -298,7 +299,7 @@ check_regex(id, ip, msg, where)
      char               *msg;
      int                 where;
 {
-  RegexRec_T          *q;
+  RegexRec_T         *q;
   int                 result = 0;
 
   int                 score_min = cf_get_int(CF_REGEX_MAX_SCORE);
@@ -481,7 +482,7 @@ check_rurlbl(id, ip, msg)
       ZE_MessageInfo(URLBL_LOG + 2, "Hmmm . %s DIR DOMAIN : %s", id, p);
 
       if ((buf = (char *) malloc(size)) == NULL) {
-        ZE_LogSysError("malloc(%ld)", (long int ) size);
+        ZE_LogSysError("malloc(%ld)", (long int) size);
         goto url_domain_ok;
       }
 
@@ -572,7 +573,7 @@ check_rurlbl(id, ip, msg)
         goto url_domain_ok;
 
       {
-        RegexRec_T          *q;
+        RegexRec_T         *q;
 
         /*
          ** URLs defined at ze-regex
@@ -711,7 +712,7 @@ check_rurlbl(id, ip, msg)
 
       if ((buf = (char *) malloc(size)) != NULL) {
         long                i;
-        RegexRec_T          *q;
+        RegexRec_T         *q;
 
         memset(buf, 0, size);
         memcpy(buf, p + pi, pf - pi);
@@ -756,7 +757,7 @@ check_rurlbl(id, ip, msg)
           } while ((q = (RegexRec_T *) zeTable_Get_Next_Ptr(&htbl)) != NULL);
         }
       } else {
-        ZE_LogSysError("malloc(%ld)", (long int ) size);
+        ZE_LogSysError("malloc(%ld)", (long int) size);
         break;
       }
 

@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -36,9 +37,8 @@
  *                                                                            *
  **************************************************************************** */
 
-typedef struct msg_btsm_T
-{
-  ZEBT_T               bt;
+typedef struct msg_btsm_T {
+  ZEBT_T              bt;
   bfilter_T          *bf;
   void               *priv;
 } msg_btsm_T;
@@ -54,8 +54,8 @@ typedef struct msg_btsm_T
 #define   FEATURE_NGRAM       1
 
 typedef struct {
-  int      featureType;
-  int      featureLength;
+  int                 featureType;
+  int                 featureLength;
 } feature_T;
 
 
@@ -63,7 +63,7 @@ static bool         mimepart2wordTokens(char *, size_t, char *, int, int,
                                         void *, mime_part_T *);
 
 static bool         mimepart2ngramTokens(char *, size_t, char *, int, int,
-                                        void *, mime_part_T *);
+                                         void *, mime_part_T *);
 
 /* ****************************************************************************
 ** #####            #####   ####   #    #  ######  #    #   ####
@@ -135,8 +135,7 @@ static char        *TOK_SEPARATOR[] = {
 
 #define    SEP_WS    " \t\n\r"
 
-typedef struct
-{
+typedef struct {
   char               *tag;
   char               *prefix;
   bool                recurse;
@@ -180,8 +179,7 @@ get_tokconf_headers(tag)
 {
   tokconf_T          *p = NULL;
 
-  for (p = hdrs_tokconf; p->tag != NULL; p++)
-  {
+  for (p = hdrs_tokconf; p->tag != NULL; p++) {
     if (STRCASEEQUAL(p->tag, tag))
       return p;
   }
@@ -210,8 +208,7 @@ get_tokconf_body(tag)
 {
   tokconf_T          *p = NULL;
 
-  for (p = body_tokconf; p->tag != NULL; p++)
-  {
+  for (p = body_tokconf; p->tag != NULL; p++) {
     if (STRCASEEQUAL(p->tag, tag))
       return p;
   }
@@ -226,18 +223,14 @@ set_tokconf_active(tag, active)
 {
   tokconf_T          *p = NULL;
 
-  for (p = body_tokconf; p->tag != NULL; p++)
-  {
-    if (STRCASEEQUAL(p->tag, tag))
-    {
+  for (p = body_tokconf; p->tag != NULL; p++) {
+    if (STRCASEEQUAL(p->tag, tag)) {
       p->active = active;
       break;
     }
   }
-  for (p = hdrs_tokconf; p->tag != NULL; p++)
-  {
-    if (STRCASEEQUAL(p->tag, tag))
-    {
+  for (p = hdrs_tokconf; p->tag != NULL; p++) {
+    if (STRCASEEQUAL(p->tag, tag)) {
       p->active = active;
       break;
     }
@@ -258,18 +251,20 @@ token_trim_bounds(s)
   if (s == NULL)
     return;
 
-  /* end of the string */
-  while ((i = strlen(s)) > 0)
-  {
+  /*
+   * end of the string 
+   */
+  while ((i = strlen(s)) > 0) {
     if (strchr(".-/*'`/:", s[i - 1]) == NULL)
       break;
     s[i - 1] = '\0';
   }
 
-  /* the beginning */
+  /*
+   * the beginning 
+   */
   p = q = s;
-  if ((i = strspn(p, "()><+-.*!'`/")) > 0)
-  {
+  if ((i = strspn(p, "()><+-.*!'`/")) > 0) {
     p += i;
     while (*p != '\0')
       *q++ = *p++;
@@ -280,8 +275,7 @@ token_trim_bounds(s)
   i = 0;
   for (p = s; *p == '$' && !isdigit(*(p + 1)); p++)
     i++;
-  if (i > 0)
-  {
+  if (i > 0) {
     q = s;
     while (*p != '\0')
       *q++ = *p++;
@@ -311,11 +305,15 @@ check_token(s)
     return FALSE;
 #endif
 
-  /* date */
+  /*
+   * date 
+   */
   if (zeStrRegex(s, "^[0-9]{2,2}/[0-9]{1,2}/[0-9]{2,4}$", NULL, NULL, TRUE))
     return FALSE;
 
-  /* time */
+  /*
+   * time 
+   */
   if (zeStrRegex
       (s, "^[0-9]{2,2}:[0-9]{2,2}:[0-9]{2,2}(pm|am)?$", NULL, NULL, TRUE))
     return FALSE;
@@ -372,7 +370,9 @@ extract_word_tokens(cf, prefix, separator, buf, kind, bm, level)
   if (cf == NULL)
     cf = &tcf;
 
-  /* separator = cf->separator; */
+  /*
+   * separator = cf->separator; 
+   */
   if (separator == NULL)
     separator = SEP_TOK;
 
@@ -386,10 +386,8 @@ extract_word_tokens(cf, prefix, separator, buf, kind, bm, level)
   zeStr2Lower(buf);
 
   for (stok = strtok_r(buf, separator, &ptr); stok != NULL;
-       stok = strtok_r(NULL, separator, &ptr))
-  {
-    if (ptr != NULL && *ptr != '\0')
-    {
+       stok = strtok_r(NULL, separator, &ptr)) {
+    if (ptr != NULL && *ptr != '\0') {
       char               *p = ptr;
 
       if (p[0] == '$' && isspace(p[1]) && isdigit(p[2]))
@@ -398,28 +396,28 @@ extract_word_tokens(cf, prefix, separator, buf, kind, bm, level)
 
     token_trim_bounds(stok);
 
-    if (!check_token(stok))
-    {
+    if (!check_token(stok)) {
       prev = NULL;
       continue;
     }
 
-    /* dollars... */
-    if (*stok == '$')
-    {
+    /*
+     * dollars... 
+     */
+    if (*stok == '$') {
       char               *q = stok + 1;
 
-      while (isdigit(*q) || *q == '.')
-      {
+      while (isdigit(*q) || *q == '.') {
         if (*q != '.')
           *q = '0';
         q++;
       }
     }
 
-    /* colors */
-    if (*stok == '#')
-    {
+    /*
+     * colors 
+     */
+    if (*stok == '#') {
       int                 i;
 
       for (i = 1; i <= 6 && isxdigit(stok[i]); i++)
@@ -428,24 +426,22 @@ extract_word_tokens(cf, prefix, separator, buf, kind, bm, level)
 
     ADD_TOKEN(bm, prefix, stok);
 
-    /* verifie la forme */
+    /*
+     * verifie la forme 
+     */
     {
     }
 
     {
       char               *ts = NULL;
 
-      if ((ts = strdup(stok)) != NULL)
-      {
+      if ((ts = strdup(stok)) != NULL) {
         bool                first = TRUE;
         char               *p, *q;
 
-        if ((bf->flags & BFLAG_TRFTOK) != 0)
-        {
-          for (p = q = ts; *p != '\0'; p++)
-          {
-            switch (*p)
-            {
+        if ((bf->flags & BFLAG_TRFTOK) != 0) {
+          for (p = q = ts; *p != '\0'; p++) {
+            switch (*p) {
               case '\'':
               case '^':
                 break;
@@ -469,12 +465,10 @@ extract_word_tokens(cf, prefix, separator, buf, kind, bm, level)
           ADD_TOKEN(bm, prefix, ts);
         }
 
-        if (bf->segRecurse)
-        {
+        if (bf->segRecurse) {
 #define SECSEP ".^\':@|+_-%#!$"
 
-          if (strpbrk(stok, SECSEP) != NULL)
-          {
+          if (strpbrk(stok, SECSEP) != NULL) {
             strlcpy(ts, stok, strlen(stok) + 1);
             extract_word_tokens(NULL, prefix, SECSEP, ts, kind, bm, level);
           }
@@ -482,16 +476,16 @@ extract_word_tokens(cf, prefix, separator, buf, kind, bm, level)
 
         FREE(ts);
       } else
-        /* XXXX JOE */
+        /*
+         * XXXX JOE 
+         */
         ZE_LogSysError("strdup(%s) error", stok);
     }
 
-    if (prev != NULL && bf->segDouble)
-    {
+    if (prev != NULL && bf->segDouble) {
       char                t[256];
 
-      if (strlen(prev) > 0 && strlen(stok) > 0)
-      {
+      if (strlen(prev) > 0 && strlen(stok) > 0) {
         snprintf(t, sizeof (t), "%s-dbl-%s", prev, stok);
         ADD_TOKEN(bm, prefix, t);
       }
@@ -533,16 +527,14 @@ extract_html_tags(buf, size)
   msz = 2 * (size + 1);
   msz += (8 - msz % 8);
   t = malloc(msz);
-  if (t == NULL)
-  {
+  if (t == NULL) {
     ZE_LogSysError("malloc error");
     return NULL;
   }
   memset(t, 0, msz);
 
   p = buf;
-  for (p = buf + strcspn(buf, "<"); *p != '\0'; p += strcspn(p, "<"))
-  {
+  for (p = buf + strcspn(buf, "<"); *p != '\0'; p += strcspn(p, "<")) {
     int                 n;
 
     p++;
@@ -625,20 +617,17 @@ mimepart2wordTokens(buf, size, xid, level, type, arg, mime_part)
      ** Content-Type
      */
     h = rfc2822_lookup_header(mime_part->hdrs, "Content-Type");
-    if (h != NULL)
-    {
+    if (h != NULL) {
       char               *r = NULL;
       int                 s_type = 0;
 
       ZE_MessageInfo(19, "HDR -> Content-Type... %s", h->value);
       r = rfc2822_get_main_attr(h);
-      if (r != NULL)
-      {
+      if (r != NULL) {
         s_type = which_mime_type(r);
 
         ZE_MessageInfo(19, " Type : %s", r);
-        if ((x = get_tokconf_body("ctmain")) != NULL && x->active)
-        {
+        if ((x = get_tokconf_body("ctmain")) != NULL && x->active) {
           convert_8to7(r, TRUE);
           extract_word_tokens(x, x->prefix, x->separator, r, 0, bm, 0);
         }
@@ -646,11 +635,9 @@ mimepart2wordTokens(buf, size, xid, level, type, arg, mime_part)
       FREE(r);
 
       r = rfc2822_get_attr(h, "name=");
-      if (r != NULL)
-      {
+      if (r != NULL) {
         ZE_MessageInfo(19, " Disposition : %s", r);
-        if ((x = get_tokconf_body("ctname")) != NULL && x->active)
-        {
+        if ((x = get_tokconf_body("ctname")) != NULL && x->active) {
           convert_8to7(r, TRUE);
           NORM_FILENAME(r);
           extract_word_tokens(x, x->prefix, x->separator, r, 0, bm, 0);
@@ -659,11 +646,9 @@ mimepart2wordTokens(buf, size, xid, level, type, arg, mime_part)
       FREE(r);
 
       r = rfc2822_get_attr(h, "filename=");
-      if (r != NULL)
-      {
+      if (r != NULL) {
         ZE_MessageInfo(19, " Disposition : %s", r);
-        if ((x = get_tokconf_body("ctname")) != NULL && x->active)
-        {
+        if ((x = get_tokconf_body("ctname")) != NULL && x->active) {
           convert_8to7(r, TRUE);
           NORM_FILENAME(r);
           extract_word_tokens(x, x->prefix, x->separator, r, 0, bm, 0);
@@ -671,23 +656,19 @@ mimepart2wordTokens(buf, size, xid, level, type, arg, mime_part)
       }
       FREE(r);
 
-      if (s_type == MIME_TYPE_MULTIPART)
-      {
+      if (s_type == MIME_TYPE_MULTIPART) {
         char               *bound = NULL;
 
         ZE_MessageInfo(19, " HDR TYPE : %s", h->value);
         bound = rfc2822_get_attr(h, "boundary=");
-        if (bound != NULL)
-        {
+        if (bound != NULL) {
           ZE_MessageInfo(19, " BOUNDARY : %s", bound);
-          if ((x = get_tokconf_headers("boundary")) != NULL && x->active)
-          {
+          if ((x = get_tokconf_headers("boundary")) != NULL && x->active) {
             char               *sep = " \t\n\r";
             char               *q = bound;
 
             convert_8to7(bound, TRUE);
-            for (q = bound; *q != '\0'; q++)
-            {
+            for (q = bound; *q != '\0'; q++) {
               if (isdigit(*q))
                 *q = '0';
 #if 0
@@ -711,17 +692,14 @@ mimepart2wordTokens(buf, size, xid, level, type, arg, mime_part)
      ** Content-Disposition
      */
     h = rfc2822_lookup_header(mime_part->hdrs, "Content-Disposition");
-    if (h != NULL)
-    {
+    if (h != NULL) {
       char               *r = NULL;
 
       ZE_MessageInfo(19, "HDR -> Content-Disposition... %s", h->value);
       r = rfc2822_get_main_attr(h);
-      if (r != NULL)
-      {
+      if (r != NULL) {
         ZE_MessageInfo(19, " Disposition : %s", r);
-        if ((x = get_tokconf_body("cdmain")) != NULL && x->active)
-        {
+        if ((x = get_tokconf_body("cdmain")) != NULL && x->active) {
           convert_8to7(r, TRUE);
           extract_word_tokens(x, x->prefix, x->separator, r, 0, bm, 0);
         }
@@ -729,11 +707,9 @@ mimepart2wordTokens(buf, size, xid, level, type, arg, mime_part)
       FREE(r);
 
       r = rfc2822_get_attr(h, "name=");
-      if (r != NULL)
-      {
+      if (r != NULL) {
         ZE_MessageInfo(19, " Disposition : %s", r);
-        if ((x = get_tokconf_body("cdname")) != NULL && x->active)
-        {
+        if ((x = get_tokconf_body("cdname")) != NULL && x->active) {
           convert_8to7(r, TRUE);
           NORM_FILENAME(r);
           extract_word_tokens(x, x->prefix, x->separator, r, 0, bm, 0);
@@ -742,11 +718,9 @@ mimepart2wordTokens(buf, size, xid, level, type, arg, mime_part)
       FREE(r);
 
       r = rfc2822_get_attr(h, "filename=");
-      if (r != NULL)
-      {
+      if (r != NULL) {
         ZE_MessageInfo(19, " Disposition : %s", r);
-        if ((x = get_tokconf_body("cdname")) != NULL && x->active)
-        {
+        if ((x = get_tokconf_body("cdname")) != NULL && x->active) {
           convert_8to7(r, TRUE);
           NORM_FILENAME(r);
           extract_word_tokens(x, x->prefix, x->separator, r, 0, bm, 0);
@@ -758,16 +732,13 @@ mimepart2wordTokens(buf, size, xid, level, type, arg, mime_part)
     /*
      ** All Headers
      */
-    for (h = mime_part->hdrs; h != NULL; h = h->next)
-    {
+    for (h = mime_part->hdrs; h != NULL; h = h->next) {
       ZE_MessageInfo(19, "H : %-20s - V : %s", h->key, h->value);
 
-      if ((x = get_tokconf_headers(h->key)) != NULL && x->active)
-      {
+      if ((x = get_tokconf_headers(h->key)) != NULL && x->active) {
         convert_8to7(h->value, TRUE);
 
-        if (STRCASEEQUAL(x->prefix, "msgid"))
-        {
+        if (STRCASEEQUAL(x->prefix, "msgid")) {
           char               *px;
 
           for (px = h->value; *px != '\0'; px++)
@@ -785,20 +756,19 @@ mimepart2wordTokens(buf, size, xid, level, type, arg, mime_part)
 
   ZE_MessageInfo(11, "MIME PART SIZE : %d", size);
 
-  if (bf->maxPartSize > 0 && size > bf->maxPartSize)
-  {
-    /* Shall log something ??? */
+  if (bf->maxPartSize > 0 && size > bf->maxPartSize) {
+    /*
+     * Shall log something ??? 
+     */
     return TRUE;
   }
 
   convert_8to7(buf, TRUE);
 #if 0
-  if (0)
-  {
+  if (0) {
     char               *p, *q;
 
-    for (p = q = buf; *p != '\0'; p++)
-    {
+    for (p = q = buf; *p != '\0'; p++) {
       if (*p != *q || isalpha(*p))
         *q++ = *p;
     }
@@ -811,9 +781,9 @@ mimepart2wordTokens(buf, size, xid, level, type, arg, mime_part)
   if (size < 6)
     return TRUE;
 
-  if (STRCASEEQUAL("text/html", mime_part->mime))
-  {
+  if (STRCASEEQUAL("text/html", mime_part->mime)) {
     char               *cleanbuf = NULL;
+
 #if 0
     tokconf_T          *x = NULL;
 #endif
@@ -844,8 +814,7 @@ mimepart2wordTokens(buf, size, xid, level, type, arg, mime_part)
     return TRUE;
   }
 
-  if (STRCASEEQUAL("text/plain", mime_part->mime))
-  {
+  if (STRCASEEQUAL("text/plain", mime_part->mime)) {
     extract_word_tokens(NULL, "body", NULL, buf, 0, bm, 0);
 
     return TRUE;
@@ -903,19 +872,15 @@ extract_char_tokens(cf, prefix, separator, buf, kind, bm, level)
 
     cp = ' ';
     cc = 0;
-    for (p = q = buf; *p != '\0'; cp = *p++)
-    {
+    for (p = q = buf; *p != '\0'; cp = *p++) {
       if (*p == '\r')
         continue;
 
-      if (isblank(*p))
-      {
-        if (blank)
-        {
+      if (isblank(*p)) {
+        if (blank) {
           cc++;
           continue;
-        } else
-        {
+        } else {
           cc = 1;
           blank = TRUE;
         }
@@ -938,8 +903,7 @@ extract_char_tokens(cf, prefix, separator, buf, kind, bm, level)
   {
     char               *p;
 
-    for (p = buf; strlen(p) >= C_NGRAM; p++)
-    {
+    for (p = buf; strlen(p) >= C_NGRAM; p++) {
       char                tok[64];
 
       zeSafeStrnCpy(tok, sizeof (tok), p, C_NGRAM);
@@ -985,20 +949,17 @@ mimepart2ngramTokens(buf, size, xid, level, type, arg, mime_part)
      ** Content-Type
      */
     h = rfc2822_lookup_header(mime_part->hdrs, "Content-Type");
-    if (h != NULL)
-    {
+    if (h != NULL) {
       char               *r = NULL;
       int                 s_type = 0;
 
       ZE_MessageInfo(19, "HDR -> Content-Type... %s", h->value);
       r = rfc2822_get_main_attr(h);
-      if (r != NULL)
-      {
+      if (r != NULL) {
         s_type = which_mime_type(r);
 
         ZE_MessageInfo(19, " Type : %s", r);
-        if ((x = get_tokconf_body("ctmain")) != NULL && x->active)
-        {
+        if ((x = get_tokconf_body("ctmain")) != NULL && x->active) {
           convert_8to7(r, TRUE);
           extract_char_tokens(x, x->prefix, x->separator, r, 0, bm, 0);
         }
@@ -1006,11 +967,9 @@ mimepart2ngramTokens(buf, size, xid, level, type, arg, mime_part)
       FREE(r);
 
       r = rfc2822_get_attr(h, "name=");
-      if (r != NULL)
-      {
+      if (r != NULL) {
         ZE_MessageInfo(19, " Disposition : %s", r);
-        if ((x = get_tokconf_body("ctname")) != NULL && x->active)
-        {
+        if ((x = get_tokconf_body("ctname")) != NULL && x->active) {
           convert_8to7(r, TRUE);
           NORM_FILENAME(r);
           extract_char_tokens(x, x->prefix, x->separator, r, 0, bm, 0);
@@ -1019,11 +978,9 @@ mimepart2ngramTokens(buf, size, xid, level, type, arg, mime_part)
       FREE(r);
 
       r = rfc2822_get_attr(h, "filename=");
-      if (r != NULL)
-      {
+      if (r != NULL) {
         ZE_MessageInfo(19, " Disposition : %s", r);
-        if ((x = get_tokconf_body("ctname")) != NULL && x->active)
-        {
+        if ((x = get_tokconf_body("ctname")) != NULL && x->active) {
           convert_8to7(r, TRUE);
           NORM_FILENAME(r);
           extract_char_tokens(x, x->prefix, x->separator, r, 0, bm, 0);
@@ -1031,23 +988,19 @@ mimepart2ngramTokens(buf, size, xid, level, type, arg, mime_part)
       }
       FREE(r);
 
-      if (s_type == MIME_TYPE_MULTIPART)
-      {
+      if (s_type == MIME_TYPE_MULTIPART) {
         char               *bound = NULL;
 
         ZE_MessageInfo(19, " HDR TYPE : %s", h->value);
         bound = rfc2822_get_attr(h, "boundary=");
-        if (bound != NULL)
-        {
+        if (bound != NULL) {
           ZE_MessageInfo(19, " BOUNDARY : %s", bound);
-          if ((x = get_tokconf_headers("boundary")) != NULL && x->active)
-          {
+          if ((x = get_tokconf_headers("boundary")) != NULL && x->active) {
             char               *sep = " \t\n\r";
             char               *q = bound;
 
             convert_8to7(bound, TRUE);
-            for (q = bound; *q != '\0'; q++)
-            {
+            for (q = bound; *q != '\0'; q++) {
               if (isdigit(*q))
                 *q = '0';
 #if 0
@@ -1071,17 +1024,14 @@ mimepart2ngramTokens(buf, size, xid, level, type, arg, mime_part)
      ** Content-Disposition
      */
     h = rfc2822_lookup_header(mime_part->hdrs, "Content-Disposition");
-    if (h != NULL)
-    {
+    if (h != NULL) {
       char               *r = NULL;
 
       ZE_MessageInfo(19, "HDR -> Content-Disposition... %s", h->value);
       r = rfc2822_get_main_attr(h);
-      if (r != NULL)
-      {
+      if (r != NULL) {
         ZE_MessageInfo(19, " Disposition : %s", r);
-        if ((x = get_tokconf_body("cdmain")) != NULL && x->active)
-        {
+        if ((x = get_tokconf_body("cdmain")) != NULL && x->active) {
           convert_8to7(r, TRUE);
           extract_char_tokens(x, x->prefix, x->separator, r, 0, bm, 0);
         }
@@ -1089,11 +1039,9 @@ mimepart2ngramTokens(buf, size, xid, level, type, arg, mime_part)
       FREE(r);
 
       r = rfc2822_get_attr(h, "name=");
-      if (r != NULL)
-      {
+      if (r != NULL) {
         ZE_MessageInfo(19, " Disposition : %s", r);
-        if ((x = get_tokconf_body("cdname")) != NULL && x->active)
-        {
+        if ((x = get_tokconf_body("cdname")) != NULL && x->active) {
           convert_8to7(r, TRUE);
           NORM_FILENAME(r);
           extract_char_tokens(x, x->prefix, x->separator, r, 0, bm, 0);
@@ -1102,11 +1050,9 @@ mimepart2ngramTokens(buf, size, xid, level, type, arg, mime_part)
       FREE(r);
 
       r = rfc2822_get_attr(h, "filename=");
-      if (r != NULL)
-      {
+      if (r != NULL) {
         ZE_MessageInfo(19, " Disposition : %s", r);
-        if ((x = get_tokconf_body("cdname")) != NULL && x->active)
-        {
+        if ((x = get_tokconf_body("cdname")) != NULL && x->active) {
           convert_8to7(r, TRUE);
           NORM_FILENAME(r);
           extract_char_tokens(x, x->prefix, x->separator, r, 0, bm, 0);
@@ -1118,16 +1064,13 @@ mimepart2ngramTokens(buf, size, xid, level, type, arg, mime_part)
     /*
      ** All Headers
      */
-    for (h = mime_part->hdrs; h != NULL; h = h->next)
-    {
+    for (h = mime_part->hdrs; h != NULL; h = h->next) {
       ZE_MessageInfo(19, "H : %-20s - V : %s", h->key, h->value);
 
-      if ((x = get_tokconf_headers(h->key)) != NULL && x->active)
-      {
+      if ((x = get_tokconf_headers(h->key)) != NULL && x->active) {
         convert_8to7(h->value, TRUE);
 
-        if (STRCASEEQUAL(x->prefix, "msgid"))
-        {
+        if (STRCASEEQUAL(x->prefix, "msgid")) {
           char               *px;
 
           for (px = h->value; *px != '\0'; px++)
@@ -1145,20 +1088,19 @@ mimepart2ngramTokens(buf, size, xid, level, type, arg, mime_part)
 
   ZE_MessageInfo(11, "MIME PART SIZE : %d", size);
 
-  if (bf->maxPartSize > 0 && size > bf->maxPartSize)
-  {
-    /* Shall log something ??? */
+  if (bf->maxPartSize > 0 && size > bf->maxPartSize) {
+    /*
+     * Shall log something ??? 
+     */
     return TRUE;
   }
 
   convert_8to7(buf, TRUE);
 #if 0
-  if (0)
-  {
+  if (0) {
     char               *p, *q;
 
-    for (p = q = buf; *p != '\0'; p++)
-    {
+    for (p = q = buf; *p != '\0'; p++) {
       if (*p != *q || isalpha(*p))
         *q++ = *p;
     }
@@ -1171,9 +1113,9 @@ mimepart2ngramTokens(buf, size, xid, level, type, arg, mime_part)
   if (size < 6)
     return TRUE;
 
-  if (STRCASEEQUAL("text/html", mime_part->mime))
-  {
+  if (STRCASEEQUAL("text/html", mime_part->mime)) {
     char               *cleanbuf = NULL;
+
 #if 0
     tokconf_T          *x = NULL;
 #endif
@@ -1204,8 +1146,7 @@ mimepart2ngramTokens(buf, size, xid, level, type, arg, mime_part)
     return TRUE;
   }
 
-  if (STRCASEEQUAL("text/plain", mime_part->mime))
-  {
+  if (STRCASEEQUAL("text/plain", mime_part->mime)) {
     extract_char_tokens(NULL, "body", NULL, buf, 0, bm, 0);
 
     return TRUE;
@@ -1242,13 +1183,11 @@ msg_btsm_add_token(bm, token)
 
   strlcpy(tok.token, token, sizeof (tok.token));
   tok.prob = UT_PROB;
-  if ((t = zeBTree_Get(&bm->bt, &tok)) == NULL)
-  {
+  if ((t = zeBTree_Get(&bm->bt, &tok)) == NULL) {
     tok.prob = UT_PROB;
     tok.nb = 1;
 
-    if (!zeBTree_Add(&bm->bt, &tok))
-    {
+    if (!zeBTree_Add(&bm->bt, &tok)) {
       ZE_LogMsgError(0, "ERROR inserting new token");
       res = FALSE;
     }
@@ -1266,8 +1205,7 @@ msg_btsm_init(bm)
   ASSERT(bm != NULL);
   ASSERT(bm->bt.signature == SIGNATURE);
 
-  if (!zeBTree_Init(&bm->bt, sizeof (sfilter_token_T), token_cmp))
-  {
+  if (!zeBTree_Init(&bm->bt, sizeof (sfilter_token_T), token_cmp)) {
     return FALSE;
   }
 
@@ -1340,14 +1278,12 @@ bfilter_handle_message(id, fname, func, arg)
     char               *env = FALSE;
     static bool         ok = FALSE;
 
-    if ((env = getenv("TEXTUNIT")) != NULL)
-    {
+    if ((env = getenv("TEXTUNIT")) != NULL) {
       if (STRCASEEQUAL(env, "NGRAM"))
         TextUnitWord = FALSE;
     }
 
-    if ((env = getenv("NGRAMLEN")) != NULL && strlen(env) > 0)
-    {
+    if ((env = getenv("NGRAMLEN")) != NULL && strlen(env) > 0) {
       int                 n;
 
       n = atoi(env);
@@ -1355,10 +1291,9 @@ bfilter_handle_message(id, fname, func, arg)
         C_NGRAM = n;
     }
 
-    if (!ok)
-    {
-      ZE_MessageInfo(10, "Setting tokenizer to %s (unit length = %d)", 
-		   TextUnitWord ? "WORD" : "NGRAM", C_NGRAM); 
+    if (!ok) {
+      ZE_MessageInfo(10, "Setting tokenizer to %s (unit length = %d)",
+                     TextUnitWord ? "WORD" : "NGRAM", C_NGRAM);
       ok = TRUE;
     }
   }
@@ -1368,8 +1303,7 @@ bfilter_handle_message(id, fname, func, arg)
   else
     decode = decode_mime_file(id, fname, NULL, mimepart2ngramTokens, &bm);
 
-  if (decode)
-  {
+  if (decode) {
     int                 n;
 
     if (func != NULL)

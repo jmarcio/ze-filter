@@ -28,7 +28,7 @@
 
 
 int                 zm_RdTextFile(char *, int, int, char *,
-                                   int (*)(void *, void *));
+                                  int (*)(void *, void *));
 
 static void         strClearBlanks(char *);
 

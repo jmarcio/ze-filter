@@ -177,7 +177,8 @@ do_test(conf_T * cargs)
     if (cargs->random) {
       rind = random() % range;
 
-      snprintf(ipbuf, sizeof (ipbuf), "1.1.%d.%d", (int ) rind % 255, (int ) (random() % 255));
+      snprintf(ipbuf, sizeof (ipbuf), "1.1.%d.%d", (int) rind % 255,
+               (int) (random() % 255));
       ip = ipbuf;
     } else
       rind = n;

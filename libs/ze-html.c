@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -77,32 +78,26 @@ html_clean_codes(buf, size)
   char               *new = NULL;
   size_t              sz;
 
-  if ((buf == NULL) || (size == 0) || (strlen(buf) > size))
-  {
+  if ((buf == NULL) || (size == 0) || (strlen(buf) > size)) {
     ZE_LogMsgError(0, "Error...");
     return;
   }
 
   sz = size + 1;
   sz += (8 - sz % 8);
-  if ((new = (char *) malloc(sz)) == NULL)
-  {
+  if ((new = (char *) malloc(sz)) == NULL) {
     ZE_LogSysError("malloc new error");
     return;
   }
   memcpy(new, buf, size);
 
-  for (p = new, q = buf; (size > 0) && (*p != '\0'); size--, p++)
-  {
-    if (*p != '%')
-    {
+  for (p = new, q = buf; (size > 0) && (*p != '\0'); size--, p++) {
+    if (*p != '%') {
       *q++ = *p;
       continue;
     }
-    if (*p == '%')
-    {
-      if (!is_hexa_char(p[1]) || !is_hexa_char(p[2]))
-      {
+    if (*p == '%') {
+      if (!is_hexa_char(p[1]) || !is_hexa_char(p[2])) {
         *q++ = *p;
         continue;
       }
@@ -133,20 +128,16 @@ convert_html_codes(buf)
 
   p = q = buf;
 
-  for (p = q = buf; *p != '\0'; p++)
-  {
-    if (*p == '%')
-    {
+  for (p = q = buf; *p != '\0'; p++) {
+    if (*p == '%') {
       if (strchr("01234567890abcdef", tolower(p[1])) &&
-          strchr("01234567890abcdef", tolower(p[2])))
-      {
+          strchr("01234567890abcdef", tolower(p[2]))) {
         *q++ = (p[1] << 4) + p[2];
         p += 2;
         continue;
       }
     }
-    if (p[0] == '&' && p[1] == '#')
-    {
+    if (p[0] == '&' && p[1] == '#') {
 
     }
     *q++ = *p;
@@ -174,8 +165,7 @@ cleanup_html_buffer(buf, size)
 
   sz = size + 1;
   sz += (8 - sz % 8);
-  if ((p = (char *) malloc(sz)) == NULL)
-  {
+  if ((p = (char *) malloc(sz)) == NULL) {
     ZE_LogSysError("malloc error");
     return NULL;
   }
@@ -184,24 +174,23 @@ cleanup_html_buffer(buf, size)
 
   t = buf;
   s = p;
-  for (i = 0; (i < size) && (*t != '\0'); i++, t++)
-  {
-    if (!state)
-    {
-      /* begin of HTML tag */
-      if (*t == '<')
-      {
+  for (i = 0; (i < size) && (*t != '\0'); i++, t++) {
+    if (!state) {
+      /*
+       * begin of HTML tag 
+       */
+      if (*t == '<') {
         state = TRUE;
         continue;
       }
 
-      /* coded character */
-      if (*t == '&')
-      {
+      /*
+       * coded character 
+       */
+      if (*t == '&') {
         long                pi, pf;
 
-        if (zeStrRegex(t, "&[A-Za-z]+;", &pi, &pf, TRUE) && (pi == 0))
-        {
+        if (zeStrRegex(t, "&[A-Za-z]+;", &pi, &pf, TRUE) && (pi == 0)) {
           int                 c;
 
           c = get_html_entity(t + pi);
@@ -212,8 +201,7 @@ cleanup_html_buffer(buf, size)
           i += (pf - pi - 1);
           continue;
         }
-        if (zeStrRegex(t, "&#[0-9]+;", &pi, &pf, TRUE) && (pi == 0))
-        {
+        if (zeStrRegex(t, "&#[0-9]+;", &pi, &pf, TRUE) && (pi == 0)) {
           char               *q = t;
           int                 c;
 
@@ -228,11 +216,12 @@ cleanup_html_buffer(buf, size)
         }
       }
 
-      /* default : simply copy it */
+      /*
+       * default : simply copy it 
+       */
       *s++ = *t;
       continue;
-    } else
-    {
+    } else {
       if (*t == '>')
         state = FALSE;
     }
@@ -246,13 +235,11 @@ cleanup_html_buffer(buf, size)
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
-typedef struct regex_tag_T
-{
+typedef struct regex_tag_T {
   char               *tag;
   regex_t             re;
   bool                ok;
-}
-regex_tag_T;
+} regex_tag_T;
 
 #if 1
 static char        *VALID_HTML_TAGS[] = {
@@ -345,12 +332,12 @@ check_valid_html_tags(id, buf)
 
   id = STRNULL(id, "NOID");
 
-  xmlbuf = zeStrRegex(buf, "<(html)?[ ]*[?]?xml.*[ :]?[^>]*>", NULL, NULL, TRUE);
+  xmlbuf =
+    zeStrRegex(buf, "<(html)?[ ]*[?]?xml.*[ :]?[^>]*>", NULL, NULL, TRUE);
   if (xmlbuf)
     return 0;
 
-  while (strlen(p) > 0)
-  {
+  while (strlen(p) > 0) {
     char                rbuf[1024];
 
     pi = pf = 0;
@@ -358,8 +345,7 @@ check_valid_html_tags(id, buf)
     if (!zeStrRegex(p, "<[^>]*>", &pi, &pf, TRUE))
       break;
 
-    if ((pf - pi) < sizeof (rbuf))
-    {
+    if ((pf - pi) < sizeof (rbuf)) {
       bool                ok = FALSE;
       char              **s;
       size_t              len = pf - pi;
@@ -370,8 +356,7 @@ check_valid_html_tags(id, buf)
       {
         char               *u, *v;
 
-        for (u = v = rbuf; *u != '\0'; u++)
-        {
+        for (u = v = rbuf; *u != '\0'; u++) {
           if ((*u != '\n') && (*u != '\r'))
             *v++ = *u;
         }
@@ -379,28 +364,26 @@ check_valid_html_tags(id, buf)
       }
 
       ZE_MessageInfo(19, "%s SPAMCHECK : Checking : %s, %ld %ld", id, rbuf, pi,
-                   pf);
+                     pf);
 
       for (s = VALID_HTML_TAGS; (*s != NULL) && !ok; s++)
         ok = zeStrRegex(rbuf, *s, NULL, NULL, TRUE);
 
 #if 0
-      if (1 && !ok && xmlbuf)
-      {
+      if (1 && !ok && xmlbuf) {
         for (s = VALID_XML_TAGS; (*s != NULL) && !ok; s++)
           ok = zeStrRegex(rbuf, *s, NULL, NULL, TRUE);
       }
 #endif
-      if (!ok)
-      {
+      if (!ok) {
         score++;
         if (score <= 10)
-          ZE_MessageInfo(10, "%s SPAM CHECK - NOT VALID HTML TAG : %s", id, rbuf);
-        if (score == 10)
-        {
+          ZE_MessageInfo(10, "%s SPAM CHECK - NOT VALID HTML TAG : %s", id,
+                         rbuf);
+        if (score == 10) {
           ZE_MessageInfo(10,
-                       "%s SPAM CHECK - NOT VALID HTML TAG : more than 10 already found ! ",
-                       id);
+                         "%s SPAM CHECK - NOT VALID HTML TAG : more than 10 already found ! ",
+                         id);
           break;
         }
       }
@@ -416,14 +399,12 @@ check_valid_html_tags(id, buf)
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
-typedef struct
-{
+typedef struct {
   char               *name;
   int                 value;
   int                 code1;
   int                 code2;
-}
-html_entity_T;
+} html_entity_T;
 
 static html_entity_T VALID_ENTITIES[] = {
   {"&lt;", 0, '<', '<'},
@@ -537,8 +518,7 @@ get_html_entity(s)
 {
   html_entity_T      *p = VALID_ENTITIES;
 
-  for (p = VALID_ENTITIES; p->name != NULL; p++)
-  {
+  for (p = VALID_ENTITIES; p->name != NULL; p++) {
     if (strncasecmp(p->name, s, strlen(p->name)) == 0)
       return p->code2;
   }

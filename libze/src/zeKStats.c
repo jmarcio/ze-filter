@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -20,14 +21,23 @@
  * More details about ze-filter license can be found at ze-filter
  * web site : http://foss.jose-marcio.org
  */
+
 /* ************************************************************************ */
+
 /* Kameleon - A Discrete Event Simulator                                    */
+
 /*                                                                          */
+
 /* Created by : Jose Marcio Martins da Cruz                                 */
+
 /*              Ecole Nationale Superieure des Mines de Paris               */
+
 /*                                                                          */
+
 /* History :                                                                */
+
 /*   15 May 1996 : Creation                                                 */
+
 /* ************************************************************************ */
 
 
@@ -40,8 +50,8 @@
 #include "zeKStats.h"
 
 double
-zeKMean (s)
-     kstats_T              *s;
+zeKMean(s)
+     kstats_T           *s;
 {
   if ((s == NULL) || (s->n == 0))
     return 0;
@@ -50,17 +60,17 @@ zeKMean (s)
 }
 
 double
-zeKStdDev (s)
-     kstats_T              *s;
+zeKStdDev(s)
+     kstats_T           *s;
 {
   if ((s == NULL) || (s->n < 2))
     return 0;
-  return sqrt (fabs ((s->st2 - s->st * s->st / s->n) / (s->n - 1)));
+  return sqrt(fabs((s->st2 - s->st * s->st / s->n) / (s->n - 1)));
 }
 
 double
-zeKMin (s)
-     kstats_T              *s;
+zeKMin(s)
+     kstats_T           *s;
 {
   if ((s == NULL) || (s->n == 0))
     return 0;
@@ -69,8 +79,8 @@ zeKMin (s)
 }
 
 double
-zeKMax (s)
-     kstats_T              *s;
+zeKMax(s)
+     kstats_T           *s;
 {
   if ((s == NULL) || (s->n == 0))
     return 0;
@@ -80,7 +90,7 @@ zeKMax (s)
 
 long
 zeKCount(s)
-     kstats_T              *s;
+     kstats_T           *s;
 {
   if ((s == NULL) || (s->n == 0))
     return 0;
@@ -89,17 +99,17 @@ zeKCount(s)
 }
 
 void
-zeKStatsReset (s)
-     kstats_T              *s;
+zeKStatsReset(s)
+     kstats_T           *s;
 {
   if (s == NULL)
     return;
-  memset (s, 0, sizeof (*s));
+  memset(s, 0, sizeof (*s));
 }
 
 void
-zeKStatsUpdate (s, t)
-     kstats_T              *s;
+zeKStatsUpdate(s, t)
+     kstats_T           *s;
      double              t;
 {
   if (s == NULL)
@@ -117,21 +127,21 @@ zeKStatsUpdate (s, t)
 
 #if 0
 void
-print_inference (s, p, c)
-     kstats_T              *s;
+print_inference(s, p, c)
+     kstats_T           *s;
      double              p;
      char               *c;
 {
   if ((s != NULL) && (s->n > 1)) {
-    printf ("--> ");
+    printf("--> ");
     if (c != NULL)
-      printf ("%s <--", c);
-    printf ("\n");
-    printf ("    Mean Value        : %9.4f\n", zeKMean (s));
-    printf ("    Std. Deviation    : %9.4f\n", zeKStdDev (s));
-    printf ("    Confidence (%4.2f) : %9.4f\n", p,
-            confidence_interval (p, zeKStdDev (s), s->n));
-    printf ("    Notes             : %9d\n", s->n);
+      printf("%s <--", c);
+    printf("\n");
+    printf("    Mean Value        : %9.4f\n", zeKMean(s));
+    printf("    Std. Deviation    : %9.4f\n", zeKStdDev(s));
+    printf("    Confidence (%4.2f) : %9.4f\n", p,
+           confidence_interval(p, zeKStdDev(s), s->n));
+    printf("    Notes             : %9d\n", s->n);
   }
 }
 
@@ -161,29 +171,29 @@ static point       *p = NULL;
 
 /* --------------------------------------------- */
 static double
-fn (double x)
+fn(double x)
 {
-  return (exp (-sqr (x) / 2) / SQRT2PI);
+  return (exp(-sqr(x) / 2) / SQRT2PI);
 }
 
 static int
-init_table (int nint, double nmax)
+init_table(int nint, double nmax)
 {
   int                 i;
   double              x, y = 0.;
   double              dx = nmax / nint;
 
   if (p == NULL) {
-    if ((p = (point *) malloc ((nint + 1) * sizeof (point))) == NULL)
+    if ((p = (point *) malloc((nint + 1) * sizeof (point))) == NULL)
       return ERROR;
   }
-  memset (p, 0, (nint + 1) * sizeof (point));
+  memset(p, 0, (nint + 1) * sizeof (point));
 
   p[0].x = 0.;
   p[0].y = 0.;
   for (i = 1; i < nint + 1; i++) {
     x = i * dx;
-    y += dx * (fn (x) + fn (x - dx)) / 2;
+    y += dx * (fn(x) + fn(x - dx)) / 2;
     p[i].x = x;
     p[i].y = y;
   }
@@ -197,7 +207,7 @@ static double       NMAX = 10.;
 #define sign(x) (((x) > 0.) ? 1 : (((x) < 0.) ? -1 : 0))
 
 static double
-f (double x)
+f(double x)
 {
   double              dx = NMAX / NINT;
   int                 q;
@@ -206,13 +216,13 @@ f (double x)
   int                 i, j;
   int                 s;
 
-  if ((p == NULL) && ((init_table (NINT, NMAX)) != OK)) {
-    printf ("Erreur pendant creation de matrice normale\n");
-    exit (1);
+  if ((p == NULL) && ((init_table(NINT, NMAX)) != OK)) {
+    printf("Erreur pendant creation de matrice normale\n");
+    exit(1);
   }
 
-  s = sign (x);
-  x = fabs (x);
+  s = sign(x);
+  x = fabs(x);
 
   if (x > NMAX)
     return (s * p[NINT].y);
@@ -221,7 +231,7 @@ f (double x)
   r = x - q * dx;
 
   i = j = q;
-  switch (sign (r)) {
+  switch (sign(r)) {
     case -1:
       i--;
       break;
@@ -240,30 +250,30 @@ f (double x)
 }
 
 double
-FGauss (double x)
+FGauss(double x)
 {
-  return (0.5 + f (x));
+  return (0.5 + f(x));
 }
 
 #if !defined(HAVE_ERF)
 double
-erf (double x)
+erf(double x)
 {
-  return (2 * f (x));
+  return (2 * f(x));
 }
 #endif
 
 #if !defined(HAVE_ERFC)
 double
-erfc (double x)
+erfc(double x)
 {
-  return (1 - 2 * f (x));
+  return (1 - 2 * f(x));
 }
 #endif
 
 /* --------------------------------------------- */
 static int
-luby (double y)
+luby(double y)
 {
   int                 i, j, k;
 
@@ -286,7 +296,7 @@ luby (double y)
 }
 
 static int
-glby (double y)
+glby(double y)
 {
   int                 i, j, k;
 
@@ -310,17 +320,17 @@ glby (double y)
 }
 
 static double
-finv (double y)
+finv(double y)
 {
   int                 i, j;
 
-  if ((p == NULL) && ((init_table (NINT, NMAX)) != OK)) {
-    printf ("Erreur pendant creation de matrice normale\n");
-    exit (1);
+  if ((p == NULL) && ((init_table(NINT, NMAX)) != OK)) {
+    printf("Erreur pendant creation de matrice normale\n");
+    exit(1);
   }
 
-  i = glby (y);
-  j = luby (y);
+  i = glby(y);
+  j = luby(y);
 
   if (j - i > 1)
     return 0.;
@@ -332,40 +342,40 @@ finv (double y)
 }
 
 double
-FGaussI (double y)
+FGaussI(double y)
 {
   if ((y > 1.) || (y < 0.))
     return 0;
 
   if (y >= 0.5)
-    return (finv (y - 0.5));
-  return (-finv (0.5 - y));
+    return (finv(y - 0.5));
+  return (-finv(0.5 - y));
 }
 
 double
-erfi (double y)
+erfi(double y)
 {
   if ((y > 1.) || (y < -1.))
     return 0;
 
-  return (sign (y) * finv (fabs (y / 2)));
+  return (sign(y) * finv(fabs(y / 2)));
 }
 
 double
-erfci (double y)
+erfci(double y)
 {
   if ((y > 2.) || (y < 0.))
     return 0;
 
-  return (erfi (1. - y));
+  return (erfi(1. - y));
 }
 
 /* --------------------------------------------- */
 double
-confidence_interval (double p, double stddev, int n)
+confidence_interval(double p, double stddev, int n)
 {
   if ((p < 0.) || (p > 1.))
     return 0.;
 
-  return (stddev * erfi (p) / sqrt ((double) n));
+  return (stddev * erfi(p) / sqrt((double) n));
 }

@@ -40,8 +40,7 @@ zeStrRev(s)
     return s;
 
   len = strlen(s) - 1;
-  for (i = 0; i <= len / 2; i++)
-  {
+  for (i = 0; i <= len / 2; i++) {
     char                t = s[i];
 
     s[i] = s[len - i];
@@ -64,8 +63,7 @@ zeStrDupRev(s)
   if (s == NULL)
     return s;
 
-  if ((p = strdup(s)) == NULL)
-  {
+  if ((p = strdup(s)) == NULL) {
     ZE_LogSysError("strdup(%s)", s);
     return p;
   }
@@ -293,7 +291,7 @@ zeMalloc(sz)
  ******************************************************************************/
 char               *
 zeStr2Lower(s)
-  char *s;
+     char               *s;
 {
   char               *p;
 
@@ -310,7 +308,7 @@ zeStr2Lower(s)
  ******************************************************************************/
 char               *
 zeStr2Upper(s)
-  char *s;
+     char               *s;
 {
   char               *p;
 
@@ -512,16 +510,14 @@ zeStrChomp(s)
   {
     char               *p;
 
-    for (p = s + n; (n >= 0) && (*p != '\0'); p--, n--)
-    {
+    for (p = s + n; (n >= 0) && (*p != '\0'); p--, n--) {
       if ((*p != '\n') && (*p != '\r'))
         break;
       *p = '\0';
     }
   }
 #else
-  while ((n = strlen(s)) > 0)
-  {
+  while ((n = strlen(s)) > 0) {
     if ((s[n - 1] != '\n') && (s[n - 1] != '\r'))
       break;
     s[n - 1] = '\0';
@@ -637,6 +633,7 @@ zeStr2Tokens(s, sz, argv, sep)
  *                                                                            *
  **************************************************************************** */
 #if NEED_SM_SNPRINTF
+
 /* Inserted and modified by Jose Marcio Martins da Cruz to
    replace need to include libsm or libsmutil from sendmail 
    versions older than 8.12.2 */
@@ -662,6 +659,7 @@ zeStr2Tokens(s, sz, argv, sep)
 
 /* Write formatted output into S, according to the format
    string FORMAT, writing no more than MAXLEN characters.  */
+
 /* VARARGS3 */
 
 int
@@ -737,5 +735,3 @@ zeStrTime2Secs(s)
   }
   return 3600;
 }
-
-

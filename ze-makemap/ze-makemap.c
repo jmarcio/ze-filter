@@ -247,7 +247,7 @@ main(argc, argv)
 
       if (!zeDb_Stat(&zdbh, &st))
         exit(1);
-      printf(" ** %7ld records found\n", (long int ) st->st.btree_st.bt_ndata);
+      printf(" ** %7ld records found\n", (long int) st->st.btree_st.bt_ndata);
       FREE(st);
       zeDb_Close(&zdbh);
     }
@@ -298,7 +298,8 @@ main(argc, argv)
               printf(format, key, data);
             }
             nb++;
-          } while (zeDb_CursorGetNext(&zdbh, key, sizeof (key), data, sizeof (data)));
+          } while (zeDb_CursorGetNext
+                   (&zdbh, key, sizeof (key), data, sizeof (data)));
 
           DB_BTREE_SEQ_END();
         }
@@ -414,6 +415,5 @@ usage()
          "        -2       : two columns (key / value) - default\n"
          "        -h       : help (print this and exits)\n"
          "                   default mode : erase and skim\n"
-         "\n%s - %s\n\n",
-         PACKAGE, __DATE__, __TIME__, PACKAGE,COPYRIGHT);
+         "\n%s - %s\n\n", PACKAGE, __DATE__, __TIME__, PACKAGE, COPYRIGHT);
 }

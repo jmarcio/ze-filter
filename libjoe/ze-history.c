@@ -188,7 +188,7 @@ static void         histraw2histres(HistRes_T *, HistRaw_T *);
 
 struct History_T {
   size_t              nb;
-  ZEBT_T               jdbh;
+  ZEBT_T              jdbh;
   HistRes_T           glob;
 };
 
@@ -693,7 +693,7 @@ res_history_update(hst, ip, tf, dt, verbose)
 
   HISTORY_UNLOCK();
 
-  ZE_LogMsgInfo(12, "Search ended : %ld noeuds", (long int ) hst->nb);
+  ZE_LogMsgInfo(12, "Search ended : %ld noeuds", (long int) hst->nb);
 
   return TRUE;
 }
@@ -755,7 +755,8 @@ print_noeud_summary(void *rec, void *arg)
      ((double) p->t_work_max) / 1000, zeKStdDev(&p->st_work) / 1000);
   if ((p->nb_conn > 0) && (zeKMean(&p->st_length) > 0))
     printf(" Mean Throuput      : %7.3f KBytes/sec\n",
-           (1000. * p->nb_bytes) / (1024 * p->nb_conn * zeKMean(&p->st_length)));
+           (1000. * p->nb_bytes) / (1024 * p->nb_conn *
+                                    zeKMean(&p->st_length)));
 
   printf("Counts\n");
   printf(" Messages           : %7d\n", p->nb_msgs);
@@ -828,7 +829,7 @@ print_global_summary(data, arg)
     *s = '\0';
   printf(" Last Connection   : %s \n", sout);
   printf(" Connections       : %7d\n", p->nb_conn);
-  printf(" Gateways          : %7ld\n", (long int ) hst->nb);
+  printf(" Gateways          : %7ld\n", (long int) hst->nb);
   printf(" Throttle Max      : %7d / 10 min (for the server)\n",
          p->serv_rate_max);
   printf(" Throttle Max      : %7d / 10 min (for a single gateway)\n",
@@ -843,7 +844,8 @@ print_global_summary(data, arg)
      ((double) p->t_work_max) / 1000, zeKStdDev(&p->st_work) / 1000);
   if ((p->nb_conn > 0) && (zeKMean(&p->st_length) > 0))
     printf(" Mean Throuput     : %7.3f KBytes/sec\n",
-           (1000. * p->nb_bytes) / (1024 * p->nb_conn * zeKMean(&p->st_length)));
+           (1000. * p->nb_bytes) / (1024 * p->nb_conn *
+                                    zeKMean(&p->st_length)));
 
   printf("Counts\n");
   printf(" Messages           : %7d\n", p->nb_msgs);
@@ -1255,7 +1257,7 @@ load_live_history(hst, tf, dt)
 
   HISTORY_UNLOCK();
 
-  ZE_LogMsgInfo(12, "Search ended : %ld noeuds", (long int ) hst->nb);
+  ZE_LogMsgInfo(12, "Search ended : %ld noeuds", (long int) hst->nb);
 
   return TRUE;
 }

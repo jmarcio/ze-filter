@@ -780,8 +780,8 @@ periodic_tasks_debug(data)
       n[1] = 10;
 
       snprintf(ip, sizeof (ip), "%d.%d.%d.%d", n[0], n[1], n[2], n[3]);
-      snprintf(name, sizeof (name), "%d.%d.%d.%d.jose-marcio.org", n[0], n[1], n[2],
-               n[3]);
+      snprintf(name, sizeof (name), "%d.%d.%d.%d.jose-marcio.org", n[0], n[1],
+               n[2], n[3]);
 
       ZE_MessageInfo(19, "Adding   ... %-20s %s", ip, name);
       (void) connopen_check_host(ip, name, 1);
@@ -796,8 +796,8 @@ periodic_tasks_debug(data)
       n[1] = 10;
 
       snprintf(ip, sizeof (ip), "%d.%d.%d.%d", n[0], n[1], n[2], n[3]);
-      snprintf(name, sizeof (name), "%d.%d.%d.%d.jose-marcio.org", n[0], n[1], n[2],
-               n[3]);
+      snprintf(name, sizeof (name), "%d.%d.%d.%d.jose-marcio.org", n[0], n[1],
+               n[2], n[3]);
 
       ZE_MessageInfo(19, "Removing ... %-20s %s", ip, name);
       (void) connopen_check_host(ip, name, -1);

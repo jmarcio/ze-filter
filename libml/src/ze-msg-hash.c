@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -39,8 +40,8 @@ jmc_str2md5(sout, sin, szout)
      unsigned char      *sin;
      size_t              szout;
 {
-  ZEMD5_T           ctx;
-  unsigned char                dig[64];
+  ZEMD5_T             ctx;
+  unsigned char       dig[64];
 
   memset(dig, 0, sizeof (dig));
   zeMD5_Init(&ctx);
@@ -62,8 +63,8 @@ jmc_str2sha1(sout, sin, szout)
      unsigned char      *sin;
      size_t              szout;
 {
-  ZESHA1_T          ctx;
-  unsigned char                dig[64];
+  ZESHA1_T            ctx;
+  unsigned char       dig[64];
 
   memset(dig, 0, sizeof (dig));
   zeSHA1_Init(&ctx);
@@ -89,8 +90,7 @@ hexa_encode(sout, szout, sin, szin)
   int                 i;
 
   memset(sout, 0, szout);
-  for (i = 0; i < szin; i++)
-  {
+  for (i = 0; i < szin; i++) {
     char                s[4];
 
     snprintf(s, sizeof (s), "%02X", sin[i]);
@@ -107,17 +107,16 @@ bool
 str2hash2hex(code, sout, sin, szout)
      int                 code;
      char               *sout;
-     char      *sin;
+     char               *sin;
      size_t              szout;
 {
   unsigned char       dig[64];
 
   memset(dig, 0, sizeof (dig));
-  switch (code)
-  {
+  switch (code) {
     case HASH_SHA1:
       {
-        ZESHA1_T          ctx;
+        ZESHA1_T            ctx;
 
         zeSHA1_Init(&ctx);
         zeSHA1_Update(&ctx, (unsigned char *) sin, strlen((char *) sin));
@@ -127,7 +126,7 @@ str2hash2hex(code, sout, sin, szout)
       break;
     case HASH_MD5:
       {
-        ZEMD5_T           ctx;
+        ZEMD5_T             ctx;
 
         zeMD5_Init(&ctx);
         zeMD5_Update(&ctx, (unsigned char *) sin, strlen((char *) sin));
@@ -148,17 +147,16 @@ bool
 str2hash2b64(code, sout, sin, szout)
      int                 code;
      char               *sout;
-     char      *sin;
+     char               *sin;
      size_t              szout;
 {
-  unsigned char                dig[64];
+  unsigned char       dig[64];
 
   memset(dig, 0, sizeof (dig));
-  switch (code)
-  {
+  switch (code) {
     case HASH_SHA1:
       {
-        ZESHA1_T          ctx;
+        ZESHA1_T            ctx;
 
         zeSHA1_Init(&ctx);
         zeSHA1_Update(&ctx, (unsigned char *) sin, strlen((char *) sin));
@@ -168,7 +166,7 @@ str2hash2b64(code, sout, sin, szout)
       break;
     case HASH_MD5:
       {
-        ZEMD5_T           ctx;
+        ZEMD5_T             ctx;
 
         zeMD5_Init(&ctx);
         zeMD5_Update(&ctx, (unsigned char *) sin, strlen((char *) sin));
@@ -211,8 +209,7 @@ hash_code2label(code)
 {
   char               *s = "PLAIN";
 
-  switch (code)
-  {
+  switch (code) {
     case HASH_PLAIN:
       s = "PLAIN";
       break;

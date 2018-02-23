@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -32,28 +33,27 @@
  **************************************************************************** */
 #define DIMTASKS     256
 
-typedef struct
-{
-  uint32_t       signature;
-  time_t         dt;
+typedef struct {
+  uint32_t            signature;
+  time_t              dt;
 
-  CYCLIC_F       function;
-  void          *arg;
+  CYCLIC_F            function;
+  void               *arg;
 
-  time_t         last;
-  int            count;
-  time_t         work;
+  time_t              last;
+  int                 count;
+  time_t              work;
 
-  kstats_T       st;
+  kstats_T            st;
 } CTASK_T;
 
-static CTASK_T tasks[DIMTASKS];
-static bool    tsk_ok = FALSE;
+static CTASK_T      tasks[DIMTASKS];
+static bool         tsk_ok = FALSE;
 
-static time_t  dt_loop = 10;
-static time_t  t_start = 0;
+static time_t       dt_loop = 10;
+static time_t       t_start = 0;
 
-static void   *CycTasks(void *arg);
+static void        *CycTasks(void *arg);
 
 /* ****************************************************************************
  *                                                                            *
@@ -61,13 +61,12 @@ static void   *CycTasks(void *arg);
  **************************************************************************** */
 bool
 CycTasks_Init(dt)
-     time_t         dt;
+     time_t              dt;
 {
-  pthread_t      tid = (pthread_t) 0;
+  pthread_t           tid = (pthread_t) 0;
 
-  if (!tsk_ok)
-  {
-    int            r;
+  if (!tsk_ok) {
+    int                 r;
 
     t_start = time(NULL);
     dt_loop = dt;
@@ -89,21 +88,20 @@ CycTasks_Init(dt)
 
 bool
 CycTasks_Register(task, arg, dt)
-     CYCLIC_F       task;
-     void          *arg;
-     time_t         dt;
+     CYCLIC_F            task;
+     void               *arg;
+     time_t              dt;
 {
-  int            i;
+  int                 i;
 
   ASSERT(task != NULL);
   ASSERT(dt > 0);
 
-  for (i = 0; i < DIMTASKS; i++)
-  {
+  for (i = 0; i < DIMTASKS; i++) {
     if (tasks[i].signature == SIGNATURE)
       continue;
 
-    memset(&tasks[i], 0, sizeof(tasks[i]));
+    memset(&tasks[i], 0, sizeof (tasks[i]));
 
     if (tasks[i].function != NULL)
       continue;
@@ -128,11 +126,10 @@ CycTasks_Register(task, arg, dt)
 void
 CycTasks_Stats()
 {
-  int i;
+  int                 i;
 
-  for (i = 0; i < DIMTASKS; i++)
-  {
-    int n, m;
+  for (i = 0; i < DIMTASKS; i++) {
+    int                 n, m;
 
     if (tasks[i].signature != SIGNATURE)
       continue;
@@ -149,22 +146,21 @@ CycTasks_Stats()
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
-static void   *
+static void        *
 CycTasks(arg)
-     void          *arg;
+     void               *arg;
 {
-  pthread_t      tid;
+  pthread_t           tid;
 
-  time_t         now, last;
+  time_t              now, last;
 
   now = last = time(NULL);
 
   tid = pthread_self();
   (void) pthread_detach(tid);
 
-  for (;;)
-  {
-    int            i;
+  for (;;) {
+    int                 i;
 
     ZE_MessageInfo(12, "*** CycTasks running...");
 
@@ -176,9 +172,8 @@ CycTasks(arg)
 
     last = now;
 
-    for (i = 0; i < DIMTASKS; i++)
-    {
-      uint64_t   tms;
+    for (i = 0; i < DIMTASKS; i++) {
+      uint64_t            tms;
 
       if (tasks[i].signature != SIGNATURE)
         continue;
@@ -191,7 +186,9 @@ CycTasks(arg)
 
       tasks[i].last = now;
 
-      /* XXX do something with result ??? */
+      /*
+       * XXX do something with result ??? 
+       */
       tms = zeTime_ms();
       (void) tasks[i].function(tasks[i].arg);
       tasks[i].work += (zeTime_ms() - tms);
@@ -210,7 +207,8 @@ CycTasks(arg)
 int
 test_task(void *arg)
 {
-  ZE_MessageInfo(10, "Hi ! %s : %ld", STRNULL(arg, "(null)"), time(NULL) - t_start);
+  ZE_MessageInfo(10, "Hi ! %s : %ld", STRNULL(arg, "(null)"),
+                 time(NULL) - t_start);
 
   return 0;
 }

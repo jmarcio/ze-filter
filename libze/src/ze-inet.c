@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -53,8 +54,7 @@ jinet_ntop(family, addr, cp, size)
 
   s = NULL;
   MUTEX_LOCK(&mutex);
-  if ((p = inet_ntoa(addr)) != NULL)
-  {
+  if ((p = inet_ntoa(addr)) != NULL) {
     strlcpy(cp, p, size);
     s = cp;
   }
@@ -85,13 +85,13 @@ jinet_pton(family, cp, addr)
     ZE_LogSysError("inet_pton");
   if (res == 0)
     ZE_LogMsgError(0, "inet_pton : /%s/ isn't a valid address string",
-                  cp != NULL ? cp : "(NULL)");
+                   cp != NULL ? cp : "(NULL)");
 #else
 #ifdef HAVE_INET_ATON
   res = inet_aton(cp, addr) == 0 ? 0 : 1;
   if (res == 0)
     ZE_LogMsgError(0, "inet_aton : %s isn't a valid address string",
-                  cp != NULL ? cp : "(NULL)");
+                   cp != NULL ? cp : "(NULL)");
 #endif
 #endif
   return res;
@@ -109,8 +109,7 @@ jsock_ntop(sa, salen, buf, size)
      char               *buf;
      size_t              size;
 {
-  switch (sa->sa_family)
-  {
+  switch (sa->sa_family) {
     case AF_INET:
       {
         struct sockaddr_in *sin = (struct sockaddr_in *) sa;
@@ -147,19 +146,18 @@ ip_strcmp(a, b)
   aipv6 = (strchr(a, ':') != NULL);
   bipv6 = (strchr(b, ':') != NULL);
 
-  if (aipv6 && bipv6)
-  {
+  if (aipv6 && bipv6) {
     return strcasecmp(a, b);
   }
 
-  if (!aipv6 && !bipv6)
-  {
+  if (!aipv6 && !bipv6) {
     struct in_addr      aa, ab;
 
-    /* XXX a voir */
+    /*
+     * XXX a voir 
+     */
     if (jinet_pton(AF_INET, b, &ab.s_addr)
-        && jinet_pton(AF_INET, a, &aa.s_addr))
-    {
+        && jinet_pton(AF_INET, a, &aa.s_addr)) {
       if (htonl(aa.s_addr) > htonl(ab.s_addr))
         return 1;
       if (htonl(aa.s_addr) < htonl(ab.s_addr))
@@ -190,41 +188,38 @@ get_hostname(host, size)
 #if HAVE_GETHOSTNAME
   ZE_LogMsgDebug(15, "Using gethostname to get host name");
 
-  if (gethostname(host, size) < 0)
-  {
+  if (gethostname(host, size) < 0) {
     ZE_LogSysError("sysinfo(SI_HOSTNAME) error");
     return FALSE;
   }
   return TRUE;
 #else
 
-# if HAVE_UNAME
+#if HAVE_UNAME
   {
     struct utsname      udata;
 
     ZE_LogMsgDebug(15, "Using uname to get host name");
-    if (uname(&udata) < 0)
-    {
+    if (uname(&udata) < 0) {
       ZE_LogSysError("uname error");
       return FALSE;
     }
     strlcpy(host, udata.nodename, size);
     return TRUE;
   }
-# else
+#else
 
-#  if SYSINFO_NODENAME
+#if SYSINFO_NODENAME
   SYSINFO             ZE_LogMsgDebug(15, "Using sysinfo to get host name");
 
-  if (sysinfo(SI_HOSTNAME, host, sizeof (host)) < 0)
-  {
+  if (sysinfo(SI_HOSTNAME, host, sizeof (host)) < 0) {
     ZE_LogSysError("sysinfo(SI_HOSTNAME) error");
     return FALSE;
   }
   return TRUE;
-#  endif
+#endif
 
-# endif
+#endif
 
 #endif
   return FALSE;
@@ -267,36 +262,32 @@ convNameAddr(bout, bin, size, conv2addr)
   hints.ai_next = NULL;
 
   r = getaddrinfo(bin, NULL, &hints, &res);
-  if (r != 0)
-  {
-    if (conv2addr && r == EAI_NONAME)
-    {
+  if (r != 0) {
+    if (conv2addr && r == EAI_NONAME) {
       ok = FALSE;
       goto fin;
     }
 
     ZE_LogSysError("getaddrinfo(%s,%s) : %d %s",
-                  bin,
-                  STRBOOL(conv2addr, "name -> addr", "addr -> name"),
-                  r, gai_strerror(r));
+                   bin,
+                   STRBOOL(conv2addr, "name -> addr", "addr -> name"),
+                   r, gai_strerror(r));
     ok = FALSE;
     goto fin;
   }
 
-  for (rp = res; rp != NULL; rp = rp->ai_next)
-  {
+  for (rp = res; rp != NULL; rp = rp->ai_next) {
     int                 r;
     char                buf[NI_MAXHOST];
 
     r = getnameinfo(rp->ai_addr, rp->ai_addrlen,
                     buf, sizeof (buf), NULL, 0, conv2addr ? NI_NUMERICHOST : 0);
 
-    if (r != 0)
-    {
+    if (r != 0) {
       ZE_LogSysError("getnameinfo(%s,%s) : %d %s",
-                    bin,
-                    STRBOOL(conv2addr, "name -> addr", "addr -> name"),
-                    r, gai_strerror(r));
+                     bin,
+                     STRBOOL(conv2addr, "name -> addr", "addr -> name"),
+                     r, gai_strerror(r));
       ok = FALSE;
       goto fin;
     }
@@ -368,8 +359,7 @@ inet_n2p(family, addr, cp, size)
 
   s = NULL;
   MUTEX_LOCK(&mutex);
-  if ((p = inet_ntoa(addr)) != NULL)
-  {
+  if ((p = inet_ntoa(addr)) != NULL) {
     strlcpy(cp, p, size);
     s = cp;
   }
@@ -400,13 +390,13 @@ inet_p2n(family, cp, addr)
     ZE_LogSysError("inet_pton");
   if (res == 0)
     ZE_LogMsgError(0, "inet_pton : /%s/ isn't a valid address string",
-                  cp != NULL ? cp : "(NULL)");
+                   cp != NULL ? cp : "(NULL)");
 #else
 #ifdef HAVE_INET_ATON
   res = inet_aton(cp, addr) == 0 ? 0 : 1;
   if (res == 0)
     ZE_LogMsgError(0, "inet_aton : %s isn't a valid address string",
-                  cp != NULL ? cp : "(NULL)");
+                   cp != NULL ? cp : "(NULL)");
 #endif
 #endif
   return res;
@@ -430,30 +420,26 @@ get_hostbysock(sock, slen, addr, alen, name, nlen)
   int                 r;
   bool                ok = TRUE;
 
-  if (addr != NULL && alen > 0)
-  {
+  if (addr != NULL && alen > 0) {
     memset(buf, 0, sizeof (buf));
     memset(addr, 0, alen);
     r = getnameinfo(sock, slen, buf, sizeof (buf), NULL, 0, NI_NUMERICHOST);
-    if (r != 0)
-    {
+    if (r != 0) {
       ZE_LogSysError("getnameinfo(%s) : %d %s", "name -> addr", r,
-                    gai_strerror(r));
+                     gai_strerror(r));
       ok = FALSE;
       goto fin;
     }
     strlcpy(addr, buf, alen);
   }
 
-  if (name != NULL && nlen > 0)
-  {
+  if (name != NULL && nlen > 0) {
     memset(buf, 0, sizeof (buf));
     memset(name, 0, nlen);
     r = getnameinfo(sock, slen, buf, sizeof (buf), NULL, 0, 0);
-    if (r != 0)
-    {
+    if (r != 0) {
       ZE_LogSysError("getnameinfo(%s) : %d %s", "addr -> name", r,
-                    gai_strerror(r));
+                     gai_strerror(r));
       ok = FALSE;
       goto fin;
     }
@@ -486,18 +472,17 @@ Ip_strcmp(a, b)
   aip = (strchr(a, ':') != NULL);
   bip = (strchr(b, ':') != NULL);
 
-  if (aip && bip)
-  {
+  if (aip && bip) {
     return strcasecmp(a, b);
   }
 
-  if (!aip && !bip)
-  {
+  if (!aip && !bip) {
     struct in_addr      aa, ab;
 
-    /* XXX a voir */
-    if (inet_p2n(AF_INET, b, &ab.s_addr) && inet_p2n(AF_INET, a, &aa.s_addr))
-    {
+    /*
+     * XXX a voir 
+     */
+    if (inet_p2n(AF_INET, b, &ab.s_addr) && inet_p2n(AF_INET, a, &aa.s_addr)) {
       if (htonl(aa.s_addr) > htonl(ab.s_addr))
         return 1;
       if (htonl(aa.s_addr) < htonl(ab.s_addr))
@@ -517,8 +502,8 @@ Ip_strcmp(a, b)
  *                                                                            *
  **************************************************************************** */
 #if HAVE_POLL
-# define J_POLL_RD_FLAGS (POLLIN | POLLPRI | POLLHUP)
-# define J_POLL_WR_FLAGS (POLLOUT | POLLHUP)
+#define J_POLL_RD_FLAGS (POLLIN | POLLPRI | POLLHUP)
+#define J_POLL_WR_FLAGS (POLLOUT | POLLHUP)
 #endif             /* HAVE_POLL */
 
 #ifndef FDREADY_LOG_LEVEL
@@ -541,8 +526,7 @@ jfd_ready(sd, fdmode, to)
 
   flags = (fdmode == ZE_SOCK_READ ? J_POLL_RD_FLAGS : J_POLL_WR_FLAGS);
 
-  for (;;)
-  {
+  for (;;) {
     pfd.fd = sd;
     pfd.events = flags;
     pfd.revents = 0;
@@ -551,18 +535,15 @@ jfd_ready(sd, fdmode, to)
       return ZE_SOCK_TIMEOUT;
 
 #if 0
-    if ((pfd.revents & (POLLERR | POLLHUP | POLLNVAL)) != 0)
-    {
+    if ((pfd.revents & (POLLERR | POLLHUP | POLLNVAL)) != 0) {
       ZE_MessageInfo(FDREADY_LOG_LEVEL, " POLL ERR/HUP/NVAL = %s/%s/%s",
-                   STRBOOL((pfd.revents & POLLERR) == TRUE, "T", "F"),
-                   STRBOOL((pfd.revents & POLLHUP) == TRUE, "T", "F"),
-                   STRBOOL((pfd.revents & POLLNVAL) == TRUE, "T", "F"));
+                     STRBOOL((pfd.revents & POLLERR) == TRUE, "T", "F"),
+                     STRBOOL((pfd.revents & POLLHUP) == TRUE, "T", "F"),
+                     STRBOOL((pfd.revents & POLLNVAL) == TRUE, "T", "F"));
     }
 #endif
-    if (r < 0)
-    {
-      if (errno == EINTR)
-      {
+    if (r < 0) {
+      if (errno == EINTR) {
         if (++nerr > 100)
           return ZE_SOCK_ERROR;
         continue;
@@ -581,8 +562,9 @@ jfd_ready(sd, fdmode, to)
       return ZE_SOCK_TIMEOUT;
   }
 #if 0
-  ZE_LogMsgError(0, "ERROR=poll:mi_rd_socket_ready, socket=%d, r=%d, errno=%d revents=%d", sd,
-     r, errno, pfd.revents);
+  ZE_LogMsgError(0,
+                 "ERROR=poll:mi_rd_socket_ready, socket=%d, r=%d, errno=%d revents=%d",
+                 sd, r, errno, pfd.revents);
   return ZE_SOCK_ERROR;
 #endif
 #else              /* HAVE_POLL */
@@ -590,8 +572,7 @@ jfd_ready(sd, fdmode, to)
   int                 r;
   struct timeval      timeout;
 
-  for (;;)
-  {
+  for (;;) {
     timeout.tv_usec = 1000 * (to % 1000);
     timeout.tv_sec = to / 1000;
     FD_ZERO(&rdfs);
@@ -604,8 +585,7 @@ jfd_ready(sd, fdmode, to)
       r = select(sd + 1, NULL, &rdfs, &excfs, timeout);
     if (r == 0)
       return ZE_SOCK_TIMEOUT;
-    if (r < 0)
-    {
+    if (r < 0) {
       if (errno == EINTR)
         continue;
       return ZE_SOCK_ERROR;
@@ -633,18 +613,16 @@ sd_printf(int sd, char *format, ...)
   int                 result = FALSE;
   int                 nerr = 0;
 
-  memset(str, 0, sizeof(str));
+  memset(str, 0, sizeof (str));
   va_start(arg, format);
   (void) vsnprintf(str, sizeof (str), format, arg);
   va_end(arg);
 
-  while (TRUE)
-  {
+  while (TRUE) {
     int                 r;
 
     r = sendto(sd, str, strlen(str), 0, NULL, 0);
-    if (r == -1)
-    {
+    if (r == -1) {
       if (nerr++ > MAX_EINTR_ERRORS)
         break;
 
@@ -654,8 +632,7 @@ sd_printf(int sd, char *format, ...)
       ZE_LogSysError("sendto error (r = %d)", r);
       break;
     }
-    if (r == 0)
-    {
+    if (r == 0) {
       ZE_LogMsgError(0, "sendto error (r = %d)", r);
       break;
     }
@@ -682,15 +659,13 @@ sd_readln(fd, buf, size)
     return -1;
 
   *p = '\0';
-  while (size > 0)
-  {
+  while (size > 0) {
     int                 n;
 
     n = recvfrom(fd, p, 1, MSG_DONTWAIT, NULL, NULL);
     if (n == 0)
       break;
-    if (n < 0)
-    {
+    if (n < 0) {
       if (errno == EINTR || errno == EAGAIN)
         continue;
       ZE_LogSysError("read error");

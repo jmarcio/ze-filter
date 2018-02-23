@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -30,16 +31,16 @@
  *                                                                            *
  **************************************************************************** */
 int
-qp_decode (out, in, sz)
-     char           *out;
-     char           *in;
-     size_t          sz;
+qp_decode(out, in, sz)
+     char               *out;
+     char               *in;
+     size_t              sz;
 {
-  char           *p = in;
-  char           *q = out;
-  int             nb = 0;
+  char               *p = in;
+  char               *q = out;
+  int                 nb = 0;
 
-  char           *qp = "0123456789ABCDEFabcdef";
+  char               *qp = "0123456789ABCDEFabcdef";
 
   if ((in == NULL) || (out == NULL))
     return 0;
@@ -53,25 +54,25 @@ qp_decode (out, in, sz)
     p++;
     if (*p == '\r' || *p == '\n')
       continue;
-    if (strspn (p, qp) > 1) {
-      int             c = 0;
-      char           *r = NULL;
+    if (strspn(p, qp) > 1) {
+      int                 c = 0;
+      char               *r = NULL;
 
 #if 1
-      r = strchr (qp, toupper(*p));
+      r = strchr(qp, toupper(*p));
       if (r != NULL)
-	c = ((int ) (r - qp)) << 4;
+        c = ((int) (r - qp)) << 4;
 #else
-      c = (strchr (qp, toupper(*p)) - qp) << 4;
+      c = (strchr(qp, toupper(*p)) - qp) << 4;
 #endif
 
       p++;
 #if 1
-      r = strchr (qp, toupper(*p));
+      r = strchr(qp, toupper(*p));
       if (r != NULL)
-	c += ((int ) (r - qp));
+        c += ((int) (r - qp));
 #else
-      c += (strchr (qp, toupper(*p)) - qp);
+      c += (strchr(qp, toupper(*p)) - qp);
 #endif
       *q++ = c;
       nb++;
@@ -89,52 +90,49 @@ qp_decode (out, in, sz)
 #define    QPCHARS  "0123456789ABCDEF"
 
 int
-new_qp_decode (out, in, sz)
-     char           *out;
-     char           *in;
-     size_t          sz;
+new_qp_decode(out, in, sz)
+     char               *out;
+     char               *in;
+     size_t              sz;
 {
-  char           *p = in;
-  char           *q = out;
-  int             nb = 0;
+  char               *p = in;
+  char               *q = out;
+  int                 nb = 0;
 
   if ((in == NULL) || (out == NULL))
     return 0;
 
   p = in;
-  while (*p != '\0' && nb < sz)
-  {
-    while (*p != '\0' && *p != '=' && nb < sz)
-    {
-	*q++ = *p++;
-	nb++;
+  while (*p != '\0' && nb < sz) {
+    while (*p != '\0' && *p != '=' && nb < sz) {
+      *q++ = *p++;
+      nb++;
     }
     if (nb >= sz || *p == '\0')
       break;
 
-    if (*p == '=')
-    {
+    if (*p == '=') {
       p++;
 
       if (*p == '\r' || *p == '\n')
-	continue;
+        continue;
 
       if (*p == '\0')
-	break;
+        break;
 
       if (strlen(p) > 1) {
-	char c, x, *r;
+        char                c, x, *r;
 
-	x = 0;
-	c = toupper(*p++);
-	if ((r = strchr(QPCHARS, c)) != NULL)
-	  x = (r - QPCHARS) << 4;
-	c = toupper(*p++);
-	if ((r = strchr(QPCHARS, c)) != NULL)
-	  x |= (r - QPCHARS);
+        x = 0;
+        c = toupper(*p++);
+        if ((r = strchr(QPCHARS, c)) != NULL)
+          x = (r - QPCHARS) << 4;
+        c = toupper(*p++);
+        if ((r = strchr(QPCHARS, c)) != NULL)
+          x |= (r - QPCHARS);
 
-	*q++ = x;
-	nb++;
+        *q++ = x;
+        nb++;
       }
     }
   }
@@ -143,4 +141,3 @@ new_qp_decode (out, in, sz)
 
   return nb;
 }
-

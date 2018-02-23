@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -29,7 +30,7 @@
 
 #if (USE_SOCKETPAIR == 1) && !defined (HAVE_SOCKETPAIR)
 #undef USE_SOCKETPAIR
-#endif /* USE_SOCKETPAIR */
+#endif             /* USE_SOCKETPAIR */
 
 /* ****************************************************************************
  *                                                                            *
@@ -37,7 +38,7 @@
  **************************************************************************** */
 int
 open_channel(p)
-     int                 *p;
+     int                *p;
 {
 #if USE_SOCKETPAIR
   return (socketpair(AF_UNIX, SOCK_STREAM, 0, p));
@@ -61,20 +62,17 @@ send_msg_channel(p, msg, who)
 
   chan = (who == CHAN_FATHER ? 1 : 0);
 
-  if ((val = fcntl(p[chan], F_GETFL, 0)) < 0)
-  {
+  if ((val = fcntl(p[chan], F_GETFL, 0)) < 0) {
     ZE_LogSysWarning("can't get pipe status");
     return 1;
   }
   val &= O_ACCMODE;
-  if ((val != O_WRONLY) && (val != O_RDWR))
-  {
+  if ((val != O_WRONLY) && (val != O_RDWR)) {
     ZE_LogMsgWarning(0, "pipe closed ?");
     return 1;
   }
 
-  if (write(p[chan], &msg, sizeof (msg)) != sizeof (msg))
-  {
+  if (write(p[chan], &msg, sizeof (msg)) != sizeof (msg)) {
     if (errno == EPIPE || ze_logLevel > 20)
       ZE_LogSysWarning("write %d -> pipe", msg);
     return 1;
@@ -97,20 +95,19 @@ recv_msg_channel(p, msg, who)
 
   chan = (who == CHAN_FATHER ? 1 : 0);
 
-  if ((val = fcntl(p[chan], F_GETFL, 0)) < 0)
-  {
+  if ((val = fcntl(p[chan], F_GETFL, 0)) < 0) {
     ZE_LogSysWarning("can't get pipe status");
     return 1;
   }
   val &= O_ACCMODE;
-  if (val != O_RDONLY && val != O_RDWR)
-  {
+  if (val != O_RDONLY && val != O_RDWR) {
     ZE_LogMsgWarning(0, "pipe closed ?");
-    /* return 1; */
+    /*
+     * return 1; 
+     */
   }
 
-  if (read(p[chan], msg, sizeof (*msg)) != sizeof (*msg))
-  {
+  if (read(p[chan], msg, sizeof (*msg)) != sizeof (*msg)) {
     if (ze_logLevel > 20)
       ZE_LogSysWarning("read <- pipe");
     return 1;
@@ -129,20 +126,17 @@ send_message_pipe(fd, msg)
 {
   int                 val;
 
-  if ((val = fcntl(fd, F_GETFL, 0)) < 0)
-  {
+  if ((val = fcntl(fd, F_GETFL, 0)) < 0) {
     ZE_LogSysWarning("can't get pipe status");
     return FALSE;
   }
   val &= O_ACCMODE;
-  if ((val != O_WRONLY) && (val != O_RDWR))
-  {
+  if ((val != O_WRONLY) && (val != O_RDWR)) {
     ZE_LogMsgWarning(0, "pipe closed ?");
     return FALSE;
   }
 
-  if (write(fd, &msg, sizeof (msg)) != sizeof (msg))
-  {
+  if (write(fd, &msg, sizeof (msg)) != sizeof (msg)) {
     if ((errno == EPIPE) || (ze_logLevel > 20))
       ZE_LogSysWarning("write %d -> pipe", msg);
     return FALSE;
@@ -161,20 +155,17 @@ recv_message_pipe(fd, msg)
 {
   int                 val;
 
-  if ((val = fcntl(fd, F_GETFL, 0)) < 0)
-  {
+  if ((val = fcntl(fd, F_GETFL, 0)) < 0) {
     ZE_LogSysWarning("can't get pipe status");
     return FALSE;
   }
   val &= O_ACCMODE;
-  if (val != O_RDONLY && val != O_RDWR)
-  {
+  if (val != O_RDONLY && val != O_RDWR) {
     ZE_LogMsgWarning(0, "pipe closed ?");
     return FALSE;
   }
 
-  if (read(fd, msg, sizeof (*msg)) != sizeof (*msg))
-  {
+  if (read(fd, msg, sizeof (*msg)) != sizeof (*msg)) {
     if (ze_logLevel > 20)
       ZE_LogSysWarning("read <- pipe");
     return FALSE;

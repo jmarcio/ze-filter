@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -33,32 +34,29 @@
  *                                                                            *
  **************************************************************************** */
 
-# define LR_BODY_LENGTH        256
-# define LR_RAW_LENGTH         2500
+#define LR_BODY_LENGTH        256
+#define LR_RAW_LENGTH         2500
 
-typedef struct
-{
+typedef struct {
   bool                ok;
-  ZEBT_T               bt;
+  ZEBT_T              bt;
   int                 dummy;
-}
-DATA_T;
+} DATA_T;
 
 #define DATA_INIT {FALSE, JBT_INITIALIZER}
 
 static bool         lr_task(char *id,
                             char *fname, lr_cargs_T * cargs, lr_margs_T * margs,
-                            test_score_T * mscore, int task, bool learn, bool spam);
+                            test_score_T * mscore, int task, bool learn,
+                            bool spam);
 
 /* ****************************************************************************
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
 
-typedef struct
-{
-  union
-  {
+typedef struct {
+  union {
     uint32_t            utok;
     char                xtok[8];
   } tok;
@@ -86,11 +84,10 @@ lrtokcmp(void *a, void *b)
 
 static double       lrate = LRATE;
 
-typedef struct
-{
+typedef struct {
   bool                ok;
   pthread_mutex_t     mutex;
-  ZEBT_T               lrbt;
+  ZEBT_T              lrbt;
 
   char               *fname;    /* data file name */
 
@@ -102,7 +99,9 @@ typedef struct
 
   lr_callback_F       learn_callback;
 
-  /* options */
+  /*
+   * options 
+   */
   lr_opts_T           opts;
 
 } LR_T;
@@ -123,7 +122,7 @@ static LR_T         lr_data = LR_INITIALIZER;
  **************************************************************************** */
 static int
 lr_data_read(bt, fname)
-     ZEBT_T              *bt;
+     ZEBT_T             *bt;
      char               *fname;
 {
   FILE               *fin = NULL;
@@ -135,45 +134,36 @@ lr_data_read(bt, fname)
     return -1;
 
   fin = fopen(fname, "r");
-  if (fin == NULL)
-  {
+  if (fin == NULL) {
     ZE_LogSysError("fopen %s", fname);
     return -1;
   }
-  while (fgets(buf, sizeof (buf), fin) != NULL)
-  {
+  while (fgets(buf, sizeof (buf), fin) != NULL) {
     nl++;
     (void) zeStrChomp(buf);
 
-    if (inHead)
-    {
+    if (inHead) {
       char               *argv[8];
       int                 argc;
 
-      if (zeStrRegex(buf, "</head>", NULL, NULL, TRUE))
-      {
+      if (zeStrRegex(buf, "</head>", NULL, NULL, TRUE)) {
         inHead = FALSE;
         continue;
       }
       argc = zeStr2Tokens(buf, 8, argv, "=: ");
-      if (argc >= 2)
-      {
-        if (STRCASEEQUAL(argv[0], "count"))
-        {
+      if (argc >= 2) {
+        if (STRCASEEQUAL(argv[0], "count")) {
           continue;
         }
-        if (STRCASEEQUAL(argv[0], "spams"))
-        {
+        if (STRCASEEQUAL(argv[0], "spams")) {
           lr_data.ns = atoi(argv[1]);
           continue;
         }
-        if (STRCASEEQUAL(argv[0], "hams"))
-        {
+        if (STRCASEEQUAL(argv[0], "hams")) {
           lr_data.nh = atoi(argv[1]);
           continue;
         }
-        if (STRCASEEQUAL(argv[0], "usebody"))
-        {
+        if (STRCASEEQUAL(argv[0], "usebody")) {
           lr_data.opts.useBody = TRUE;
           if (STRCASEEQUAL(argv[1], "NO"))
             lr_data.opts.useBody = FALSE;
@@ -181,8 +171,7 @@ lr_data_read(bt, fname)
             lr_data.opts.useBody = FALSE;
           continue;
         }
-        if (STRCASEEQUAL(argv[0], "useheaders"))
-        {
+        if (STRCASEEQUAL(argv[0], "useheaders")) {
           lr_data.opts.useHeaders = TRUE;
           if (STRCASEEQUAL(argv[1], "NO"))
             lr_data.opts.useHeaders = FALSE;
@@ -190,8 +179,7 @@ lr_data_read(bt, fname)
             lr_data.opts.useHeaders = FALSE;
           continue;
         }
-        if (STRCASEEQUAL(argv[0], "bodylength"))
-        {
+        if (STRCASEEQUAL(argv[0], "bodylength")) {
           size_t              len;
 
           len = zeStr2size(argv[0], NULL, LR_BODY_LENGTH);
@@ -202,22 +190,18 @@ lr_data_read(bt, fname)
       }
     }
 
-    if (inData)
-    {
+    if (inData) {
       lrtok_T             tok;
 
-      if (zeStrRegex(buf, "</data>", NULL, NULL, TRUE))
-      {
+      if (zeStrRegex(buf, "</data>", NULL, NULL, TRUE)) {
         inData = FALSE;
         continue;
       }
 
       memset(&tok, 0, sizeof (tok));
       if (sscanf(buf, "%x %lg %d %d %d", &tok.tok.utok, &tok.weight,
-                 &tok.nb, &tok.nbs, &tok.nbh) == 5)
-      {
-        if (!zeBTree_Add(bt, &tok))
-        {
+                 &tok.nb, &tok.nbs, &tok.nbh) == 5) {
+        if (!zeBTree_Add(bt, &tok)) {
 
         }
         continue;
@@ -226,13 +210,11 @@ lr_data_read(bt, fname)
       continue;
     }
 
-    if (zeStrRegex(buf, "<head>", NULL, NULL, TRUE))
-    {
+    if (zeStrRegex(buf, "<head>", NULL, NULL, TRUE)) {
       inHead = TRUE;
       continue;
     }
-    if (zeStrRegex(buf, "<data>", NULL, NULL, TRUE))
-    {
+    if (zeStrRegex(buf, "<data>", NULL, NULL, TRUE)) {
       inData = TRUE;
       continue;
     }
@@ -253,15 +235,15 @@ lr_data_open(fname)
     return TRUE;
 
   MUTEX_LOCK(&lr_data.mutex);
-  if (!lr_data.ok)
-  {
+  if (!lr_data.ok) {
     char               *env = NULL;
 
     (void) zeBTree_Init(&lr_data.lrbt, sizeof (lrtok_T), lrtokcmp);
 
-    /* JOE XXX hmm ... and if fname is NULL ??? */
-    if ((lr_data.fname = strdup(fname)) == NULL)
-    {
+    /*
+     * JOE XXX hmm ... and if fname is NULL ??? 
+     */
+    if ((lr_data.fname = strdup(fname)) == NULL) {
       goto fin;
     }
 
@@ -280,26 +262,22 @@ lr_data_open(fname)
     lr_data.opts.lrate = LRATE;
     lr_data.learn_callback = NULL;
 
-    if ((env = getenv("LR_LRATE")) != NULL)
-    {
+    if ((env = getenv("LR_LRATE")) != NULL) {
       double              rate;
 
       rate = zeStr2double(env, NULL, lrate);
-      if (rate > 0.)
-      {
+      if (rate > 0.) {
         lrate = rate;
         lr_data.opts.lrate = rate;
       }
     }
 
-    if ((env = getenv("LR_USE_RAW_MSG")) != NULL)
-    {
+    if ((env = getenv("LR_USE_RAW_MSG")) != NULL) {
       if (zeStrRegex(env, "yes|true|oui", NULL, NULL, TRUE))
         lr_data.opts.useRawMsg = TRUE;
     }
 
-    if ((env = getenv("LR_RAW_LENGTH")) != NULL)
-    {
+    if ((env = getenv("LR_RAW_LENGTH")) != NULL) {
       size_t              len;
 
       len = zeStr2size(env, NULL, LR_RAW_LENGTH);
@@ -307,8 +285,7 @@ lr_data_open(fname)
         lr_data.opts.rawLength = len;
     }
 
-    if ((env = getenv("LR_BODY_LENGTH")) != NULL)
-    {
+    if ((env = getenv("LR_BODY_LENGTH")) != NULL) {
       size_t              len;
 
       len = zeStr2size(env, NULL, LR_BODY_LENGTH);
@@ -316,8 +293,7 @@ lr_data_open(fname)
         lr_data.opts.bodyLength = len;
     }
 
-    if ((env = getenv("LR_USE_BODY")) != NULL)
-    {
+    if ((env = getenv("LR_USE_BODY")) != NULL) {
       lr_data.opts.useBody = TRUE;
       if (STRCASEEQUAL(env, "NO"))
         lr_data.opts.useBody = FALSE;
@@ -325,8 +301,7 @@ lr_data_open(fname)
         lr_data.opts.useBody = FALSE;
     }
 
-    if ((env = getenv("LR_USE_HEADERS")) != NULL)
-    {
+    if ((env = getenv("LR_USE_HEADERS")) != NULL) {
       lr_data.opts.useHeaders = TRUE;
       if (STRCASEEQUAL(env, "NO"))
         lr_data.opts.useHeaders = FALSE;
@@ -353,8 +328,7 @@ lr_data_close()
     return TRUE;
 
   MUTEX_LOCK(&lr_data.mutex);
-  if (lr_data.ok)
-  {
+  if (lr_data.ok) {
     (void) zeBTree_Destroy(&lr_data.lrbt);
 
     FREE(lr_data.fname);
@@ -375,8 +349,7 @@ lr_data_show_conf()
     return TRUE;
 
   MUTEX_LOCK(&lr_data.mutex);
-  if (lr_data.ok)
-  {
+  if (lr_data.ok) {
     ZE_MessageInfo(10, "Modele (fname)                 %s", lr_data.fname);
 #if 0
 
@@ -422,11 +395,12 @@ lr_browse_dump(vtok, varg)
 {
   lrtok_T            *tok = (lrtok_T *) vtok;
   FILE               *fout = varg;
+
 #if 0
   int                 tlen = lr_data.opts.tok_len;
 #endif
-  fprintf(fout, "%08lx %lg %5d %5d %5d\n", (long unsigned int) tok->tok.utok, tok->weight,
-          tok->nb, tok->nbs, tok->nbh);
+  fprintf(fout, "%08lx %lg %5d %5d %5d\n", (long unsigned int) tok->tok.utok,
+          tok->weight, tok->nb, tok->nbs, tok->nbh);
 
   return 1;
 }
@@ -439,11 +413,10 @@ lr_data_dump(fname)
     return FALSE;
 
   MUTEX_LOCK(&lr_data.mutex);
-  if (lr_data.ok)
-  {
+  if (lr_data.ok) {
     FILE               *fout = NULL;
     int                 nb;
-    ZEBT_T              *bt = &lr_data.lrbt;
+    ZEBT_T             *bt = &lr_data.lrbt;
     time_t              now;
 
     fout = fopen(fname, "w");
@@ -556,7 +529,7 @@ static char        *mymtas[] = {
 
 static              bool
 scan_msg_part(bt, s)
-     ZEBT_T              *bt;
+     ZEBT_T             *bt;
      char               *s;
 {
   int                 i, slen, tlen = 4;
@@ -564,8 +537,7 @@ scan_msg_part(bt, s)
   slen = strlen(s);
 
   strlcat(s, "    ", 4);
-  for (i = 0; i <= slen - tlen; i++)
-  {
+  for (i = 0; i <= slen - tlen; i++) {
     lrtok_T             token, *t;
 
     uint32_t            tok;
@@ -597,6 +569,7 @@ bt_browse_classify(void *vtok, void *varg)
 {
   double             *score = (double *) varg;
   lrtok_T            *ptok = vtok;
+
 #if 0
   lrtok_T             tok;
 
@@ -629,19 +602,16 @@ bt_browse_adjust(void *vtok, void *varg)
   double             *delta = (double *) varg;
 
   tok = *((lrtok_T *) vtok);
-  if ((ptok = zeBTree_Get(&lr_data.lrbt, &tok)) == NULL)
-  {
+  if ((ptok = zeBTree_Get(&lr_data.lrbt, &tok)) == NULL) {
     tok.weight += *delta;
     tok.nb = 1;
     if (*delta > 0)
       tok.nbs++;
     else
       tok.nbh++;
-    if (!zeBTree_Add(&lr_data.lrbt, &tok))
-    {
+    if (!zeBTree_Add(&lr_data.lrbt, &tok)) {
     }
-  } else
-  {
+  } else {
     ptok->weight += *delta;
     ptok->nb++;
     if (*delta > 0)
@@ -670,6 +640,7 @@ tokens_mime_part(buf, size, id, level, type, arg, mpart)
      mime_part_T        *mpart;
 {
   DATA_T             *data = (DATA_T *) arg;
+
 #if 0
   char               *mtype = "TEXT";
 #endif
@@ -685,41 +656,33 @@ tokens_mime_part(buf, size, id, level, type, arg, mpart)
   {
     char               *env = NULL;
 
-    if ((env = getenv("LR_CLEANUP_HEADERS")) != NULL)
-    {
+    if ((env = getenv("LR_CLEANUP_HEADERS")) != NULL) {
       clHeaders = zeStrRegex(env, "yes|true", NULL, NULL, TRUE);
     }
-    if ((env = getenv("LR_CLEANUP_DATES")) != NULL)
-    {
+    if ((env = getenv("LR_CLEANUP_DATES")) != NULL) {
       clDates = zeStrRegex(env, "yes|true", NULL, NULL, TRUE);
     }
   }
 
-  if (lr_data.opts.useHeaders)
-  {
-    for (h = mpart->hdrs; h != NULL; h = h->next)
-    {
+  if (lr_data.opts.useHeaders) {
+    for (h = mpart->hdrs; h != NULL; h = h->next) {
       char              **s = NULL;
       long                pi, pf;
 
       if (h->value == NULL || strlen(h->value) == 0)
-	continue;
+        continue;
 
       snprintf(vbuf, sizeof (vbuf), "%s: %s", h->key, h->value);
-      if (clHeaders)
-      {
-        for (s = uheaders; s != NULL && *s != NULL; s++)
-        {
+      if (clHeaders) {
+        for (s = uheaders; s != NULL && *s != NULL; s++) {
           if (STRCASEEQUAL(*s, h->key))
             break;
         }
         if (*s != NULL)
           continue;
 
-        if (STRCASEEQUAL("Received", h->key))
-        {
-          for (s = mymtas; s != NULL && *s != NULL; s++)
-          {
+        if (STRCASEEQUAL("Received", h->key)) {
+          for (s = mymtas; s != NULL && *s != NULL; s++) {
 #if 1
             if (zeStrRegex(h->value, *s, NULL, NULL, TRUE))
 #else
@@ -731,10 +694,8 @@ tokens_mime_part(buf, size, id, level, type, arg, mpart)
             continue;
         }
 
-        if (STRCASEEQUAL("X-ze-filter-Enveloppe", h->key))
-        {
-          for (s = mymtas; s != NULL && *s != NULL; s++)
-          {
+        if (STRCASEEQUAL("X-ze-filter-Enveloppe", h->key)) {
+          for (s = mymtas; s != NULL && *s != NULL; s++) {
 #if 1
             if (zeStrRegex(h->value, *s, NULL, NULL, TRUE))
 #else
@@ -748,16 +709,13 @@ tokens_mime_part(buf, size, id, level, type, arg, mpart)
       }
       snprintf(vbuf, sizeof (vbuf), "%s: %s", h->key, h->value);
 
-      if (clDates)
-      {
-        while (zeStrRegex(vbuf, DATE_EXPR, &pi, &pf, TRUE))
-        {
+      if (clDates) {
+        while (zeStrRegex(vbuf, DATE_EXPR, &pi, &pf, TRUE)) {
           int                 i, lm;
           char               *p;
 
           lm = strlen(vbuf);
-          for (i = 0, p = vbuf; i < lm; i++)
-          {
+          for (i = 0, p = vbuf; i < lm; i++) {
             if (i < pi || i > pf)
               *p++ = vbuf[i];
           }
@@ -769,13 +727,11 @@ tokens_mime_part(buf, size, id, level, type, arg, mpart)
     }
   }
 
-  if (lr_data.opts.useBody)
-  {
+  if (lr_data.opts.useBody) {
     if (type != MIME_TYPE_TEXT)
       return TRUE;
 
-    if (lr_data.opts.bodyLength > 0)
-    {
+    if (lr_data.opts.bodyLength > 0) {
       char               *pb = buf;
 
       strlcpy(vbuf, pb, lr_data.opts.bodyLength);
@@ -808,8 +764,7 @@ lr_task(id, fname, cargs, margs, mscore, task, learn, spam)
   bool                result = FALSE;
   double              ptarget, delta;
 
-  if (!lr_data.ok)
-  {
+  if (!lr_data.ok) {
     static int          nbw = 0;
 
     if (nbw++ < 5)
@@ -821,30 +776,26 @@ lr_task(id, fname, cargs, margs, mscore, task, learn, spam)
   if (!zeBTree_Init(&data.bt, sizeof (lrtok_T), lrtokcmp))
     goto fin;
 
-  if (lr_data.opts.useRawMsg)
-  {
+  if (lr_data.opts.useRawMsg) {
     int                 fd = -1;
     char                buf[8192];
     size_t              nc;
 
     fd = open(fname, O_RDONLY);
-    if (fd < 0)
-    {
+    if (fd < 0) {
       ZE_LogSysError("Error opening %s", fname);
       goto fin;
     }
     memset(buf, 0, sizeof (buf));
     nc = read(fd, buf, 2500);
-    if (nc < 0)
-    {
+    if (nc < 0) {
       ZE_LogSysError("Error reading %s", fname);
       close(fd);
       goto fin;
     }
     close(fd);
     scan_msg_part(&data.bt, buf);
-  } else
-  {
+  } else {
     if (!decode_mime_file(id, fname, NULL, tokens_mime_part, &data))
       goto fin;
   }
@@ -859,14 +810,12 @@ lr_task(id, fname, cargs, margs, mscore, task, learn, spam)
     goto fin;
   prob = 1. / (1. + exp(-score));
 
-  if (mscore != NULL)
-  {
+  if (mscore != NULL) {
     mscore->actif = TRUE;
     mscore->value = prob;
     mscore->odds = score;
   }
-  if (margs != NULL)
-  {
+  if (margs != NULL) {
     margs->score.actif = TRUE;
     margs->score.value = prob;
     margs->score.odds = score;
@@ -883,8 +832,7 @@ lr_task(id, fname, cargs, margs, mscore, task, learn, spam)
     double              dp;
 
 #if 0
-    if (lr_data.learn_callback != NULL)
-    {
+    if (lr_data.learn_callback != NULL) {
       (void) lr_data.learn_callback(lr_data.nsu + lr_data.nhu, cargs, margs);
     }
 #endif
@@ -893,7 +841,7 @@ lr_task(id, fname, cargs, margs, mscore, task, learn, spam)
     dp = ptarget - prob;
     if (lr_data.opts.active_learning) {
       if ((fabs(prob - 0.5) > lr_data.opts.active_margin) && (fabs(dp) < 0.5))
-	goto fin;
+        goto fin;
     }
 
     if (margs != NULL)
@@ -903,13 +851,14 @@ lr_task(id, fname, cargs, margs, mscore, task, learn, spam)
       double              lrate;
 
       lrate = lr_data.opts.lrate;
-      if (lr_data.learn_callback != NULL)
-      {
+      if (lr_data.learn_callback != NULL) {
         lrate = lr_data.learn_callback(lr_data.nsu + lr_data.nhu, cargs, margs);
         lr_data.opts.lrate = lrate;
       }
       delta = dp * lr_data.opts.lrate;
-      /* si apprentissage, correct weights */
+      /*
+       * si apprentissage, correct weights 
+       */
       nb = zeBTree_Browse(&data.bt, bt_browse_adjust, &delta);
     }
 
@@ -918,10 +867,8 @@ lr_task(id, fname, cargs, margs, mscore, task, learn, spam)
     else
       lr_data.nh++;
 
-    if (margs != NULL)
-    {
-      if (!margs->resample)
-      {
+    if (margs != NULL) {
+      if (!margs->resample) {
         if (spam)
           lr_data.nsu++;
         else
@@ -931,8 +878,7 @@ lr_task(id, fname, cargs, margs, mscore, task, learn, spam)
       if (cargs != NULL)
         cargs->nFeatures = zeBTree_Count(&lr_data.lrbt);
     }
-    if (nb <= 0)
-    {
+    if (nb <= 0) {
       result = FALSE;
       goto fin;
     }
@@ -969,7 +915,8 @@ lr_classify(id, fname, cargs, margs, mscore)
      lr_margs_T         *margs;
      test_score_T       *mscore;
 {
-  return lr_task(id, fname, cargs, margs, mscore, LR_TASK_CLASSIFY, FALSE, FALSE);
+  return lr_task(id, fname, cargs, margs, mscore, LR_TASK_CLASSIFY, FALSE,
+                 FALSE);
 }
 
 /* ****************************************************************************
@@ -1042,28 +989,29 @@ void
 lr_print_options(opts)
      lr_opts_T          *opts;
 {
-  lr_opts_T *popts = opts;
+  lr_opts_T          *popts = opts;
 
   popts = (opts != NULL ? opts : &lr_data.opts);
 
   printf("# lrate                 %7.3f\n"
-	 "# resample              %d\n"
-	 "# useRawMsg             %d\n"
-	 "# rawLength             %ld\n"
-	 "# bodyLength            %ld\n"
-	 "# useBody               %d\n"
-	 "# useHeaders            %d\n"
-	 "# cleanUpHeaders        %d\n"
-	 "# cleanUpDates          %d\n"
-	 "# tok_type              %d\n"
-	 "# tok_len               %d\n"
-	 "# active_learning       %d\n"
+         "# resample              %d\n"
+         "# useRawMsg             %d\n"
+         "# rawLength             %ld\n"
+         "# bodyLength            %ld\n"
+         "# useBody               %d\n"
+         "# useHeaders            %d\n"
+         "# cleanUpHeaders        %d\n"
+         "# cleanUpDates          %d\n"
+         "# tok_type              %d\n"
+         "# tok_len               %d\n"
+         "# active_learning       %d\n"
          "# active_margin         %.3f\n"
-	 "#\n",
-	 popts->lrate, popts->resample, popts->useRawMsg, (long) popts->rawLength,
-	 (long) popts->bodyLength, popts->useBody, popts->useHeaders,
-	 popts->cleanUpHeaders, popts->cleanUpDates, popts->tok_type,
-	 popts->tok_len, popts->active_learning, popts->active_margin);
+         "#\n",
+         popts->lrate, popts->resample, popts->useRawMsg,
+         (long) popts->rawLength, (long) popts->bodyLength, popts->useBody,
+         popts->useHeaders, popts->cleanUpHeaders, popts->cleanUpDates,
+         popts->tok_type, popts->tok_len, popts->active_learning,
+         popts->active_margin);
 }
 
 /* ****************************************************************************

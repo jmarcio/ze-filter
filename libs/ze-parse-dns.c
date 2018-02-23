@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -26,5 +27,3 @@ dummy_parse_dns()
 {
   return 0;
 }
-
-

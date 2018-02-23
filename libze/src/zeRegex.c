@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -25,6 +26,7 @@
 #include <libze.h>
 
 #include <zeRegex.h>
+
 /* ****************************************************************************
  *                                                                            *
  *                                                                            *
@@ -52,7 +54,7 @@ static bool         use_pcre = FALSE;
  **************************************************************************** */
 bool
 zeRegexComp(re, expr, flags)
-     zeRegex_T           *re;
+     zeRegex_T          *re;
      char               *expr;
      int                 flags;
 {
@@ -65,25 +67,23 @@ zeRegexComp(re, expr, flags)
   use_pcre = FALSE;
 #endif             /* USE_PCRE */
 
-  ZE_MessageInfo(20, "Using PCRE : %s", use_pcre ? "YES" : "NO"); 
+  ZE_MessageInfo(20, "Using PCRE : %s", use_pcre ? "YES" : "NO");
 
   if (re->signature == SIGNATURE)
     zeRegexFree(re);
 
 #if USE_PCRE
-  if (use_pcre)
-  {
+  if (use_pcre) {
 
-    if (re->signature != SIGNATURE)
-    {
+    if (re->signature != SIGNATURE) {
       const char         *errptr = NULL;
       int                 erroffset = 0;
 
-      re->pcre_rebase = pcre_compile(expr, J_PCRE_FLAGS, &errptr, &erroffset, NULL);
+      re->pcre_rebase =
+        pcre_compile(expr, J_PCRE_FLAGS, &errptr, &erroffset, NULL);
       if (re->pcre_rebase == NULL)
         ZE_LogMsgError(0, "pcre_compile error : %s", errptr);
-      if (re->pcre_rebase != NULL)
-      {
+      if (re->pcre_rebase != NULL) {
         re->pcre_rextra = pcre_study(re->pcre_rebase, 0, &errptr);
         if (re->pcre_rextra == NULL)
           ZE_LogMsgInfo(12, "pcre_study error : %s", errptr);
@@ -96,11 +96,10 @@ zeRegexComp(re, expr, flags)
     re->result = regcomp(&re->re, expr, flags);
   }
 
-  if (re->result == 0)
-  {
+  if (re->result == 0) {
     /*
-    ** See this latter if shall save expression
-    */
+     ** See this latter if shall save expression
+     */
 #if 1
     re->expr = strdup(expr);
 #endif
@@ -117,7 +116,7 @@ zeRegexComp(re, expr, flags)
 
 bool
 zeRegexExec(re, s, pi, pf, flags)
-     zeRegex_T           *re;
+     zeRegex_T          *re;
      char               *s;
      long               *pi;
      long               *pf;
@@ -130,15 +129,13 @@ zeRegexExec(re, s, pi, pf, flags)
 
   re->result = -1;
 #if USE_PCRE
-  if (use_pcre)
-  {
+  if (use_pcre) {
     int                 ovector[DIM_VECTOR];
     int                 rc;
-    
+
     rc = pcre_exec(re->pcre_rebase, re->pcre_rextra, s, strlen(s),
                    0, 0, ovector, DIM_VECTOR);
-    if (rc >= 0)
-    {
+    if (rc >= 0) {
       re->result = 0;
       if (pi != NULL)
         *pi = ovector[0];
@@ -149,8 +146,7 @@ zeRegexExec(re, s, pi, pf, flags)
 #endif
   {
     re->result = regexec(&re->re, s, 1, &pm, flags);
-    if (re->result == 0)
-    {
+    if (re->result == 0) {
       if (pi != NULL)
         *pi = pm.rm_so;
       if (pf != NULL)
@@ -167,14 +163,13 @@ zeRegexExec(re, s, pi, pf, flags)
  **************************************************************************** */
 void
 zeRegexFree(re)
-     zeRegex_T           *re;
+     zeRegex_T          *re;
 {
   if ((re == NULL) || (re->signature != SIGNATURE))
     return;
 
 #if USE_PCRE
-  if (use_pcre)
-  {
+  if (use_pcre) {
     if (re->pcre_rebase != NULL)
       pcre_free(re->pcre_rebase);
     if (re->pcre_rextra != NULL)
@@ -204,15 +199,14 @@ zeRegexCount(s, expr)
   int                 nb = 0;
   long                pf = 0;
   char               *p;
-  zeRegex_T            re;
+  zeRegex_T           re;
 
   if ((s == NULL) || (expr == NULL))
     return FALSE;
 
   memset(&re, 0, sizeof (re));
 
-  if (zeRegexComp(&re, expr, JREGCOMP_FLAGS))
-  {
+  if (zeRegexComp(&re, expr, JREGCOMP_FLAGS)) {
     for (p = s; zeRegexExec(&re, p, NULL, &pf, 0); p += pf)
       nb++;
     zeRegexFree(&re);
@@ -232,7 +226,7 @@ zeRegexLookup(s, expr, pi, pf)
      long               *pi;
      long               *pf;
 {
-  zeRegex_T            re;
+  zeRegex_T           re;
   bool                found = FALSE;
   long                xi, xf;
 
@@ -242,12 +236,10 @@ zeRegexLookup(s, expr, pi, pf)
   xi = xf = 0;
   memset(&re, 0, sizeof (re));
 
-  if (zeRegexComp(&re, expr, JREGCOMP_FLAGS))
-  {
+  if (zeRegexComp(&re, expr, JREGCOMP_FLAGS)) {
     found = zeRegexExec(&re, s, &xi, &xf, JREGEXEC_FLAGS);
     zeRegexFree(&re);
-    if (found)
-    {
+    if (found) {
       if (pi != NULL)
         *pi = xi;
       if (pf != NULL)
@@ -263,7 +255,7 @@ zeRegexLookup(s, expr, pi, pf)
  **************************************************************************** */
 char               *
 zeRegexError(re)
-     zeRegex_T           *re;
+     zeRegex_T          *re;
 {
 
   return NULL;

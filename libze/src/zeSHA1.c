@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")
  * Copyright (C) 2000, 2001, 2003  Internet Software Consortium.
@@ -18,6 +19,7 @@
 /* $Id: sha1.c,v 1.10.2.2.2.3 2004/03/06 08:14:35 marka Exp $ */
 
 /*	$NetBSD: sha1.c,v 1.5 2000/01/22 22:19:14 mycroft Exp $	*/
+
 /*	$OpenBSD: sha1.c,v 1.9 1997/07/23 21:12:32 kstailey Exp $	*/
 
 /*
@@ -55,11 +57,11 @@
  * I got the idea of expanding during the round function from SSLeay
  */
 #if !defined(WORDS_BIGENDIAN)
-# define blk0(i) \
+#define blk0(i) \
 	(block->l[i] = (rol(block->l[i], 24) & 0xFF00FF00) \
 	 | (rol(block->l[i], 8) & 0x00FF00FF))
 #else
-# define blk0(i) block->l[i]
+#define blk0(i) block->l[i]
 #endif
 #define blk(i) \
 	(block->l[i & 15] = rol(block->l[(i + 13) & 15] \
@@ -86,8 +88,7 @@
 	z += (w ^ x ^ y) + blk(i) + 0xCA62C1D6 + rol(v, 5); \
 	w = rol(w, 30);
 
-typedef union
-{
+typedef union {
   unsigned char       c[64];
   unsigned int        l[16];
 } CHAR64LONG16;
@@ -229,7 +230,9 @@ transform(uint32_t state[5], const unsigned char buffer[64])
   block = &workspace;
   (void) memcpy(block, buffer, 64);
 
-  /* Copy context->state[] to working vars */
+  /*
+   * Copy context->state[] to working vars 
+   */
   a = state[0];
   b = state[1];
   c = state[2];
@@ -242,7 +245,9 @@ transform(uint32_t state[5], const unsigned char buffer[64])
   do_R3(&a, &b, &c, &d, &e, block);
   do_R4(&a, &b, &c, &d, &e, block);
 #else
-  /* 4 rounds of 20 operations each. Loop unrolled. */
+  /*
+   * 4 rounds of 20 operations each. Loop unrolled. 
+   */
   R0(a, b, c, d, e, 0);
   R0(e, a, b, c, d, 1);
   R0(d, e, a, b, c, 2);
@@ -325,14 +330,18 @@ transform(uint32_t state[5], const unsigned char buffer[64])
   R4(b, c, d, e, a, 79);
 #endif
 
-  /* Add the working vars back into context.state[] */
+  /*
+   * Add the working vars back into context.state[] 
+   */
   state[0] += a;
   state[1] += b;
   state[2] += c;
   state[3] += d;
   state[4] += e;
 
-  /* Wipe variables */
+  /*
+   * Wipe variables 
+   */
   a = b = c = d = e = 0;
 }
 
@@ -345,7 +354,9 @@ zeSHA1_Init(ZESHA1_T * context)
 {
   ASSERT(context != NULL);
 
-  /* SHA1 initialization constants */
+  /*
+   * SHA1 initialization constants 
+   */
   context->state[0] = 0x67452301;
   context->state[1] = 0xEFCDAB89;
   context->state[2] = 0x98BADCFE;
@@ -365,8 +376,7 @@ zeSHA1_Invalidate(ZESHA1_T * context)
  * Run your data through this.
  */
 void
-zeSHA1_Update(ZESHA1_T * context, const unsigned char *data,
-                unsigned int len)
+zeSHA1_Update(ZESHA1_T * context, const unsigned char *data, unsigned int len)
 {
   unsigned int        i, j;
 
@@ -377,15 +387,13 @@ zeSHA1_Update(ZESHA1_T * context, const unsigned char *data,
   if ((context->count[0] += len << 3) < j)
     context->count[1] += (len >> 29) + 1;
   j = (j >> 3) & 63;
-  if ((j + len) > 63)
-  {
+  if ((j + len) > 63) {
     (void) memcpy(&context->buffer[j], data, (i = 64 - j));
     transform(context->state, context->buffer);
     for (; i + 63 < len; i += 64)
       transform(context->state, &data[i]);
     j = 0;
-  } else
-  {
+  } else {
     i = 0;
   }
 
@@ -409,9 +417,10 @@ zeSHA1_Final(ZESHA1_T * context, unsigned char *digest)
   ASSERT(digest != 0);
   ASSERT(context != 0);
 
-  for (i = 0; i < 8; i++)
-  {
-    /* Endian independent */
+  for (i = 0; i < 8; i++) {
+    /*
+     * Endian independent 
+     */
     finalcount[i] = (unsigned char)
       ((context->count[(i >= 4 ? 0 : 1)] >> ((3 - (i & 3)) * 8)) & 255);
   }
@@ -419,11 +428,12 @@ zeSHA1_Final(ZESHA1_T * context, unsigned char *digest)
   zeSHA1_Update(context, &final_200, 1);
   while ((context->count[0] & 504) != 448)
     zeSHA1_Update(context, &final_0, 1);
-  /* The next Update should cause a transform() */
+  /*
+   * The next Update should cause a transform() 
+   */
   zeSHA1_Update(context, finalcount, 8);
 
-  if (digest)
-  {
+  if (digest) {
     for (i = 0; i < 20; i++)
       digest[i] = (unsigned char)
         ((context->state[i >> 2] >> ((3 - (i & 3)) * 8)) & 255);
@@ -431,4 +441,3 @@ zeSHA1_Final(ZESHA1_T * context, unsigned char *digest)
 
   memset(context, 0, sizeof (ZESHA1_T));
 }
-
