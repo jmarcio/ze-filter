@@ -13,7 +13,7 @@ VERSION=`basename $HERE`
 VERSION=`echo $VERSION | sed s/zefilter-// | sed s/ze-filter-//`
 echo $VERSION > aux/release
 
-aux/set-release
+dev-tools/set-release
 
 set -x
 

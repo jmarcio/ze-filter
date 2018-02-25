@@ -413,7 +413,7 @@ cli_lr_classify(fileIn, dataFile)
       lr_classify(id, fname, &cargs, &margs, &mscore);
 
       ZE_MessageInfo(10,
-                     "%s %s op=%s judge=%-4s class=%-4s score=%.4f prob=%.4f",
+                     "%s %s op=%s truth=%-4s class=%-4s score=%.4f prob=%.4f",
                      stime, fname, "class", spam ? "spam" : "ham",
                      mscore.odds > 0.0 ? "spam" : "ham", mscore.odds,
                      mscore.value);
@@ -535,7 +535,7 @@ cli_lr_learn(fileIn, dataFile, cliopt, lropts)
       ok = TRUE;
 
       ZE_MessageInfo(10,
-                     "%s classification : %8.4f %.8f judge=%-4s class=%-4s"
+                     "%s classification : %8.4f %.8f truth=%-4s class=%-4s"
                      " learn=%s query=%s features=%d"
                      " score=%g prob=%.6f",
                      sfile,
@@ -842,7 +842,7 @@ cli_lr_simul(fileIn, dataFile, cliopt, lropts)
         cli_simul_handle(&cargs, &margs, &pile, &pevt);
 
         ZE_MessageInfo(10,
-                       "%ld %s op=%s judge=%-4s class=%-4s"
+                       "%ld %s op=%s truth=%-4s class=%-4s"
                        " learn=%-5s query=%-5s miss=%-5s noisy=%-5s features=%d"
                        " score=%g prob=%.6f",
                        pevt.date,
@@ -997,7 +997,7 @@ cli_lr_simul(fileIn, dataFile, cliopt, lropts)
          */
 
         ZE_MessageInfo(10,
-                       "%ld %s op=%s judge=%-4s class=%-4s"
+                       "%ld %s op=%s truth=%-4s class=%-4s"
                        " learn=%-5s query=%-5s miss=%-5s noisy=%-5s features=%d"
                        " score=%g prob=%.6f",
                        fevt.date,

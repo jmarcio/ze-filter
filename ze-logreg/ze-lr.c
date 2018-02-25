@@ -342,7 +342,7 @@ cli_lr_classify(fileIn, dataFile)
       margs.class = LR_CLASS_UNKNOWN;
       lr_classify(id, fname, &cargs, &margs, &mscore);
 
-      ZE_MessageInfo(10, "%s judge=%-4s class=%-4s score=%.4f prob=%.4f",
+      ZE_MessageInfo(10, "%s truth=%-4s class=%-4s score=%.4f prob=%.4f",
                      fname,
                      spam ? "spam" : "ham",
                      mscore.odds > 0.0 ? "spam" : "ham",
@@ -470,7 +470,7 @@ cli_lr_learn(fileIn, dataFile, cliopt)
       ok = TRUE;
 
       ZE_MessageInfo(10,
-                     "%s classification : %8.4f %.8f judge=%-4s class=%-4s"
+                     "%s classification : %8.4f %.8f truth=%-4s class=%-4s"
                      " learn=%s query=%s features=%d"
                      " score=%g prob=%.6f",
                      sfile,

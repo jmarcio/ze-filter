@@ -321,10 +321,6 @@ zeBTree_Add(jdbh, data)
   if (jdbh->signature != SIGNATURE)
     return FALSE;
 
-#if BUGGY_AVLTREE
-  return TRUE;
-#endif
-
   if (jdbh->chkCount && (jdbh->count >= MAX_BTNODES)) {
     if (jdbh->nbErr < MAX_BTERR)
       ZE_LogMsgError(0, "Too much nodes in btree : %ld", (long) jdbh->count);

@@ -19,5 +19,4 @@ else
   echo "ze-filter-$VERSION-$BRANCH-$DATE" > aux/release
 fi
 
-# echo "ze-filter-$BRANCH-$DATE" > aux/release
 
