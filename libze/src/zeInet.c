@@ -25,14 +25,14 @@
 #include <ze-sys.h>
 
 #include "libze.h"
-#include "ze-inet.h"
+#include "zeInet.h"
 
 /* ****************************************************************************
  *                                                                            * 
  *                                                                            *
  **************************************************************************** */
 char               *
-jinet_ntop(family, addr, cp, size)
+zeInet_ntop(family, addr, cp, size)
      int                 family;
      void               *addr;
      char               *cp;
@@ -72,7 +72,7 @@ jinet_ntop(family, addr, cp, size)
  *                                                                            *
  **************************************************************************** */
 int
-jinet_pton(family, cp, addr)
+zeInet_pton(family, cp, addr)
      sa_family_t         family;
      char               *cp;
      void               *addr;
@@ -103,7 +103,7 @@ jinet_pton(family, cp, addr)
  *                                                                            *
  **************************************************************************** */
 bool
-jsock_ntop(sa, salen, buf, size)
+zeSock_ntop(sa, salen, buf, size)
      struct sockaddr    *sa;
      socklen_t           salen;
      char               *buf;
@@ -114,7 +114,7 @@ jsock_ntop(sa, salen, buf, size)
       {
         struct sockaddr_in *sin = (struct sockaddr_in *) sa;
 
-        if (jinet_ntop(sa->sa_family, &sin->sin_addr.s_addr, buf, size) == NULL)
+        if (zeInet_ntop(sa->sa_family, &sin->sin_addr.s_addr, buf, size) == NULL)
           return FALSE;
         return TRUE;
       }
@@ -123,7 +123,7 @@ jsock_ntop(sa, salen, buf, size)
       {
         struct sockaddr_in6 *sin6 = (struct sockaddr_in6 *) sa;
 
-        if (jinet_ntop(sa->sa_family, &sin6->sin6_addr, buf, size) == NULL)
+        if (zeInet_ntop(sa->sa_family, &sin6->sin6_addr, buf, size) == NULL)
           return FALSE;
         return TRUE;
       }
@@ -137,7 +137,7 @@ jsock_ntop(sa, salen, buf, size)
  *                                                                            *
  **************************************************************************** */
 int
-ip_strcmp(a, b)
+zeIP_StrCmp(a, b)
      char               *a;
      char               *b;
 {
@@ -156,8 +156,8 @@ ip_strcmp(a, b)
     /*
      * XXX a voir 
      */
-    if (jinet_pton(AF_INET, b, &ab.s_addr)
-        && jinet_pton(AF_INET, a, &aa.s_addr)) {
+    if (zeInet_pton(AF_INET, b, &ab.s_addr)
+        && zeInet_pton(AF_INET, a, &aa.s_addr)) {
       if (htonl(aa.s_addr) > htonl(ab.s_addr))
         return 1;
       if (htonl(aa.s_addr) < htonl(ab.s_addr))
@@ -176,7 +176,7 @@ ip_strcmp(a, b)
  *                                                                            *
  **************************************************************************** */
 bool
-get_hostname(host, size)
+zeGet_HostName(host, size)
      char               *host;
      size_t              size;
 {
@@ -311,7 +311,7 @@ fin:
  *                                                                            *
  **************************************************************************** */
 bool
-get_hostbyaddr(ip, name, len)
+zeGet_HostByAddr(ip, name, len)
      char               *ip;
      char               *name;
      int                 len;
@@ -324,7 +324,7 @@ get_hostbyaddr(ip, name, len)
  *                                                                            *
  **************************************************************************** */
 bool
-get_hostbyname(name, ip, len)
+zeGet_HostByName(name, ip, len)
      char               *name;
      char               *ip;
      int                 len;
@@ -337,7 +337,7 @@ get_hostbyname(name, ip, len)
  *                                                                            *
  **************************************************************************** */
 char               *
-inet_n2p(family, addr, cp, size)
+zeInet_n2p(family, addr, cp, size)
      int                 family;
      void               *addr;
      char               *cp;
@@ -377,7 +377,7 @@ inet_n2p(family, addr, cp, size)
  *                                                                            *
  **************************************************************************** */
 int
-inet_p2n(family, cp, addr)
+zeInet_p2n(family, cp, addr)
      sa_family_t         family;
      char               *cp;
      void               *addr;
@@ -408,7 +408,7 @@ inet_p2n(family, cp, addr)
  *                                                                            *
  **************************************************************************** */
 bool
-get_hostbysock(sock, slen, addr, alen, name, nlen)
+zeGet_HostBySock(sock, slen, addr, alen, name, nlen)
      struct sockaddr    *sock;
      socklen_t           slen;
      char               *addr;
@@ -463,7 +463,7 @@ fin:
  *                                                                            *
  **************************************************************************** */
 int
-Ip_strcmp(a, b)
+zeIP2_StrCmp(a, b)
      char               *a;
      char               *b;
 {
@@ -482,7 +482,7 @@ Ip_strcmp(a, b)
     /*
      * XXX a voir 
      */
-    if (inet_p2n(AF_INET, b, &ab.s_addr) && inet_p2n(AF_INET, a, &aa.s_addr)) {
+    if (zeInet_p2n(AF_INET, b, &ab.s_addr) && zeInet_p2n(AF_INET, a, &aa.s_addr)) {
       if (htonl(aa.s_addr) > htonl(ab.s_addr))
         return 1;
       if (htonl(aa.s_addr) < htonl(ab.s_addr))
@@ -511,7 +511,7 @@ Ip_strcmp(a, b)
 #endif
 
 int
-jfd_ready(sd, fdmode, to)
+zeFd_Ready(sd, fdmode, to)
      int                 sd;
      bool                fdmode;
      long                to;
@@ -606,7 +606,7 @@ jfd_ready(sd, fdmode, to)
 #define MAX_EINTR_ERRORS   24
 
 bool
-sd_printf(int sd, char *format, ...)
+zeSD_Printf(int sd, char *format, ...)
 {
   va_list             arg;
   char                str[1024];
@@ -648,7 +648,7 @@ sd_printf(int sd, char *format, ...)
  *                                                                            *
  **************************************************************************** */
 int
-sd_readln(fd, buf, size)
+zeSD_ReadLn(fd, buf, size)
      int                 fd;
      char               *buf;
      size_t              size;

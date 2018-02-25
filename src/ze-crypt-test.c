@@ -55,7 +55,7 @@ main(argc, argv)
   for (i = 0; i < 1000000 && tok[i] != NULL; i++) {
     char                sout[256];
 
-    jmc_str2md5(sout, (unsigned char *) tok[i], sizeof (sout));
+    zeHash_Str2MD5(sout, (unsigned char *) tok[i], sizeof (sout));
 #if 0
     printf("MD5  %s\n", sout);
 #endif
@@ -67,7 +67,7 @@ main(argc, argv)
   for (i = 0; i < 1000000 && tok[i] != NULL; i++) {
     char                sout[256];
 
-    jmc_str2sha1(sout, (unsigned char *) tok[i], sizeof (sout));
+    zeHash_Str2SHA1(sout, (unsigned char *) tok[i], sizeof (sout));
 #if 0
     printf("SHA1 %s\n", sout);
 #endif
@@ -80,15 +80,15 @@ main(argc, argv)
     char               *s;
 
     s = "dieochetiz_'";
-    jmc_str2md5(sout, (unsigned char *) s, sizeof (sout));
+    zeHash_Str2MD5(sout, (unsigned char *) s, sizeof (sout));
     printf("* MD5  %-40s %s\n", s, sout);
-    jmc_str2sha1(sout, (unsigned char *) s, sizeof (sout));
+    zeHash_Str2SHA1(sout, (unsigned char *) s, sizeof (sout));
     printf("* SHA1 %-40s %s\n", s, sout);
 
     s = "dkeiu ___-_dffgfskjoieud877546766";
-    jmc_str2md5(sout, (unsigned char *) s, sizeof (sout));
+    zeHash_Str2MD5(sout, (unsigned char *) s, sizeof (sout));
     printf("* MD5  %-40s %s\n", s, sout);
-    jmc_str2sha1(sout, (unsigned char *) s, sizeof (sout));
+    zeHash_Str2SHA1(sout, (unsigned char *) s, sizeof (sout));
     printf("* SHA1 %-40s %s\n", s, sout);
   }
 

@@ -29,9 +29,9 @@
 * @{
 */
 
-extern bool         lr_filter_ok;
+extern bool         zeLR_FilterOK;
 
-bool                lr_data_load(bool background);
+bool                zeLR_LoadData(bool background);
 
 /** @} */
 

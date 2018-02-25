@@ -30,29 +30,26 @@
 */
 
 
-char           *jinet_ntop (int, void *, char *, size_t);
-int             jinet_pton (int, char *, void *);
+char           *zeInet_ntop (int, void *, char *, size_t);
+int             zeInet_pton (int, char *, void *);
 
-bool            jsock_ntop(struct sockaddr *, socklen_t , char *, size_t);
+bool            zeSock_ntop(struct sockaddr *, socklen_t , char *, size_t);
 
-int             ip_strcmp (char *, char *);
+int             zeIP_StrCmp (char *, char *);
 
-bool            get_hostname(char *, size_t);
+bool            zeGet_HostName(char *, size_t);
 
-bool            get_hostbyaddr (char *ip, char *name, int len);
-bool            get_hostbyname (char *name, char *ip, int len);
+bool            zeGet_HostByAddr (char *ip, char *name, int len);
+bool            zeGet_HostByName (char *name, char *ip, int len);
 
-char           *inet_n2p (int, void *, char *, size_t);
-int             inet_p2n (int, char *, void *);
+char           *zeInet_n2p (int, void *, char *, size_t);
+int             zeInet_p2n (int, char *, void *);
 
-bool            get_hostbysock(struct sockaddr *sock, socklen_t slen, 
+bool            zeGet_HostBySock(struct sockaddr *sock, socklen_t slen, 
 			       char *addr, size_t alen,
 			       char *name, size_t nlen);
 
-int             Ip_strcmp (char *, char *);
-
-
-
+int             zeIP2_StrCmp (char *, char *);
 
 #define   ZE_SOCK_READ        1
 #define   ZE_SOCK_WRITE       0
@@ -61,10 +58,10 @@ int             Ip_strcmp (char *, char *);
 #define   ZE_SOCK_READY       0
 #define   ZE_SOCK_TIMEOUT     1
 
-int             jfd_ready (int, bool, long);
+int             zeFd_Ready (int, bool, long);
 
-bool            sd_printf(int sd, char *format, ...);
-int             sd_readln(int fd, char *buf, size_t size);
+bool            zeSD_Printf(int sd, char *format, ...);
+int             zeSD_ReadLn(int fd, char *buf, size_t size);
 
 /** @} */
 

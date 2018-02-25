@@ -217,7 +217,7 @@ list_tokens(node, arg)
     case HASH_MD5:
     case HASH_SHA1:
       memset(buf, 0, sizeof (buf));
-      (void) str2hash2hex(crypt_tok, buf, t->token, sizeof (buf));
+      (void) zeHash_Str2Hash2Hex(crypt_tok, buf, t->token, sizeof (buf));
       s = buf;
       break;
     default:

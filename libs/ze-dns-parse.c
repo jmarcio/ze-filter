@@ -130,7 +130,7 @@ parse_a_answer(r, a)
 
     a->host[a->count].name = strdup(a->domain);
 
-    if (!jinet_ntop(AF_INET, rr->rr_u.rr_a, buf, sizeof (buf)))
+    if (!zeInet_ntop(AF_INET, rr->rr_u.rr_a, buf, sizeof (buf)))
       memset(buf, 0, sizeof (buf));
 
     a->host[a->count].ip = strdup(buf);
@@ -201,7 +201,7 @@ parse_aaaa_answer(r, a)
 
     a->host[a->count].name = strdup(a->domain);
 
-    if (!jinet_ntop(AF_INET6, rr->rr_u.rr_a, buf, sizeof (buf)))
+    if (!zeInet_ntop(AF_INET6, rr->rr_u.rr_a, buf, sizeof (buf)))
       memset(buf, 0, sizeof (buf));
 
     a->host[a->count].ip = strdup(buf);
@@ -300,7 +300,7 @@ parse_mx_answer(r, mx)
           mx->count++;
         }
 
-        if (!jinet_ntop(AF_INET, ra->rr_u.rr_a, buf, sizeof (buf)))
+        if (!zeInet_ntop(AF_INET, ra->rr_u.rr_a, buf, sizeof (buf)))
           memset(buf, 0, sizeof (buf));
 
         mx->host[mx->count].ip = strdup(buf);
@@ -412,7 +412,7 @@ print_dns_reply(r, level)
           {
             char                buf[32];
 
-            if (!jinet_ntop(AF_INET, rr->rr_u.rr_a, buf, sizeof (buf)))
+            if (!zeInet_ntop(AF_INET, rr->rr_u.rr_a, buf, sizeof (buf)))
               memset(buf, 0, sizeof (buf));
             printf("%s* %-3s %-16s %s\n", prefix, stype, buf, rr->rr_domain);
           }

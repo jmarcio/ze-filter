@@ -269,8 +269,8 @@ static int
 grey_server_disconnect()
 {
   if (gChan.sd >= 0) {
-    if (jfd_ready(gChan.sd, ZE_SOCK_WRITE, 0))
-      (void) sd_printf(gChan.sd, "QUIT\r\n");
+    if (zeFd_Ready(gChan.sd, ZE_SOCK_WRITE, 0))
+      (void) zeSD_Printf(gChan.sd, "QUIT\r\n");
 #if 0
     sleep(1);
 #endif
@@ -457,7 +457,7 @@ grey_channel_check()
     gChan.sd = grey_server_connect();
 
     if (gChan.sd >= 0) {
-      while (jfd_ready(gChan.sd, ZE_SOCK_READ, to) == ZE_SOCK_READY) {
+      while (zeFd_Ready(gChan.sd, ZE_SOCK_READ, to) == ZE_SOCK_READY) {
         size_t              sz;
         char                buf[256];
 
@@ -546,7 +546,7 @@ remote_grey_check(ip, from, to, hostname)
   }
 #endif
 
-  if (!sd_printf(gChan.sd, "GREYCHECK %s %s %s %s\r\n", ip, STRNULL(from, "-"),
+  if (!zeSD_Printf(gChan.sd, "GREYCHECK %s %s %s %s\r\n", ip, STRNULL(from, "-"),
                  STRNULL(to, "-"), STRNULL(hostname, "-"))) {
     grey_server_disconnect();
     goto fin;
@@ -574,7 +574,7 @@ remote_grey_check(ip, from, to, hostname)
       /*
        * check if socket is ready 
        */
-      rfd = jfd_ready(gChan.sd, ZE_SOCK_READ, dt);
+      rfd = zeFd_Ready(gChan.sd, ZE_SOCK_READ, dt);
       if (rfd == ZE_SOCK_TIMEOUT)
         continue;
 
@@ -754,7 +754,7 @@ remote_grey_validate(ip, from, to, hostname)
   }
 #endif
 
-  if (!sd_printf(gChan.sd, "GREYVALID %s %s %s %s\r\n", ip, STRNULL(from, "-"),
+  if (!zeSD_Printf(gChan.sd, "GREYVALID %s %s %s %s\r\n", ip, STRNULL(from, "-"),
                  STRNULL(to, "-"), STRNULL(hostname, "-"))) {
     grey_server_disconnect();
     goto fin;
@@ -782,7 +782,7 @@ remote_grey_validate(ip, from, to, hostname)
       /*
        * check if socket is ready 
        */
-      rfd = jfd_ready(gChan.sd, ZE_SOCK_READ, dt);
+      rfd = zeFd_Ready(gChan.sd, ZE_SOCK_READ, dt);
       if (rfd == ZE_SOCK_TIMEOUT)
         continue;
 
@@ -948,7 +948,7 @@ grey_socket_flush_read()
   /*
    * empty input buffer before asking something 
    */
-  while (jfd_ready(gChan.sd, ZE_SOCK_READ, 1) == ZE_SOCK_READY) {
+  while (zeFd_Ready(gChan.sd, ZE_SOCK_READ, 1) == ZE_SOCK_READY) {
     size_t              n;
 
     n = recvfrom(gChan.sd, buf, sizeof (buf), 0, NULL, NULL);

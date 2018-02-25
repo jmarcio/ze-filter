@@ -564,7 +564,7 @@ zeFilter()
   db_open_blacklist();
 #endif
   memset(my_hostname, 0, sizeof (my_hostname));
-  if (!get_hostname(my_hostname, sizeof (my_hostname)))
+  if (!zeGet_HostName(my_hostname, sizeof (my_hostname)))
     ZE_LogMsgError(0, "Error getting host name");
   else
     ZE_MessageInfo(9, "Running on %s (nodename)", my_hostname);
@@ -643,7 +643,7 @@ zeFilter()
 
     enable = TRUE;
     if (enable)
-      (void) lr_data_load(TRUE);
+      (void) zeLR_LoadData(TRUE);
   }
 
   (void) configure_msg_eval_function(NULL);

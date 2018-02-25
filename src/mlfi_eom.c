@@ -252,7 +252,7 @@ mlfi_eom(ctx)
     char               *mac_qid = NULL;
 
     memset(host, 0, sizeof (host));
-    if (!get_hostname(host, sizeof (host)))
+    if (!zeGet_HostName(host, sizeof (host)))
       snprintf(host, sizeof (host), "localhost");
     /*
      * add a header to the message announcing our presence 
@@ -1036,7 +1036,7 @@ eom_check_content(ctx, done)
     }
   }
 
-  if (lr_filter_ok && cf_get_int(CF_BAYESIAN_FILTER) == OPT_YES) {
+  if (zeLR_FilterOK && cf_get_int(CF_BAYESIAN_FILTER) == OPT_YES) {
     bool                check_it = TRUE;
     size_t              fsize;
     size_t              fsize_max = 300 KBYTES;

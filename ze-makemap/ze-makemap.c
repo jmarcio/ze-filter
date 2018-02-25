@@ -214,7 +214,7 @@ main(argc, argv)
   nb_t = nb_ok = nb_ko = 0;
 
   if (dbtext) {
-    zm_RdTextFile(NULL, dbattrnb, dbreverse, "", NULL);
+    zeRdTextFile(NULL, dbattrnb, dbreverse, "", NULL);
     exit(0);
   }
 
@@ -329,7 +329,7 @@ main(argc, argv)
       if ((db_updt_mode & MDB_ERASE) != 0)
         (void) zeDb_Empty(&zdbh);
 
-      (void) zm_RdTextFile(NULL, dbattrnb, dbreverse, "", add_db_rec);
+      (void) zeRdTextFile(NULL, dbattrnb, dbreverse, "", add_db_rec);
 
       zeDb_Close(&zdbh);
     }

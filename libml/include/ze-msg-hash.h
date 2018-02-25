@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -36,17 +37,21 @@
 #define    HASH_UNDEF     -1
 
 
-bool                jmc_str2md5(char *sout, unsigned char *sin, size_t szout);
+bool                zeHash_Str2MD5(char *sout, unsigned char *sin,
+                                   size_t szout);
 
-bool                jmc_str2sha1(char *sout, unsigned char *sin, size_t szout);
+bool                zeHash_Str2SHA1(char *sout, unsigned char *sin,
+                                    size_t szout);
 
-bool                str2hash2hex(int code, char *sout, char *sin, size_t szout);
-bool                str2hash2b64(int code, char *sout, char *sin, size_t szout);
+bool                zeHash_Str2Hash2Hex(int code, char *sout, char *sin,
+                                        size_t szout);
+bool                zeHash_Str2Hash2B64(int code, char *sout, char *sin,
+                                        size_t szout);
 
-int                 hash_label2code(char *label);
-char               *hash_code2label(int code);
+int                 zeHash_Label2Code(char *label);
+char               *zeHash_Code2Label(int code);
 
 /** @} */
 
-# define __ZE_MSG_HASH_H    1
+#define __ZE_MSG_HASH_H    1
 #endif             /* __ZE_MSG_HASH_H */

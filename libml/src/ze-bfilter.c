@@ -171,11 +171,11 @@ bfilter_db2bf(bf)
     int                 code;
 
     ZE_MessageInfo(19, "   Found %s", v);
-    code = hash_label2code(v);
+    code = zeHash_Label2Code(v);
     (void) set_bfilter_db_crypt(code);
 
     ZE_MessageInfo(9, "Setting bayes filter encode mode to %s",
-                   hash_code2label(get_bfilter_db_crypt()));
+                   zeHash_Code2Label(get_bfilter_db_crypt()));
   }
 
   res = TRUE;
@@ -718,7 +718,7 @@ smodel_db_check_token(key, token)
         char                buf[64];
 
         memset(buf, 0, sizeof (buf));
-        (void) str2hash2hex(bf->crypt, buf, key, sizeof (buf));
+        (void) zeHash_Str2Hash2Hex(bf->crypt, buf, key, sizeof (buf));
         snprintf(k, sizeof (k), "%s:%s", "token", buf);
       }
       break;

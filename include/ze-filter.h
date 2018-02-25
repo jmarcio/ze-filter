@@ -189,7 +189,7 @@ extern time_t       tlongconn;
     if (cf_get_int(CF_RESOLVE_CACHE_ENABLE) == OPT_YES)	\
       resolve_cache_check("PTR", ip, name, size);	\
     if (strlen(name) == 0 && query)			\
-      get_hostbyaddr(ip,name,size);                     \
+      zeGet_HostByAddr(ip,name,size);                     \
   } while (0);
 
 

@@ -126,7 +126,7 @@ livehistory_cmp(a, b)
   if ((ta == NULL) && (tb == NULL))
     return 0;
 
-  return ip_strcmp(ta->ip, tb->ip);
+  return zeIP_StrCmp(ta->ip, tb->ip);
 }
 
 /* ****************************************************************************

@@ -382,7 +382,7 @@ typedef struct {
 
 static XFILE_T      toto = XFILE_INITIALIZER;
 
-static zeTbl_T      htbl;
+static zeTable_T      htbl;
 
 static pthread_mutex_t st_mutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -567,7 +567,7 @@ read_it(path, tag)
 {
   int                 r;
 
-  r = zm_RdTextFile(path, RD_TWO_COLUMN, RD_REVERSE, tag, add_xfiles);
+  r = zeRdTextFile(path, RD_TWO_COLUMN, RD_REVERSE, tag, add_xfiles);
 
   return r >= 0;
 }

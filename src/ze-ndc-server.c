@@ -105,16 +105,16 @@ control_handler(name)
       memset(client_addr, 0, sizeof (client_addr));
       memset(client_name, 0, sizeof (client_name));
 #if 1
-      if (get_hostbysock(clisock, len, client_addr, sizeof (client_addr),
+      if (zeGet_HostBySock(clisock, len, client_addr, sizeof (client_addr),
                          client_name, sizeof (client_name))) {
         addr = client_addr;
         name = client_name;
       }
 #else
-      if (jsock_ntop(clisock, len, client_addr, sizeof (client_addr)))
+      if (zeSock_ntop(clisock, len, client_addr, sizeof (client_addr)))
         addr = client_addr;
 
-      if (get_hostbyaddr(client_addr, client_name, sizeof (client_name)))
+      if (zeGet_HostByAddr(client_addr, client_name, sizeof (client_name)))
         name = client_name;
 #endif
 
@@ -133,7 +133,7 @@ control_handler(name)
 
     FD_PRINTF(connfd, "200 OK - Waiting for commands !\n");
 
-    if (jfd_ready(connfd, ZE_SOCK_READ, CTRL_TO) == ZE_SOCK_READY) {
+    if (zeFd_Ready(connfd, ZE_SOCK_READ, CTRL_TO) == ZE_SOCK_READY) {
       char                buf[1024];
       size_t              sz;
       char               *argv[MAX_ARGS];
@@ -850,7 +850,7 @@ do_control(sd, argc, argv)
 
     if (strcasecmp(arg, "LRDATA") == 0) {
       FD_PRINTF(sd, "200 OK for %s %s !\r\n", cmd, arg);
-      lr_data_load(TRUE);
+      zeLR_LoadData(TRUE);
       FD_PRINTF(sd, "200 %s %s done !\r\n", cmd, arg);
       return TRUE;
     }

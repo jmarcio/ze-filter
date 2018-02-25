@@ -243,7 +243,7 @@ main(int argc, char **argv)
 
     *ip = '\0';
     if (strlen(host) > 0) {
-      if (get_hostbyname(host, ip, sizeof (ip))) {
+      if (zeGet_HostByName(host, ip, sizeof (ip))) {
         name = host;
         p = ip;
       } else

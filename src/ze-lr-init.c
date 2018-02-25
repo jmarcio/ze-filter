@@ -35,7 +35,7 @@
  *                                                                            *
  ******************************************************************************/
 
-bool                lr_filter_ok = FALSE;
+bool                zeLR_FilterOK = FALSE;
 
 static void        *lr_initialize(void *);
 
@@ -45,7 +45,7 @@ static void        *lr_initialize(void *);
  ******************************************************************************/
 
 bool
-lr_data_load(background)
+zeLR_LoadData(background)
      bool                background;
 {
   if (background) {
@@ -93,12 +93,12 @@ lr_initialize(arg)
 
   ADJUST_FILENAME(path, lrname, cdb_dir, "ze-lr.txt");
 
-  lr_filter_ok = FALSE;
+  zeLR_FilterOK = FALSE;
   ZE_MessageInfo(9, "Opening perceptron data file : %s", path);
   (void) lr_data_close();
   if (lr_data_open(path)) {
     ZE_MessageInfo(9, "Perceptron data file : %s : OK !", path);
-    lr_filter_ok = TRUE;
+    zeLR_FilterOK = TRUE;
   } else
     ZE_MessageWarning(9, "Couldn't open perceptron data file : %s", path);
 

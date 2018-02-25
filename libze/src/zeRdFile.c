@@ -27,7 +27,7 @@
 #include "libze.h"
 
 
-int                 zm_RdTextFile(char *, int, int, char *,
+int                 zeRdTextFile(char *, int, int, char *,
                                   int (*)(void *, void *));
 
 static void         strClearBlanks(char *);
@@ -40,7 +40,7 @@ static void         strClearBlanks(char *);
  ******************************************************************************/
 
 int
-zm_RdTextFile(fname, rdtype, rdreverse, tag, func)
+zeRdTextFile(fname, rdtype, rdreverse, tag, func)
      char               *fname;
      int                 rdtype;
      int                 rdreverse;
@@ -182,7 +182,7 @@ fin:
  *                                                                            *
  ******************************************************************************/
 int
-zm_RdFile(fname, tag, func, arg)
+zeRdFile(fname, tag, func, arg)
      char               *fname;
      char               *tag;
      RDFILE_F            func;

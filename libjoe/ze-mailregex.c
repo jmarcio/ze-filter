@@ -84,7 +84,7 @@ typedef struct {
   int                 count;
 } RegexRec_T;
 
-static zeTbl_T      htbl = JTABLE_INITIALIZER;
+static zeTable_T      htbl = ZE_TABLE_INITIALIZER;
 
 static pthread_mutex_t st_mutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -250,7 +250,7 @@ read_it(path, tag)
 {
   int                 r;
 
-  r = zm_RdTextFile(path, RD_TWO_COLUMN, RD_REVERSE, tag, add_regex_rec);
+  r = zeRdTextFile(path, RD_TWO_COLUMN, RD_REVERSE, tag, add_regex_rec);
 
   return r >= 0;
 }

@@ -650,8 +650,8 @@ group_token_files(argc, argv, msgMin, scli_crypt)
   if (!zeBTree_Init(&bt, sizeof (sfilter_token_T), sfilter_token_cmp))
     goto fin;
 
-  icli_crypt = hash_label2code(scli_crypt);
-  scli_crypt = hash_code2label(icli_crypt);
+  icli_crypt = zeHash_Label2Code(scli_crypt);
+  scli_crypt = zeHash_Code2Label(icli_crypt);
 
   for (i = 0; i < argc; i++) {
     FILE               *fin = NULL;
@@ -685,14 +685,14 @@ group_token_files(argc, argv, msgMin, scli_crypt)
           p += strcspn(p, " \t");
           p += strspn(p, " \t");
 
-          file_crypt = hash_label2code(p);
+          file_crypt = zeHash_Label2Code(p);
 
           if (i == 0) {
             if (icli_crypt == HASH_PLAIN && file_crypt != HASH_PLAIN) {
               ZE_MessageInfo(8, "# Changing global crypt option %s -> %s %d\n",
-                             scli_crypt, hash_code2label(file_crypt));
+                             scli_crypt, zeHash_Code2Label(file_crypt));
               icli_crypt = file_crypt;
-              scli_crypt = hash_code2label(icli_crypt);
+              scli_crypt = zeHash_Code2Label(icli_crypt);
             }
           }
 
@@ -744,7 +744,7 @@ group_token_files(argc, argv, msgMin, scli_crypt)
             switch (icli_crypt) {
               case HASH_MD5:
               case HASH_SHA1:
-                str2hash2hex(icli_crypt, dig, p, sizeof (dig));
+                zeHash_Str2Hash2Hex(icli_crypt, dig, p, sizeof (dig));
                 snprintf(tok.token, sizeof (tok.token), "TOKEN:%s", dig);
                 break;
               default:

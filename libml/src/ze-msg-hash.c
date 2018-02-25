@@ -35,7 +35,7 @@
  *                                                                            *
  **************************************************************************** */
 bool
-jmc_str2md5(sout, sin, szout)
+zeHash_Str2MD5(sout, sin, szout)
      char               *sout;
      unsigned char      *sin;
      size_t              szout;
@@ -58,7 +58,7 @@ jmc_str2md5(sout, sin, szout)
  *                                                                            *
  **************************************************************************** */
 bool
-jmc_str2sha1(sout, sin, szout)
+zeHash_Str2SHA1(sout, sin, szout)
      char               *sout;
      unsigned char      *sin;
      size_t              szout;
@@ -104,7 +104,7 @@ hexa_encode(sout, szout, sin, szin)
  *                                                                            *
  **************************************************************************** */
 bool
-str2hash2hex(code, sout, sin, szout)
+zeHash_Str2Hash2Hex(code, sout, sin, szout)
      int                 code;
      char               *sout;
      char               *sin;
@@ -144,7 +144,7 @@ str2hash2hex(code, sout, sin, szout)
  *                                                                            *
  **************************************************************************** */
 bool
-str2hash2b64(code, sout, sin, szout)
+zeHash_Str2Hash2B64(code, sout, sin, szout)
      int                 code;
      char               *sout;
      char               *sin;
@@ -184,7 +184,7 @@ str2hash2b64(code, sout, sin, szout)
  *                                                                            *
  **************************************************************************** */
 int
-hash_label2code(label)
+zeHash_Label2Code(label)
      char               *label;
 {
   if (label == NULL)
@@ -204,7 +204,7 @@ hash_label2code(label)
  *                                                                            *
  **************************************************************************** */
 char               *
-hash_code2label(code)
+zeHash_Code2Label(code)
      int                 code;
 {
   char               *s = "PLAIN";

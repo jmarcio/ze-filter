@@ -465,7 +465,7 @@ greyd_father(arg)
 
       addr = name = user = NULL;
 
-      if (get_hostbysock(cliaddr, len, client_addr, sizeof (client_addr),
+      if (zeGet_HostBySock(cliaddr, len, client_addr, sizeof (client_addr),
                          client_name, sizeof (client_name))) {
         addr = client_addr;
         name = client_name;
@@ -492,7 +492,7 @@ greyd_father(arg)
       if (!ok) {
         ZE_MessageInfo(9, "Access denied to %s (%s) on control channel",
                        STRNULL(addr, ""), STRNULL(name, ""));
-        (void) sd_printf(connfd, "500 Access denied\n");
+        (void) zeSD_Printf(connfd, "500 Access denied\n");
         shutdown(connfd, SHUT_RDWR);
         close(connfd);
         continue;
@@ -509,7 +509,7 @@ greyd_father(arg)
 
       if ((arg = malloc(sizeof (gclient_T))) == NULL) {
         ZE_LogSysError("Error creating server data structure");
-        (void) sd_printf(connfd, "421 System Error - come back later\n");
+        (void) zeSD_Printf(connfd, "421 System Error - come back later\n");
         shutdown(connfd, SHUT_RDWR);
         close(connfd);
         if (nerr > 16)
@@ -522,7 +522,7 @@ greyd_father(arg)
 
       if ((r = pthread_create(&tid, NULL, greyd_server, arg)) != 0) {
         ZE_LogSysError("pthread_create error");
-        (void) sd_printf(connfd, "421 System Error - come back later\n");
+        (void) zeSD_Printf(connfd, "421 System Error - come back later\n");
         shutdown(connfd, SHUT_RDWR);
         close(connfd);
         if (nerr > 16)
@@ -574,11 +574,11 @@ greyd_server(arg)
 
   if ((nthread < 0) || (nthread >= MAX_THREAD)) {
     ZE_MessageWarning(9, "Too many threads ! ");
-    (void) sd_printf(fd, "421 I'm too busy. Come back later\r\n");
+    (void) zeSD_Printf(fd, "421 I'm too busy. Come back later\r\n");
     goto fin;
   }
 
-  if (!sd_printf(fd, "200 OK - Waiting for commands !\r\n"))
+  if (!zeSD_Printf(fd, "200 OK - Waiting for commands !\r\n"))
     goto fin;
 
   tiloop = time(NULL);
@@ -598,7 +598,7 @@ greyd_server(arg)
       nloop = 0;
     }
 
-    r = jfd_ready(fd, ZE_SOCK_READ, CTRL_TO);
+    r = zeFd_Ready(fd, ZE_SOCK_READ, CTRL_TO);
 
     if (r == ZE_SOCK_ERROR) {
       ZE_MessageWarning(9,
@@ -777,14 +777,14 @@ handle_command(sd, addr, argc, argv)
         ZE_MessageInfo(9, "PEER=(%s) ANSWER=(%d GREYCHECK - policy says : %s)",
                        addr, r, s);
 
-      if (!sd_printf
+      if (!zeSD_Printf
           (sd, "%d GREYCHECK ANSWER Grey server said... %s \r\n", r, s))
         goto ioerror;
 
       goto ok;
     }
 
-    if (!sd_printf(sd, "600 Not enough parameters !\r\n"))
+    if (!zeSD_Printf(sd, "600 Not enough parameters !\r\n"))
       goto ioerror;
 
     return GREY_SRV_ERROR;
@@ -817,13 +817,13 @@ handle_command(sd, addr, argc, argv)
       ZE_MessageInfo(9,
                      "PEER=(%s) ANSWER=(%d GREYVALID Grey server said... %s)",
                      addr, r, s);
-      if (!sd_printf
+      if (!zeSD_Printf
           (sd, "%d GREYVALID ANSWER Grey server said... %s \r\n", r, s))
         goto ioerror;
 
       goto ok;
     }
-    if (!sd_printf(sd, "600 Not enough parameters !\r\n"))
+    if (!zeSD_Printf(sd, "600 Not enough parameters !\r\n"))
       goto ioerror;
 
     return GREY_SRV_ERROR;
@@ -835,20 +835,20 @@ handle_command(sd, addr, argc, argv)
    */
   if (STRCASEEQUAL(argv[0], "UPDATE")) {
     if (STRCASEEQUAL(argv[1], "PENDING")) {
-      if (!sd_printf(sd, "200-OK for %s %s!\r\n", argv[0], argv[1]))
+      if (!zeSD_Printf(sd, "200-OK for %s %s!\r\n", argv[0], argv[1]))
         goto ioerror;
 
-      if (!sd_printf(sd, "200 %s done !\r\n", argv[0]))
+      if (!zeSD_Printf(sd, "200 %s done !\r\n", argv[0]))
         goto ioerror;
 
       goto ok;
     }
 
     if (STRCASEEQUAL(argv[1], "VALID")) {
-      if (!sd_printf(sd, "200-OK for %s %s!\r\n", argv[0], argv[1]))
+      if (!zeSD_Printf(sd, "200-OK for %s %s!\r\n", argv[0], argv[1]))
         goto ioerror;
 
-      if (!sd_printf(sd, "200 %s done !\r\n", argv[0]))
+      if (!zeSD_Printf(sd, "200 %s done !\r\n", argv[0]))
         goto ioerror;
 
       goto ok;
@@ -865,20 +865,20 @@ handle_command(sd, addr, argc, argv)
     int                 nb = 0;
 
     if (STRCASEEQUAL(argv[1], "PENDING")) {
-      if (!sd_printf(sd, "200-OK for %s %s!\r\n", argv[0], argv[1]))
+      if (!zeSD_Printf(sd, "200-OK for %s %s!\r\n", argv[0], argv[1]))
         goto ioerror;
       nb = grey_dump(sd, argv[1], 21600);
-      if (!sd_printf(sd, "200 %s done !\r\n", argv[0]))
+      if (!zeSD_Printf(sd, "200 %s done !\r\n", argv[0]))
         goto ioerror;
 
       goto ok;
     }
 
     if (STRCASEEQUAL(argv[1], "VALID")) {
-      if (!sd_printf(sd, "200-OK for %s %s!\r\n", argv[0], argv[1]))
+      if (!zeSD_Printf(sd, "200-OK for %s %s!\r\n", argv[0], argv[1]))
         goto ioerror;
       nb = grey_dump(sd, argv[1], 21600);
-      if (!sd_printf(sd, "200 %s done !\r\n", argv[0]))
+      if (!zeSD_Printf(sd, "200 %s done !\r\n", argv[0]))
         goto ioerror;
 
       goto ok;
@@ -902,30 +902,30 @@ handle_command(sd, addr, argc, argv)
       dt = zeStr2ulong(argv[2], NULL, 0);
 
     if (STRCASEEQUAL(argv[1], "PENDING")) {
-      if (!sd_printf(sd, "200-OK for %s %s!\r\n", argv[0], argv[1]))
+      if (!zeSD_Printf(sd, "200-OK for %s %s!\r\n", argv[0], argv[1]))
         goto ioerror;
       nb = grey_dump(sd, argv[1], dt);
-      if (!sd_printf(sd, "200 %s done !\r\n", argv[0]))
+      if (!zeSD_Printf(sd, "200 %s done !\r\n", argv[0]))
         goto ioerror;
 
       goto ok;
     }
 
     if (STRCASEEQUAL(argv[1], "VALID")) {
-      if (!sd_printf(sd, "200-OK for %s %s!\r\n", argv[0], argv[1]))
+      if (!zeSD_Printf(sd, "200-OK for %s %s!\r\n", argv[0], argv[1]))
         goto ioerror;
       nb = grey_dump(sd, argv[1], dt);
-      if (!sd_printf(sd, "200 %s done !\r\n", argv[0]))
+      if (!zeSD_Printf(sd, "200 %s done !\r\n", argv[0]))
         goto ioerror;
 
       goto ok;
     }
 
     if (STRCASEEQUAL(argv[1], "WHITE")) {
-      if (!sd_printf(sd, "200-OK for %s %s!\r\n", argv[0], argv[1]))
+      if (!zeSD_Printf(sd, "200-OK for %s %s!\r\n", argv[0], argv[1]))
         goto ioerror;
       nb = grey_dump(sd, argv[1], dt);
-      if (!sd_printf(sd, "200 %s done !\r\n", argv[0]))
+      if (!zeSD_Printf(sd, "200 %s done !\r\n", argv[0]))
         goto ioerror;
 
       goto ok;
@@ -939,10 +939,10 @@ handle_command(sd, addr, argc, argv)
    **
    */
   if (STRCASEEQUAL(argv[0], "RECONFIGURE")) {
-    if (!sd_printf(sd, "200-OK for %s !\r\n", argv[0]))
+    if (!zeSD_Printf(sd, "200-OK for %s !\r\n", argv[0]))
       goto ioerror;
     configure("ze-greyd", conf_file, TRUE);
-    if (!sd_printf(sd, "200 %s done !\r\n", argv[0]))
+    if (!zeSD_Printf(sd, "200 %s done !\r\n", argv[0]))
       goto ioerror;
 
     goto ok;
@@ -955,10 +955,10 @@ handle_command(sd, addr, argc, argv)
   if (STRCASEEQUAL(argv[0], "REOPENDB")) {
     bool                rok;
 
-    if (!sd_printf(sd, "200-OK for %s !\r\n", argv[0]))
+    if (!zeSD_Printf(sd, "200-OK for %s !\r\n", argv[0]))
       goto ioerror;
     rok = policy_reopen();
-    if (!sd_printf(sd, "200 %s : %-10s %s !\r\n", argv[0], "POLICY",
+    if (!zeSD_Printf(sd, "200 %s : %-10s %s !\r\n", argv[0], "POLICY",
                    STRBOOL(rok, "OK", "ERROR")))
       goto ioerror;
 
@@ -970,10 +970,10 @@ handle_command(sd, addr, argc, argv)
    **
    */
   if (STRCASEEQUAL(argv[0], "RESTART")) {
-    if (!sd_printf(sd, "200-OK for %s !\r\n", argv[0]))
+    if (!zeSD_Printf(sd, "200-OK for %s !\r\n", argv[0]))
       goto ioerror;
     kill(0, SIGHUP);
-    if (!sd_printf(sd, "200 %s done !\r\n", argv[0]))
+    if (!zeSD_Printf(sd, "200 %s done !\r\n", argv[0]))
       goto ioerror;
 
     goto ok;
@@ -984,49 +984,49 @@ handle_command(sd, addr, argc, argv)
    **
    */
   if (STRCASEEQUAL(argv[0], "HELP")) {
-    if (!sd_printf(sd, "200-OK for %s !\r\n", argv[0]))
+    if (!zeSD_Printf(sd, "200-OK for %s !\r\n", argv[0]))
       goto ioerror;
 
-    if (!sd_printf(sd, "    GREYCHECK ip from to hostname\r\n"))
+    if (!zeSD_Printf(sd, "    GREYCHECK ip from to hostname\r\n"))
       goto ioerror;
-    if (!sd_printf(sd, "    GREYVALID ip from to hostname\r\n"))
-      goto ioerror;
-
-    if (!sd_printf(sd, "    DOWNLOAD PENDING\r\n"))
-      goto ioerror;
-    if (!sd_printf(sd, "    DOWNLOAD VALID\r\n"))
+    if (!zeSD_Printf(sd, "    GREYVALID ip from to hostname\r\n"))
       goto ioerror;
 
-    if (!sd_printf(sd, "    UPDATE PENDING \r\n"))
+    if (!zeSD_Printf(sd, "    DOWNLOAD PENDING\r\n"))
       goto ioerror;
-    if (!sd_printf(sd, "    UPDATE VALID \r\n"))
-      goto ioerror;
-
-    if (!sd_printf(sd, "    RECONFIGURE \r\n"))
-      goto ioerror;
-    if (!sd_printf(sd, "    REOPENDB \r\n"))
+    if (!zeSD_Printf(sd, "    DOWNLOAD VALID\r\n"))
       goto ioerror;
 
-    if (!sd_printf(sd, "    EXIT \r\n"))
+    if (!zeSD_Printf(sd, "    UPDATE PENDING \r\n"))
       goto ioerror;
-    if (!sd_printf(sd, "    QUIT \r\n"))
+    if (!zeSD_Printf(sd, "    UPDATE VALID \r\n"))
       goto ioerror;
-    if (!sd_printf(sd, "    HELP \r\n"))
+
+    if (!zeSD_Printf(sd, "    RECONFIGURE \r\n"))
       goto ioerror;
-    if (!sd_printf(sd, "    SHUTDOWN \r\n"))
+    if (!zeSD_Printf(sd, "    REOPENDB \r\n"))
+      goto ioerror;
+
+    if (!zeSD_Printf(sd, "    EXIT \r\n"))
+      goto ioerror;
+    if (!zeSD_Printf(sd, "    QUIT \r\n"))
+      goto ioerror;
+    if (!zeSD_Printf(sd, "    HELP \r\n"))
+      goto ioerror;
+    if (!zeSD_Printf(sd, "    SHUTDOWN \r\n"))
       goto ioerror;
 
 #if 0
-    if (!sd_printf(sd, "     \r\n"))
+    if (!zeSD_Printf(sd, "     \r\n"))
       goto ioerror;
-    if (!sd_printf(sd, "     \r\n"))
+    if (!zeSD_Printf(sd, "     \r\n"))
       goto ioerror;
-    if (!sd_printf(sd, "     \r\n"))
+    if (!zeSD_Printf(sd, "     \r\n"))
       goto ioerror;
-    if (!sd_printf(sd, "     \r\n"))
+    if (!zeSD_Printf(sd, "     \r\n"))
       goto ioerror;
 #endif
-    if (!sd_printf(sd, "200 %s done !\r\n", argv[0]))
+    if (!zeSD_Printf(sd, "200 %s done !\r\n", argv[0]))
       goto ioerror;
 
     goto ok;
@@ -1038,7 +1038,7 @@ handle_command(sd, addr, argc, argv)
    */
   if (STRCASEEQUAL(argv[0], "EXIT") || STRCASEEQUAL(argv[0], "QUIT")) {
 #if 1
-    (void) sd_printf(sd, "200 OK for %s (EXIT)!\r\n", argv[0]);
+    (void) zeSD_Printf(sd, "200 OK for %s (EXIT)!\r\n", argv[0]);
 #endif
     return GREY_SRV_CLOSE;
   }
@@ -1048,16 +1048,16 @@ handle_command(sd, addr, argc, argv)
    **
    */
   if (STRCASEEQUAL(argv[0], "SHUTDOWN")) {
-    if (!sd_printf(sd, "200-OK for %s !\r\n", argv[0]))
+    if (!zeSD_Printf(sd, "200-OK for %s !\r\n", argv[0]))
       goto ioerror;
     kill(0, SIGTERM);
-    if (!sd_printf(sd, "200 %s done (EXIT)!\r\n", argv[0]))
+    if (!zeSD_Printf(sd, "200 %s done (EXIT)!\r\n", argv[0]))
       goto ioerror;
 
     return GREY_SRV_CLOSE;
   }
 
-  if (!sd_printf(sd, "600 %s : Unknown command !\r\n", argv[0]))
+  if (!zeSD_Printf(sd, "600 %s : Unknown command !\r\n", argv[0]))
     goto ioerror;
 
   goto fin;
@@ -1079,7 +1079,7 @@ fin:
    */
 ok:
   if (quit) {
-    (void) sd_printf(sd, "200 OK for %s (EXIT)!\r\n", argv[0]);
+    (void) zeSD_Printf(sd, "200 OK for %s (EXIT)!\r\n", argv[0]);
     return GREY_SRV_CLOSE;
   }
   return GREY_SRV_OK;

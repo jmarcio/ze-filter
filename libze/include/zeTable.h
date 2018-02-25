@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -28,9 +29,9 @@
 * @{
 */
 
-typedef struct zeTbl_T zeTbl_T;
+typedef struct zeTable_T zeTable_T;
 
-struct zeTbl_T {
+struct zeTable_T {
   size_t              sz;
   size_t              rsz;
   int                 chunk;
@@ -41,24 +42,24 @@ struct zeTbl_T {
   int                 (*comp) (const void *, const void *);
 };
 
-#define    JTABLE_INITIALIZER   {0,0,0,0,0,0,NULL,NULL}
+#define    ZE_TABLE_INITIALIZER   {0,0,0,0,0,0,NULL,NULL}
 
-int                 zeTable_Init (zeTbl_T *, size_t, int,
-                                  int (*)(const void *, const void *));
-int                 zeTable_Free (zeTbl_T *);
-int                 zeTable_Clear (zeTbl_T *);
-int                 zeTable_Add (zeTbl_T *, void *);
-int                 zeTable_Count (zeTbl_T *);
-int                 zeTable_Fetch (zeTbl_T *, void *);
-int                 zeTable_Get_Ind (zeTbl_T *, void *, int);
-int                 zeTable_Get_First (zeTbl_T *, void *);
-int                 zeTable_Get_Next (zeTbl_T *, void *);
-int                 zeTable_Sort (zeTbl_T *);
+int                 zeTable_Init(zeTable_T *, size_t, int,
+                                 int (*)(const void *, const void *));
+int                 zeTable_Free(zeTable_T *);
+int                 zeTable_Clear(zeTable_T *);
+int                 zeTable_Add(zeTable_T *, void *);
+int                 zeTable_Count(zeTable_T *);
+int                 zeTable_Fetch(zeTable_T *, void *);
+int                 zeTable_Get_Ind(zeTable_T *, void *, int);
+int                 zeTable_Get_First(zeTable_T *, void *);
+int                 zeTable_Get_Next(zeTable_T *, void *);
+int                 zeTable_Sort(zeTable_T *);
 
-void               *zeTable_Fetch_ptr (zeTbl_T *, void *);
-void               *zeTable_Get_Ind_ptr (zeTbl_T *, int);
-void               *zeTable_Get_First_Ptr (zeTbl_T *);
-void               *zeTable_Get_Next_Ptr (zeTbl_T *);
+void               *zeTable_Fetch_ptr(zeTable_T *, void *);
+void               *zeTable_Get_Ind_ptr(zeTable_T *, int);
+void               *zeTable_Get_First_Ptr(zeTable_T *);
+void               *zeTable_Get_Next_Ptr(zeTable_T *);
 
 /** @} */
 

@@ -42,7 +42,7 @@
 #include <zeKStats.h>
 #include <zeBTree.h>
 #include <ze-buffer.h>
-#include <ze-inet.h>
+#include <zeInet.h>
 #include <zeShared.h>
 #include <zeTable.h>
 #include <zeTime.h>

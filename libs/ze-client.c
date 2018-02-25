@@ -268,7 +268,7 @@ client_send(client, buf, size)
   for (;;) {
     int                 r;
 
-    r = jfd_ready(client->sd, ZE_SOCK_WRITE, tout);
+    r = zeFd_Ready(client->sd, ZE_SOCK_WRITE, tout);
 
     if (r == ZE_SOCK_ERROR) {
       ZE_LogSysError("send error");
@@ -363,7 +363,7 @@ client_recv(client, buf, size)
     int                 r;
 
     errno = 0;
-    r = jfd_ready(client->sd, ZE_SOCK_READ, tout);
+    r = zeFd_Ready(client->sd, ZE_SOCK_READ, tout);
 
     if (r == ZE_SOCK_ERROR) {
       result = FALSE;
@@ -452,7 +452,7 @@ client_readln(client, buf, size)
     int                 r;
 
     errno = 0;
-    r = jfd_ready(client->sd, ZE_SOCK_READ, tout);
+    r = zeFd_Ready(client->sd, ZE_SOCK_READ, tout);
 
     if (r == ZE_SOCK_ERROR) {
       result = FALSE;
@@ -546,7 +546,7 @@ client_flush_read(client)
     int                 r;
     size_t              sz;
 
-    r = jfd_ready(sd, ZE_SOCK_READ, 5);
+    r = zeFd_Ready(sd, ZE_SOCK_READ, 5);
 
     if (r == ZE_SOCK_ERROR) {
       ZE_LogSysError("error");

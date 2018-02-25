@@ -279,7 +279,7 @@ read_scanner_answer(sd, buf, sz, to)
   ptr = buf;
 
   nb = 0;
-  switch (jfd_ready(sd, ZE_SOCK_READ, to)) {
+  switch (zeFd_Ready(sd, ZE_SOCK_READ, to)) {
     case ZE_SOCK_READY:
       nb = recv(sd, ptr, nbr, 0);
       ptr += nb;
@@ -362,7 +362,7 @@ av_client(answer, sz_answer, msg, sz_msg, question)
     }
 
     ZE_LogMsgDebug(DEBUG_LEVEL, "Let's check if ready...");
-    if ((r = jfd_ready(sd, ZE_SOCK_WRITE, 10000)) == ZE_SOCK_READY) {
+    if ((r = zeFd_Ready(sd, ZE_SOCK_WRITE, 10000)) == ZE_SOCK_READY) {
       ZE_LogMsgDebug(DEBUG_LEVEL, "READY...! Let's go !");
       if ((nb = sendto(sd, buf, strlen(buf), 0, NULL, 0)) < 0) {
         ZE_LogSysError("ze-avclient : sendto error");
@@ -372,7 +372,7 @@ av_client(answer, sz_answer, msg, sz_msg, question)
       }
       ZE_LogMsgDebug(DEBUG_LEVEL, "         Sent... %s", buf);
     } else
-      ZE_LogSysWarning("jfd_ready returned NOT READY %d ", r);
+      ZE_LogSysWarning("zeFd_Ready returned NOT READY %d ", r);
 
     ZE_LogMsgDebug(DEBUG_LEVEL, "ze-avclient - SEND : %s", buf);
   }
@@ -395,7 +395,7 @@ av_client(answer, sz_answer, msg, sz_msg, question)
     ptr = buf;
     nbr = sizeof (buf);
     do {
-      switch (jfd_ready(sd, ZE_SOCK_READ, av_to)) {
+      switch (zeFd_Ready(sd, ZE_SOCK_READ, av_to)) {
         case ZE_SOCK_READY:
           nerr = 0;
           if ((nb = recv(sd, ptr, nbr, 0)) >= 0) {

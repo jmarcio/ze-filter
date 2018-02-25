@@ -85,11 +85,11 @@ main(argc, argv)
       char                buf[256];
 
       memset(buf, 0, sizeof (buf));
-      if (get_hostbyaddr(argv[i], buf, sizeof (buf))) {
+      if (zeGet_HostByAddr(argv[i], buf, sizeof (buf))) {
         ZE_MessageInfo(10, " %3d TONAME : %-30s %s", i, argv[i], buf);
       }
       memset(buf, 0, sizeof (buf));
-      if (get_hostbyname(argv[i], buf, sizeof (buf))) {
+      if (zeGet_HostByName(argv[i], buf, sizeof (buf))) {
         ZE_MessageInfo(10, " %3d TOADDR : %-30s %s", i, argv[i], buf);
       }
     }

@@ -2741,7 +2741,7 @@ grey_dump(fd, which, dt)
             continue;
         }
 
-        if (!sd_printf(fd, "%s %s\r\n", key, data))
+        if (!zeSD_Printf(fd, "%s %s\r\n", key, data))
           break;
         nb++;
       } while (grey_cursor_get_next

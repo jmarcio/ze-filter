@@ -445,7 +445,7 @@ histraw2histres(dst, src)
 
     strlcpy(dst->ip, src->ip, sizeof (dst->ip));
 #if 0
-    if (jinet_pton(src->ip, &addr) != 0)
+    if (zeInet_pton(src->ip, &addr) != 0)
       dst->addr = addr;
 #endif
   }
@@ -620,7 +620,7 @@ histrescmp(va, vb)
   HistRes_T          *a = (HistRes_T *) va;
   HistRes_T          *b = (HistRes_T *) vb;
 
-  return ip_strcmp(a->ip, b->ip);
+  return zeIP_StrCmp(a->ip, b->ip);
 }
 
 /* ****************************************************************************

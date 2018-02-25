@@ -63,8 +63,8 @@ time_t              zeStrTime2Secs(char *);
 
 #define STREQUAL(a,b)                                                   \
   ((a) != NULL && (b) != NULL ? strcmp((a),(b)) == 0 : ((a) == (b)))
-
 #endif
+
 #define STRNULL(x,r)             ((x) != NULL ? (x) : (r))
 #define STREMPTY(x,r)            ((x) != NULL && strlen(x) > 0 ? (x) : (r))
 #define STRBOOL(x,t,f)           ((x) ? t : f)

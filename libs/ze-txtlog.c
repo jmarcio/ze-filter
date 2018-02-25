@@ -462,7 +462,7 @@ locked_log_open(log)
           memset(&log->log.udp.sock, 0, sizeof (log->log.udp.sock));
           log->log.udp.sock.sin_family = AF_INET;
           log->log.udp.sock.sin_port = htons(port);
-          r = jinet_pton(AF_INET, addr, &log->log.udp.sock.sin_addr);
+          r = zeInet_pton(AF_INET, addr, &log->log.udp.sock.sin_addr);
           if (r >= 0) {
             log->log.udp.fd = socket(AF_INET, SOCK_DGRAM, 0);
             log->open = TRUE;
