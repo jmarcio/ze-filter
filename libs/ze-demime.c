@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -29,12 +30,10 @@
 
 #define USE_NEW_GET_BOUNDARY         1
 
-typedef struct
-{
+typedef struct {
   int                 int_value;
   char               *str_value;
-}
-VALUES;
+} VALUES;
 
 static VALUES       mime_types[] = {
   {MIME_TYPE_TEXT, "text"},
@@ -57,7 +56,7 @@ static VALUES       mime_encode[] = {
   {MIME_ENCODE_OTHER, NULL}
 };
 
-char *zeStrnDup(const char *s, size_t n);
+char               *zeStrnDup(const char *s, size_t n);
 
 /* ****************************************************************************
  *                                                                            *
@@ -187,12 +186,11 @@ decode_mime_buffer(id, buf, sz, level, flags, func, arg)
   if (level > 4)
     ZE_MessageInfo(10, "MIME recursion level seems high : %d", level);
 
-  if (J_MIME_DEBUG)
-  {
+  if (J_MIME_DEBUG) {
     char                str[64];
 
     zeStrSet(str, '*', 60);
-    ZE_LogMsgDebug(19, "%s",str);
+    ZE_LogMsgDebug(19, "%s", str);
     ZE_LogMsgDebug(19, "*** ENTERING...: level = %d", level);
   }
 
@@ -211,14 +209,13 @@ decode_mime_buffer(id, buf, sz, level, flags, func, arg)
 
   ZE_MessageInfo(LOG_LEVEL, "Checking Content-Transfer-Encoding");
   hdrs = rfc2822_lookup_header(mpart.hdrs, "Content-Transfer-Encoding");
-  if (hdrs != NULL)
-  {
+  if (hdrs != NULL) {
     char               *r = NULL;
 
     is_mime = TRUE;
 
     ZE_MessageInfo(LOG_LEVEL + 1, "HDR -> Content-Transfer-Encoding... %s",
-                 hdrs->value);
+                   hdrs->value);
     r = rfc2822_get_main_attr(hdrs);
     if (r != NULL)
       encode = which_mime_encoding(r);
@@ -228,8 +225,7 @@ decode_mime_buffer(id, buf, sz, level, flags, func, arg)
 
   ZE_MessageInfo(LOG_LEVEL, "Checking Content-Type");
   hdrs = rfc2822_lookup_header(mpart.hdrs, "Content-Type");
-  if (hdrs != NULL)
-  {
+  if (hdrs != NULL) {
     char               *r = NULL;
     int                 s_type = type;
 
@@ -237,42 +233,38 @@ decode_mime_buffer(id, buf, sz, level, flags, func, arg)
 
     ZE_MessageInfo(LOG_LEVEL, "HDR -> Content-Type... %s", hdrs->value);
     r = rfc2822_get_main_attr(hdrs);
-    if (r != NULL)
-    {
+    if (r != NULL) {
       FREE(mimetype);
       mimetype = r;
       s_type = which_mime_type(r);
     }
 
-    ZE_MessageInfo(LOG_LEVEL, "TYPE : %4d %s", s_type, STRNULL(mimetype, "???"));
-    if (s_type == MIME_TYPE_TEXT)
-    {
+    ZE_MessageInfo(LOG_LEVEL, "TYPE : %4d %s", s_type,
+                   STRNULL(mimetype, "???"));
+    if (s_type == MIME_TYPE_TEXT) {
       char               *cset = NULL;
 
       cset = rfc2822_get_attr(hdrs, "charset=");
-      if (cset != NULL)
-      {
+      if (cset != NULL) {
         FREE(charset);
         charset = cset;
       }
       ZE_MessageInfo(LOG_LEVEL + 1, " HDR CHARSET  = (%s)",
-                   STRNULL(charset, "NULL"));
+                     STRNULL(charset, "NULL"));
     }
 
-    if (s_type == MIME_TYPE_MULTIPART)
-    {
+    if (s_type == MIME_TYPE_MULTIPART) {
       char               *bound = NULL;
 
       ZE_MessageInfo(LOG_LEVEL, " HDR TYPE : %s", hdrs->value);
       bound = rfc2822_get_attr(hdrs, "boundary=");
-      if (bound != NULL)
-      {
+      if (bound != NULL) {
 
         FREE(boundary);
         boundary = bound;
       }
       ZE_MessageInfo(LOG_LEVEL + 1, " HDR BOUNDARY = (%s)",
-                   STRNULL(bound, "NOT FOUND"));
+                     STRNULL(bound, "NOT FOUND"));
     }
 
     /*
@@ -282,8 +274,7 @@ decode_mime_buffer(id, buf, sz, level, flags, func, arg)
       char               *fname;
 
       fname = rfc2822_get_attr(hdrs, "name=");
-      if (fname != NULL)
-      {
+      if (fname != NULL) {
         CLEANUP_FILENAME(fname);
         FREE(name);
         name = fname;
@@ -291,8 +282,7 @@ decode_mime_buffer(id, buf, sz, level, flags, func, arg)
       }
 
       fname = rfc2822_get_attr(hdrs, "filename=");
-      if (fname != NULL)
-      {
+      if (fname != NULL) {
         CLEANUP_FILENAME(fname);
         FREE(filename);
         filename = fname;
@@ -303,8 +293,7 @@ decode_mime_buffer(id, buf, sz, level, flags, func, arg)
     /*
      ** Get boundary value...
      */
-    if (s_type == MIME_TYPE_MULTIPART)
-    {
+    if (s_type == MIME_TYPE_MULTIPART) {
       if (boundary != NULL)
         type = s_type;
     } else
@@ -313,8 +302,7 @@ decode_mime_buffer(id, buf, sz, level, flags, func, arg)
 
   ZE_MessageInfo(LOG_LEVEL, "Checking Content-Disposition");
   hdrs = rfc2822_lookup_header(mpart.hdrs, "Content-Disposition");
-  if (hdrs != NULL)
-  {
+  if (hdrs != NULL) {
 
     is_mime = TRUE;
 
@@ -322,8 +310,7 @@ decode_mime_buffer(id, buf, sz, level, flags, func, arg)
       char               *fname = NULL;
 
       fname = rfc2822_get_attr(hdrs, "name=");
-      if (fname != NULL)
-      {
+      if (fname != NULL) {
         CLEANUP_FILENAME(fname);
         FREE(name);
         name = fname;
@@ -331,8 +318,7 @@ decode_mime_buffer(id, buf, sz, level, flags, func, arg)
       }
 
       fname = rfc2822_get_attr(hdrs, "filename=");
-      if (fname != NULL)
-      {
+      if (fname != NULL) {
         CLEANUP_FILENAME(fname);
         FREE(name);
         name = fname;
@@ -342,48 +328,51 @@ decode_mime_buffer(id, buf, sz, level, flags, func, arg)
   }
 #if 1
   hdrs = mpart.hdrs;
-  while (hdrs != NULL)
-  {
+  while (hdrs != NULL) {
     ZE_MessageInfo(LOG_LEVEL, "LIST->KEY : %s", hdrs->key);
     hdrs = hdrs->next;
   }
 #endif
 
-  /* debug */
-  if (J_MIME_DEBUG)
-  {
+  /*
+   * debug 
+   */
+  if (J_MIME_DEBUG) {
     ZE_MessageInfo(LOG_LEVEL, "ENCODING       : %5d %s", encode,
-                 mime_encode_name(encode));
+                   mime_encode_name(encode));
     ZE_MessageInfo(LOG_LEVEL, "TYPE           : %5d %s", type,
-                 mime_type_name(type));
-    ZE_MessageInfo(LOG_LEVEL, "BOUNDARY       : %s", STRNULL(boundary, "(null)"));
+                   mime_type_name(type));
+    ZE_MessageInfo(LOG_LEVEL, "BOUNDARY       : %s",
+                   STRNULL(boundary, "(null)"));
     ZE_MessageInfo(LOG_LEVEL, "NAME           : %s", STRNULL(name, "(null)"));
-    ZE_MessageInfo(LOG_LEVEL, "FILENAME       : %s", STRNULL(filename, "(null)"));
-    ZE_MessageInfo(LOG_LEVEL, "CHARSET        : %s", STRNULL(charset, "(null)"));
+    ZE_MessageInfo(LOG_LEVEL, "FILENAME       : %s",
+                   STRNULL(filename, "(null)"));
+    ZE_MessageInfo(LOG_LEVEL, "CHARSET        : %s",
+                   STRNULL(charset, "(null)"));
     ZE_MessageInfo(LOG_LEVEL, "MIME           : %s %s",
-                 STRBOOL(is_mime, "YES", "NO "), STRNULL(mimetype, "UNKNOWN"));
+                   STRBOOL(is_mime, "YES", "NO "), STRNULL(mimetype,
+                                                           "UNKNOWN"));
   }
 
-  if (is_mime)
-  {
-    /* returns if body is empty... */
+  if (is_mime) {
+    /*
+     * returns if body is empty... 
+     */
     if ((p == NULL) || (*p == '\0'))
       GOTO_FIN(FALSE);
 
-    if ((bodybuf = strdup(p)) == NULL)
-    {
+    if ((bodybuf = strdup(p)) == NULL) {
       ZE_LogSysError("strdup error");
       GOTO_FIN(FALSE);
     }
     bodyp = bodybuf;
-    /* it was strlen + 1 */
+    /*
+     * it was strlen + 1 
+     */
     bodyl = strlen(bodybuf);
-  } else
-  {
-    if (level > 0)
-    {
-      if ((bodybuf = (char *) malloc(sz + 1)) == NULL)
-      {
+  } else {
+    if (level > 0) {
+      if ((bodybuf = (char *) malloc(sz + 1)) == NULL) {
         ZE_LogSysError("malloc error");
         GOTO_FIN(FALSE);
       }
@@ -391,28 +380,30 @@ decode_mime_buffer(id, buf, sz, level, flags, func, arg)
       memcpy(bodybuf, buf, sz);
       bodyp = bodybuf;
       bodyl = sz;
-    } else
-    {
-      /* returns if body is empty... */
-      if ((p == NULL) || (*p == '\0'))
-      {
+    } else {
+      /*
+       * returns if body is empty... 
+       */
+      if ((p == NULL) || (*p == '\0')) {
         GOTO_FIN(FALSE);
       }
 
-      if ((bodybuf = strdup(p)) == NULL)
-      {
+      if ((bodybuf = strdup(p)) == NULL) {
         ZE_LogSysError("strdup error");
         GOTO_FIN(FALSE);
       }
       bodyp = bodybuf;
-      /* it was strlen + 1 JOE */
+      /*
+       * it was strlen + 1 JOE 
+       */
       bodyl = strlen(bodybuf);
     }
   }
 
-  /* Let's decode message body */
-  switch (encode)
-  {
+  /*
+   * Let's decode message body 
+   */
+  switch (encode) {
     case MIME_ENCODE_7BIT:
       break;
     case MIME_ENCODE_8BIT:
@@ -431,20 +422,21 @@ decode_mime_buffer(id, buf, sz, level, flags, func, arg)
   }
 
   if (J_MIME_DEBUG)
-    ZE_LogMsgInfo(LOG_LEVEL, "BODY LENGTH    : %ld %ld", (long) strlen(bodyp), (long) bodyl);
+    ZE_LogMsgInfo(LOG_LEVEL, "BODY LENGTH    : %ld %ld", (long) strlen(bodyp),
+                  (long) bodyl);
 
   LOG_SOB("SUB BUF", bodyp);
 
-  /* Let's process body */
+  /*
+   * Let's process body 
+   */
   if ((type == MIME_TYPE_MULTIPART) &&
-      (level < MAX_RECURSIVE_LEVEL) && (boundary != NULL) && is_mime)
-  {
+      (level < MAX_RECURSIVE_LEVEL) && (boundary != NULL) && is_mime) {
     char               *bstrp = NULL;
     int                 nboundary = 0;
 
     bstrp = zeStrCatDup("--", boundary);
-    if (bstrp == NULL)
-    {
+    if (bstrp == NULL) {
       ZE_LogSysError("zeStrCatDup(%s, %s) error", "--", boundary);
       GOTO_FIN(FALSE);
     }
@@ -452,18 +444,20 @@ decode_mime_buffer(id, buf, sz, level, flags, func, arg)
     {
       char               *p = "";
       size_t              l = strlen(p);
+
 #if 0
       rfc2822_hdr_T      *h;
 
       ZE_MessageInfo(10, " Listing headers...");
       h = mpart.hdrs;
-      while (h != NULL)
-      {
+      while (h != NULL) {
         ZE_MessageInfo(10, "LIST->KEY : %s", h->key);
         h = h->next;
       }
 #endif
-      /* process part */
+      /*
+       * process part 
+       */
       mpart.buf = p;
       mpart.size = l;
       mpart.level = level;
@@ -483,14 +477,12 @@ decode_mime_buffer(id, buf, sz, level, flags, func, arg)
       char               *gotcha = NULL;
       char               *p = bodyp;
 
-      while (*p != '\0')
-      {
+      while (*p != '\0') {
         char               *t = NULL;
 
         ZE_MessageInfo(LOG_LEVEL + 1, "Looking for Boundary : %s", bstrp);
 
-        if ((gotcha = strstr(p, bstrp)) != NULL)
-        {
+        if ((gotcha = strstr(p, bstrp)) != NULL) {
           size_t              pi = 0, pf = 0;
 
           nboundary++;
@@ -500,14 +492,12 @@ decode_mime_buffer(id, buf, sz, level, flags, func, arg)
 
           ZE_MessageInfo(LOG_LEVEL + 1, " Gotcha : %ld <-> %ld...", pi, pf);
 
-          if (pi == 0)
-          {
+          if (pi == 0) {
             p += pf;
             continue;
           }
 
-          if ((t = zeStrnDup(p, pi)) == NULL)
-          {
+          if ((t = zeStrnDup(p, pi)) == NULL) {
             ZE_LogSysError("zeStrnDup error");
             break;
           }
@@ -515,11 +505,9 @@ decode_mime_buffer(id, buf, sz, level, flags, func, arg)
           p += pf;
           if (strncmp(p, "--", 2) == 0)
             p += 2;
-        } else
-        {
+        } else {
           ZE_MessageInfo(LOG_LEVEL + 1, " Gotcha : NOT...");
-          if ((t = strdup(p)) == NULL)
-          {
+          if ((t = strdup(p)) == NULL) {
             ZE_LogSysError("strdup error");
             break;
           }
@@ -527,7 +515,7 @@ decode_mime_buffer(id, buf, sz, level, flags, func, arg)
         }
 
         ZE_MessageInfo(LOG_LEVEL + 1, " -> Boundary lookup : Gotcha = %s",
-                     STRBOOL(gotcha != NULL, "YES", "NO"));
+                       STRBOOL(gotcha != NULL, "YES", "NO"));
 
         decode_mime_buffer(id, t, strlen(t), level + 1, flags, func, arg);
         FREE(t);
@@ -539,19 +527,19 @@ decode_mime_buffer(id, buf, sz, level, flags, func, arg)
     /*
      **    handle situation when nboundary equals 0
      */
-    if (nboundary == 0)
-    {
+    if (nboundary == 0) {
       ZE_MessageInfo(10, "%s SPAM CHECK : multipart/... without boundaries",
-                   STRNULL(id, "NOMSGID "));
+                     STRNULL(id, "NOMSGID "));
 #if 0
       if (flags != NULL)
         SET_FLAG(*flags, MIME_ERROR_UNUSED_BOUNDARY);
 #endif
     }
 
-  } else
-  {
-    /* process part */
+  } else {
+    /*
+     * process part 
+     */
     mpart.buf = bodyp;
     mpart.size = bodyl;
     mpart.level = level;
@@ -596,8 +584,7 @@ decode_mime_file(id, fname, flags, func, arg)
 
   buf = read_text_file(fname, &sz);
 
-  if (buf == NULL)
-  {
+  if (buf == NULL) {
     ZE_LogMsgError(0, "Error reading %s input file", fname);
     return FALSE;
   }
@@ -624,8 +611,7 @@ which_mime_encoding(s)
   if (s == NULL)
     return MIME_ENCODE_OTHER;
 
-  while (p->str_value != NULL)
-  {
+  while (p->str_value != NULL) {
     if (strcasecmp(s, p->str_value) == 0)
       return p->int_value;
     p++;
@@ -644,8 +630,7 @@ mime_encode_name(n)
 {
   VALUES             *p = mime_encode;
 
-  while (p->str_value != NULL)
-  {
+  while (p->str_value != NULL) {
     if (n == p->int_value)
       return p->str_value;
     p++;
@@ -668,8 +653,7 @@ which_mime_type(s)
   if (s == NULL)
     return MIME_TYPE_TEXT;
 
-  while (p->str_value != NULL)
-  {
+  while (p->str_value != NULL) {
     if (strncasecmp(s, p->str_value, n) == 0)
       return p->int_value;
     p++;
@@ -688,8 +672,7 @@ mime_type_name(n)
 {
   VALUES             *p = mime_types;
 
-  while (p->str_value != NULL)
-  {
+  while (p->str_value != NULL) {
     if (n == p->int_value)
       return p->str_value;
     p++;
@@ -715,8 +698,7 @@ str_clear_right_spaces(s)
   if ((s == NULL) || ((n = strlen(s)) == 0))
     return s;
 
-  for (n--; n >= 0; n--)
-  {
+  for (n--; n >= 0; n--) {
     if (s[n] != ' ')
       break;
     s[n] = '\0';

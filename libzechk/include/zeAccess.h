@@ -18,14 +18,20 @@
  *
  */
 
+#ifndef __ZE_ACCESS_H
 
-#ifndef ZMACCESS_H
-
+/** @addtogroup DBConf
+ *
+ * @{
+ */
+ 
 #define  ACCESS_OK        0
 #define  ACCESS_TMPFAIL   1
 #define  ACCESS_REJECT    2
 
 int                 AccessLookup(char *addr, char *from, char *to);
 
-# define ZMACCESS_H    1
-#endif             /* ZMACCESS_H */
+/** @} */
+
+# define __ZE_ACCESS_H    1
+#endif             /* __ZE_ACCESS_H */

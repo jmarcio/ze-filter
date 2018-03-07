@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -34,13 +35,13 @@
  *                                                                            *
  **************************************************************************** */
 bool
-jmc_str2md5(sout, sin, szout)
+zeHash_Str2MD5(sout, sin, szout)
      char               *sout;
      unsigned char      *sin;
      size_t              szout;
 {
-  ZEMD5_T           ctx;
-  unsigned char                dig[64];
+  ZEMD5_T             ctx;
+  unsigned char       dig[64];
 
   memset(dig, 0, sizeof (dig));
   zeMD5_Init(&ctx);
@@ -57,20 +58,20 @@ jmc_str2md5(sout, sin, szout)
  *                                                                            *
  **************************************************************************** */
 bool
-jmc_str2sha1(sout, sin, szout)
+zeHash_Str2SHA1(sout, sin, szout)
      char               *sout;
      unsigned char      *sin;
      size_t              szout;
 {
-  ZESHA1_T          ctx;
-  unsigned char                dig[64];
+  ZESHA1_T            ctx;
+  unsigned char       dig[64];
 
   memset(dig, 0, sizeof (dig));
   zeSHA1_Init(&ctx);
   zeSHA1_Update(&ctx, sin, strlen((char *) sin));
   zeSHA1_Final(&ctx, dig);
 
-  base64_encode(sout, szout, dig, JMC_SHA1_DIGESTLENGTH);
+  base64_encode(sout, szout, dig, ZE_SHA1_DIGESTLENGTH);
 
   return TRUE;
 }
@@ -89,8 +90,7 @@ hexa_encode(sout, szout, sin, szin)
   int                 i;
 
   memset(sout, 0, szout);
-  for (i = 0; i < szin; i++)
-  {
+  for (i = 0; i < szin; i++) {
     char                s[4];
 
     snprintf(s, sizeof (s), "%02X", sin[i]);
@@ -104,30 +104,29 @@ hexa_encode(sout, szout, sin, szin)
  *                                                                            *
  **************************************************************************** */
 bool
-str2hash2hex(code, sout, sin, szout)
+zeHash_Str2Hash2Hex(code, sout, sin, szout)
      int                 code;
      char               *sout;
-     char      *sin;
+     char               *sin;
      size_t              szout;
 {
   unsigned char       dig[64];
 
   memset(dig, 0, sizeof (dig));
-  switch (code)
-  {
+  switch (code) {
     case HASH_SHA1:
       {
-        ZESHA1_T          ctx;
+        ZESHA1_T            ctx;
 
         zeSHA1_Init(&ctx);
         zeSHA1_Update(&ctx, (unsigned char *) sin, strlen((char *) sin));
         zeSHA1_Final(&ctx, dig);
-        hexa_encode(sout, szout, dig, JMC_SHA1_DIGESTLENGTH);
+        hexa_encode(sout, szout, dig, ZE_SHA1_DIGESTLENGTH);
       }
       break;
     case HASH_MD5:
       {
-        ZEMD5_T           ctx;
+        ZEMD5_T             ctx;
 
         zeMD5_Init(&ctx);
         zeMD5_Update(&ctx, (unsigned char *) sin, strlen((char *) sin));
@@ -145,30 +144,29 @@ str2hash2hex(code, sout, sin, szout)
  *                                                                            *
  **************************************************************************** */
 bool
-str2hash2b64(code, sout, sin, szout)
+zeHash_Str2Hash2B64(code, sout, sin, szout)
      int                 code;
      char               *sout;
-     char      *sin;
+     char               *sin;
      size_t              szout;
 {
-  unsigned char                dig[64];
+  unsigned char       dig[64];
 
   memset(dig, 0, sizeof (dig));
-  switch (code)
-  {
+  switch (code) {
     case HASH_SHA1:
       {
-        ZESHA1_T          ctx;
+        ZESHA1_T            ctx;
 
         zeSHA1_Init(&ctx);
         zeSHA1_Update(&ctx, (unsigned char *) sin, strlen((char *) sin));
         zeSHA1_Final(&ctx, dig);
-        base64_encode(sout, szout, dig, JMC_SHA1_DIGESTLENGTH);
+        base64_encode(sout, szout, dig, ZE_SHA1_DIGESTLENGTH);
       }
       break;
     case HASH_MD5:
       {
-        ZEMD5_T           ctx;
+        ZEMD5_T             ctx;
 
         zeMD5_Init(&ctx);
         zeMD5_Update(&ctx, (unsigned char *) sin, strlen((char *) sin));
@@ -186,7 +184,7 @@ str2hash2b64(code, sout, sin, szout)
  *                                                                            *
  **************************************************************************** */
 int
-hash_label2code(label)
+zeHash_Label2Code(label)
      char               *label;
 {
   if (label == NULL)
@@ -206,13 +204,12 @@ hash_label2code(label)
  *                                                                            *
  **************************************************************************** */
 char               *
-hash_code2label(code)
+zeHash_Code2Label(code)
      int                 code;
 {
   char               *s = "PLAIN";
 
-  switch (code)
-  {
+  switch (code) {
     case HASH_PLAIN:
       s = "PLAIN";
       break;

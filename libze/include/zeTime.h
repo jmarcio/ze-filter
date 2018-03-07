@@ -22,13 +22,20 @@
  */
 
 
-#ifndef ZE_TIME_H
+#ifndef __ZE_TIME_H
+
+/** @addtogroup Systools
+*
+* @{
+*/
 
 typedef uint64_t timems_T;
 
 uint64_t            zeTime_ms();
 time_t              zeSleep_ms(time_t);
 
-# define ZE_TIME_H    1
-#endif /* J_TIME_H */
+/** @} */
+
+# define __ZE_TIME_H    1
+#endif /* __ZE_TIME_H */
 

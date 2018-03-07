@@ -22,8 +22,13 @@
  */
 
 
-#ifndef __JBASE64_H__
+#ifndef __ZE_BASE64_H
 
+/** @addtogroup MsgTools
+ *
+ * @{
+ */
+ 
 int                 base64_decode(char *, char *, size_t *, size_t *);
 
 bool                base64_encode(char *sout,
@@ -31,5 +36,7 @@ bool                base64_encode(char *sout,
 
 void               *alt_base64_decode(char *, size_t *);
 
-#define __JBASE64_H__
+/** @} */
+
+#define __ZE_BASE64_H
 #endif

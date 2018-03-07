@@ -22,11 +22,18 @@
  */
 
 
-#ifndef ZE_LR_INIT_H
+#ifndef __ZE_LR_INIT_H
 
-extern bool         lr_filter_ok;
+/** @addtogroup Logreg
+*
+* @{
+*/
 
-bool                lr_data_load(bool background);
+extern bool         zeLR_FilterOK;
 
-# define ZE_LR_INIT_H    1
-#endif             /* J_LR_INIT_H */
+bool                zeLR_LoadData(bool background);
+
+/** @} */
+
+# define __ZE_LR_INIT_H    1
+#endif             /* __ZE_LR_INIT_H */

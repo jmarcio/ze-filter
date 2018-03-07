@@ -22,10 +22,16 @@
  */
 
 
-#ifndef ZE_IP_H
+#ifndef __ZE_IP_H
 
+/** @addtogroup Network
+ *
+ * Network functions
+ * @{
+ */
 
+/** @} */
 
-# define ZE_IP_H    1
-#endif /* J_IP_H */
+# define __ZE_IP_H    1
+#endif /* __ZE_IP_H */
 

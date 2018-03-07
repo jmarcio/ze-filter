@@ -21,7 +21,7 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#ifndef __JFILTER_H__
+#ifndef __ZE_FILTER_DATA_H
 
 #include "libmilter/mfapi.h"
 
@@ -322,5 +322,5 @@ extern int          mx_check_level;
       priv->fsuffix = suffix;				\
   } while (0)
 
-#define __JFILTER_H__
+#define __ZE_FILTER_DATA_H
 #endif

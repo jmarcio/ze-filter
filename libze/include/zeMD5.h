@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")
  * Copyright (C) 2000, 2001  Internet Software Consortium.
@@ -39,25 +40,31 @@
  * Still in the public domain.
  */
 
-#ifndef JMC_MD5_H
-#define JMC_MD5_H 1
+#ifndef __ZE_MD5_H
+
+/** @addtogroup Strings
+*
+* @{
+*/
 
 #define ZE_MD5_DIGESTLENGTH 16
 
-typedef struct
-{
+typedef struct {
   uint32_t            buf[4];
   uint32_t            bytes[2];
   uint32_t            in[16];
 } ZEMD5_T;
 
-void                zeMD5_Init(ZEMD5_T *ctx);
+void                zeMD5_Init(ZEMD5_T * ctx);
 
-void                zeMD5_Invalidate(ZEMD5_T *ctx);
+void                zeMD5_Invalidate(ZEMD5_T * ctx);
 
-void                zeMD5_Update(ZEMD5_T *ctx, const unsigned char *buf, 
-				   unsigned int len);
+void                zeMD5_Update(ZEMD5_T * ctx, const unsigned char *buf,
+                                 unsigned int len);
 
 void                zeMD5_Final(ZEMD5_T * ctx, unsigned char *digest);
 
-#endif             /* JMC_MD5_H */
+/** @} */
+
+#define __ZE_MD5_H 1
+#endif             /* __ZE_MD5_H */

@@ -22,7 +22,12 @@
  */
 
 
-#ifndef ZE_DBRCPT_H
+#ifndef __ZE_DBRCPT_H
+
+/** @addtogroup DBConf
+*
+* @{
+*/
 
 bool                db_rcpt_open(bool);
 bool                db_rcpt_reopen();
@@ -35,6 +40,8 @@ bool                db_rcpt_check_email(char *prefix, char *key, char *bufout,
 bool                db_rcpt_check_domain(char *prefix, char *key, char *bufout,
 					 size_t szbuf, uint32_t flags);
 
-# define ZE_DBRCPT_H    1
-#endif /* J_DBRCPT_H */
+/** @} */
+
+# define __ZE_DBRCPT_H    1
+#endif /* __ZE_DBRCPT_H */
 

@@ -22,9 +22,16 @@
  */
 
 
-#ifndef __ZE_UNATTACH_H__
+#ifndef __ZE_UNATTACH_H
 
+/** @addtogroup MsgTools
+ *
+ * @{
+ */
+ 
 bool            unattach (char *, char *, char *, uint32_t *);
 
-#define __ZE_UNATTACH_H__
+/** @} */
+
+#define __ZE_UNATTACH_H
 #endif

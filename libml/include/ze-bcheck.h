@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -22,53 +23,58 @@
  */
 
 
-#ifndef ZE_BCHECK_H
+#ifndef __ZE_BCHECK_H
 
+/** @addtogroup Bayes 
+ *
+ * Statistical bayesian filter
+ * @{
+ */
 #define MAX_TOK          128
 
-typedef struct sfilter_vsm_T
-{
+typedef struct sfilter_vsm_T {
   sfilter_token_T     tok[MAX_TOK];
   int                 nbt;
   int                 nb;
 } sfilter_vsm_T;
 
-#define SFILTER_VSM_INIT(bc,nbt,prob)		\
-  do {						\
-    int i;					\
+#define SFILTER_VSM_INIT(bc,nbt,prob)		  \
+  do {                                    \
+    int i;					                      \
     memset(bc, 0, sizeof(sfilter_vsm_T));	\
-    for (i = 0; i < MAX_TOK; i++)		\
-      bc->tok[i].prob = prob;			\
-    bc->nbt = nbt;				\
-    bc->nb = 0;					\
+    for (i = 0; i < MAX_TOK; i++)		      \
+      bc->tok[i].prob = prob;			        \
+    bc->nbt = nbt;				                \
+    bc->nb = 0;					                  \
   } while (0)
 
 
-
-typedef struct sfilter_cli_T
-{
-  size_t              maxSize;  /* max message size */
-  bool                check;    /* general - option */
-  bool                verbose;  /* general - option */
-  bool                progress; /* general - option */
-  char               *dbname;   /* database - general */
-
-  char               *id;       /* message ID -> learn and check */
-
-  bool                spam;     /* spam / ham - learn */
-  char               *timestr;  /* date -> learn */
-
-  sfilter_vsm_T       bcheck;   /* pertinent tokens - check */
-  int                 histo[21];  /* histogram  - check */
-  bool                histogram;  /* do histogram ? - check */
-  int                 nbt;      /* number of pertinent tokens - check */
-  double              uprob;    /* unknown tokens probability */
+/**
+ * Statistical filter CLI parameters
+ */
+typedef struct sfilter_cli_T {
+  size_t              maxSize;     /**< max message size */
+  bool                check;       /**< general - option */
+  bool                verbose;     /**< general - option */
+  bool                progress;    /**< general - option */
+  char               *dbname;      /**< database - general */
+  char               *id;          /**< message ID -> learn and check */
+  bool                spam;        /**< spam / ham - learn */
+  char               *timestr;     /**< date -> learn */
+  sfilter_vsm_T       bcheck;      /**< pertinent tokens - check */
+  int                 histo[21];   /**< histogram  - check */
+  bool                histogram;   /**< do histogram ? - check */
+  int                 nbt;         /**< number of pertinent tokens - check */
+  double              uprob;       /**< unknown tokens probability */
 } sfilter_cli_T;
 
-bool                sfilter_cli_handle_message(char *, int, void *);
+bool                sfilter_cli_handle_message(char *fname, int msgNb,
+                                               void *arg);
+
 double              sfilter_check_message(char *id, char *fname,
                                           sfilter_vsm_T * bcheck);
 
+/** @} */
 
-# define ZE_BCHECK_H    1
-#endif             /* J_BCHECK_H */
+#define __ZE_BCHECK_H    1
+#endif             /* __ZE_BCHECK_H */

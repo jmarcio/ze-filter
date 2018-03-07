@@ -291,14 +291,14 @@ show_help(fd, hdr, str)
      char               *hdr;
      char               *str;
 {
-  if (!sd_printf(fd, "200 %s\r\n", PACKAGE))
+  if (!zeSD_Printf(fd, "200 %s\r\n", PACKAGE))
     goto ioerror;
   if (hdr != NULL)
-    if (!sd_printf(fd, "%s\r\n", hdr))
+    if (!zeSD_Printf(fd, "%s\r\n", hdr))
       goto ioerror;
-  if (!sd_printf(fd, "%s\r\n", str))
+  if (!zeSD_Printf(fd, "%s\r\n", str))
     goto ioerror;
-  if (!sd_printf(fd, "200 OK !!\r\n"))
+  if (!zeSD_Printf(fd, "200 OK !!\r\n"))
     goto ioerror;
 
   return TRUE;

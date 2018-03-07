@@ -22,11 +22,18 @@
  */
 
 
-#ifndef ZE_LOG_QUARANTINE_H
+#ifndef __ZE_LOG_QUARANTINE_H
+
+/** @addtogroup Logging
+*
+* @{
+*/
 
 void                log_quarantine(SMFICTX *, attachment_T *);
 bool                log_quarantine_reopen();
 
-# define ZE_LOG_QUARANTINE_H    1
-#endif /* J_LOG_QUARANTINE_H */
+/** @} */
+
+# define __ZE_LOG_QUARANTINE_H    1
+#endif /* __ZE_LOG_QUARANTINE_H */
 

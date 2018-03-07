@@ -22,7 +22,12 @@
  */
 
 
-#ifndef ZE_CLIENT_H
+#ifndef __ZE_CLIENT_H
+
+/** @addtogroup Network
+*
+* @{
+*/
 
 #define CLIENT_SPEC_LEN     512
 
@@ -60,5 +65,7 @@ bool                client_readln(client_T * client, char *buf, size_t size);
 
 int                 connect_timed(int, struct sockaddr *, socklen_t, int);
 
-# define ZE_CLIENT_H    1
-#endif             /* J_CLIENT_H */
+/** @} */
+
+# define __ZE_CLIENT_H    1
+#endif             /* __ZE_CLIENT_H */

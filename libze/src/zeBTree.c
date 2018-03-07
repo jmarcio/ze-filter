@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -37,10 +38,9 @@
 #define   _DB_EH    0
 #define   _DB_RH    1
 
-struct ZEBTREC_T
-{
-  ZEBTREC_T           *left;
-  ZEBTREC_T           *right;
+struct ZEBTREC_T {
+  ZEBTREC_T          *left;
+  ZEBTREC_T          *right;
   int                 balance;
   void               *data;
 };
@@ -49,20 +49,21 @@ static bool         zeBTree_Destroy_tree(ZEBTREC_T *);
 
 static bool         zeBTree_Add_node(ZEBT_T *, void *, ZEBTREC_T **, bool *);
 
-static ZEBTREC_T    *zeBTree_Del_node(ZEBT_T *, void *, ZEBTREC_T *, bool *);
+static ZEBTREC_T   *zeBTree_Del_node(ZEBT_T *, void *, ZEBTREC_T *, bool *);
 
-static ZEBTREC_T    *zeBTree_Get_node(ZEBT_T *, void *, ZEBTREC_T *);
+static ZEBTREC_T   *zeBTree_Get_node(ZEBT_T *, void *, ZEBTREC_T *);
 
-static int          zeBTree_Browse_tree(ZEBT_T *, ZEBT_BROWSE_F, ZEBTREC_T *, void *);
+static int          zeBTree_Browse_tree(ZEBT_T *, ZEBT_BROWSE_F, ZEBTREC_T *,
+                                        void *);
 static bool         zeBTree_Cpy_tree(ZEBT_T *, ZEBTREC_T *, ZEBT_SEL_F, void *);
 
-static ZEBTREC_T    *zeBTree_Node_Alloc(ZEBT_T *, void *);
+static ZEBTREC_T   *zeBTree_Node_Alloc(ZEBT_T *, void *);
 
-static ZEBTREC_T    *zeBTree_Rotate_Left(ZEBTREC_T *);
-static ZEBTREC_T    *zeBTree_Rotate_Right(ZEBTREC_T *);
+static ZEBTREC_T   *zeBTree_Rotate_Left(ZEBTREC_T *);
+static ZEBTREC_T   *zeBTree_Rotate_Right(ZEBTREC_T *);
 
-static ZEBTREC_T    *zeBTree_Left_Balance(ZEBTREC_T *);
-static ZEBTREC_T    *zeBTree_Right_Balance(ZEBTREC_T *);
+static ZEBTREC_T   *zeBTree_Left_Balance(ZEBTREC_T *);
+static ZEBTREC_T   *zeBTree_Right_Balance(ZEBTREC_T *);
 
 static int          jlog2(int);
 
@@ -94,9 +95,9 @@ int                 zeBTree_Max_Height(ZEBT_T *);
  **************************************************************************** */
 bool
 zeBTree_Init(jdbh, size, reccmp)
-     ZEBT_T              *jdbh;
+     ZEBT_T             *jdbh;
      size_t              size;
-     ZEBT_CMP_F           reccmp;
+     ZEBT_CMP_F          reccmp;
 {
   if (jdbh == NULL)
     return FALSE;
@@ -129,7 +130,7 @@ zeBTree_Init(jdbh, size, reccmp)
  **************************************************************************** */
 bool
 zeBTree_Lock(jdbh)
-     ZEBT_T              *jdbh;
+     ZEBT_T             *jdbh;
 {
   if (jdbh == NULL)
     return FALSE;
@@ -149,7 +150,7 @@ zeBTree_Lock(jdbh)
  **************************************************************************** */
 bool
 zeBTree_unLock(jdbh)
-     ZEBT_T              *jdbh;
+     ZEBT_T             *jdbh;
 {
   if (jdbh == NULL)
     return FALSE;
@@ -168,7 +169,7 @@ zeBTree_unLock(jdbh)
  **************************************************************************** */
 bool
 zeBTree_Set_BTree_Size(jdbh, chkCount, maxCount)
-     ZEBT_T              *jdbh;
+     ZEBT_T             *jdbh;
      bool                chkCount;
      int                 maxCount;
 {
@@ -190,7 +191,7 @@ zeBTree_Set_BTree_Size(jdbh, chkCount, maxCount)
  **************************************************************************** */
 bool
 zeBTree_Destroy(jdbh)
-     ZEBT_T              *jdbh;
+     ZEBT_T             *jdbh;
 {
 
   if (jdbh == NULL)
@@ -220,7 +221,7 @@ zeBTree_Destroy(jdbh)
  **************************************************************************** */
 bool
 zeBTree_Clear(jdbh)
-     ZEBT_T              *jdbh;
+     ZEBT_T             *jdbh;
 {
 
   if (jdbh == NULL)
@@ -243,7 +244,7 @@ zeBTree_Clear(jdbh)
  **************************************************************************** */
 int
 zeBTree_Count(jdbh)
-     ZEBT_T              *jdbh;
+     ZEBT_T             *jdbh;
 {
   if (jdbh == NULL)
     return 0;
@@ -260,8 +261,8 @@ zeBTree_Count(jdbh)
  **************************************************************************** */
 int
 zeBTree_Browse(jdbh, func, data)
-     ZEBT_T              *jdbh;
-     ZEBT_BROWSE_F        func;
+     ZEBT_T             *jdbh;
+     ZEBT_BROWSE_F       func;
      void               *data;
 {
   if (jdbh == NULL)
@@ -279,10 +280,10 @@ zeBTree_Browse(jdbh, func, data)
  **************************************************************************** */
 void               *
 zeBTree_Get(jdbh, data)
-     ZEBT_T              *jdbh;
+     ZEBT_T             *jdbh;
      void               *data;
 {
-  ZEBTREC_T           *node;
+  ZEBTREC_T          *node;
 
   if (jdbh == NULL)
     return NULL;
@@ -307,7 +308,7 @@ zeBTree_Get(jdbh, data)
 
 bool
 zeBTree_Add(jdbh, data)
-     ZEBT_T              *jdbh;
+     ZEBT_T             *jdbh;
      void               *data;
 {
   bool                ok = FALSE;
@@ -320,12 +321,7 @@ zeBTree_Add(jdbh, data)
   if (jdbh->signature != SIGNATURE)
     return FALSE;
 
-#if BUGGY_AVLTREE
-  return TRUE;
-#endif
-
-  if (jdbh->chkCount && (jdbh->count >= MAX_BTNODES))
-  {
+  if (jdbh->chkCount && (jdbh->count >= MAX_BTNODES)) {
     if (jdbh->nbErr < MAX_BTERR)
       ZE_LogMsgError(0, "Too much nodes in btree : %ld", (long) jdbh->count);
     jdbh->nbErr++;
@@ -354,10 +350,10 @@ zeBTree_Add(jdbh, data)
  **************************************************************************** */
 bool
 zeBTree_Del(jdbh, data)
-     ZEBT_T              *jdbh;
+     ZEBT_T             *jdbh;
      void               *data;
 {
-  ZEBTREC_T           *root = NULL;
+  ZEBTREC_T          *root = NULL;
   bool                shorter = FALSE;
 
   if (jdbh->signature != SIGNATURE)
@@ -374,7 +370,7 @@ zeBTree_Del(jdbh, data)
  **************************************************************************** */
 static              bool
 zeBTree_Destroy_tree(root)
-     ZEBTREC_T           *root;
+     ZEBTREC_T          *root;
 {
   if (root == NULL)
     return TRUE;
@@ -395,43 +391,45 @@ zeBTree_Destroy_tree(root)
  *                                                                            *
  * TO DO ***                                                                  *
  **************************************************************************** */
-static ZEBTREC_T    *
+static ZEBTREC_T   *
 zeBTree_Del_node(jdbh, data, root, shorter)
-     ZEBT_T              *jdbh;
+     ZEBT_T             *jdbh;
      void               *data;
-     ZEBTREC_T           *root;
+     ZEBTREC_T          *root;
      bool               *shorter;
 {
   int                 cmp;
-  ZEBTREC_T           *res = root;
+  ZEBTREC_T          *res = root;
 
-  if (jdbh == NULL)
-  {
-    /* JOE - ERROR */
+  if (jdbh == NULL) {
+    /*
+     * JOE - ERROR 
+     */
     return NULL;
   }
-  if (data == NULL)
-  {
-    /* JOE - ERROR */
+  if (data == NULL) {
+    /*
+     * JOE - ERROR 
+     */
     return NULL;
   }
 
-  if (root == NULL)
-  {
-    /* XXX */
+  if (root == NULL) {
+    /*
+     * XXX 
+     */
     return root;
   }
 
-  if ((cmp = (*jdbh->reccmp) (data, root->data)) == 0)
-  {
-    /* XXX */
+  if ((cmp = (*jdbh->reccmp) (data, root->data)) == 0) {
+    /*
+     * XXX 
+     */
     return NULL;
   }
-  if (cmp < 0)
-  {
+  if (cmp < 0) {
   }
-  if (cmp > 0)
-  {
+  if (cmp > 0) {
   }
   return res;
 }
@@ -440,13 +438,13 @@ zeBTree_Del_node(jdbh, data, root, shorter)
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
-ZEBTREC_T           *
+ZEBTREC_T          *
 zeBTree_Get_node(jdbh, data, root)
-     ZEBT_T              *jdbh;
+     ZEBT_T             *jdbh;
      void               *data;
-     ZEBTREC_T           *root;
+     ZEBTREC_T          *root;
 {
-  int res = 0;
+  int                 res = 0;
 
   if (jdbh == NULL)
     return NULL;
@@ -455,8 +453,7 @@ zeBTree_Get_node(jdbh, data, root)
   if (root == NULL)
     return NULL;
 
-  if (root->data == NULL)
-  {
+  if (root->data == NULL) {
     ZE_LogMsgWarning(0, "root not NULL but root->data is NULL...");
     return NULL;
   }
@@ -479,9 +476,9 @@ zeBTree_Get_node(jdbh, data, root)
  **************************************************************************** */
 int
 zeBTree_Browse_tree(jdbh, func, root, data)
-     ZEBT_T              *jdbh;
-     ZEBT_BROWSE_F        func;
-     ZEBTREC_T           *root;
+     ZEBT_T             *jdbh;
+     ZEBT_BROWSE_F       func;
+     ZEBTREC_T          *root;
      void               *data;
 {
   int                 n = 0;
@@ -513,9 +510,9 @@ zeBTree_Browse_tree(jdbh, func, root, data)
  **************************************************************************** */
 bool
 zeBTree_Cpy(dst, org, getit, arg)
-     ZEBT_T              *dst;
-     ZEBT_T              *org;
-     ZEBT_SEL_F           getit;
+     ZEBT_T             *dst;
+     ZEBT_T             *org;
+     ZEBT_SEL_F          getit;
      void               *arg;
 {
   if (dst == NULL || org == NULL)
@@ -533,21 +530,18 @@ zeBTree_Cpy(dst, org, getit, arg)
  **************************************************************************** */
 static              bool
 zeBTree_Cpy_tree(jdbh, root, getit, arg)
-     ZEBT_T              *jdbh;
-     ZEBTREC_T           *root;
-     ZEBT_SEL_F           getit;
+     ZEBT_T             *jdbh;
+     ZEBTREC_T          *root;
+     ZEBT_SEL_F          getit;
      void               *arg;
 {
   if (root == NULL)
     return FALSE;
 
   (void) zeBTree_Cpy_tree(jdbh, root->left, getit, arg);
-  if (root->data != NULL)
-  {
-    if (getit(root->data, arg))
-    {
-      if (!zeBTree_Add(jdbh, root->data))
-	;
+  if (root->data != NULL) {
+    if (getit(root->data, arg)) {
+      if (!zeBTree_Add(jdbh, root->data));
     }
   } else;
 
@@ -562,11 +556,11 @@ zeBTree_Cpy_tree(jdbh, root, getit, arg)
  **************************************************************************** */
 bool
 zeBTree_Cleanup(jdbh, getit, arg)
-     ZEBT_T              *jdbh;
-     ZEBT_SEL_F           getit;
+     ZEBT_T             *jdbh;
+     ZEBT_SEL_F          getit;
      void               *arg;
 {
-  ZEBTREC_T           *oroot = NULL;
+  ZEBTREC_T          *oroot = NULL;
 
   if (jdbh == NULL)
     return FALSE;
@@ -578,8 +572,7 @@ zeBTree_Cleanup(jdbh, getit, arg)
   jdbh->root = NULL;
   jdbh->count = 0;
 
-  if (zeBTree_Cpy_tree(jdbh, oroot, getit, arg))
-  {
+  if (zeBTree_Cpy_tree(jdbh, oroot, getit, arg)) {
     zeBTree_Destroy_tree(oroot);
   }
 
@@ -591,11 +584,11 @@ zeBTree_Cleanup(jdbh, getit, arg)
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
-static ZEBTREC_T    *
+static ZEBTREC_T   *
 zeBTree_Rotate_Left(root)
-     ZEBTREC_T           *root;
+     ZEBTREC_T          *root;
 {
-  ZEBTREC_T           *tmp;
+  ZEBTREC_T          *tmp;
 
   if (root == NULL)
     return NULL;
@@ -615,11 +608,11 @@ zeBTree_Rotate_Left(root)
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
-static ZEBTREC_T    *
+static ZEBTREC_T   *
 zeBTree_Rotate_Right(root)
-     ZEBTREC_T           *root;
+     ZEBTREC_T          *root;
 {
-  ZEBTREC_T           *tmp;
+  ZEBTREC_T          *tmp;
 
   if (root == NULL)
     return NULL;
@@ -639,16 +632,15 @@ zeBTree_Rotate_Right(root)
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
-static ZEBTREC_T    *
+static ZEBTREC_T   *
 zeBTree_Right_Balance(root)
-     ZEBTREC_T           *root;
+     ZEBTREC_T          *root;
 {
-  ZEBTREC_T           *x, *w;
+  ZEBTREC_T          *x, *w;
 
   x = root->right;
 
-  switch (x->balance)
-  {
+  switch (x->balance) {
     case _DB_RH:
       root->balance = _DB_EH;
       x->balance = _DB_EH;
@@ -659,8 +651,7 @@ zeBTree_Right_Balance(root)
       break;
     case _DB_LH:
       w = x->left;
-      switch (w->balance)
-      {
+      switch (w->balance) {
         case _DB_EH:
           root->balance = _DB_EH;
           x->balance = _DB_EH;
@@ -688,16 +679,15 @@ zeBTree_Right_Balance(root)
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
-static ZEBTREC_T    *
+static ZEBTREC_T   *
 zeBTree_Left_Balance(root)
-     ZEBTREC_T           *root;
+     ZEBTREC_T          *root;
 {
-  ZEBTREC_T           *x, *w;
+  ZEBTREC_T          *x, *w;
 
   x = root->left;
 
-  switch (x->balance)
-  {
+  switch (x->balance) {
     case _DB_LH:
       root->balance = _DB_EH;
       x->balance = _DB_EH;
@@ -708,15 +698,16 @@ zeBTree_Left_Balance(root)
       break;
     case _DB_RH:
       w = x->right;
-      switch (w->balance)
-      {
+      switch (w->balance) {
         case _DB_EH:
           root->balance = _DB_EH;
           x->balance = _DB_EH;
           break;
         case _DB_RH:
           root->balance = _DB_EH;
-          /* R -> L */
+          /*
+           * R -> L 
+           */
           x->balance = _DB_LH;
           break;
         case _DB_LH:
@@ -739,16 +730,15 @@ zeBTree_Left_Balance(root)
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
-static ZEBTREC_T    *
+static ZEBTREC_T   *
 zeBTree_Node_Alloc(jdbh, data)
-     ZEBT_T              *jdbh;
+     ZEBT_T             *jdbh;
      void               *data;
 {
-  ZEBTREC_T           *rec;
+  ZEBTREC_T          *rec;
 
   rec = (ZEBTREC_T *) malloc(sizeof (ZEBTREC_T));
-  if (rec == NULL)
-  {
+  if (rec == NULL) {
     ZE_LogSysError("malloc jbtrec");
     return NULL;
   }
@@ -756,8 +746,7 @@ zeBTree_Node_Alloc(jdbh, data)
   memset(rec, 0, sizeof (ZEBTREC_T));
 
   rec->data = malloc(jdbh->size);
-  if (rec->data == NULL)
-  {
+  if (rec->data == NULL) {
     ZE_LogSysError("malloc data");
     free(rec);
     return NULL;
@@ -776,22 +765,20 @@ zeBTree_Node_Alloc(jdbh, data)
  **************************************************************************** */
 static              bool
 zeBTree_Add_node(jdbh, data, root, taller)
-     ZEBT_T              *jdbh;
+     ZEBT_T             *jdbh;
      void               *data;
-     ZEBTREC_T          **root;
+     ZEBTREC_T         **root;
      bool               *taller;
 {
   if (root == NULL)
     return FALSE;
 
-  if (*root == NULL)
-  {
-    ZEBTREC_T           *node = NULL;
+  if (*root == NULL) {
+    ZEBTREC_T          *node = NULL;
 
     ZE_MessageInfo(19, "Empty tree ...");
     node = zeBTree_Node_Alloc(jdbh, data);
-    if (node != NULL)
-    {
+    if (node != NULL) {
       if (taller != NULL)
         *taller = TRUE;
       node->balance = _DB_EH;
@@ -803,7 +790,7 @@ zeBTree_Add_node(jdbh, data, root, taller)
 
   {
     int                 r;
-    ZEBTREC_T           *troot = NULL;
+    ZEBTREC_T          *troot = NULL;
 
     bool                ok = TRUE;
 
@@ -811,28 +798,23 @@ zeBTree_Add_node(jdbh, data, root, taller)
 
     r = (*jdbh->reccmp) (data, troot->data);
 
-    if (r == 0)
-    {
+    if (r == 0) {
       ZE_LogMsgNotice(0, "Node already on the tree...");
       return FALSE;
     }
 
-    if (r < 0)
-    {
+    if (r < 0) {
       ok = zeBTree_Add_node(jdbh, data, &(troot->left), taller);
 
-      if (ok && (taller != NULL) && *taller)
-      {
-        switch (troot->balance)
-        {
+      if (ok && (taller != NULL) && *taller) {
+        switch (troot->balance) {
           case _DB_LH:
             {
-              ZEBTREC_T           *node = NULL;
+              ZEBTREC_T          *node = NULL;
 
               node = zeBTree_Left_Balance(troot);
               *taller = FALSE;
-              if (node == NULL)
-              {
+              if (node == NULL) {
                 ZE_LogMsgWarning(0, "zeBTree_Left_Balance returned NULL...");
                 return FALSE;
               }
@@ -848,7 +830,9 @@ zeBTree_Add_node(jdbh, data, root, taller)
             *taller = FALSE;
             break;
           default:
-            /* error */
+            /*
+             * error 
+             */
             break;
         }
       }
@@ -856,14 +840,11 @@ zeBTree_Add_node(jdbh, data, root, taller)
       return ok;
     }
 
-    if (r > 0)
-    {
+    if (r > 0) {
       ok = zeBTree_Add_node(jdbh, data, &(troot->right), taller);
 
-      if (ok && (taller != NULL) && *taller)
-      {
-        switch (troot->balance)
-        {
+      if (ok && (taller != NULL) && *taller) {
+        switch (troot->balance) {
           case _DB_LH:
             troot->balance = _DB_EH;
             *taller = FALSE;
@@ -874,12 +855,11 @@ zeBTree_Add_node(jdbh, data, root, taller)
             break;
           case _DB_RH:
             {
-              ZEBTREC_T           *node = NULL;
+              ZEBTREC_T          *node = NULL;
 
               node = zeBTree_Right_Balance(troot);
               *taller = FALSE;
-              if (node == NULL)
-              {
+              if (node == NULL) {
                 ZE_LogMsgWarning(0, "zeBTree_Right_Balance returned NULL...");
                 return FALSE;
               }
@@ -887,7 +867,9 @@ zeBTree_Add_node(jdbh, data, root, taller)
             }
             break;
           default:
-            /* error */
+            /*
+             * error 
+             */
             break;
         }
 
@@ -918,7 +900,7 @@ jlog2(x)
 
 int
 zeBTree_Max_Height(jdbh)
-     ZEBT_T              *jdbh;
+     ZEBT_T             *jdbh;
 {
 
   if (jdbh == NULL)

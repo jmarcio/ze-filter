@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -33,10 +34,8 @@
 
 static void         usage(char *name);
 
-typedef struct
-{
-  union
-  {
+typedef struct {
+  union {
     struct sockaddr_in6 sock6;
     struct sockaddr_in  sock4;
   } sock;
@@ -59,10 +58,8 @@ main(int argc, char **argv)
   {
     int                 c;
 
-    while ((c = getopt(argc, argv, OPTSTR)) >= 0)
-    {
-      switch (c)
-      {
+    while ((c = getopt(argc, argv, OPTSTR)) >= 0) {
+      switch (c) {
         case 'h':
           usage(argv[0]);
           exit(0);
@@ -82,13 +79,11 @@ main(int argc, char **argv)
 
   snprintf(spec, sizeof (spec), "udp:%s@%s", port, ip);
   sockfd = server_listen(spec, &server);
-  if (sockfd < 0)
-  {
+  if (sockfd < 0) {
     exit(EX_SOFTWARE);
   }
 
-  for (;;)
-  {
+  for (;;) {
     char                mesg[1024];
     socklen_t           sz;
     int                 n;
@@ -97,14 +92,15 @@ main(int argc, char **argv)
     memset(&cliaddr, 0, sizeof (cliaddr));
     sz = sizeof (cliaddr);
     n =
-      recvfrom(sockfd, mesg, sizeof (mesg), 0, (struct sockaddr *) &cliaddr, &sz);
+      recvfrom(sockfd, mesg, sizeof (mesg), 0, (struct sockaddr *) &cliaddr,
+               &sz);
     if (n < 0)
       break;
 
     printf("%s", mesg);
   }
 
-  exit (0);
+  exit(0);
 }
 
 /* ****************************************************************************
@@ -122,6 +118,5 @@ usage(name)
          "    -i       : IP address to bind (default is all addresses)\n"
          "    -p       : port to listen\n"
          "\n"
-         "  " COPYRIGHT "\n"
-         "  Compiled on %s %s\n\n", p, __DATE__, __TIME__);
+         "  " COPYRIGHT "\n" "  Compiled on %s %s\n\n", p, __DATE__, __TIME__);
 }

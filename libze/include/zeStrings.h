@@ -19,7 +19,12 @@
  */
 
 
-#ifndef ZMSTRINGS_H
+#ifndef __ZE_STRINGS_H
+
+/** @addtogroup Strings
+*
+* @{
+*/
 
 
 char               *zeStrRev(char *);
@@ -28,7 +33,6 @@ int                 zeStrlEqual(char *, char*);
 int                 zeSafeStrnCat(char *, size_t, char *, size_t );
 int                 zeSafeStrnCpy(char *, size_t, char *, size_t );
 char               *zeStrnDup(const char *, size_t);
-char               *zm_malloc(size_t);
 char               *zeStrCatDup(char *, char *);
 int                 zeStrCountChar(char *, int);
 char               *zeStrJoin(char *, int, char **);
@@ -50,8 +54,6 @@ int                 zeStr2Tokens(char *, int, char **, char *);
 
 time_t              zeStrTime2Secs(char *);
 
-
-char               *zm_malloc(size_t);
 #if 0
 #define STRCASEEQUAL(a,b)                                               \
   ((a) != NULL && (b) != NULL ? strcasecmp((a),(b)) == 0 : ((a) == (b)))
@@ -61,12 +63,14 @@ char               *zm_malloc(size_t);
 
 #define STREQUAL(a,b)                                                   \
   ((a) != NULL && (b) != NULL ? strcmp((a),(b)) == 0 : ((a) == (b)))
-
 #endif
+
 #define STRNULL(x,r)             ((x) != NULL ? (x) : (r))
 #define STREMPTY(x,r)            ((x) != NULL && strlen(x) > 0 ? (x) : (r))
 #define STRBOOL(x,t,f)           ((x) ? t : f)
 
 
-# define ZMSTRINGS_H    1
-#endif             /* ZMSTRINGS_H */
+/** @} */
+
+# define __ZE_STRINGS_H    1
+#endif             /* __ZE_STRINGS_H */

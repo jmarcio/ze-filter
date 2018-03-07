@@ -332,7 +332,7 @@ mlfi_connect(ctx, hostname, hostaddr)
         {
           struct sockaddr_in *sin = (struct sockaddr_in *) hostaddr;
 
-          if (!jinet_ntop(AF_INET, &sin->sin_addr, ip, sizeof (ip))) {
+          if (!zeInet_ntop(AF_INET, &sin->sin_addr, ip, sizeof (ip))) {
             ZE_MessageError(8, "%08lX mlfi_connect : inet_ntop : %s", conn_id,
                             strerror(errno));
             (void) jsmfi_setreply(ctx, "421", "4.5.1",
@@ -348,7 +348,7 @@ mlfi_connect(ctx, hostname, hostaddr)
         {
           struct sockaddr_in6 *sin6 = (struct sockaddr_in6 *) hostaddr;
 
-          if (!jinet_ntop(AF_INET6, &sin6->sin6_addr, ip, sizeof (ip))) {
+          if (!zeInet_ntop(AF_INET6, &sin6->sin6_addr, ip, sizeof (ip))) {
             ZE_MessageError(8, "%08lX mlfi_connect : inet_ntop : %s", conn_id,
                             strerror(errno));
             (void) jsmfi_setreply(ctx, "421", "4.5.1",

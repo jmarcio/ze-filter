@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -32,13 +33,12 @@
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
-typedef struct
-{
+typedef struct {
   char               *dir;
 } DATA_T;
 
 
-bool
+static              bool
 save_mime_part(buf, size, id, level, type, arg, mime_part)
      char               *buf;
      size_t              size;
@@ -60,8 +60,7 @@ save_mime_part(buf, size, id, level, type, arg, mime_part)
   if (arg == NULL)
     return FALSE;
 
-  if (type == MIME_TYPE_TEXT)
-  {
+  if (type == MIME_TYPE_TEXT) {
     if (strspn(buf, " \t\r\n") == size)
       return TRUE;
   }
@@ -73,21 +72,18 @@ save_mime_part(buf, size, id, level, type, arg, mime_part)
   snprintf(fname, sizeof (fname), "%s/%s.XXXXXX", prefix, id);
 
   fd = mkstemp(fname);
-  if (fd < 0)
-  {
+  if (fd < 0) {
     ZE_LogSysError("mkstemp %s", fname);
     return FALSE;
   }
 
-  if (fchmod(fd, mode) < 0)
-  {
+  if (fchmod(fd, mode) < 0) {
     ZE_LogSysError("fchmod %s", fname);
     close(fd);
     return FALSE;
   }
 
-  if ((nbytes = write(fd, buf, size)) < size)
-  {
+  if ((nbytes = write(fd, buf, size)) < size) {
     ZE_LogSysError("write %s", fname);
     close(fd);
     return FALSE;
@@ -119,7 +115,9 @@ unattach(id, fname, dirout, flags)
   if (fname == NULL)
     return FALSE;
 
-  /* shall see this... XXX */
+  /*
+   * shall see this... XXX 
+   */
 
 #if 0
   if (dirout == NULL)
@@ -133,10 +131,8 @@ unattach(id, fname, dirout, flags)
   memset(&data, 0, sizeof (data));
   data.dir = prefix;
 
-  if (mkdir(prefix, 0755) != 0)
-  {
-    if (errno != EEXIST)
-    {
+  if (mkdir(prefix, 0755) != 0) {
+    if (errno != EEXIST) {
       ZE_LogSysError("mkdir %s ", prefix);
       return FALSE;
     }

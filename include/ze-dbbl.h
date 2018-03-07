@@ -21,7 +21,12 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#ifndef __JDBBL_H_
+#ifndef __ZE_DBBL_H
+
+/** @addtogroup RBL
+*
+* @{
+*/
 
 #define  BL_ORACLE              1
 #define  BL_PATMATCH            2
@@ -30,9 +35,8 @@
 
 
 bool                db_open_blacklist();
-bool                db_check_blacklist(char *);
+bool                db_check_blacklist(char *ip);
 bool                db_close_blacklist();
-
 
 /* dynamic or static blacklist */
 
@@ -47,12 +51,17 @@ typedef struct db_map_T
   char                msg[64];
 } db_map_T;
 
-bool                 db_map_check(char *, char *, char *, char *, size_t);
-bool                 db_map_add(char *, char *, char *, char *);
 
-bool                 db_map_open(char *bl);
-bool                 db_map_close(char *bl);
-bool                 db_map_close_all(void);
+bool                db_blackliste_check(char *why, char *key, db_map_T *r);
 
-#define __JDBBL_H_
+bool                db_map_check(char *, char *, char *, char *, size_t);
+bool                db_map_add(char *, char *, char *, char *);
+
+bool                db_map_open(char *bl);
+bool                db_map_close(char *bl);
+bool                db_map_close_all(void);
+
+/** @} */
+
+#define __ZE_DBBL_H
 #endif

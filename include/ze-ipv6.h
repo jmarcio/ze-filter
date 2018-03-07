@@ -22,8 +22,13 @@
  */
 
 
-#ifndef ZE_IPV6_H
+#ifndef __ZE_IPV6_H
 
+/** @addtogroup Network
+ *
+ * @{
+ */
+ 
 typedef struct
 {
   uint8_t             addr[16];
@@ -59,5 +64,7 @@ void                ipv6_prefix_str(ipv6_T *addr, char *buf, size_t size, int n)
  * ipv6_truncate
  */
 
-# define ZE_IPV6_H    1
-#endif             /* J_IPV6_H */
+/** @} */
+
+# define __ZE_IPV6_H    1
+#endif             /* __ZE_IPV6_H */

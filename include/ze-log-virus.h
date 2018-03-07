@@ -22,11 +22,18 @@
  */
 
 
-#ifndef ZE_LOG_VIRUS_H
+#ifndef __ZE_LOG_VIRUS_H
+
+/** @addtogroup Logging
+*
+* @{
+*/
 
 void                log_virus(char *, char *, char *);
 bool                log_virus_reopen();
 
-# define ZE_LOG_VIRUS_H    1
-#endif /* J_LOG_VIRUS_H */
+/** @} */
+
+# define __ZE_LOG_VIRUS_H    1
+#endif /* __ZE_LOG_VIRUS_H */
 

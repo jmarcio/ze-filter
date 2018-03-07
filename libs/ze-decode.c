@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -83,22 +84,18 @@ decode_rfc1521(out, in, sz)
 
   if (out == NULL)
     return 0;
-  if (in == NULL)
-  {
+  if (in == NULL) {
     strlcpy(out, "", sz);
     return 0;
   }
-  if (!is_rfc1521_encoded(in))
-  {
+  if (!is_rfc1521_encoded(in)) {
     strlcpy(out, in, sz);
     return strlen(out);
   }
 
   p = in;
-  if (zeStrRegex(p, expr, &pi, &pf, TRUE))
-  {
-    if (pi < sz)
-    {
+  if (zeStrRegex(p, expr, &pi, &pf, TRUE)) {
+    if (pi < sz) {
       strncpy(q, p, pi);
       q[pi] = '\0';
       p += pi;
@@ -108,27 +105,23 @@ decode_rfc1521(out, in, sz)
       sz = 0;
   }
 
-  for (; (sz > 0) && zeStrRegex(p, expr, &pi, &pf, TRUE); p += pf)
-  {
+  for (; (sz > 0) && zeStrRegex(p, expr, &pi, &pf, TRUE); p += pf) {
     long                ki, kf;
     char                strin[1024], strout[1024];
 
-    if (pi != 0)
-    {
+    if (pi != 0) {
       ZE_LogMsgWarning(0, "error zeStrRegex...");
       sz = 0;
       continue;
     }
 
-    if (zeStrRegex(p, "=[?].*[?][qQ][?]", &ki, &kf, TRUE))
-    {
+    if (zeStrRegex(p, "=[?].*[?][qQ][?]", &ki, &kf, TRUE)) {
       int                 nb = pf - kf - 2;
 
       if (nb < 0)
         continue;
       memset(strin, 0, sizeof (strin));
-      if (nb >= (sizeof (strin) - 1))
-      {
+      if (nb >= (sizeof (strin) - 1)) {
         sz = 0;
         break;
       } else
@@ -139,16 +132,14 @@ decode_rfc1521(out, in, sz)
       q += strlen(q);
       continue;
     }
-    if (zeStrRegex(p, "=[?].*[?][bB][?]", &ki, &kf, TRUE))
-    {
+    if (zeStrRegex(p, "=[?].*[?][bB][?]", &ki, &kf, TRUE)) {
       int                 nb = pf - kf - 2;
       size_t              no;
 
       if (nb < 0)
         continue;
       memset(strin, 0, sizeof (strin));
-      if (nb >= (sizeof (strin) - 1))
-      {
+      if (nb >= (sizeof (strin) - 1)) {
         sz = 0;
         break;
       } else
@@ -181,8 +172,7 @@ is_rfc2231_encoded(s)
   char               *ext_attr_chars = def_ext_attr_chars();
   char                rexp[256];
 
-  if (attr_chars != NULL && ext_attr_chars != NULL)
-  {
+  if (attr_chars != NULL && ext_attr_chars != NULL) {
     snprintf(rexp, sizeof (rexp), "[%s]*'.*'[%s]*", attr_chars, ext_attr_chars);
 
     ZE_MessageInfo(19, "RFC2231 regex : %s", rexp);
@@ -204,8 +194,7 @@ decode_rfc2231(out, in, sz)
 {
   char               *q = out, *p = in, *pi = in;
 
-  if (!is_rfc2231_encoded(in))
-  {
+  if (!is_rfc2231_encoded(in)) {
     strlcpy(out, in, sz);
     return 0;
   }
@@ -218,13 +207,10 @@ decode_rfc2231(out, in, sz)
     return 0;
 
   p++;
-  while (*p != '\0')
-  {
-    switch (*p)
-    {
+  while (*p != '\0') {
+    switch (*p) {
       case '%':
-        if ((strlen(p) >= 2) && isxdigit((int) p[1]) && isxdigit((int) p[2]))
-        {
+        if ((strlen(p) >= 2) && isxdigit((int) p[1]) && isxdigit((int) p[2])) {
           int                 x = 16 * htoi(p[1]) + htoi(p[2]);
 
           if (x > 127)
@@ -253,15 +239,13 @@ def_attr_chars()
   static char        *chars = NULL;
   static char        *p;
 
-  if (chars == NULL)
-  {
+  if (chars == NULL) {
     int                 c;
 
     if ((chars = malloc(256)) == NULL)
       return "ERROR";
     memset(chars, 0, 256);
-    for (p = chars, c = 0x20; c < 0x7F; c++)
-    {
+    for (p = chars, c = 0x20; c < 0x7F; c++) {
       if (strchr(" *'%", c) == NULL && strchr(TSPECIALS, c) == NULL)
         *p++ = c;
     }
@@ -282,15 +266,13 @@ def_ext_attr_chars()
   static char        *chars = NULL;
   static char        *p;
 
-  if (chars == NULL)
-  {
+  if (chars == NULL) {
     int                 c;
 
     if ((chars = malloc(256)) == NULL)
       return "ERROR";
     memset(chars, 0, 256);
-    for (p = chars, c = 0x20; c < 0x7F; c++)
-    {
+    for (p = chars, c = 0x20; c < 0x7F; c++) {
       if (strchr(" *'", c) == NULL && strchr(TSPECIALS, c) == NULL)
         *p++ = c;
     }
@@ -337,8 +319,7 @@ strascii(s, exa, exb)
     return 0;
 
   memset(ascii, 0, sizeof (ascii));
-  for (i = 0, c = 0x20; c < 0x7F; c++)
-  {
+  for (i = 0, c = 0x20; c < 0x7F; c++) {
 #if 0
     if ((exa == NULL || strchr(exa, c) == NULL) &&
         (exb == NULL || strchr(exb, c) == NULL))

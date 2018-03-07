@@ -22,7 +22,7 @@
  */
 
 
-#ifndef ZE_CALLBACK_H
+#ifndef __ZE_CALLBACK_H
 
 #define           CALLBACK_FIRST        0
 #define           CALLBACK_CONNECT      0
@@ -72,5 +72,5 @@ bool                callback_stats_update(int callback, timems_T dt);
 bool                callback_stats_dump(int fd, bool line);
 
 
-# define ZE_CALLBACK_H    1
-#endif             /* J_CALLBACK_H */
+# define __ZE_CALLBACK_H    1
+#endif             /* __ZE_CALLBACK_H */

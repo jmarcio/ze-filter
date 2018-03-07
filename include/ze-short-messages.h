@@ -22,10 +22,17 @@
  */
 
 
-#ifndef ZE_SHORT_MESSAGES_H
+#ifndef __ZE_SHORT_MESSAGES_H
+
+/** @addtogroup Heuristics
+*
+* @{
+*/
 
 
 
-# define ZE_SHORT_MESSAGES_H    1
-#endif /* J_SHORT_MESSAGES_H */
+/** @} */
+
+# define __ZE_SHORT_MESSAGES_H    1
+#endif /* __ZE_SHORT_MESSAGES_H */
 

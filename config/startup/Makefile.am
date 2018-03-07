@@ -3,11 +3,11 @@ SYSTEMD_OBJ = ze-filter.service ze-greyd.service
 SYSTEMD_DIR = /lib/systemd/system
 
 RC_OBJ = ze-filter.init ze-greyd.init
-RC_DIR = @RCDIR@
 
 all: $(SYSTEMD_OBJ)
 
 distclean::clean-hook
+	rm -f Makefile
 
 clean:: clean-hook
 

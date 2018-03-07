@@ -22,7 +22,12 @@
  */
 
 
-#ifndef __J_REGEX_H__
+#ifndef __ZE_REGEX_H
+
+/** @addtogroup APIs
+*
+* @{
+*/
 
 
 struct zeRegex_T
@@ -57,5 +62,7 @@ char               *zeRegexError(zeRegex_T *);
 
 
 
-#define __J_REGEX_H__
+/** @} */
+
+#define __ZE_REGEX_H
 #endif

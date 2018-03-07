@@ -79,7 +79,7 @@ zeMap_OK(map)
 bool
 zeMap_Open(map, env, name, rdonly, cache_size)
      ZEMAP_T            *map;
-     ZEDB_ENV_T          *env;
+     ZEDB_ENV_T         *env;
      char               *name;
      int                 rdonly;
      size_t              cache_size;
@@ -268,7 +268,7 @@ zeMap_Delete(map, key)
 bool
 zeMap_Browse(map, func, arg, skey, ksz, tmax)
      ZEMAP_T            *map;
-     ZEMAP_BROWSE_F        func;
+     ZEMAP_BROWSE_F      func;
      void               *arg;
      char               *skey;
      size_t              ksz;

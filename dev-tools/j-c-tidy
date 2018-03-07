@@ -1,0 +1,40 @@
+#! /bin/bash
+
+
+if [ ! -f /usr/bin/indent ]
+then
+  echo "* ERROR : can't find indent"
+  exit 1;
+fi
+
+OPT="-l80 -bap -bad -bli0 -bls -bs -ce -cdw -cli2 -cbi2 -cp20 -cs -di20 -hnl -nut -saf -sai -saw -ts2 -npcs"
+OPT=" -l80
+      -bbb
+      -cdb
+      -sc 
+      -bap 
+      -bad 
+      -brs 
+      -bs 
+      -br 
+      -ce 
+      -cdw 
+      -cli2 
+      -cbi2 
+      -cp20 
+      -cs 
+      -di20 
+      -hnl 
+      -nut 
+      -saf 
+      -sai 
+      -saw 
+      -ts2 
+      -npcs"
+
+for f in $*
+do
+  echo "* $f"
+  indent $OPT $f
+done
+

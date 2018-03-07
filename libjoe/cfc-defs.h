@@ -26,6 +26,13 @@
  * web site : http://foss.jose-marcio.org
  */
 
+#ifndef __ZE_CFC_DEFS_H
+
+/** @addtogroup TxtConf
+*
+* @{
+*/
+
 static char  *ENUM_ACTION[] = {
                    "OK",
                    "REJECT",
@@ -2194,4 +2201,9 @@ static cfvar_t cfvar[] = {
               "300"},
 
              {-1,0,NULL,0,NULL,NULL,NULL,NULL}};
+
+/** @} */
+
+#define __ZE_CFC_DEFS_H    1
+#endif
 

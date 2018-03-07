@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -46,13 +47,13 @@ header_date2secs(date)
   char               *p;
   struct tm           tm;
 
-  char *strptime(const char *s, const char *format, struct tm *tm);
+  char               *strptime(const char *s, const char *format,
+                               struct tm *tm);
 
   if (date == NULL)
     goto fin;
 
-  if (zeStrRegex(date, DATE_RE_1, &pi, NULL, TRUE))
-  {
+  if (zeStrRegex(date, DATE_RE_1, &pi, NULL, TRUE)) {
     char                buf[256];
     long                hour = 0;
     char               *format = NULL;
@@ -70,20 +71,19 @@ header_date2secs(date)
 
     if (tm.tm_year >= 138) {
       ZE_MessageNotice(10, "Date invalid ??? %s", date);
-      tm.tm_year = MIN(135, tm.tm_year); 
+      tm.tm_year = MIN(135, tm.tm_year);
     }
 
     secs = mktime(&tm) + hour * 3600;
 
     ZE_MessageInfo(15, "%d %d %d %02d %02d %02d %ld\n",
-                 tm.tm_mday, tm.tm_mon,
-                 tm.tm_year, tm.tm_hour, tm.tm_min, tm.tm_sec, secs);
+                   tm.tm_mday, tm.tm_mon,
+                   tm.tm_year, tm.tm_hour, tm.tm_min, tm.tm_sec, secs);
 
     goto fin;
   }
 
-  if (zeStrRegex(date, DATE_RE_2, &pi, NULL, TRUE))
-  {
+  if (zeStrRegex(date, DATE_RE_2, &pi, NULL, TRUE)) {
     char                buf[256];
     long                hour = 0;
     char               *format = NULL;
@@ -101,20 +101,21 @@ header_date2secs(date)
 
     if (tm.tm_year >= 138) {
       ZE_MessageNotice(10, "Date invalid ??? %s", date);
-      tm.tm_year = MIN(135, tm.tm_year); 
+      tm.tm_year = MIN(135, tm.tm_year);
     }
 
     secs = mktime(&tm) + hour * 3600;
 
     ZE_MessageInfo(15, "%d %d %d %02d %02d %02d %ld\n",
-                 tm.tm_mday, tm.tm_mon,
-                 tm.tm_year, tm.tm_hour, tm.tm_min, tm.tm_sec, secs);
+                   tm.tm_mday, tm.tm_mon,
+                   tm.tm_year, tm.tm_hour, tm.tm_min, tm.tm_sec, secs);
 
     goto fin;
   }
 
 fin:
-  ZE_MessageInfo(13, "header_date2secs : %s -> %ld", STRNULL(date, "NULL"), secs);
+  ZE_MessageInfo(13, "header_date2secs : %s -> %ld", STRNULL(date, "NULL"),
+                 secs);
 
   return secs;
 }
@@ -143,16 +144,14 @@ extract_email_address(dst, org, sz)
 
   pi = pf = 0;
 
-  if (zeStrRegex(org, expr, &pi, &pf, TRUE))
-  {
+  if (zeStrRegex(org, expr, &pi, &pf, TRUE)) {
     if (pf - pi - 1 <= sz)
       sz = pf - pi - 1;
 
     strlcpy(dst, org + pi + 1, sz);
 
     ZE_MessageInfo(19, "OK %s %s", org, dst);
-  } else
-  {
+  } else {
     int                 l = strlen(org);
 
     memset(dst, 0, sz);
@@ -193,8 +192,7 @@ extract_host_from_email_address(dst, org, sz)
 
   pi = pf = 0;
 
-  if (zeStrRegex(org, expr, &pi, &pf, TRUE))
-  {
+  if (zeStrRegex(org, expr, &pi, &pf, TRUE)) {
     int                 n;
 
     n = strcspn(org + pi, "@");
@@ -205,12 +203,10 @@ extract_host_from_email_address(dst, org, sz)
 
     strlcpy(dst, org + pi + 1, sz);
     zeStr2Lower(dst);
-  } else
-  {
+  } else {
     char               *p = strchr(org, '@');
 
-    if (p != NULL)
-    {
+    if (p != NULL) {
       p++;
       strlcpy(dst, p, sz);
     }
@@ -225,11 +221,11 @@ extract_host_from_email_address(dst, org, sz)
  *                                                                           *
  *****************************************************************************/
 #ifndef  SMFIS_CONTINUE
-# define SMFIS_CONTINUE   0
-# define SMFIS_REJECT     1
-# define SMFIS_DISCARD    2
-# define SMFIS_ACCEPT     3
-# define SMFIS_TEMPFAIL   4
+#define SMFIS_CONTINUE   0
+#define SMFIS_REJECT     1
+#define SMFIS_DISCARD    2
+#define SMFIS_ACCEPT     3
+#define SMFIS_TEMPFAIL   4
 #endif             /* SMFIS_CONTINUE */
 
 int
@@ -244,10 +240,9 @@ jc_string2reply(r, s)
   r->result = SMFIS_CONTINUE;
   r->signature = SIGNATURE;
 
-  if (zeStrRegex(s, "^ERROR", NULL, NULL, TRUE))
-  {
-    if (zeStrRegex(s, "^ERROR:[0-9]{3}:[0-9]\\.[0-9]\\.[0-9]:", NULL, NULL, TRUE))
-    {
+  if (zeStrRegex(s, "^ERROR", NULL, NULL, TRUE)) {
+    if (zeStrRegex
+        (s, "^ERROR:[0-9]{3}:[0-9]\\.[0-9]\\.[0-9]:", NULL, NULL, TRUE)) {
       char               *p = s;
       int                 n;
 
@@ -266,8 +261,7 @@ jc_string2reply(r, s)
       p += strcspn(p, ":") + 1;
       strlcpy(r->msg, p, sizeof (r->msg));
 
-      switch (*(r->rcode))
-      {
+      switch (*(r->rcode)) {
         case '4':
           r->result = SMFIS_TEMPFAIL;
           break;
@@ -278,8 +272,7 @@ jc_string2reply(r, s)
           r->result = SMFIS_REJECT;
           break;
       }
-    } else
-    {
+    } else {
       snprintf(r->rcode, sizeof (r->rcode), "550");
       snprintf(r->xcode, sizeof (r->xcode), "5.7.0");
       snprintf(r->msg, sizeof (r->msg), "Access denied");
@@ -289,14 +282,12 @@ jc_string2reply(r, s)
     goto fin;
   }
 
-  if (zeStrRegex(s, "^OK", NULL, NULL, TRUE))
-  {
+  if (zeStrRegex(s, "^OK", NULL, NULL, TRUE)) {
     r->result = SMFIS_CONTINUE;
     goto fin;
   }
 
-  if (zeStrRegex(s, "^REJECT", NULL, NULL, TRUE))
-  {
+  if (zeStrRegex(s, "^REJECT", NULL, NULL, TRUE)) {
     snprintf(r->rcode, sizeof (r->rcode), "550");
     snprintf(r->xcode, sizeof (r->xcode), "5.7.0");
     snprintf(r->msg, sizeof (r->msg), "Access denied");
@@ -305,8 +296,7 @@ jc_string2reply(r, s)
     goto fin;
   }
 
-  if (zeStrRegex(s, "^TEMPFAIL", NULL, NULL, TRUE))
-  {
+  if (zeStrRegex(s, "^TEMPFAIL", NULL, NULL, TRUE)) {
     snprintf(r->rcode, sizeof (r->rcode), "421");
     snprintf(r->xcode, sizeof (r->xcode), "4.5.1");
     snprintf(r->msg, sizeof (r->msg),
@@ -316,16 +306,14 @@ jc_string2reply(r, s)
     goto fin;
   }
 
-  if (zeStrRegex(s, "^[0-9]{3}:[0-9]\\.[0-9]\\.[0-9]:.+", NULL, NULL, TRUE))
-  {
+  if (zeStrRegex(s, "^[0-9]{3}:[0-9]\\.[0-9]\\.[0-9]:.+", NULL, NULL, TRUE)) {
     char               *argv[4];
     int                 argc;
 
     memset(argv, 0, sizeof (argv));
     argc = zeStr2Tokens(s, 4, argv, ":");
 
-    if (argc >= 2)
-    {
+    if (argc >= 2) {
       if (argv[0] == NULL || strlen(argv[0]) == 0)
         goto fin;
       if (argv[1] == NULL || strlen(argv[1]) == 0)
@@ -337,8 +325,7 @@ jc_string2reply(r, s)
       strlcpy(r->xcode, argv[1], sizeof (r->xcode));
       strlcpy(r->msg, argv[2], sizeof (r->msg));
 
-      switch (*(r->rcode))
-      {
+      switch (*(r->rcode)) {
         case '4':
           r->result = SMFIS_TEMPFAIL;
           break;
@@ -376,9 +363,10 @@ jc_fill_reply(r, rcode, xcode, msg, result)
 
   jc_reply_free(r);
 
-  /* XXX A voir */
-  if (*xcode != *rcode)
-  {
+  /*
+   * XXX A voir 
+   */
+  if (*xcode != *rcode) {
     ZE_LogMsgError(0, "rcode=(%s) and xcode=(%s) don't match", rcode, xcode);
     return FALSE;
   }

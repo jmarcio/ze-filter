@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -45,12 +46,10 @@
 #define   REGEXEC_FLAGS  (0)
 #endif
 
-typedef struct
-{
+typedef struct {
   uint8_t             sz;
   char                buf[64];
-}
-UUBUF_T;
+} UUBUF_T;
 
 /* ****************************************************************************
  *                                                                            *
@@ -75,8 +74,7 @@ is_uu_line(b)
   lc = (4 * ld) / 3;
 
   for (p = b; *p != 0; p++)
-    if ((*p < 0x20) || (*p > 0x60))
-    {
+    if ((*p < 0x20) || (*p > 0x60)) {
       printf("  CHAR = %c %d\n", *p, *p);
       return FALSE;
     }
@@ -119,8 +117,7 @@ uu_line_decode(b, line)
 
   ZE_MessageInfo(DBG_LEVEL, "LINE : %s", pi);
 
-  for (; lc > 0; lc -= 4)
-  {
+  for (; lc > 0; lc -= 4) {
     pi[0] -= 0x20;
     pi[1] -= 0x20;
     pi[2] -= 0x20;
@@ -157,51 +154,44 @@ uudecode_buffer(bufin, uublk)
   mode_t              mode = 0;
   char               *name = NULL;
 
-  if ((r = regcomp(&re_beg, RE_BEG, REGCOMP_FLAGS)) != 0)
-  {
+  if ((r = regcomp(&re_beg, RE_BEG, REGCOMP_FLAGS)) != 0) {
     char                sout[256];
 
     regerror(r, &re_beg, sout, sizeof (sout));
     ZE_LogMsgError(0, "regcomp error : %s", sout);
     ok = FALSE;
   }
-  if ((r = regcomp(&re_end, RE_END, REGCOMP_FLAGS)) != 0)
-  {
+  if ((r = regcomp(&re_end, RE_END, REGCOMP_FLAGS)) != 0) {
     char                sout[256];
 
     regerror(r, &re_end, sout, sizeof (sout));
     ZE_LogMsgError(0, "regcomp error : %s", sout);
     ok = FALSE;
   }
-  if (ok)
-  {
+  if (ok) {
     regmatch_t          rm_beg, rm_end;
 
     ok = TRUE;
 
-    if (regexec(&re_beg, bufin, 1, &rm_beg, REGEXEC_FLAGS) == 0)
-    {
+    if (regexec(&re_beg, bufin, 1, &rm_beg, REGEXEC_FLAGS) == 0) {
       ZE_MessageInfo(DBG_LEVEL, "BEGIN FOUND : %4d %4d", rm_beg.rm_so,
-                   rm_beg.rm_eo);
+                     rm_beg.rm_eo);
     } else
       ok = FALSE;
 
-    if (regexec(&re_end, bufin, 1, &rm_end, REGEXEC_FLAGS) == 0)
-    {
+    if (regexec(&re_end, bufin, 1, &rm_end, REGEXEC_FLAGS) == 0) {
       ZE_MessageInfo(DBG_LEVEL, "END   FOUND : %4d %4d", rm_end.rm_so,
-                   rm_end.rm_eo);
+                     rm_end.rm_eo);
     } else
       ok = FALSE;
 
-    if (ok && (rm_end.rm_so > rm_beg.rm_eo))
-    {
+    if (ok && (rm_end.rm_so > rm_beg.rm_eo)) {
       char               *pin = NULL;
       size_t              sz = rm_end.rm_so - rm_beg.rm_eo;
       char                line[1024];
 
       sz = rm_beg.rm_eo - rm_beg.rm_so;
-      if ((sz > 0) && (sz < sizeof (line)))
-      {
+      if ((sz > 0) && (sz < sizeof (line))) {
         char               *p;
         size_t              n;
 
@@ -211,8 +201,7 @@ uudecode_buffer(bufin, uublk)
         p = line + strcspn(line, " \t\r\n");
         p += strspn(p, " \t\r\n");
         n = strcspn(p, " \t\r\n");
-        if ((n > 0) && (n == strspn(p, "01234567")))
-        {
+        if ((n > 0) && (n == strspn(p, "01234567"))) {
           char                s[8];
           long                l = 0644;
 
@@ -221,8 +210,7 @@ uudecode_buffer(bufin, uublk)
             strncpy(s, p, n);
           errno = 0;
           l = strtol(s, (char **) NULL, 8);
-          if ((errno == EINVAL) || (errno == ERANGE))
-          {
+          if ((errno == EINVAL) || (errno == ERANGE)) {
             ZE_LogSysError("strtol : getting file mode");
           } else
             mode = l;
@@ -231,8 +219,7 @@ uudecode_buffer(bufin, uublk)
         p += strspn(p, " \t\r\n");
         n = strcspn(p, " \t\r\n");
         p[n] = 0;
-        if (n > 0)
-        {
+        if (n > 0) {
           if ((name = strdup(p)) == NULL)
             ZE_LogSysError("strdup : getting file name");
         }
@@ -242,8 +229,7 @@ uudecode_buffer(bufin, uublk)
       pin = (char *) malloc(sz + 1);
       bufout = (char *) malloc(sz + 1);
 
-      if ((pin != NULL) && (bufout != NULL))
-      {
+      if ((pin != NULL) && (bufout != NULL)) {
         char               *p, *q;
         int                 nbad = 0;
 
@@ -253,34 +239,28 @@ uudecode_buffer(bufin, uublk)
         p = pin + strspn(pin, "\n\r");
         q = bufout;
 
-        while (*p != '\0')
-        {
+        while (*p != '\0') {
           char                line[1024];
           UUBUF_T             uu;
 
           p = buf_get_next_line(line, p, sizeof (line));
-          if (is_uu_line(line))
-          {
+          if (is_uu_line(line)) {
             memset(&uu, 0, sizeof (uu));
-            if (uu_line_decode(&uu, line))
-            {
+            if (uu_line_decode(&uu, line)) {
               memcpy(q, uu.buf, uu.sz);
               q += uu.sz;
               sz_out += uu.sz;
             }
-          } else
-          {
+          } else {
             nbad++;
-            if (nbad > 1)
-            {
+            if (nbad > 1) {
               ZE_LogMsgError(0, "strange : more than one bad uu line");
               break;
             }
           }
         }
         *q = '\0';
-      } else
-      {
+      } else {
         ZE_LogSysError("malloc buffer uuencoded");
         if (bufout != NULL)
           free(bufout);
@@ -294,8 +274,7 @@ uudecode_buffer(bufin, uublk)
   regfree(&re_end);
 
   free_uu_block(uublk);
-  if (bufout != NULL)
-  {
+  if (bufout != NULL) {
     uublk->signature = SIGNATURE;
     uublk->buf = bufout;
     uublk->size = sz_out;
@@ -319,8 +298,7 @@ uudecode_file(fname, uublk)
   size_t              sz_in = 0;
   bool                ok = FALSE;
 
-  if ((fname == NULL) || (strlen(fname) == 0))
-  {
+  if ((fname == NULL) || (strlen(fname) == 0)) {
     ZE_LogMsgError(0, "fname NULL or empty string");
     return FALSE;
   }

@@ -22,8 +22,13 @@
  */
 
 
-#ifndef __JCPULOAD_H__
+#ifndef __ZE_CPULOAD_H
 
+/** @addtogroup Systools
+ *
+ * System Tools
+ * @{
+ */
 
 #define JCPU_IDLE          0
 #define JCPU_USER          1
@@ -41,6 +46,7 @@ void                cpuload_stop(void);
 
 void                load_measure_stop(void);
 
+/** @} */
 
-#define __JCPULOAD_H__
+#define __ZE_CPULOAD_H
 #endif

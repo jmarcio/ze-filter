@@ -21,7 +21,12 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#ifndef __JLIVEHISTORY_H__
+#ifndef __ZE_LIVEHISTORY_H
+
+/** @addtogroup Behaviour
+*
+* @{
+*/
 
 #define             LH_WORKTIME      0
 #define             LH_BADRCPT       1
@@ -44,7 +49,9 @@ int                 livehistory_add_entry(char *, time_t, int, int);
 void                livehistory_log_table(int, bool);
 
 
-#define __JLIVEHISTORY_H__
+/** @} */
+
+#define __ZE_LIVEHISTORY_H
 #endif
 
 

@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")
  * Copyright (C) 2000, 2001  Internet Software Consortium.
@@ -45,8 +46,7 @@ byteSwap(uint32_t * buf, unsigned words)
 {
   unsigned char      *p = (unsigned char *) buf;
 
-  do
-  {
+  do {
     *buf++ = (uint32_t) ((unsigned) p[3] << 8 | p[2]) << 16 |
       ((unsigned) p[1] << 8 | p[0]);
     p += 4;
@@ -185,28 +185,32 @@ zeMD5_Update(ZEMD5_T * ctx, const unsigned char *buf, unsigned int len)
 {
   uint32_t            t;
 
-  /* Update byte count */
+  /*
+   * Update byte count 
+   */
 
   t = ctx->bytes[0];
   if ((ctx->bytes[0] = t + len) < t)
     ctx->bytes[1]++;            /* Carry from low to high */
 
   t = 64 - (t & 0x3f);          /* Space available in ctx->in (at least 1) */
-  if (t > len)
-  {
+  if (t > len) {
     memcpy((unsigned char *) ctx->in + 64 - t, buf, len);
     return;
   }
-  /* First chunk is an odd size */
+  /*
+   * First chunk is an odd size 
+   */
   memcpy((unsigned char *) ctx->in + 64 - t, buf, t);
   byteSwap(ctx->in, 16);
   transform(ctx->buf, ctx->in);
   buf += t;
   len -= t;
 
-  /* Process data in 64-byte chunks */
-  while (len >= 64)
-  {
+  /*
+   * Process data in 64-byte chunks 
+   */
+  while (len >= 64) {
     memcpy(ctx->in, buf, 64);
     byteSwap(ctx->in, 16);
     transform(ctx->buf, ctx->in);
@@ -214,7 +218,9 @@ zeMD5_Update(ZEMD5_T * ctx, const unsigned char *buf, unsigned int len)
     len -= 64;
   }
 
-  /* Handle any remaining bytes of data. */
+  /*
+   * Handle any remaining bytes of data. 
+   */
   memcpy(ctx->in, buf, len);
 }
 
@@ -228,14 +234,17 @@ zeMD5_Final(ZEMD5_T * ctx, unsigned char *digest)
   int                 count = ctx->bytes[0] & 0x3f; /* Number of bytes in ctx->in */
   unsigned char      *p = (unsigned char *) ctx->in + count;
 
-  /* Set the first char of padding to 0x80.  There is always room. */
+  /*
+   * Set the first char of padding to 0x80.  There is always room. 
+   */
   *p++ = 0x80;
 
-  /* Bytes of padding needed to make 56 bytes (-8..55) */
+  /*
+   * Bytes of padding needed to make 56 bytes (-8..55) 
+   */
   count = 56 - 1 - count;
 
-  if (count < 0)
-  {                             /* Padding forces an extra block */
+  if (count < 0) {              /* Padding forces an extra block */
     memset(p, 0, count + 8);
     byteSwap(ctx->in, 16);
     transform(ctx->buf, ctx->in);
@@ -245,7 +254,9 @@ zeMD5_Final(ZEMD5_T * ctx, unsigned char *digest)
   memset(p, 0, count);
   byteSwap(ctx->in, 14);
 
-  /* Append length in bits and transform */
+  /*
+   * Append length in bits and transform 
+   */
   ctx->in[14] = ctx->bytes[0] << 3;
   ctx->in[15] = ctx->bytes[1] << 3 | ctx->bytes[0] >> 29;
   transform(ctx->buf, ctx->in);
@@ -254,4 +265,3 @@ zeMD5_Final(ZEMD5_T * ctx, unsigned char *digest)
   memcpy(digest, ctx->buf, 16);
   memset(ctx, 0, sizeof (ZEMD5_T)); /* In case it's sensitive */
 }
-

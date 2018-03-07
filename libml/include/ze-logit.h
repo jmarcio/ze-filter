@@ -22,7 +22,7 @@
  */
 
 
-#ifndef ZE_LOGIT_H
+#ifndef __ZE_LOGIT_H
 
 double              logit2(int a, int b);
 
@@ -32,5 +32,5 @@ double              logit(double p);
 
 double              logitinv(double x);
 
-# define ZE_LOGIT_H    1
-#endif             /* J_LOGIT_H */
+# define __ZE_LOGIT_H    1
+#endif             /* __ZE_LOGIT_H */

@@ -21,7 +21,7 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#ifndef __JSIGNAL_H__
+#ifndef __ZE_SIGNAL_H
 
 bool                setup_filter_signal_handler(void);
 
@@ -37,5 +37,5 @@ bool                reopen_all_log_files();
 
 void                lifesign_set(uint32_t);
 
-#define __JSIGNAL_H__
+#define __ZE_SIGNAL_H
 #endif

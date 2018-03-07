@@ -22,7 +22,7 @@
  */
 
 
-#ifndef __ZEFILTER_H__
+#ifndef __ZE_FILTER_H
 
 #include "version.h"
 #include "defs.h"
@@ -85,7 +85,7 @@ struct CONNID_T
 #include "ze-mailregex.h"
 
 #include "zeChkLib.h"
-/* #include "zePolicy.h" */
+#include "zePolicy.h"
 
 #include "macros.h"
 
@@ -189,7 +189,7 @@ extern time_t       tlongconn;
     if (cf_get_int(CF_RESOLVE_CACHE_ENABLE) == OPT_YES)	\
       resolve_cache_check("PTR", ip, name, size);	\
     if (strlen(name) == 0 && query)			\
-      get_hostbyaddr(ip,name,size);                     \
+      zeGet_HostByAddr(ip,name,size);                     \
   } while (0);
 
 
@@ -215,5 +215,5 @@ _FFR_RFC2046_MSGS_ARE_XFILES
 
 #define _FFR_RFC2046_MSGS_ARE_XFILES           1
 
-#define __ZEFILTER_H__
+#define __ZE_FILTER_H
 #endif

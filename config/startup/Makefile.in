@@ -149,6 +149,7 @@ CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
 DLLTOOL = @DLLTOOL@
+DOXYGEN = @DOXYGEN@
 DSYMUTIL = @DSYMUTIL@
 DUMPBIN = @DUMPBIN@
 ECHO_C = @ECHO_C@
@@ -203,9 +204,6 @@ PTHREAD_CC = @PTHREAD_CC@
 PTHREAD_CFLAGS = @PTHREAD_CFLAGS@
 PTHREAD_LIBS = @PTHREAD_LIBS@
 RANLIB = @RANLIB@
-RCDIR = @RCDIR@
-RCGREYD = @RCGREYD@
-RCSCRIPT = @RCSCRIPT@
 RSYNC_SERVER = @RSYNC_SERVER@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
@@ -280,7 +278,6 @@ top_srcdir = @top_srcdir@
 SYSTEMD_OBJ = ze-filter.service ze-greyd.service
 SYSTEMD_DIR = /lib/systemd/system
 RC_OBJ = ze-filter.init ze-greyd.init
-RC_DIR = @RCDIR@
 all: all-am
 
 .SUFFIXES:
@@ -484,6 +481,7 @@ uninstall-am:
 all: $(SYSTEMD_OBJ)
 
 distclean::clean-hook
+	rm -f Makefile
 
 clean:: clean-hook
 

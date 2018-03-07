@@ -22,7 +22,7 @@
  */
 
 
-#ifndef __ZE_LIBJC_H__
+#ifndef __ZE_LIBJC_H
 
 #include "version.h"
 #include "defs.h"
@@ -34,7 +34,6 @@
 #include "zeKStats.h"
 #include "ze-logit.h"
 #include "ze-name2id.h"
-#include "ze-regex.h"
 #include "ze-decode.h"
 #include "ze-base64.h"
 #include "ze-qp.h"
@@ -93,5 +92,5 @@
 
 
 
-#define __ZE_LIBJC_H__
+#define __ZE_LIBJC_H
 #endif

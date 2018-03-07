@@ -21,7 +21,7 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#ifndef __JRDFILE_H_
+#ifndef __ZE_RDFILE_H__
 
 #define            RD_ONE_COLUMN   1
 #define            RD_TWO_COLUMN   2
@@ -36,5 +36,5 @@ typedef int (*RDFILE_F)(void *, void *);
 
 int                 j_rd_file (char *fname, char *tag, RDFILE_F f, void *arg);
 
-#define __JRDFILE_H_
+#define __ZE_RDFILE_H__
 #endif

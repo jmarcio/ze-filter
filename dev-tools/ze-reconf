@@ -13,9 +13,17 @@ VERSION=`basename $HERE`
 VERSION=`echo $VERSION | sed s/zefilter-// | sed s/ze-filter-//`
 echo $VERSION > aux/release
 
-aux/set-release
+dev-tools/set-release
 
 set -x
 
+##autoheader
+##aclocal -I m4
+##libtoolize -i -c --no-warnings -q --recursive --automake
+#libtoolize -c -f --automake
+#automake --add-missing -c
+#autoconf 
+
 autoreconf
 
+autoreconf

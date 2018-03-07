@@ -41,8 +41,7 @@ get_id_by_name(data, name)
   if (data == NULL)
     return ID_NOT_FOUND;
 
-  for (p = data; p->name != NULL; p++)
-  {
+  for (p = data; p->name != NULL; p++) {
     if (strcasecmp(name, p->name) == 0)
       return p->id;
   }
@@ -64,8 +63,7 @@ get_name_by_id(data, id)
   if (data == NULL)
     return NULL;
 
-  for (p = data; p->name != NULL; p++)
-  {
+  for (p = data; p->name != NULL; p++) {
     if (id == p->id)
       return p->name;
   }

@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -76,8 +77,7 @@ bestof_add(b, v)
      bestof_T           *b;
      double              v;
 {
-  if (b->n < b->dim)
-  {
+  if (b->n < b->dim) {
     b->best[b->n++] = v;
     return TRUE;
   }

@@ -22,9 +22,9 @@
  */
 
 
-#ifndef __JDIVERS_H__
+#ifndef __ZE_DIVERS_H
 
 
 
-#define __JDIVERS_H__
+#define __ZE_DIVERS_H
 #endif

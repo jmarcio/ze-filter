@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -42,7 +43,7 @@
  *                                                                            *
  **************************************************************************** */
 void               *
-SharedFile_Open (shm, name, size)
+SharedFile_Open(shm, name, size)
      SHMOBJ_T           *shm;
      char               *name;
      size_t              size;
@@ -61,12 +62,12 @@ SharedFile_Open (shm, name, size)
   if (size == 0)
     return NULL;
 
-  if ((fd = open (name, O_RDWR | O_CREAT, 0640)) < 0) {
+  if ((fd = open(name, O_RDWR | O_CREAT, 0640)) < 0) {
     ZE_LogSysError("open error");
     return NULL;
   }
 
-  if (fstat (fd, &st) != 0) {
+  if (fstat(fd, &st) != 0) {
     ZE_LogSysError("fstat error");
     close(fd);
     return NULL;
@@ -81,38 +82,37 @@ SharedFile_Open (shm, name, size)
       return NULL;
     }
 #else
-    if ((buf = malloc (size)) == NULL) {
+    if ((buf = malloc(size)) == NULL) {
       ZE_LogSysError("malloc error");
       close(fd);
       return NULL;
     }
-    memset (buf, 0, size);
+    memset(buf, 0, size);
 #if HAVE_PWRITE
-    if (pwrite (fd, buf, (size - osize), osize) < (size - osize)) {
+    if (pwrite(fd, buf, (size - osize), osize) < (size - osize)) {
       ZE_LogSysError("pwrite error");
     }
 #else
-    if (write (fd, buf, size) < 0) {
+    if (write(fd, buf, size) < 0) {
       ZE_LogSysError("write error");
     }
 #endif
-    free (buf);
+    free(buf);
 #endif
   }
 
-  if ((buf = mmap (NULL, size, (PROT_READ | PROT_WRITE),
-                   MAP_SHARED, fd, 0)) == NULL) {
+  if ((buf = mmap(NULL, size, (PROT_READ | PROT_WRITE),
+                  MAP_SHARED, fd, 0)) == NULL) {
     ZE_LogSysError("mmap error");
-    close (fd);
+    close(fd);
     return NULL;
   }
-
 #if 0
-  close (fd);
+  close(fd);
   fd = -1;
 #endif
 
-  if ((shm->name = strdup (name)) == NULL) {
+  if ((shm->name = strdup(name)) == NULL) {
     ZE_LogSysError("strdup error");
   }
   shm->buf = buf;
@@ -127,23 +127,23 @@ SharedFile_Open (shm, name, size)
  *                                                                            *
  **************************************************************************** */
 void
-SharedFile_Close (shm)
+SharedFile_Close(shm)
      SHMOBJ_T           *shm;
 {
   if (shm == NULL)
     return;
 
-  if (munmap (shm->buf, shm->size) != 0) {
+  if (munmap(shm->buf, shm->size) != 0) {
     ZE_LogSysError("munmap error");
   }
 
   if (shm->fd >= 0)
-    close (shm->fd);
+    close(shm->fd);
 
   if (shm->name != NULL)
-    free (shm->name);
+    free(shm->name);
 
-  memset (shm, 0, sizeof (SHMOBJ_T));
+  memset(shm, 0, sizeof (SHMOBJ_T));
 }
 
 /* ****************************************************************************
@@ -151,7 +151,7 @@ SharedFile_Close (shm)
  *                                                                            *
  **************************************************************************** */
 size_t
-SharedFile_Size (shm)
+SharedFile_Size(shm)
      SHMOBJ_T           *shm;
 {
   struct stat         st;
@@ -159,7 +159,7 @@ SharedFile_Size (shm)
   if (shm == NULL)
     return -1;
 
-  if (fstat (shm->fd, &st) != 0) {
+  if (fstat(shm->fd, &st) != 0) {
     ZE_LogSysError("fstat error");
     return -1;
   }
@@ -171,7 +171,7 @@ SharedFile_Size (shm)
  *                                                                            *
  **************************************************************************** */
 size_t
-SharedFile_Resize (shm, size)
+SharedFile_Resize(shm, size)
      SHMOBJ_T           *shm;
      size_t              size;
 {
@@ -180,12 +180,12 @@ SharedFile_Resize (shm, size)
   if (shm == NULL)
     return -1;
 
-  if (fstat (shm->fd, &st) != 0) {
+  if (fstat(shm->fd, &st) != 0) {
     ZE_LogSysError("fstat error");
     return -1;
   }
   if (st.st_size != size) {
-    if (ftruncate (shm->fd, size) != 0) {
+    if (ftruncate(shm->fd, size) != 0) {
       ZE_LogSysError("ftruncate error");
       return -1;
     }
@@ -199,7 +199,7 @@ SharedFile_Resize (shm, size)
  *                                                                            *
  **************************************************************************** */
 void               *
-SharedMemory_Open (shm, name, size)
+SharedMemory_Open(shm, name, size)
      SHMOBJ_T           *shm;
      char               *name;
      size_t              size;
@@ -218,12 +218,12 @@ SharedMemory_Open (shm, name, size)
   if (size == 0)
     return NULL;
 
-  if ((fd = shm_open (name, O_RDWR | O_CREAT, 0640)) < 0) {
+  if ((fd = shm_open(name, O_RDWR | O_CREAT, 0640)) < 0) {
     ZE_LogSysError("shm_open error");
     return NULL;
   }
 
-  if (fstat (fd, &st) != 0) {
+  if (fstat(fd, &st) != 0) {
     ZE_LogSysError("fstat error");
     close(fd);
     return NULL;
@@ -238,38 +238,37 @@ SharedMemory_Open (shm, name, size)
       return NULL;
     }
 #else
-    if ((buf = malloc (size)) == NULL) {
+    if ((buf = malloc(size)) == NULL) {
       ZE_LogSysError("malloc error");
       close(fd);
       return NULL;
     }
-    memset (buf, 0, size);
+    memset(buf, 0, size);
 #if HAVE_PWRITE
-    if (pwrite (fd, buf, (size - osize), osize) < (size - osize)) {
+    if (pwrite(fd, buf, (size - osize), osize) < (size - osize)) {
       ZE_LogSysError("pwrite error");
     }
 #else
-    if (write (fd, buf, size) < 0) {
+    if (write(fd, buf, size) < 0) {
       ZE_LogSysError("write error");
     }
 #endif
-    free (buf);
+    free(buf);
 #endif
   }
 
-  if ((buf = mmap (NULL, size, (PROT_READ | PROT_WRITE),
-                   MAP_SHARED, fd, 0)) == NULL) {
+  if ((buf = mmap(NULL, size, (PROT_READ | PROT_WRITE),
+                  MAP_SHARED, fd, 0)) == NULL) {
     ZE_LogSysError("mmap error");
     return NULL;
   }
-
 #if 0
   close(fd);
   fd = -1;
 #endif
 
   shm->fd = fd;
-  if ((shm->name = strdup (name)) == NULL) {
+  if ((shm->name = strdup(name)) == NULL) {
     ZE_LogSysError("strdup error");
   }
   shm->buf = buf;
@@ -283,26 +282,26 @@ SharedMemory_Open (shm, name, size)
  *                                                                            *
  **************************************************************************** */
 void
-SharedMemory_Close (shm)
+SharedMemory_Close(shm)
      SHMOBJ_T           *shm;
 {
   if (shm == NULL)
     return;
 
-  if (shm_unlink (shm->name) != 0) {
+  if (shm_unlink(shm->name) != 0) {
     ZE_LogSysError("shm_unlink error");
   }
 
-  if (munmap (shm->buf, shm->size) != 0) {
+  if (munmap(shm->buf, shm->size) != 0) {
     ZE_LogSysError("munmap error");
   }
 
   if (shm->fd >= 0)
     close(shm->fd);
   if (shm->name != NULL)
-    free (shm->name);
+    free(shm->name);
 
-  memset (shm, 0, sizeof (SHMOBJ_T));
+  memset(shm, 0, sizeof (SHMOBJ_T));
 }
 
 /* ****************************************************************************
@@ -310,7 +309,7 @@ SharedMemory_Close (shm)
  *                                                                            *
  **************************************************************************** */
 size_t
-SharedMemory_Size (shm)
+SharedMemory_Size(shm)
      SHMOBJ_T           *shm;
 {
   struct stat         st;
@@ -318,7 +317,7 @@ SharedMemory_Size (shm)
   if (shm == NULL)
     return -1;
 
-  if (fstat (shm->fd, &st) != 0) {
+  if (fstat(shm->fd, &st) != 0) {
     ZE_LogSysError("fstat error");
     return -1;
   }
@@ -330,7 +329,7 @@ SharedMemory_Size (shm)
  *                                                                            *
  **************************************************************************** */
 size_t
-SharedMemory_Resize (shm, size)
+SharedMemory_Resize(shm, size)
      SHMOBJ_T           *shm;
      size_t              size;
 {
@@ -339,12 +338,12 @@ SharedMemory_Resize (shm, size)
   if (shm == NULL)
     return -1;
 
-  if (fstat (shm->fd, &st) != 0) {
+  if (fstat(shm->fd, &st) != 0) {
     ZE_LogSysError("fstat error");
     return -1;
   }
   if (st.st_size != size) {
-    if (ftruncate (shm->fd, size) != 0) {
+    if (ftruncate(shm->fd, size) != 0) {
       ZE_LogSysError("ftruncate error");
       return -1;
     }

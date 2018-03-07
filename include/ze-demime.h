@@ -22,7 +22,12 @@
  */
 
 
-#ifndef __JDEMIME_H__
+#ifndef __ZE_DEMIME_H
+
+/** @addtogroup MsgTools
+*
+* @{
+*/
 
 #define    MIME_ERROR_UNUSED_BOUNDARY        0
 
@@ -90,5 +95,7 @@ char               *mime_type_name(int);
 
 void                set_mime_debug(bool);
 
-#define __JDEMIME_H__
+/** @} */
+
+#define __ZE_DEMIME_H
 #endif

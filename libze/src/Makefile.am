@@ -16,7 +16,7 @@ libze_a_SOURCES       = 	zeString.c \
 				zeLinkedList.c \
 				zeBTree.c \
 				ze-buffer.c \
-				ze-inet.c \
+				zeInet.c \
 				zeShared.c \
 				zeTable.c \
 				zeTime.c \

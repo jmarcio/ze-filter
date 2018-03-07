@@ -22,7 +22,12 @@
  */
 
 
-#ifndef ZE_GREY_CLIENT_H
+#ifndef __ZE_GREY_CLIENT_H
+
+/** @addtogroup Greylisting 
+ *
+ * @{
+ */
 
 int                 remote_grey_check(char *ip, char *from,
                                       char *to, char *hostname);
@@ -34,5 +39,7 @@ void                remote_grey_quit();
 
 void                grey_channel_error_clear();
 
-# define ZE_GREY_CLIENT_H    1
-#endif             /* J_GREY_CLIENT_H */
+/** @} */
+
+# define __ZE_GREY_CLIENT_H    1
+#endif             /* __ZE_GREY_CLIENT_H */

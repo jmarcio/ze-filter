@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -40,23 +41,24 @@ convert_8to7(buf, convert_blanks)
 
   int                 pc = '\0', nc = 0;
 
-  for (p = q = buf; *p != '\0'; p++)
-  {
+  for (p = q = buf; *p != '\0'; p++) {
     int                 c = *((unsigned char *) p);
 
-    /* This is general... */
-    if (c == pc)
-    {
+    /*
+     * This is general... 
+     */
+    if (c == pc) {
       nc++;
       if (nc > 10 && !isdigit(c))
         continue;
-    } else
-    {
+    } else {
       nc = 0;
       pc = c;
     }
 
-    /* this is only for _ (underscore) */
+    /*
+     * this is only for _ (underscore) 
+     */
     if (c == '_')
       nUnderscore++;
     else
@@ -65,15 +67,12 @@ convert_8to7(buf, convert_blanks)
     if (nUnderscore > 3)
       continue;
 
-    if (*p == 0x1B)
-    {
+    if (*p == 0x1B) {
       continue;
     }
 
-    if (c < 0x20)
-    {
-      if (*p == '\n' || *p == '\r' || *p == '\t')
-      {
+    if (c < 0x20) {
+      if (*p == '\n' || *p == '\r' || *p == '\t') {
         if (convert_blanks)
           *q++ = ' ';
         else
@@ -86,8 +85,7 @@ convert_8to7(buf, convert_blanks)
       continue;
     }
 
-    if (c > 0x7F)
-    {
+    if (c > 0x7F) {
 #define CHR_128_159        "________________________________"
 #define CHR_160_191        "________________________________"
 #define CHR_192_223        "AAAAAAACEEEEIIIIGNOOOOOxOUUUUYPB"
@@ -119,21 +117,18 @@ convert_filename_8to7(buf)
 
   ASSERT(buf != NULL);
 
-  for (p = q = buf; *p != '\0'; p++)
-  {
+  for (p = q = buf; *p != '\0'; p++) {
     int                 c = *((unsigned char *) p);
 
     if (*p == 0x1B)
       continue;
 
-    if (c < 0x20)
-    {
+    if (c < 0x20) {
       *q++ = '_';
       continue;
     }
 
-    if (c > 0x7F)
-    {
+    if (c > 0x7F) {
 #define CHR_128_159        "________________________________"
 #define CHR_160_191        "________________________________"
 #define CHR_192_223        "AAAAAAACEEEEIIIIGNOOOOOxOUUUUYPB"

@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -22,7 +23,13 @@
  */
 
 
-#ifndef ZE_GREY_H
+#ifndef __ZE_GREY_H
+
+/** @addtogroup Greylisting
+ *
+ * Greylisting Filtering
+ * @{
+ */
 
 
 #define             GREY_OK       200
@@ -75,7 +82,7 @@
 int                 grey_check(char *, char *, char *, char *, bool *, bool);
 int                 grey_validate(char *, char *, char *, char *);
 
-typedef             bool (*greycleanup_F)(char *);
+typedef             bool(*greycleanup_F) (char *);
 
 bool                grey_init(char *, bool, int);
 bool                grey_reload();
@@ -84,7 +91,7 @@ void                grey_close();
 bool                grey_set_tuples(char *ip, char *from, char *to);
 
 bool                grey_set_delays(time_t tp_min_norm, time_t tp_max_norm,
-				    time_t tp_min_null, time_t tp_max_null);
+                                    time_t tp_min_null, time_t tp_max_null);
 
 bool                grey_set_lifetime(time_t tv, time_t tw, time_t tb);
 
@@ -108,5 +115,7 @@ bool                grey_remove_entry(char *where, char *key);
 
 bool                grey_remove_entries_from_file(char *where, char *fname);
 
-# define ZE_GREY_H    1
-#endif             /* J_GREY_H */
+/** @} */
+
+#define __ZE_GREY_H    1
+#endif             /* __ZE_GREY_H */

@@ -41,7 +41,7 @@ typedef struct {
   double              nOdds;
 } oradata_T;
 
-static zeTbl_T    htbl;
+static zeTable_T      htbl;
 
 static pthread_mutex_t st_mutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -202,7 +202,7 @@ read_it(path, tag)
 {
   int                 r;
 
-  r = zm_RdFile(path, tag, add_oradata_rec, NULL);
+  r = zeRdFile(path, tag, add_oradata_rec, NULL);
 
   return r >= 0;
 }

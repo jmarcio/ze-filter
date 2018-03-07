@@ -20,7 +20,6 @@ libcommon_a_SOURCES   = 	ze-base64.c \
 				ze-name2id.c \
 				ze-parse-dns.c \
 				ze-qp.c \
-				ze-regex.c \
 				ze-server.c \
 				ze-client.c \
 				ze-smtp-divers.c \

@@ -958,7 +958,7 @@ read_it(path, tag)
 {
   int                 r;
 
-  r = zm_RdFile(path, tag, read_oracle_def_string, NULL);
+  r = zeRdFile(path, tag, read_oracle_def_string, NULL);
 
   return r >= 0;
 }

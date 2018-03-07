@@ -90,7 +90,7 @@ static struct {
 
   pthread_mutex_t     mutex;
 
-  ZEBT_T               db_empty;
+  ZEBT_T              db_empty;
 
   struct Bucket_T     bucket[K_MIN];
 } hdata = {
@@ -126,7 +126,7 @@ livehistory_cmp(a, b)
   if ((ta == NULL) && (tb == NULL))
     return 0;
 
-  return ip_strcmp(ta->ip, tb->ip);
+  return zeIP_StrCmp(ta->ip, tb->ip);
 }
 
 /* ****************************************************************************
@@ -221,9 +221,9 @@ livehistory_clean_table()
   DATA_LOCK();
 
   if ((hdata.last + DTCLEANUP / 2 < now) && ((hdata.last + DTCLEANUP < now)
-                                             || (zeBTree_Count(&hdata.db_empty) >
-                                                 NB_BTCLEANUP))) {
-    ZEBT_T               tmp = JBT_INITIALIZER;
+                                             || (zeBTree_Count(&hdata.db_empty)
+                                                 > NB_BTCLEANUP))) {
+    ZEBT_T              tmp = JBT_INITIALIZER;
 
     if (zeBTree_Init(&tmp, sizeof (ShortHist_T), livehistory_cmp)) {
       if (zeBTree_Cpy(&tmp, &hdata.db_empty, select_function, (void *) &now)) {
@@ -323,8 +323,8 @@ livehistory_add_entry(ip, now, n, what)
   DATA_UNLOCK();
 
   if ((hdata.last + DTCLEANUP / 2 < now) && ((hdata.last + DTCLEANUP < now)
-                                             || (zeBTree_Count(&hdata.db_empty) >
-                                                 NB_BTCLEANUP)))
+                                             || (zeBTree_Count(&hdata.db_empty)
+                                                 > NB_BTCLEANUP)))
     livehistory_clean_table();
 
   return res;

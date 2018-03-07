@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -118,18 +119,15 @@ base64_decode(out, in, nout, nin)
   no = 1;
 
   nsep = 0;
-  while ((p != NULL) && (*p != '\0'))
-  {
+  while ((p != NULL) && (*p != '\0')) {
 
-    if (*p == '=')
-    {
+    if (*p == '=') {
       while (di < 4)
         ibuf[di++] = '=';
       break;
     }
 
-    if (strchr(" \t\r\n", *p))
-    {
+    if (strchr(" \t\r\n", *p)) {
       if (nsep++ == 2)
         break;
       p++;
@@ -137,8 +135,7 @@ base64_decode(out, in, nout, nin)
     }
     nsep = 0;
 
-    if (!ISB64CHAR(*p))
-    {
+    if (!ISB64CHAR(*p)) {
       res = 1;
       break;
     }
@@ -146,8 +143,7 @@ base64_decode(out, in, nout, nin)
     ibuf[di++] = *p;
     ibuf[di] = '\0';
 
-    if (di == 4)
-    {
+    if (di == 4) {
       int                 l;
 
       if ((nout != NULL) && (no + 3 > *nout))
@@ -168,8 +164,7 @@ base64_decode(out, in, nout, nin)
 
   }
 
-  if ((di > 0) && ((nout == NULL) || (no + 3 < *nout)))
-  {
+  if ((di > 0) && ((nout == NULL) || (no + 3 < *nout))) {
     int                 l;
 
     while (di < 4)
@@ -214,15 +209,13 @@ new_base64_decode(bufin, size)
   size_t              sz_in, sz_out;
   size_t              no = 0;
 
-  if ((bufin == NULL) || (strlen(bufin) == 0))
-  {
+  if ((bufin == NULL) || (strlen(bufin) == 0)) {
     ZE_LogMsgError(0, "input buffer NULL or empty");
     return NULL;
   }
 
   sz_in = strlen(bufin);
-  if ((bufout = (char *) malloc(sz_in + 1)) == NULL)
-  {
+  if ((bufout = (char *) malloc(sz_in + 1)) == NULL) {
     ZE_LogSysError("malloc output buffer");
     return NULL;
   }
@@ -234,18 +227,15 @@ new_base64_decode(bufin, size)
   no = 1;
 
   nsep = 0;
-  while ((p != NULL) && (*p != '\0'))
-  {
+  while ((p != NULL) && (*p != '\0')) {
 
-    if (*p == '=')
-    {
+    if (*p == '=') {
       while (di < 4)
         ibuf[di++] = '=';
       break;
     }
 
-    if (strchr(" \t\r\n", *p))
-    {
+    if (strchr(" \t\r\n", *p)) {
       if (nsep++ == 2)
         break;
       p++;
@@ -253,16 +243,14 @@ new_base64_decode(bufin, size)
     }
     nsep = 0;
 
-    if (!ISB64CHAR(*p))
-    {
+    if (!ISB64CHAR(*p)) {
       res = 1;
       break;
     }
 
     ibuf[di++] = *p;
 
-    if (di == 4)
-    {
+    if (di == 4) {
       int                 l;
 
       if (no + 3 > sz_in)
@@ -282,8 +270,7 @@ new_base64_decode(bufin, size)
 
   }
 
-  if ((di > 0) && (no + 3 < sz_in))
-  {
+  if ((di > 0) && (no + 3 < sz_in)) {
     int                 l;
 
     while (di < 4)
@@ -329,8 +316,7 @@ base64_encode(sout, szout, sin, szin)
     return FALSE;
 
   sz = szin;
-  while (sz > 0)
-  {
+  while (sz > 0) {
     int                 i;
 
     memset(bin, 0, sizeof (bin));
@@ -348,14 +334,12 @@ base64_encode(sout, szout, sin, szin)
     i = ((bin[0] & 0x03) << 4) | ((bin[1] & 0xF0) >> 4);
     cin[1] = B64[i];
 
-    if (sz > 1)
-    {
+    if (sz > 1) {
       i = ((bin[1] & 0x0F) << 2) | ((bin[2] & 0xC0) >> 6);
       cin[2] = B64[i];
     }
 
-    if (sz > 2)
-    {
+    if (sz > 2) {
       i = (bin[2] & 0x3F);
       cin[3] = B64[i];
     }

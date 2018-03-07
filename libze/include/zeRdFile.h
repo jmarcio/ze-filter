@@ -21,7 +21,7 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#ifndef __JRDFILE_H_
+#ifndef __ZE_RDFILE_H
 
 #define            RD_ONE_COLUMN   1
 #define            RD_TWO_COLUMN   2
@@ -29,12 +29,12 @@
 #define            RD_NORMAL       0
 #define            RD_REVERSE      1
 
-int                 zm_RdTextFile (char *, int, int, char *,
+int                 zeRdTextFile (char *, int, int, char *,
                                     int (*)(void *, void *));
 
 typedef int (*RDFILE_F)(void *, void *);
 
-int                 zm_RdFile (char *fname, char *tag, RDFILE_F f, void *arg);
+int                 zeRdFile (char *fname, char *tag, RDFILE_F f, void *arg);
 
-#define __JRDFILE_H_
+#define __ZE_RDFILE_H
 #endif

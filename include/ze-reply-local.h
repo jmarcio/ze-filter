@@ -1,5 +1,5 @@
 
-#ifndef __JREPLY_LOCAL_H__
+#ifndef __ZE_REPLY_LOCAL_H
 
-#define __JREPLY_LOCAL_H__
+#define __ZE_REPLY_LOCAL_H
 #endif

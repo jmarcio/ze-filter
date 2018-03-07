@@ -22,7 +22,7 @@
  */
 
 
-#ifndef __JBUFFER_H__
+#ifndef __ZE_BUFFER_H
 
 long                bufspn (char *, long, char *);
 long                bufcspn (char *, long, char *);
@@ -40,5 +40,5 @@ bool                text_word_length(char *, kstats_T *, size_t);
 long                text_buf_histogram(char *, size_t, long *);
 
 
-#define __JBUFFER_H__
+#define __ZE_BUFFER_H
 #endif

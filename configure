@@ -658,9 +658,6 @@ PTHREAD_LIBS
 PTHREAD_CC
 LANGSPEC
 XFILES_DEF
-RCGREYD
-RCSCRIPT
-RCDIR
 CONFDIR
 STATEDIR
 SPOOLDIR
@@ -713,6 +710,7 @@ LDFLAGS
 CFLAGS
 CC
 RSYNC_SERVER
+DOXYGEN
 PERL
 host_os
 host_vendor
@@ -809,7 +807,6 @@ with_work_dir
 with_ze_greyd_dir
 with_spool_dir
 with_conf_dir
-with_rc_dir
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1483,8 +1480,6 @@ Optional Packages:
                           ze-greyd work dir (default /var/ze-filter/ze-greydb)
   --with-spool-dir=PATH   ze-filter spool dir (default /var/spool/ze-filter)
   --with-conf-dir=PATH    ze-filter config dir (default /etc/ze-filter)
-  --with-rc-dir=PATH      set system start-up dir (default /etc/init.d or
-                          /etc/rc.d)
 
 Some influential environment variables:
   CC          C compiler command
@@ -3486,6 +3481,45 @@ fi
 
 
 
+# Extract the first word of "doxygen", so it can be a program name with args.
+set dummy doxygen; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_DOXYGEN+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$DOXYGEN"; then
+  ac_cv_prog_DOXYGEN="$DOXYGEN" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_DOXYGEN="doxygen"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+  test -z "$ac_cv_prog_DOXYGEN" && ac_cv_prog_DOXYGEN="echo"
+fi
+fi
+DOXYGEN=$ac_cv_prog_DOXYGEN
+if test -n "$DOXYGEN"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $DOXYGEN" >&5
+$as_echo "$DOXYGEN" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+
 CONF_FILE=compile.conf
 
 function getCompileConf()
@@ -3505,8 +3539,6 @@ CONF_CONFDIR=$(getCompileConf CONFDIR)
 CONF_WORKROOT=$(getCompileConf WORKROOT)
 CONF_SPOOLDIR=$(getCompileConf SPOOLDIR)
 CONF_ZEGREYDDIR=$(getCompileConf ZEGREYDDIR)
-
-CONF_RCDIR=$(getCompileConf RCDIR)
 
 CONF_CC=$(getCompileConf CC)
 CONF_CFLAGS=$(getCompileConf CFLAGS)
@@ -12980,56 +13012,6 @@ HAS_SYSTEMD=no
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $HAS_SYSTEMD" >&5
 $as_echo "$HAS_SYSTEMD" >&6; }
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking where default start-up scripts are installed" >&5
-$as_echo_n "checking where default start-up scripts are installed... " >&6; }
-
-if test -n "$CONF_RCDIR" ;
-then
-  RCDIR=$CONF_RCDIR
-else
-  RCDIR=/etc/init.d
-  for dir in /etc/init.d /etc/rc.d /etc/rc.d/init.d /sbin/init.d /usr/local/etc/rc.d
-  do
-    if test -d $dir
-    then
-      RCDIR=$dir
-      break
-    fi
-  done
-  case $build
-  in
-    *freebsd*)
-      RCDIR="/usr/local/etc/rc.d"
-      ;;
-    *)
-      ;;
-  esac
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $RCDIR" >&5
-$as_echo "$RCDIR" >&6; }
-
-
-# Check whether --with-rc-dir was given.
-if test "${with_rc_dir+set}" = set; then :
-  withval=$with_rc_dir; RCDIR="$withval"
-fi
-
-
-
-case $build
-in
-  *freebsd*)
-    RCSCRIPT="ze-filter.sh"
-    RCGREYD="ze-greyd.sh"
-    ;;
-  *)
-    RCSCRIPT="ze-filter"
-    RCGREYD="ze-greyd"
-    ;;
-esac
-
-
-
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking file extensions defined at xfiles.def file" >&5
 $as_echo_n "checking file extensions defined at xfiles.def file... " >&6; }
 XFILES_DEF=""
@@ -16844,6 +16826,9 @@ ac_config_files="$ac_config_files config/startup/ze-greyd.service"
 ac_config_files="$ac_config_files config/startup/Makefile"
 
 
+ac_config_files="$ac_config_files doc/Doxyfile"
+
+
 
 ac_config_commands="$ac_config_commands default"
 
@@ -17886,6 +17871,7 @@ do
     "config/startup/ze-filter.service") CONFIG_FILES="$CONFIG_FILES config/startup/ze-filter.service" ;;
     "config/startup/ze-greyd.service") CONFIG_FILES="$CONFIG_FILES config/startup/ze-greyd.service" ;;
     "config/startup/Makefile") CONFIG_FILES="$CONFIG_FILES config/startup/Makefile" ;;
+    "doc/Doxyfile") CONFIG_FILES="$CONFIG_FILES doc/Doxyfile" ;;
     "default") CONFIG_COMMANDS="$CONFIG_COMMANDS default" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
@@ -19343,8 +19329,6 @@ echo "  ze-filter user           : $USER" >> config.results
 echo "  ze-filter group          : $GROUP" >> config.results
 echo "  Create User/Group        : $CREATE" >> config.results
 echo "  prefix dir               : $prefix" >> config.results
-echo "  start-up script dir      : $RCDIR" >> config.results
-echo "  start-up scripts         : ze-filter$RCSUFFIX ze-greyd$RCSUFFIX" >> config.results
 echo "  configuration files dir  : $CONFDIR" >> config.results
 echo "  work dir                 : $WORKROOT" >> config.results
 echo "  state dir                : $STATEDIR" >> config.results

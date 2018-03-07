@@ -22,11 +22,18 @@
  */
 
 
-#ifndef ZE_CONVERT_8TO7_H
+#ifndef __ZE_CONVERT_8TO7_H
+
+/** @addtogroup MsgTools
+*
+* @{
+*/
 
 void                convert_8to7(char *buf, bool convert_spaces);
 
 void                convert_filename_8to7(char *buf);
 
-# define ZE_CONVERT_8TO7_H    1
-#endif             /* J_CONVERT_8TO7_H */
+/** @} */
+
+# define __ZE_CONVERT_8TO7_H    1
+#endif             /* __ZE_CONVERT_8TO7_H */

@@ -8,25 +8,27 @@ chomp $date;
 foreach (@ARGV) {
   my $src = $_;
 
-  my $dst;
+  my ($dst, $tag);
 
   $dst = "$src.c";
+  $tag = sprintf "__%s_H", uc $src;
   open OUT, ">$dst" || die "Can't open $dst file";
-  print_header($src, $dst);
+  print_copyright($src, $dst);
   print_header_c($src, $dst);
   close OUT;
 
   $dst = "$src.h";
   open OUT, ">$dst" || die "Can't open $dst file";
-  print_header($src, $dst);
-  print_header_h($src, $dst);
+  print_copyright($src, $dst);
+  print_header_h($src, $dst, $tag);
   close OUT;
 }
 
 
 
-sub print_header
+sub print_copyright
 {
+  my ($src, $dst) = @_;
   my $year = `date +"%Y"`;
   chomp $year;
 
@@ -35,7 +37,7 @@ sub print_header
  *
  * ze-filter - Mail Server Filter for sendmail
  *
- * Copyright (c) 2001-2017 - Jose-Marcio Martins da Cruz
+ * Copyright (c) 2001-2018 - Jose-Marcio Martins da Cruz
  *
  *  Auteur       : Jose Marcio Martins da Cruz
  *                 jose.marcio.mc\@gmail.com
@@ -73,19 +75,24 @@ EOT
 
 sub print_header_h
 {
-  my ($src, $dst, undef) = @_;
+  my ($src, $dst, $tag, undef) = @_;
 
-  my $tag = $dst;
   $tag =~ tr/a-z\-\./A-Z__/;
 
   print OUT <<EOT;
 
 #ifndef $tag
+/**
+ * \@addtogroup Defaulf
+ *
+ * \@{
+ */
 
-
+/** \@} */
 
 # define $tag    1
 #endif /* $tag */
 
 EOT
 }
+

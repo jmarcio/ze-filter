@@ -80,16 +80,6 @@ setupconfigoptions()
       CPPFLAGS="-D_FFR_DBPOLICY=1 $CPPFLAGS"
     fi
 
-    if [ "$1" = "PERIODIC_DEBUG" ] ;
-    then
-      CPPFLAGS="-D_PERIODIC_DEBUG=1 $CPPFLAGS"
-    fi
-
-    if [ "$1" = "BUGGY_AVL" ] ;
-    then
-      CPPFLAGS="-D_BUGGY_AVL=1 $CPPFLAGS"
-    fi
-
     if [ "$1" = "C99" ] ;
     then
       if [ -n "$CC" ] && [ "`basename $CC`" = "gcc" ] ;

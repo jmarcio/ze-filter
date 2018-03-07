@@ -50,14 +50,12 @@ static bool         use_pcre = FALSE;
 bool                log_found_regex(char *, char *, char *, int, int, char *);
 
 /* ***************************************************************************
- *                                                                           *
  * #####   ######   ####   ######  #    #
  * #    #  #       #    #  #        #  #
  * #    #  #####   #       #####     ##
  * #####   #       #  ###  #         ##
  * #   #   #       #    #  #        #  #
  * #    #  ######   ####   ######  #    # 
- *                                                                           *
  *****************************************************************************/
 
 #define PMATCH_LOCK()      MUTEX_LOCK(&p.match.mutex)
@@ -84,9 +82,9 @@ typedef struct {
   bool                pcre_ok;
 #endif                          /* USE_PCRE */
   int                 count;
-} REGEX_REC;
+} RegexRec_T;
 
-static zeTbl_T    htbl = JTABLE_INITIALIZER;
+static zeTable_T      htbl = ZE_TABLE_INITIALIZER;
 
 static pthread_mutex_t st_mutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -96,7 +94,7 @@ static pthread_mutex_t st_mutex = PTHREAD_MUTEX_INITIALIZER;
 static int          db_rurlbl_check(char *, char *, char *, size_t, char *,
                                     size_t);
 
-static char        *domain_chomp(char *);
+static char        *ChompDomainName(char *);
 
 /* ***************************************************************************
  *                                                                           *
@@ -105,7 +103,7 @@ static char        *domain_chomp(char *);
 void
 dump_regex_table()
 {
-  REGEX_REC           p;
+  RegexRec_T          p;
 
   printf("*** Regular Expressions lookup table : \n");
   if (zeTable_Get_First(&htbl, &p) == 0) {
@@ -127,7 +125,7 @@ add_regex_rec(vk, vv)
 {
   char               *k = (char *) vk;
   char               *v = (char *) vv;
-  REGEX_REC           r;
+  RegexRec_T          r;
   int                 i, j;
 
   memset(&r, 0, sizeof (r));
@@ -222,9 +220,9 @@ add_regex_rec(vk, vv)
 static void
 clear_compiled_regex()
 {
-  REGEX_REC          *q;
+  RegexRec_T         *q;
 
-  if ((q = (REGEX_REC *) zeTable_Get_First_Ptr(&htbl)) != NULL) {
+  if ((q = (RegexRec_T *) zeTable_Get_First_Ptr(&htbl)) != NULL) {
     do {
       regfree(&q->re);
 #if USE_PCRE
@@ -237,7 +235,7 @@ clear_compiled_regex()
       q->pcre_ok = FALSE;
 #endif             /* USE_PCRE */
 
-    } while ((q = (REGEX_REC *) zeTable_Get_Next_Ptr(&htbl)) != NULL);
+    } while ((q = (RegexRec_T *) zeTable_Get_Next_Ptr(&htbl)) != NULL);
   }
 }
 
@@ -252,7 +250,7 @@ read_it(path, tag)
 {
   int                 r;
 
-  r = zm_RdTextFile(path, RD_TWO_COLUMN, RD_REVERSE, tag, add_regex_rec);
+  r = zeRdTextFile(path, RD_TWO_COLUMN, RD_REVERSE, tag, add_regex_rec);
 
   return r >= 0;
 }
@@ -270,7 +268,7 @@ load_regex_table(cfdir, fname)
 
   if (htbl_ok == FALSE) {
     memset(&htbl, 0, sizeof (htbl));
-    res = zeTable_Init(&htbl, sizeof (REGEX_REC), 256, NULL);
+    res = zeTable_Init(&htbl, sizeof (RegexRec_T), 256, NULL);
     if (res == 0)
       htbl_ok = TRUE;
   }
@@ -301,7 +299,7 @@ check_regex(id, ip, msg, where)
      char               *msg;
      int                 where;
 {
-  REGEX_REC          *q;
+  RegexRec_T         *q;
   int                 result = 0;
 
   int                 score_min = cf_get_int(CF_REGEX_MAX_SCORE);
@@ -317,7 +315,7 @@ check_regex(id, ip, msg, where)
   DATA_LOCK();
 
 
-  if ((q = (REGEX_REC *) zeTable_Get_First_Ptr(&htbl)) != NULL) {
+  if ((q = (RegexRec_T *) zeTable_Get_First_Ptr(&htbl)) != NULL) {
     do {
       if ((q->where & where) != 0) {
         char               *ptr = msg;
@@ -412,7 +410,7 @@ check_regex(id, ip, msg, where)
         if (result >= score_min)
           break;
       }
-    } while ((q = (REGEX_REC *) zeTable_Get_Next_Ptr(&htbl)) != NULL);
+    } while ((q = (RegexRec_T *) zeTable_Get_Next_Ptr(&htbl)) != NULL);
   }
   DATA_UNLOCK();
 
@@ -484,7 +482,7 @@ check_rurlbl(id, ip, msg)
       ZE_MessageInfo(URLBL_LOG + 2, "Hmmm . %s DIR DOMAIN : %s", id, p);
 
       if ((buf = (char *) malloc(size)) == NULL) {
-        ZE_LogSysError("malloc(%ld)", (long int ) size);
+        ZE_LogSysError("malloc(%ld)", (long int) size);
         goto url_domain_ok;
       }
 
@@ -519,7 +517,7 @@ check_rurlbl(id, ip, msg)
         }
         *r = '\0';
 
-        domain_chomp(buf);
+        ChompDomainName(buf);
       }
 
       /*
@@ -575,12 +573,12 @@ check_rurlbl(id, ip, msg)
         goto url_domain_ok;
 
       {
-        REGEX_REC          *q;
+        RegexRec_T         *q;
 
         /*
          ** URLs defined at ze-regex
          */
-        if ((q = (REGEX_REC *) zeTable_Get_First_Ptr(&htbl)) != NULL) {
+        if ((q = (RegexRec_T *) zeTable_Get_First_Ptr(&htbl)) != NULL) {
           do {
             if (q->where == MAIL_URLSTR) {
               char               *sb;
@@ -601,7 +599,7 @@ check_rurlbl(id, ip, msg)
               if (url_found)
                 break;
             }
-          } while ((q = (REGEX_REC *) zeTable_Get_Next_Ptr(&htbl)) != NULL);
+          } while ((q = (RegexRec_T *) zeTable_Get_Next_Ptr(&htbl)) != NULL);
         }
 
         if (url_found || result >= score_min)
@@ -714,7 +712,7 @@ check_rurlbl(id, ip, msg)
 
       if ((buf = (char *) malloc(size)) != NULL) {
         long                i;
-        REGEX_REC          *q;
+        RegexRec_T         *q;
 
         memset(buf, 0, size);
         memcpy(buf, p + pi, pf - pi);
@@ -732,7 +730,7 @@ check_rurlbl(id, ip, msg)
         /*
          * To be filled up 
          */
-        if ((q = (REGEX_REC *) zeTable_Get_First_Ptr(&htbl)) != NULL) {
+        if ((q = (RegexRec_T *) zeTable_Get_First_Ptr(&htbl)) != NULL) {
           do {
             if (q->where == MAIL_URLEXPR) {
               bool                found = FALSE;
@@ -756,10 +754,10 @@ check_rurlbl(id, ip, msg)
               if (found || result >= score_min)
                 break;
             }
-          } while ((q = (REGEX_REC *) zeTable_Get_Next_Ptr(&htbl)) != NULL);
+          } while ((q = (RegexRec_T *) zeTable_Get_Next_Ptr(&htbl)) != NULL);
         }
       } else {
-        ZE_LogSysError("malloc(%ld)", (long int ) size);
+        ZE_LogSysError("malloc(%ld)", (long int) size);
         break;
       }
 
@@ -787,15 +785,14 @@ check_rurlbl(id, ip, msg)
   return result;
 }
 
-
 /* ***************************************************************************
  *                                                                           *
  *                                                                           *
  *****************************************************************************/
 static ZEDB_T       hdb = ZEDB_INITIALIZER;
 
-static              bool
-db_open_rurbl_database()
+bool
+db_open_rurlbl_database()
 {
   bool                res = TRUE;
   char               *dbname;
@@ -841,7 +838,7 @@ db_close_rurbl_database()
 }
 
 bool
-db_reopen_rurbl_database()
+db_reopen_rurlbl_database()
 {
 #if 1
   bool                res = FALSE;
@@ -901,7 +898,7 @@ db_rurlbl_check(id, url, dest, size, urlbl, szurlbl)
 
   id = STRNULL(id, "NOID");
   if (!zeDb_OK(&hdb)) {
-    if (!db_open_rurbl_database()) {
+    if (!db_open_rurlbl_database()) {
       db_error++;
       return 0;
     }
@@ -996,7 +993,7 @@ db_rurlbl_check(id, url, dest, size, urlbl, szurlbl)
  *                                                                            *
  **************************************************************************** */
 static char        *
-domain_chomp(s)
+ChompDomainName(s)
      char               *s;
 {
   int                 n;

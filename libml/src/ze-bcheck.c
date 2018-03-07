@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -26,7 +27,6 @@
 #include <ze-filter.h>
 #include <libml.h>
 
-
 /* ****************************************************************************
 ** ######  #    #    ##    #       #    #    ##     #####  ######
 ** #       #    #   #  #   #       #    #   #  #      #    #
@@ -43,8 +43,7 @@ which_average_method()
 {
   char               *env = NULL;
 
-  if ((env = getenv("BAYES_AVERAGE")) != NULL)
-  {
+  if ((env = getenv("BAYES_AVERAGE")) != NULL) {
     if (STRCASEEQUAL(env, "KULLBACK"))
       return KULLBACK_AVERAGE;
   }
@@ -97,11 +96,10 @@ probability_average(t, n)
     kh = nmh < nm ? (nm / nmh) : 1.;
 
     nt = 0;
-    for (i = 0; i < n; i++)
-    {
-      if (t[i].ok)
-      {
+    for (i = 0; i < n; i++) {
+      if (t[i].ok) {
         double              ns = 0, nh = 0;
+
 #if 0
         double              p = t[i].prob;
 #endif
@@ -173,8 +171,7 @@ browse_tokens(void *node, void *arg)
   if (!smodel_db_check_token(t->token, t))
     t->prob = UT_PROB;
 
-  if (strlen(bp->tok[0].token) != 0)
-  {
+  if (strlen(bp->tok[0].token) != 0) {
 #if 1
     if (TOK_PERT_CMP(t, &(bp->tok[0])) > 0)
 #else
@@ -184,8 +181,7 @@ browse_tokens(void *node, void *arg)
       bp->tok[0] = *t;
       qsort(bp->tok, bp->nbt, sizeof (sfilter_token_T), bptokcmp);
     }
-  } else
-  {
+  } else {
     bp->tok[0] = *t;
     qsort(bp->tok, bp->nbt, sizeof (sfilter_token_T), bptokcmp);
   }
@@ -215,14 +211,13 @@ list_tokens(node, arg)
   char               *s = t->token;
   char                buf[64];
 
-  switch (crypt_tok)
-  {
+  switch (crypt_tok) {
     case HASH_PLAIN:
       break;
     case HASH_MD5:
     case HASH_SHA1:
       memset(buf, 0, sizeof (buf));
-      (void) str2hash2hex(crypt_tok, buf, t->token, sizeof (buf));
+      (void) zeHash_Str2Hash2Hex(crypt_tok, buf, t->token, sizeof (buf));
       s = buf;
       break;
     default:
@@ -290,13 +285,11 @@ sfilter_cli_handle_message(fname, msgNb, arg)
   else
     res = bfilter_handle_message(id, fname, list_tokens, data);
 
-  if (res && data->check)
-  {
+  if (res && data->check) {
     double              prob;
     int                 n;
 
-    if (data->verbose)
-    {
+    if (data->verbose) {
       for (n = 0; n < data->bcheck.nbt; n++)
         printf("TOKEN %3d %3d %6.3f %s\n", n, data->bcheck.tok[n].nb,
                data->bcheck.tok[n].prob, data->bcheck.tok[n].token);

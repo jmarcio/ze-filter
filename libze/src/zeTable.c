@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -31,7 +32,7 @@
  *                                                                            *
  *                                                                            *
  **************************************************************************** */
-static int          zeTable_Resize(zeTbl_T *);
+static int          zeTable_Resize(zeTable_T *);
 
 #define    RECPTR(t, i)   ((char *) t->data + i * t->sz)
 
@@ -43,7 +44,7 @@ static int          zeTable_Resize(zeTbl_T *);
 
 int
 zeTable_Init(tbh, sz, dim, comp)
-     zeTbl_T          *tbh;
+     zeTable_T            *tbh;
      size_t              sz;
      int                 dim;
      int                 (*comp) (const void *, const void *);
@@ -79,7 +80,7 @@ zeTable_Init(tbh, sz, dim, comp)
  **************************************************************************** */
 static int
 zeTable_Resize(tbh)
-     zeTbl_T          *tbh;
+     zeTable_T            *tbh;
 {
   int                 newsz;
   void               *ptr;
@@ -96,8 +97,7 @@ zeTable_Resize(tbh)
   else
     ptr = realloc(tbh->data, newsz);
 
-  if (ptr != NULL)
-  {
+  if (ptr != NULL) {
     tbh->dim += tbh->chunk;
     tbh->data = ptr;
   }
@@ -111,7 +111,7 @@ zeTable_Resize(tbh)
  **************************************************************************** */
 int
 zeTable_Free(tbh)
-     zeTbl_T          *tbh;
+     zeTable_T            *tbh;
 {
   if (tbh == NULL)
     return -1;
@@ -134,7 +134,7 @@ zeTable_Free(tbh)
  **************************************************************************** */
 int
 zeTable_Clear(tbh)
-     zeTbl_T          *tbh;
+     zeTable_T            *tbh;
 {
   if (tbh == NULL)
     return -1;
@@ -153,7 +153,7 @@ zeTable_Clear(tbh)
  **************************************************************************** */
 int
 zeTable_Add(tbh, data)
-     zeTbl_T          *tbh;
+     zeTable_T            *tbh;
      void               *data;
 {
   if (tbh == NULL)
@@ -162,8 +162,7 @@ zeTable_Add(tbh, data)
   if (tbh->data == NULL)
     return -1;
 
-  if ((tbh->nb >= tbh->dim) && (zeTable_Resize(tbh) < 0))
-  {
+  if ((tbh->nb >= tbh->dim) && (zeTable_Resize(tbh) < 0)) {
     return -1;
   }
 
@@ -179,7 +178,7 @@ zeTable_Add(tbh, data)
  **************************************************************************** */
 int
 zeTable_Fetch(tbh, data)
-     zeTbl_T          *tbh;
+     zeTable_T            *tbh;
      void               *data;
 {
   if (tbh == NULL)
@@ -188,12 +187,10 @@ zeTable_Fetch(tbh, data)
   if (tbh->data == NULL)
     return -1;
 
-  if (tbh->comp)
-  {
+  if (tbh->comp) {
     void               *ptr;
 
-    if ((ptr = bsearch(data, tbh->data, tbh->nb, tbh->sz, tbh->comp)) != NULL)
-    {
+    if ((ptr = bsearch(data, tbh->data, tbh->nb, tbh->sz, tbh->comp)) != NULL) {
       memcpy(data, ptr, tbh->rsz);
       return 0;
     }
@@ -207,7 +204,7 @@ zeTable_Fetch(tbh, data)
  **************************************************************************** */
 int
 zeTable_Count(tbh)
-     zeTbl_T          *tbh;
+     zeTable_T            *tbh;
 {
   if (tbh == NULL)
     return -1;
@@ -224,7 +221,7 @@ zeTable_Count(tbh)
  **************************************************************************** */
 int
 zeTable_Get_Ind(tbh, data, ind)
-     zeTbl_T          *tbh;
+     zeTable_T            *tbh;
      void               *data;
      int                 ind;
 {
@@ -248,7 +245,7 @@ zeTable_Get_Ind(tbh, data, ind)
  **************************************************************************** */
 int
 zeTable_Get_First(tbh, data)
-     zeTbl_T          *tbh;
+     zeTable_T            *tbh;
      void               *data;
 {
   if (tbh == NULL)
@@ -275,7 +272,7 @@ zeTable_Get_First(tbh, data)
  **************************************************************************** */
 int
 zeTable_Get_Next(tbh, data)
-     zeTbl_T          *tbh;
+     zeTable_T            *tbh;
      void               *data;
 {
   if (tbh == NULL)
@@ -303,7 +300,7 @@ zeTable_Get_Next(tbh, data)
  **************************************************************************** */
 void               *
 zeTable_Get_First_Ptr(tbh)
-     zeTbl_T          *tbh;
+     zeTable_T            *tbh;
 {
   if (tbh == NULL)
     return NULL;
@@ -325,7 +322,7 @@ zeTable_Get_First_Ptr(tbh)
  **************************************************************************** */
 void               *
 zeTable_Get_Next_Ptr(tbh)
-     zeTbl_T          *tbh;
+     zeTable_T            *tbh;
 {
   if (tbh == NULL)
     return NULL;
@@ -347,7 +344,7 @@ zeTable_Get_Next_Ptr(tbh)
  **************************************************************************** */
 int
 zeTable_Sort(tbh)
-     zeTbl_T          *tbh;
+     zeTable_T            *tbh;
 {
   if (tbh == NULL)
     return -1;

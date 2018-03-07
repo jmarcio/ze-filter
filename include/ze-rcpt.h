@@ -21,7 +21,12 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#ifndef __JRCPT_H_
+#ifndef __ZE_RCPT_H
+
+/** @addtogroup DBConf
+*
+* @{
+*/
 
 int                 check_rcpt(char *rcpt, char *ip, char *name, 
 			       int netclass);
@@ -45,5 +50,7 @@ char               *rcpt_code_string(int);
 #define RCPT_IGNORE               7
 
 
-#define __JRCPT_H_
+/** @} */
+
+#define __ZE_RCPT_H
 #endif

@@ -22,12 +22,12 @@
  */
 
 
-#ifndef __JMORPHO_H__
+#ifndef __ZE_MORPHO_H
 
 bool            morpho_bin_erosion(uint8_t *, size_t );
 bool            morpho_bin_dilation(uint8_t *, size_t );
 bool            morpho_bin_openning(uint8_t *, size_t );
 bool            morpho_bin_closing(uint8_t *, size_t );
 
-#define __JMORPHO_H__
+#define __ZE_MORPHO_H
 #endif

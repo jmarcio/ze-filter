@@ -239,7 +239,7 @@ zeDb_PeriodicTasks(arg)
   return NULL;
 }
 
-ZEDB_ENV_T          *
+ZEDB_ENV_T         *
 zeDb_EnvOpen(home, rdonly, dt_chkpoint)
      char               *home;
      bool                rdonly;
@@ -414,7 +414,7 @@ err:
  ******************************************************************************/
 bool
 zeDb_EnvClose(dbenv)
-     ZEDB_ENV_T          *dbenv;
+     ZEDB_ENV_T         *dbenv;
 {
 #if USE_BerkeleyDB
   int                 ret;
@@ -461,7 +461,7 @@ bt_compare_fcn(h, a, b)
 bool
 zeDb_Open(h, dbenv, database, mode, rdonly, dbtype, dbcache)
      ZEDB_T             *h;
-     ZEDB_ENV_T          *dbenv;
+     ZEDB_ENV_T         *dbenv;
      char               *database;
      int                 mode;
      bool                rdonly;

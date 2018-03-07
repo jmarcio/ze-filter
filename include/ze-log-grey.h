@@ -22,13 +22,20 @@
  */
 
 
-#ifndef ZE_LOG_GREY_H
+#ifndef __ZE_LOG_GREY_H
+
+/** @addtogroup Logging
+*
+* @{
+*/
 
 
 void                log_grey_expire(char *);
 bool                log_grey_expire_reopen();
 
 
-# define ZE_LOG_GREY_H    1
-#endif /* J_LOG_GREY_H */
+/** @} */
+
+# define __ZE_LOG_GREY_H    1
+#endif /* __ZE_LOG_GREY_H */
 

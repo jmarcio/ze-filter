@@ -22,7 +22,7 @@
  */
 
 
-#ifndef ZE_STRCONVERT_H
+#ifndef __ZE_STRCONVERT_H
 
 long                zeStr2long(char *s, int *error, long dval);
 unsigned long       zeStr2ulong(char *s, int *error, unsigned long dval);
@@ -34,5 +34,5 @@ double              zeStr2double(char *s, int *error, double dval);
 time_t              zeStr2time(char *s, int *error, time_t dval);
 size_t              zeStr2size(char *s, int *error, size_t dval);
 
-# define ZE_STRCONVERT_H    1
-#endif             /* ZE_STRCONVERT_H */
+# define __ZE_STRCONVERT_H    1
+#endif             /* __ZE_STRCONVERT_H */

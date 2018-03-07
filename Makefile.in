@@ -101,7 +101,7 @@ am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/include/config.h
-CONFIG_CLEAN_FILES = include/version.h include/defs.h
+CONFIG_CLEAN_FILES = include/version.h include/defs.h doc/Doxyfile
 CONFIG_CLEAN_VPATH_FILES =
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -159,7 +159,7 @@ ETAGS = etags
 CTAGS = ctags
 CSCOPE = cscope
 DIST_SUBDIRS = $(SUBDIRS)
-am__DIST_COMMON = $(srcdir)/Makefile.in \
+am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/doc/Doxyfile.in \
 	$(top_srcdir)/include/config.h.in \
 	$(top_srcdir)/include/defs.h.in \
 	$(top_srcdir)/include/version.h.in AUTHORS COPYING ChangeLog \
@@ -230,6 +230,7 @@ CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
 DLLTOOL = @DLLTOOL@
+DOXYGEN = @DOXYGEN@
 DSYMUTIL = @DSYMUTIL@
 DUMPBIN = @DUMPBIN@
 ECHO_C = @ECHO_C@
@@ -284,9 +285,6 @@ PTHREAD_CC = @PTHREAD_CC@
 PTHREAD_CFLAGS = @PTHREAD_CFLAGS@
 PTHREAD_LIBS = @PTHREAD_LIBS@
 RANLIB = @RANLIB@
-RCDIR = @RCDIR@
-RCGREYD = @RCGREYD@
-RCSCRIPT = @RCSCRIPT@
 RSYNC_SERVER = @RSYNC_SERVER@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
@@ -442,6 +440,8 @@ distclean-hdr:
 include/version.h: $(top_builddir)/config.status $(top_srcdir)/include/version.h.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 include/defs.h: $(top_builddir)/config.status $(top_srcdir)/include/defs.h.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+doc/Doxyfile: $(top_builddir)/config.status $(top_srcdir)/doc/Doxyfile.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 
 mostlyclean-libtool:
@@ -877,6 +877,13 @@ uninstall-am:
 
 
 .INIT :
+
+all:
+
+doxydoc:
+	doxygen doc/Doxyfile
+
+srcdoc: doxydoc
 
 clean-hook:
 	rm -f *~ */*~ */*/*~ */*/*/*~ */*/*/*/*~ #*# */#*# */*/#*# */*/*/#*#

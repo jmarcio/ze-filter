@@ -62,7 +62,7 @@ static struct {
 
   pthread_mutex_t     mutex;
 
-  ZEBT_T               db_open;
+  ZEBT_T              db_open;
 
 } hdata = {
 FALSE, (time_t) 0, 0, PTHREAD_MUTEX_INITIALIZER, JBT_INITIALIZER};
@@ -206,9 +206,9 @@ connopen_check_host(ip, name, nb)
 
   DATA_UNLOCK();
 
-  if ((hdata.last + DTCLEANUP / 2 < now) &&
-      ((hdata.last + DTCLEANUP < now)
-       || (zeBTree_Count(&hdata.db_open) > NB_BTCLEANUP)))
+  if ((hdata.last + DTCLEANUP / 2 < now) && ((hdata.last + DTCLEANUP < now)
+                                             || (zeBTree_Count(&hdata.db_open) >
+                                                 NB_BTCLEANUP)))
     connopen_clean_table();
 
   return res;
@@ -255,12 +255,12 @@ connopen_clean_table()
 
   tcleanup = now;
 
-  if ((hdata.last + DTCLEANUP / 2 < now) &&
-      ((hdata.last + DTCLEANUP < now)
-       || (zeBTree_Count(&hdata.db_open) > NB_BTCLEANUP))) {
+  if ((hdata.last + DTCLEANUP / 2 < now) && ((hdata.last + DTCLEANUP < now)
+                                             || (zeBTree_Count(&hdata.db_open) >
+                                                 NB_BTCLEANUP))) {
 
 #if 1
-    ZEBT_T               tmp = JBT_INITIALIZER;
+    ZEBT_T              tmp = JBT_INITIALIZER;
 
     ZE_MessageInfo(19, "connopen_clean_table : before  : %d nodes",
                    zeBTree_Count(&hdata.db_open));

@@ -22,7 +22,7 @@
  */
 
 
-#ifndef __JIPC_H__
+#ifndef __ZE_IPC_H
 
 #define             CHAN_FATHER    1
 #define             CHAN_CHILD     0
@@ -38,5 +38,5 @@ bool                recv_message_pipe (int, int *);
 #define       SEND_MSG_CHANNEL(p,msg,who)  \
                   send_message(((who) == CHAN_FATHER ? (p)[1] : (p)[0], (msg))
 
-#define __JIPC_H__
+#define __ZE_IPC_H
 #endif

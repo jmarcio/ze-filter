@@ -21,7 +21,7 @@
  * web site : http://foss.jose-marcio.org
  */
 
-#ifndef __JAVDECODE_H__
+#ifndef __ZE_AVDECODE_H
 
 int                 av_decode_answer (int, char *, int);
 
@@ -30,5 +30,5 @@ int                 av_decode_answer (int, char *, int);
 #define         AVRES_ERROR   2
 #define         AVRES_POLICY  3
 
-#define __JAVDECODE_H__
+#define __ZE_AVDECODE_H
 #endif

@@ -689,4 +689,3 @@ path2filename(path)
 
   return path;
 }
-

@@ -22,7 +22,12 @@
  */
 
 
-#ifndef __JRESOURCE_H__
+#ifndef __ZE_RESOURCE_H
+
+/** @addtogroup Systools
+*
+* @{
+*/
 
 #define FD_LEVEL_OK     0
 #define FD_LEVEL_SHORT  1
@@ -38,5 +43,7 @@ bool                enable_coredump(bool);
 
 bool                check_rusage();
 
-#define __JRESOURCE_H__
+/** @} */
+
+#define __ZE_RESOURCE_H
 #endif

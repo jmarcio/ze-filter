@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -64,10 +65,8 @@ main(int argc, char **argv)
   ze_logLevel = 9;
   memset(host, 0, sizeof (host));
 
-  while ((c = getopt(argc, argv, args)) != -1)
-  {
-    switch (c)
-    {
+  while ((c = getopt(argc, argv, args)) != -1) {
+    switch (c) {
       case 'h':
         usage();
         exit(0);
@@ -87,7 +86,7 @@ main(int argc, char **argv)
         jt++;
         break;
       case 'c':
-	cf_opt.arg_c = optarg;
+        cf_opt.arg_c = optarg;
         break;
       case 'd':
         hostnames = TRUE;
@@ -108,89 +107,72 @@ main(int argc, char **argv)
         dt = zeStr2time(optarg, NULL, 3600);
         break;
       case 'm':
-        if (jq > 0)
-        {
-          if (strcmp("s", optarg) == 0)
-          {
+        if (jq > 0) {
+          if (strcmp("s", optarg) == 0) {
             summary_type = H_SUMMARY;
             break;
           }
-          if (strcmp("e", optarg) == 0)
-          {
+          if (strcmp("e", optarg) == 0) {
             summary_type = H_EMPTY;
             break;
           }
-          if (strcmp("re", optarg) == 0)
-          {
+          if (strcmp("re", optarg) == 0) {
             summary_type = H_REJ_EMPTY;
             break;
           }
-          if (strcmp("rg", optarg) == 0)
-          {
+          if (strcmp("rg", optarg) == 0) {
             summary_type = H_REJ_GREY;
             break;
           }
-          if (strcmp("b", optarg) == 0)
-          {
+          if (strcmp("b", optarg) == 0) {
             summary_type = H_BADRCPT;
             break;
           }
-          if (strcmp("rb", optarg) == 0)
-          {
+          if (strcmp("rb", optarg) == 0) {
             summary_type = H_REJ_BADRCPT;
             break;
           }
-          if (strcmp("rm", optarg) == 0)
-          {
+          if (strcmp("rm", optarg) == 0) {
             summary_type = H_REJ_BADMX;
             break;
           }
-          if (strcmp("ro", optarg) == 0)
-          {
+          if (strcmp("ro", optarg) == 0) {
             summary_type = H_REJ_OPEN;
             break;
           }
-          if (strcmp("t", optarg) == 0)
-          {
+          if (strcmp("t", optarg) == 0) {
             summary_type = H_REJ_THROTTLE;
             break;
           }
-          if (strcmp("rt", optarg) == 0)
-          {
+          if (strcmp("rt", optarg) == 0) {
             summary_type = H_REJ_THROTTLE;
             break;
           }
-          if (strcmp("r", optarg) == 0)
-          {
+          if (strcmp("r", optarg) == 0) {
             summary_type = H_RESOLVE;
             break;
           }
-          if (strcmp("rr", optarg) == 0)
-          {
+          if (strcmp("rr", optarg) == 0) {
             summary_type = H_REJ_RESOLVE;
             break;
           }
-          if (strcmp("c", optarg) == 0)
-          {
+          if (strcmp("c", optarg) == 0) {
             summary_type = H_REJ_REGEX;
             break;
           }
-          if (strcmp("x", optarg) == 0)
-          {
+          if (strcmp("x", optarg) == 0) {
             summary_type = H_XFILES;
             break;
           }
-          if (strcmp("st", optarg) == 0)
-          {
+          if (strcmp("st", optarg) == 0) {
             summary_type = H_SPAMTRAP;
             break;
           }
           summary_type = H_SUMMARY;
           break;
         }
-        if (jt > 0)
-        {
-	  flags |= smtprate_str2flags(optarg);
+        if (jt > 0) {
+          flags |= smtprate_str2flags(optarg);
           break;
         }
         break;
@@ -205,8 +187,7 @@ main(int argc, char **argv)
   if (optind < argc && strlen(argv[optind]) > 0)
     snprintf(host, sizeof (host), "%s", argv[optind]);
 
-  if (!(jp || jt || jg || jq || jx))
-  {
+  if (!(jp || jt || jg || jq || jx)) {
     usage();
     exit(1);
   }
@@ -218,59 +199,51 @@ main(int argc, char **argv)
 
   configure("ze-printstats", conf_file, FALSE);
 
-  if (jp > 0 || jg > 0)
-  {
+  if (jp > 0 || jg > 0) {
     if (dump_state(STDOUT_FILENO, jp, jg, verbose, newformat) > 0)
       printf("ERROR\n");
   }
 
-  if (0)
-  {
+  if (0) {
     char                dbdir[256];
     char               *dbenv = getenv("DBENV");
 
     char               *dir;
 
-    if (dbenv != NULL && STRCASEEQUAL(dbenv, "yes"))
-    {
+    if (dbenv != NULL && STRCASEEQUAL(dbenv, "yes")) {
       dir = cf_get_str(CF_WDBDIR);
 
       memset(dbdir, 0, sizeof (dbdir));
       if (dir != NULL && strlen(dir) > 0)
         snprintf(dbdir, sizeof (dbdir), "%s/%s", dir, "db");
 
-      if (!open_work_db_env(dbdir, ZE_WDBDIR, TRUE))
-      {
+      if (!open_work_db_env(dbdir, ZE_WDBDIR, TRUE)) {
       }
     }
   }
 
   resolve_cache_init(NULL, RESOLVE_CACHE_RD);
 
-  if (jt > 0)
-  {
+  if (jt > 0) {
     if (dt == 0)
       dt = 10 MINUTES;
-    if (flags == 0)
-    {
+    if (flags == 0) {
       SET_BIT(flags, RATE_CONN);
       SET_BIT(flags, RATE_RCPT);
     }
     smtprate_read_table(NULL);
     smtprate_update_table(3600);
-    smtprate_print_table(STDOUT_FILENO, jt - 1, verbose, hostnames, dt, flags, nbRecs);
+    smtprate_print_table(STDOUT_FILENO, jt - 1, verbose, hostnames, dt, flags,
+                         nbRecs);
   }
 
-  if (jq > 0)
-  {
+  if (jq > 0) {
     char               *p = NULL, *name = NULL;
     char                ip[256];
 
     *ip = '\0';
-    if (strlen(host) > 0)
-    {
-      if (get_hostbyname(host, ip, sizeof (ip)))
-      {
+    if (strlen(host) > 0) {
+      if (zeGet_HostByName(host, ip, sizeof (ip))) {
         name = host;
         p = ip;
       } else
@@ -281,7 +254,8 @@ main(int argc, char **argv)
 
     (void) raw_history_open(TRUE);
     res_history_update(NULL, p, 0, dt, verbose);
-    res_history_summary(NULL, p, 0, dt, verbose, hostnames, summary_type, nbRecs);
+    res_history_summary(NULL, p, 0, dt, verbose, hostnames, summary_type,
+                        nbRecs);
     (void) raw_history_close();
   }
 
@@ -312,7 +286,7 @@ usage()
          "               all,conn,rcpt,bounce,msgs,vol,svc\n"
          "        -l   : period of interest - default value : 10m\n"
          "               period shall be smaller than 20m - default unit : s\n"
-         "        -n N : max number of records to print\n"         
+         "        -n N : max number of records to print\n"
          "    ze-printstats -q [-l dt [s|m|h|d]] [[-v | ip | hostname] | [-m x]]\n"
          "        -q   : query gateway activity\n"
          "        -l   : period of interest - default unit : secs\n"

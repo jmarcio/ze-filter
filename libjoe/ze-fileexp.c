@@ -382,7 +382,7 @@ typedef struct {
 
 static XFILE_T      toto = XFILE_INITIALIZER;
 
-static zeTbl_T    htbl;
+static zeTable_T      htbl;
 
 static pthread_mutex_t st_mutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -404,7 +404,8 @@ dump_xfiles_table()
   if (zeTable_Get_First(&htbl, &p) == 0) {
     do {
       printf("-> %s %-20s %7ld/%7ld : %s\n",
-             STRBOOL(p.mimecond, " ", "!"), p.mime, (long int ) p.min, (long int ) p.max, p.expr);
+             STRBOOL(p.mimecond, " ", "!"), p.mime, (long int) p.min,
+             (long int) p.max, p.expr);
     } while (zeTable_Get_Next(&htbl, &p) == 0);
   }
   DATA_UNLOCK();
@@ -566,7 +567,7 @@ read_it(path, tag)
 {
   int                 r;
 
-  r = zm_RdTextFile(path, RD_TWO_COLUMN, RD_REVERSE, tag, add_xfiles);
+  r = zeRdTextFile(path, RD_TWO_COLUMN, RD_REVERSE, tag, add_xfiles);
 
   return r >= 0;
 }

@@ -22,7 +22,12 @@
  */
 
 
-#ifndef __JREPLY_H__
+#ifndef __ZE_REPLY_H
+
+/** @addtogroup Actions
+*
+* @{
+*/
 
 #include <ze-reply-local.h>
 
@@ -261,5 +266,7 @@ bool                get_reply_msg(SMFICTX *, char *, char *, size_t, char *, cha
 
 #endif             /* LANG_EN */
 
-#define __JREPLY_H__
+/** @} */
+
+#define __ZE_REPLY_H
 #endif

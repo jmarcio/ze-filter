@@ -1,3 +1,4 @@
+
 /*
  *
  * ze-filter - Mail Server Filter for sendmail
@@ -31,16 +32,16 @@
  *                                                                           *
  *****************************************************************************/
 long
-bufspn (buf, sz, accept)
-     char           *buf;
-     long            sz;
-     char           *accept;
+bufspn(buf, sz, accept)
+     char               *buf;
+     long                sz;
+     char               *accept;
 {
-  long            n;
-  char           *p;
+  long                n;
+  char               *p;
 
   for (p = buf, n = 0; n < sz; n++, p++) {
-    if (strchr (accept, *p) == NULL)
+    if (strchr(accept, *p) == NULL)
       break;
   }
   return n;
@@ -52,16 +53,16 @@ bufspn (buf, sz, accept)
  *                                                                           *
  *****************************************************************************/
 long
-bufcspn (buf, sz, reject)
-     char           *buf;
-     long            sz;
-     char           *reject;
+bufcspn(buf, sz, reject)
+     char               *buf;
+     long                sz;
+     char               *reject;
 {
-  long            n;
-  char           *p;
+  long                n;
+  char               *p;
 
   for (p = buf, n = 0; n < sz; n++, p++) {
-    if (strchr (reject, *p) != NULL)
+    if (strchr(reject, *p) != NULL)
       break;
   }
   return n;
@@ -79,10 +80,8 @@ buf_clean_rc(s, sz)
   size_t              nsz = 0;
   char               *p, *q;
 
-  for (p = q = s; sz > 0; sz--, p++)
-  {
-    if (*p != '\r')
-    {
+  for (p = q = s; sz > 0; sz--, p++) {
+    if (*p != '\r') {
       *q++ = *p;
       nsz++;
     }
@@ -95,16 +94,16 @@ buf_clean_rc(s, sz)
  *                                                                           *
  *****************************************************************************/
 int
-buf_get_line (dst, szdst, org, szorg)
-     char           *dst;
-     long            szdst;
-     char           *org;
-     long            szorg;
+buf_get_line(dst, szdst, org, szorg)
+     char               *dst;
+     long                szdst;
+     char               *org;
+     long                szorg;
 {
-  int             i = 0, nbc = 0;
-  char           *p = org;
+  int                 i = 0, nbc = 0;
+  char               *p = org;
 
-  if (org == NULL || dst == NULL || strlen (org) == 0)
+  if (org == NULL || dst == NULL || strlen(org) == 0)
     return 0;
 
   *dst = '\0';
@@ -140,7 +139,7 @@ buf_get_line (dst, szdst, org, szorg)
 
   if (i > 0) {
     if (i < szdst) {
-      strncpy (dst, org, i);
+      strncpy(dst, org, i);
       dst[i] = '\0';
     } else {
       ZE_LogMsgWarning(0, "line length > dest buf size");
@@ -179,13 +178,13 @@ buf_get_line (dst, szdst, org, szorg)
  *                                                                            * 
  *                                                                            *
  **************************************************************************** */
-char           *
-read_text_file (fname, sz)
-     char           *fname;
-     size_t         *sz;
+char               *
+read_text_file(fname, sz)
+     char               *fname;
+     size_t             *sz;
 {
-  struct stat     fstat;
-  char           *buf = NULL;
+  struct stat         fstat;
+  char               *buf = NULL;
 
   if (fname == NULL)
     return NULL;
@@ -193,28 +192,28 @@ read_text_file (fname, sz)
   if (sz != NULL)
     *sz = 0;
 
-  if (stat (fname, &fstat) == 0) {
-    uint32_t        fsize = fstat.st_size;
-    int             fd;
+  if (stat(fname, &fstat) == 0) {
+    uint32_t            fsize = fstat.st_size;
+    int                 fd;
 
-    if ((buf = (char *) malloc (fsize + 1)) == NULL)
+    if ((buf = (char *) malloc(fsize + 1)) == NULL)
       return NULL;
 
-    if ((fd = open (fname, O_RDONLY)) < 0) {
+    if ((fd = open(fname, O_RDONLY)) < 0) {
       ZE_LogSysWarning("open(%s) error", STRNULL(fname, "(NULL)"));
-      free (buf);
+      free(buf);
       return NULL;
     }
 
-    if ((fsize = read (fd, buf, fsize)) < 0) {
+    if ((fsize = read(fd, buf, fsize)) < 0) {
       ZE_LogSysWarning("read error");
-      free (buf);
+      free(buf);
       return NULL;
     }
-    close (fd);
+    close(fd);
 
     buf[fsize] = '\0';
-    fsize = zeStrRmNulls (buf, fsize);
+    fsize = zeStrRmNulls(buf, fsize);
 
     if (sz != 0)
       *sz = fsize;
@@ -226,19 +225,19 @@ read_text_file (fname, sz)
  *                                                                            * 
  *                                                                            *
  **************************************************************************** */
-char           *
-buf_get_next_line (out, in, szout)
-     char           *in;
-     char           *out;
-     size_t          szout;
+char               *
+buf_get_next_line(out, in, szout)
+     char               *in;
+     char               *out;
+     size_t              szout;
 {
-  size_t          n;
+  size_t              n;
 
   memset(out, 0, szout);
-  n = strcspn (in, "\r\n");
+  n = strcspn(in, "\r\n");
   if ((szout > 0) && (n > szout - 1))
     n = szout;
-  strncpy (out, in, n);
+  strncpy(out, in, n);
   out[n] = '\0';
   in += n;
 
@@ -277,10 +276,9 @@ text_word_length(buf, st, size)
 
   zeKStatsReset(st);
 
-	p = buf;
-	i = 0;
-  while ((sz > 0) && (*p != '\0'))
-  {
+  p = buf;
+  i = 0;
+  while ((sz > 0) && (*p != '\0')) {
     long                pi, pf;
 
     pi = pf = 0;
@@ -288,8 +286,7 @@ text_word_length(buf, st, size)
     if (!zeStrRegex(p, "[A-Za-z]+", &pi, &pf, TRUE))
       break;
 
-    if (pi == 0)
-    {
+    if (pi == 0) {
       zeKStatsUpdate(st, (double) (pf - pi));
       p += pf;
       sz -= pf;
@@ -314,6 +311,7 @@ text_buf_histogram(buf, size, prob)
 {
   unsigned char      *p = (unsigned char *) buf;
   long                n = 0;
+
 #if 0
   int                 freq[256];
 #endif
@@ -321,7 +319,7 @@ text_buf_histogram(buf, size, prob)
   if ((buf == NULL) || (size == 0) || (prob == NULL))
     return 0;
 
-  memset(prob, 0, 256 * sizeof(*prob));
+  memset(prob, 0, 256 * sizeof (*prob));
 
   for (p = (unsigned char *) buf, n = 0; (n < size) && (*p != '\0'); n++, p++) {
     if (isprint(*p))

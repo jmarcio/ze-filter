@@ -22,7 +22,12 @@
  */
 
 
-#ifndef ZE_MSG_SCORE_H
+#ifndef __ZE_MSG_SCORE_H
+
+/** @addtogroup Actions
+*
+* @{
+*/
 
 
 #define   BSCORE_LO     0.25
@@ -130,5 +135,7 @@ bool                evaluate_msg_action(int action,
                                         msg_scores_T * scp,
                                         double score, char *str);
 
-# define ZE_MSG_SCORE_H    1
-#endif             /* J_MSG_SCORE_H */
+/** @} */
+
+# define __ZE_MSG_SCORE_H    1
+#endif             /* __ZE_MSG_SCORE_H */

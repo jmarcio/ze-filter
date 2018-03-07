@@ -19,21 +19,31 @@
  */
 
 
-#ifndef ZEFILESYSTEM_H
+#ifndef __ZE_FILETOOLS_H
 
-char               *zeBasename(char *);
-char               *zeMyBasename(char *, char *, size_t);
+/** @addtogroup Systools
+*
+* @{
+*/
 
-bool                zmFileLock(int);
-bool                zmFileUnlock(int);
+char               *zeBasename(char *path);
+char               *zeMyBasename(char *out, char *in, size_t sizeout);
 
-size_t              zeGetFileSize(char *);
-size_t              zeGetFdSize(int );
-int                 zeReadLn(int, char *, size_t);
-bool                zeRemoveDir(char *);
-bool                zeShowDirInfo(char *);
-int                 zeFdPrintf(int , char *, ...);
+bool                zmFileLock(int fd);
+bool                zmFileUnlock(int fd);
 
-# define ZEFILESYSTEM_H    1
-#endif /* ZEFILESYSTEM_H */
+size_t              zeGetFileSize(char *filename);
+size_t              zeGetFdSize(int fd);
+size_t              zeFdReadLn(int fd, char *buf, size_t count);
+bool                zeRemoveDir(char *dirname);
+bool                zeShowDirInfo(char *dirname);
+size_t              zeFdPrintf(int fr, char *format, ...);
+
+size_t              zeFdWrite(int fd, void *buf, size_t count); 
+size_t              zeFdRead(int fd, void *buf, size_t count); 
+
+/** @} */
+
+# define __ZE_FILETOOLS_H    1
+#endif /* __ZE_FILETOOLS_H */
 

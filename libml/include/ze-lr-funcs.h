@@ -22,7 +22,12 @@
  */
 
 
-#ifndef ZE_LR_FUNCS_H
+#ifndef __ZE_LR_FUNCS_H
+
+/** @addtogroup Logreg
+*
+* @{
+*/
 
 #define               LR_CLASS_UNKNOWN   -1
 #define               LR_CLASS_HAM        0
@@ -150,5 +155,7 @@ void                lr_print_options(lr_opts_T * opts);
 typedef double      (*lr_callback_F) (int, lr_cargs_T *, lr_margs_T *);
 bool                lr_set_learn_callback(lr_callback_F);
 
-# define ZE_LR_FUNCS_H    1
-#endif             /* J_LR_FUNCS_H */
+/** @} */
+
+# define __ZE_LR_FUNCS_H    1
+#endif             /* __ZE_LR_FUNCS_H */

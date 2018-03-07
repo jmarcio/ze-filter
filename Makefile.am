@@ -30,6 +30,13 @@ DBTOOLS = db_archive db_checkpoint db_deadlock db_dump db_hotbackup \
 	db_load db_printlog db_log_verify db_recover db_stat db_upgrade \
 	db_verify
 
+all:
+
+doxydoc:
+	doxygen doc/Doxyfile
+
+srcdoc: doxydoc
+
 clean-hook:
 	rm -f *~ */*~ */*/*~ */*/*/*~ */*/*/*/*~ #*# */#*# */*/#*# */*/*/#*#
 	rm -f config.results

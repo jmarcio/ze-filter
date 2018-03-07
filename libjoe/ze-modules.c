@@ -336,7 +336,7 @@ load_all_modules(cfdir, modcf, moddir)
   modsys.moddir = moddir;
 
   ADJUST_FILENAME(path, modcf, cfdir, "modules.cf");
-  r = zm_RdFile(path, NULL, (RDFILE_F) read_mod_cf_line, &modsys);
+  r = zeRdFile(path, NULL, (RDFILE_F) read_mod_cf_line, &modsys);
 
   return TRUE;
 }
