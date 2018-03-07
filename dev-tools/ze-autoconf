@@ -17,9 +17,9 @@ dev-tools/set-release
 
 set -x
 
-##autoheader
-##aclocal -I m4
-##libtoolize -i -c --no-warnings -q --recursive --automake
+autoheader
+aclocal -I m4
+libtoolize -i -c --no-warnings -q --recursive --automake
 #libtoolize -c -f --automake
 automake --add-missing -c
 autoconf 
