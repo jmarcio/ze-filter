@@ -1,8 +1,5 @@
 #! /bin/bash
 
-#M4=/usr/local/gnu/bin/m4
-#export M4
-
 PATH=/usr/bin:$PATH
 
 DATE=`date +%y%m%d`
@@ -18,9 +15,10 @@ dev-tools/set-release
 set -x
 
 autoheader
-aclocal -I m4
+aclocal
 libtoolize -i -c --no-warnings -q --recursive --automake
 #libtoolize -c -f --automake
 automake --add-missing -c
 autoconf 
 
+/bin/rm -rf $(find . -name autom4te.cache)
