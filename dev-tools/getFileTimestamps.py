@@ -1,4 +1,7 @@
+#! /usr/bin/python3
+
 import os, sys
+import re
 from stat import *
 
 def walktree(top):
@@ -6,7 +9,8 @@ def walktree(top):
      calling the callback function for each regular file'''
 
   for f in os.listdir(top):
-    if f == '.git':
+    if re.match("^(\.git|tmp)$", f):
+      print("SKIP  skiping {:s}".format(f))
       continue
     pathname = os.path.join(top, f)
     mode = os.stat(pathname)[ST_MODE]
@@ -21,5 +25,7 @@ def walktree(top):
       print('Skipping %s' % pathname)
 
 if __name__ == '__main__':
-  walktree(sys.argv[1])
-
+  if len(sys.argv) > 1:
+    walktree(sys.argv[1])
+  else:
+    walktree('.') 
