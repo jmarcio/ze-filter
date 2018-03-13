@@ -250,6 +250,7 @@ PolicyLookupTuple(prefix, addr, name, netclass, from, to, result)
      char               *to;
      bool                result;
 {
+  return TRUE;
 }
 
 

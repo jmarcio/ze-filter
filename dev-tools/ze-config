@@ -12,10 +12,10 @@ echo $VERSION > aux/release
 
 dev-tools/set-release
 
-set -x
+#set -x
 
 autoheader
-aclocal
+aclocal -I m4
 libtoolize -i -c --no-warnings -q --recursive --automake
 #libtoolize -c -f --automake
 automake --add-missing -c

@@ -1,6 +1,7 @@
 #! /bin/bash
 
 RsyncSrv=rsync://foss.jose-marcio.org:1873
+RsyncOpt="-q --chown=ze-filter:ze-filter"
 
 cd /var/ze-filter/cdb
 
@@ -21,9 +22,10 @@ do
   ${line} > /dev/null || break
 done <<EOT
 # Getting databases from server
-rsync -aq rsync://foss.jose-marcio.org:1873/urlbl/ze-urlbl.txt      .
-rsync -aq rsync://foss.jose-marcio.org:1873/ze-toolbox/ze-bayes.txt .
-rsync -aq rsync://foss.jose-marcio.org:1873/lr-data/                lr-data/
+rsync -a $RsyncOpt rsync://foss.jose-marcio.org:1873/urlbl/ze-urlbl.txt      .
+rsync -a $RsyncOpt rsync://foss.jose-marcio.org:1873/ze-toolbox/ze-bayes.txt .
+rsync -a $RsyncOpt rsync://foss.jose-marcio.org:1873/lr-data/                lr-data/
+
 # Check links
 rm -f ze-lr.txt
 ln -s lr-data/ze-lr.txt ze-lr.txt
